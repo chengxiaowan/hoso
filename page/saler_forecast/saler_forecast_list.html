@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+    <link href="/static/ui/css/animate.css" rel="stylesheet">
+    <link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+    <link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+    <link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content hide" id="app">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading clearfix">
+                        <form role="form" class="form-inline pull-left" @submit.prevent="search">
+                            <div class="form-group" v-show="role=='经理'">
+                                <select style="width:190px" id="saleId" name="saleId">
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input class="span10 date-picker form-control" id="time" name="time" type="text" data-date-format="yyyy-mm" readonly="readonly"
+                                    placeholder="请选择月份" style="width: 150px;" />
+                            </div>
+                            <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 搜索</button>
+                            <button type="reset" @click="clear" class="btn">
+							<i id="nav-search-icon" class="fa fa-refresh nav-search-icon "></i> 重置
+						</button>
+                        </form>
+                        <a v-if="role!='经理'" href="javascript:;" @click="add" class="btn btn-success pull-right"><i class="fa fa-plus"></i> 新增</a>
+                    </div>
+                    <div class="panel-body">
+                        <div class="alert alert-warning">
+                            <span class="alert-link"> 合计预测金额: </span>    <span class="alert-link" style="font-size:18px"> {{totalMoney}} 元 </span> 
+                        </div>
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th v-if="role=='经理'">销售</th>
+                                    <th>客户名称</th>
+                                    <th>预测金额(元)</th>
+                                    <th>月份</th>
+                                    <th width="270">备注</th>
+                                    <th width="105" v-if="role!='经理'">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(el,index) of c.list">
+                                    <td v-if="role=='经理'">{{el.saleName}}</td>
+                                    <td>{{el.saleCustomerName}}</td>
+                                    <td>{{el.ycMoney}}</td>
+                                    <td>{{el.date}}</td>
+                                    <td class="tips-hook">
+                                        <div style="max-width:250px" class="ellipsis">
+                                        {{el.remark}}
+                                        </div></td>
+                                    <td v-if="role!='经理'">
+                                        <button type="button" class="btn btn-success" @click="edit(el)"><i class="fa fa-edit"></i> 编辑</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="pull-left form form-inline">
+                            <div class="form-group form-group-sm">
+                                共 {{c.total}} 条数据,每页显示 <select @change="search" v-model="c.pageSize" class="form-control">
+                                     <option value="10">10</option>
+                                     <option value="20">20</option>
+                                     <option value="30">30</option>
+                                     <option value="40">40</option>
+                                     <option value="50">50</option>
+                                 </select> 条
+                            </div>
+                        </div>
+                        <div class="pagi pull-right">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="" style="height:0;overflow:hidden">
+            <div class="col-sm-12 form form-horizontal" id="addBox">
+                <div class="col-md-12 m-t-md">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">客户名称：</label>
+                        <div class="col-sm-8">
+                            <select style="width:100%" data-validate="require" name="saleCustomerId" id="customer">
+                            </select>
+                            </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="">预测金额：</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" data-validate="require|number" name="ycMoney" placeholder="请输入预测金额" type="number" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="">月份：</label>
+                        <div class="col-sm-8">
+                            <input class="form-control date-picker" data-validate="require" name="date" data-date-format="yyyy-mm" placeholder="请输入月份" type="text" readonly value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="">备注：</label>
+                        <div class="col-sm-8">
+                            <textarea style="height:180px" name="remark" class="form-control" placeholder="请输入备注" rows="" cols=""></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/ui/js/jquery.min.js"></script>
+    <script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+    <script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+    <script src="/static/ui/js/plugins/layer/laydate/laydate.js"></script>
+    <link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+    <script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+    <script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+    <script src="/static/js/include/module/module_pagination.js"></script>
+    <script src="/static/ui/js/vue.js"></script>
+    <script src="/static/ui/js/require.min.js" data-main="/static/js/include/page/saler_forecast_list"></script>
+</body>
+
+</html>

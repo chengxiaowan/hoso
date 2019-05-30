@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        html, body {
+            font: 13px/18px sans-serif;
+        }
+        select {
+            min-width: 300px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="el">
+    <div id="box">1</div>
+</div>
+
+<!-- using string template here to work around HTML <option> placement restriction -->
+
+
+
+<script src="https://unpkg.com/jquery@3.1.1/dist/jquery.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/select2@4.0.3/dist/css/select2.min.css">
+<script src="https://unpkg.com/select2@4.0.3/dist/js/select2.js"></script>
+<script src="https://unpkg.com/vue@2.5.16/dist/vue.js"></script>
+<script>
+    Vue.component('select2', {
+        props: ['options', 'value'],
+        template: `
+            <select>
+                <slot></slot>
+            </select>
+        `,
+        mounted: function () {
+            var vm = this
+            $(this.$el)
+            // init select2
+                .select2({ data: this.options })
+                .val(this.value)
+                .trigger('change')
+                // emit event on change.
+                .on('change', function () {
+                    vm.$emit('input', this.value)
+                })
+        },
+        watch: {
+            value: function (value) {
+                // update value
+                $(this.$el)
+                    .val(value)
+                    .trigger('change')
+            },
+            options: function (options) {
+                // update options
+                $(this.$el).empty().select2({ data: options })
+            }
+        },
+        destroyed: function () {
+            $(this.$el).off().select2('destroy')
+        }
+    })
+
+    var vm = new Vue({
+        el: '#el',
+        template: `
+        <div>
+        <p>Selected: {{ selected }}</p>
+        <select2 :options="options" v-model="selected">
+            <option disabled value="0">Select one</option>
+        </select2>
+    </div>
+        `,
+        data: {
+            selected: 2,
+            options: [
+                { id: 1, text: 'Hello' },
+                { id: 2, text: 'World' }
+            ]
+        },
+
+    })
+</script>
+</body>
+</html>

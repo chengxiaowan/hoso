@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <select v-model="selected">
+        <option v-for="test in tests" :value="test">{{ test.text }}</option>
+    </select>
+    <p>您选择的名字的Id是：{{selected}} {{ selected.text }}</p>
+</div>
+
+<script src="../js/vue.js"></script>
+<script>
+    window.app = new Vue({
+            el: '#app',
+        selected: {},
+            tests: [
+                { value: 1, text: 'some text' },
+                { value: 2, text: 'some other text' },
+                { value: 3, text: 'some more text' },
+                { value: 4, text: 'text' },
+            ]
+        })
+</script>
+</body>
+</html>
+
+
+
+

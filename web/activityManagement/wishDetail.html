@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>我爱我家详情</title>
+		<meta name="keywords" content="寒舍">
+		<meta name="description" content="寒舍">
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+		<link rel="stylesheet" href="../css/animate.min.css">
+		<link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+		<link rel="stylesheet" href="../css/style.css">
+		<link rel="stylesheet" href="../css/layout.css">
+		<link rel="stylesheet" href="../css/htz.css" />
+		<link rel="stylesheet" href="../css/swiper.min.css">
+	</head>
+	<style>
+		.input-container {
+			height: 34px!important;
+			line-height: 34px!important;
+		}
+		
+		.select2-container {
+			z-index: 99999999999999;
+		}
+		
+		body {
+			font-size: 12px;
+		}
+		.swiper-container {
+			width: 60%;
+			height: 80%;
+			position: fixed;
+			left: 0;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			margin: auto;
+			/*这行代码是关键*/
+			z-index: 999999999;
+		}
+		
+		.swiper-slide {
+			text-align: center;
+			font-size: 18px;
+			background: #fff;
+			/* Center slide text vertically */
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: -webkit-flex;
+			display: flex;
+			-webkit-box-pack: center;
+			-ms-flex-pack: center;
+			-webkit-justify-content: center;
+			justify-content: center;
+			-webkit-box-align: center;
+			-ms-flex-align: center;
+			-webkit-align-items: center;
+			align-items: center;
+			position: relative;
+		}
+		
+		.swiper-slide img {
+			/*cursor: pointer;*/
+		}
+		
+		.mb-bg {
+			z-index: 999999999;
+		}
+		li{
+			list-style: none;
+		}
+	</style>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content" id="app">
+			<div class="row">
+				<div class="col-sm-12" style="margin-bottom: 5px;">
+					<h2 class="m-t-xs">标题: {{c.title}} <small class="m-l-md">
+					</small></h2>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="tabs-container">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a data-toggle="tab" @click="tab(1)" href="#tab-1" aria-expanded="true"> 基本信息</a>
+							</li>
+							<li class="">
+								<a data-toggle="tab" @click="tab(2)" href="#tab-2" aria-expanded="false">点赞列表</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div id="tab-1" class="tab-pane active">
+								<div class="panel-body">
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="panel panel-default">
+														<div class="panel-heading">
+															基本信息
+														</div>
+														<div class="panel-body">
+															<div class="row form form-horizontal">
+																<div class="col-md-6">
+																	<div class="">
+																		<b class="col-sm-3 control-label">标题：</b>
+																		<div class="col-sm-9 input-container ">
+																			{{c.title}}
+																		</div>
+																	</div>
+																</div>
+
+																<div class="col-md-6">
+																	<div class="">
+																		<b class="col-sm-3 control-label">点赞数：</b>
+																		<div class="col-sm-9 input-container ">
+																			{{c.admiredNum}}
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-6">
+																	<div class="">
+																		<b class="col-sm-3 control-label">发起人：</b>
+																		<div class="col-sm-9 input-container ">
+																			{{c.nickName}}
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-6">
+																	<div class="">
+																		<b class="col-sm-3 control-label">发布时间：</b>
+																		<div class="col-sm-9 input-container ">
+																			{{c.createTime}}
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-12">
+																	<div class="">
+																		<b class="col-sm-3 control-label">描述：</b>
+																		<div class="col-sm-12" style="padding-left: 38px;">
+																			{{c.description}}
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="panel-heading">
+															图片
+														</div>
+														<div class="ibox-content">
+															<div class="col-sm-12">
+																<div class="form-group clear">
+																	<div class="col-sm-12" style="display: flex;justify-content: flex-start;align-items: center;vertical-align: middle;cursor: pointer;">
+																		<li style="margin-right: 10px;" v-for="(item,index) of  picPath" @click="show(picPath)"><img :src="item" style="width: 60px"></li>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+							<!--点赞列表-->
+							<div id="tab-2" class="tab-pane">
+								<div class="panel-body">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="panel panel-default">
+												<div class="panel-heading">
+													点赞列表
+												</div>
+												<div class="panel-body">
+													<div class="ibox-content">
+														<table id="simple-table" class="table table-responsive table-bordered table-hover">
+															<thead>
+																<tr>
+																	<th width="50%">微信昵称</th>
+																	<th width="50%">点赞时间</th>
+																</tr>
+															</thead>
+															<tbody>
+																<template v-if="isZw">
+																	<tr v-for="(item,index) of list.list">
+																		<td>{{item.nickName}}</td>
+																		<td>{{item.createTime}}</td>
+																	</tr>
+																</template>
+																<template v-else>
+																	<tr class="main_info">
+																		<td colspan="10">暂无数据</td>
+																	</tr>
+																</template>
+
+															</tbody>
+														</table>
+														<div class="pull-left form form-inline">
+															<div class="form-group form-group-sm">
+																共 {{list.total}} 条数据,每页显示
+																<select @change="getData(1)" v-model="list.pageSize" class="form-control">
+																	<option value="10">10</option>
+																	<option value="20">20</option>
+																	<option value="30">30</option>
+																	<option value="40">40</option>
+																	<option value="50">50</option>
+																</select> 条
+															</div>
+														</div>
+														<div class="pagi pull-right"></div>
+													</div>
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--轮播图背景-->
+			<div v-cloak v-if="bg_show==true" @click="hide" class="mb-bg"></div>
+			<!--轮播图-->
+			<div v-cloak v-show="pic_show == true" class="swiper-container ">
+				<div class="swiper-wrapper">
+					<div class="swiper-slide swiper-no-swiping" v-for="(item,index) in picList"><img class="img" style="height: 100%;" :src="item"></div>
+				</div>
+				<!-- Add Pagination -->
+				<div class="swiper-pagination"></div>
+				<!-- Add Arrows -->
+				<div class="swiper-button-next"></div>
+				<div class="swiper-button-prev"></div>
+			</div>
+
+		</div>
+		<!-- 全局js -->
+		<script src="../js/jquery-2.1.1.min.js"></script>
+		<script src="../js/swiper.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/plugins/layer/layer.min.js"></script>
+		<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+		<script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/module/module_pagination.js"></script>
+		<!-- 自定义js -->
+		<script src="../js/content.min.js?v=1.0.0"></script>
+		<script src="../js/custom/common.js"></script>
+		<script src="../js/custom/activityManagement/wishDetail.js"></script>
+	</body>
+
+</html>

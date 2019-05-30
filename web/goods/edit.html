@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>新增商品</title>
+		<meta name="keywords" content="寒舍">
+		<meta name="description" content="寒舍">
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+		<link rel="stylesheet" href="../js/plugins/layui/css/layui.css">
+		<link rel="stylesheet" href="../css/animate.min.css">
+		<!--选择框-->
+		<link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+		<link rel="stylesheet" href="../js/plugins/utf8-jsp/themes/default/css/ueditor.css">
+		<link rel="stylesheet" href="../css/style.css">
+		<link rel="stylesheet" href="../css/layout.css">
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<style>
+			.panel-body {
+				padding: 0 !important;
+			}
+			
+			.ibox-content,
+			.panel {
+				padding: 0;
+				border: 0
+			}
+			
+			.panel {
+				display: none;
+			}
+			
+			.show {
+				display: block;
+			}
+			
+			.page {
+				padding: 0 10px;
+			}
+			
+			.panel>.table-bordered,
+			.panel>.table-responsive>.table-bordered {
+				border-bottom: 1px solid #e7eaec;
+			}
+			
+			.edui-editor {
+				margin: 0 auto;
+				margin-top: 20px;
+			}
+			
+		</style>
+	</head>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content" id="app">
+			<div class="ibox-content">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="topNav">
+							<ul class="navs" id="myTab">
+								<li @click="activateTab(0)" :class="{cur:index==0}">
+									<a href="javascript:;">基本详情</a>
+								</li>
+								<li @click="activateTab(1)" :class="{cur:index==1}">
+									<a href="javascript:;">自定义属性</a>
+								</li>
+								<li @click="activateTab(2)" :class="{cur:index==2}">
+									<a href="javascript:;">颜色信息</a>
+								</li>
+								<li @click="activateTab(3)" :class="{cur:index==3}">
+									<a href="javascript:;">型号</a>
+								</li>
+								<li @click="activateTab(4)" :class="{cur:index==4}">
+									<a href="javascript:;">子商品</a>
+								</li>
+								<!--<li @click="activateTab(5)" :class="{cur:index==5}"><a href="javascript:;">素材库</a></li>-->
+								<li @click="activateTab(6)" :class="{cur:index==6}">
+									<a href="javascript:;">商品描述</a>
+								</li>
+								<!--<li @click="activateTab(7)" :class="{cur:index==7}"><a href="javascript:;">相关附件</a></li>
+                        <li @click="activateTab(8)" :class="{cur:index==8}"><a href="javascript:;">操作日志</a></li>-->
+							</ul>
+						</div>
+						<div class="tab-content">
+							<!-- 基本详情 start -->
+							<div class="mark panel" :class="{show:index==0}">
+								<div class="panel-body">
+									<em class="title">基本信息</em>
+									<div id="contractForm" class="form form-horizontal">
+										<div class="row row_list">
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label class="col-sm-2 control-label">商品名称<em class="red">*</em></label>
+													<div class="col-sm-10">
+														<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入商品名称" v-model="name">
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label class="col-sm-2 control-label">供应商<em class="red">*</em></label>
+													<div class="col-sm-10">
+														<select class="form-control" v-select2="" data-placeholder="请选择供应商" v-model="supplierId" required="required">
+															<option value="" disabled></option>
+															<option v-for="item in supplierList" v-bind:value="item.id">{{item.text}}</option>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-6 clear">
+												<div class="form-group">
+													<label class="col-sm-2 control-label">商品分类<em class="red">*</em></label>
+													<div class="col-sm-10">
+														<template>
+															<el-select v-model="typeId" clearable filterable placeholder="请选择商品分类" style='width: 100%;'>
+																<el-option v-for="item in typeList" :key="item.parentId" :label="item.parentName" :value="item.parentId">
+																</el-option>
+															</el-select>
+														</template>
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label class="col-sm-2 control-label">品牌</label>
+													<div class="col-sm-10">
+														<select class="form-control" v-select22="" data-placeholder="请选择品牌" v-model="brandId">
+															<option value="" disabled>请选择品牌</option>
+															<option v-for="item in brandList" :value="item.id">{{item.text}}</option>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-6 clear">
+												<div class="form-group">
+													<label class="col-sm-2 control-label">计量单位<em class="red">*</em></label>
+													<div class="col-sm-10">
+														<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入计量单位" v-model="unitValue">
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label class="col-sm-2 control-label">出货天数</label>
+													<div class="col-sm-10">
+														<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入出货天数" v-model="shipmentsDays">
+													</div>
+												</div>
+											</div>
+											<!--<div class="col-sm-6">
+												<div class="form-group">
+													<label class="col-sm-2 control-label">产地</label>
+													<div class="col-sm-10">
+														<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入产地" v-model="fromArea">
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label class="col-sm-2 control-label">执行标准</label>
+													<div class="col-sm-10">
+														<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入执行标准" v-model="standard">
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label class="col-sm-2 control-label">配送方式</label>
+													<div class="col-sm-10">
+														<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入配送方式" v-model="distribution">
+													</div>
+												</div>
+											</div>-->
+											<div class="col-sm-12">
+												<div class="form-group">
+													<label class="col-sm-1 control-label">简述</label>
+													<div class="col-sm-11">
+														<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入简述" v-model="summary">
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-6 clear">
+												<div class="form-group">
+													<label class="col-sm-2 control-label">商品图片 <em class="red">*</em></label>
+													<div class="col-sm-10">
+														<div class="layui-upload" id="btn-uploader2">
+															<div class="layui-upload-list pull-left" style="clear: both;">
+																<img style="width: 60%;" class="layui-upload-img" id="demo2" :src="image">
+																<p id="demoText"></p>
+															</div>
+															<button type="button" class="layui-btn pull-left" id="pickfiles2">上传图片</button>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="ibox-content-btn clear" style="margin: 0 0 20px;">
+										<a class="btn btn-htz  btn-primary" title="保存" @click="save();">保存</a>
+										<!--<a class="btn btn-htz  btn-htz-default" title="取消" onclick="cancle();">取消</a>-->
+									</div>
+								</div>
+							</div>
+							<!-- 基本详情 end -->
+							<!-- 自定义属性 start -->
+							<div class="panel" :class="{show:index==1}">
+								<div class="panel-body">
+									<em class="title">商品自定义参数 <a class="btn btn-htz  btn-primary  pull-right" title="新增" @click="addAttribute();"><i class="icon icon_plus"></i> 新增</a></em>
+									<table class="table table-responsive table-bordered table-hover">
+										<thead>
+											<tr>
+												<th width="15%">参数名称</th>
+												<th width="60%">参数值</th>
+												<th width="25%">操作</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr v-if="attrsList.total > 0" v-for="item in attrsList.list">
+												<td>{{item.skuAttributeName}}</td>
+												<td>{{item.skuSelectValue}}</td>
+												<td>
+													<a class="btn btn-success" title="编辑" @click="editAttribute(item.goodsSkuAttributeId);">编辑</a>
+													<a class="btn btn-default" title="删除" @click="delAttribute(item);">删除</a>
+												</td>
+											</tr>
+											<tr class="main_info" v-else>
+												<td colspan="3">没有相关数据</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="page">
+										<div class="pull-left form form-inline">
+											<div class="form-group form-group-sm">
+												共 {{list.total}} 条数据,每页显示
+												<select @change="getAttributeList(1)" v-model="attrsList.pageSize" class="form-control">
+													<option value="10">10</option>
+													<option value="20">20</option>
+													<option value="30">30</option>
+													<option value="40">40</option>
+													<option value="50">50</option>
+												</select> 条
+											</div>
+										</div>
+										<div class="pagi pull-right"></div>
+									</div>
+								</div>
+							</div>
+							<!-- 自定义属性 end -->
+							<!-- 颜色信息 start -->
+							<div class="panel" :class="{show:index==2}">
+								<div class="panel-body">
+									<em class="title">颜色信息 <a class="btn btn-htz  btn-primary pull-right" title="新增" @click="addColor('0');"><i class="icon icon_plus"></i> 新增</a></em>
+									<table class="table table-responsive table-bordered table-hover">
+										<thead>
+											<tr>
+												<th width="25%">标题</th>
+												<th width="25%">编码</th>
+												<th width="25%">图片</th>
+												<th width="25%">操作</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr v-if="colorsList.total > 0" v-for="item in colorsList.list">
+												<td>{{item.name}}</td>
+												<td>{{item.skuSelectCode}}</td>
+												<td><img :src="item.imgPath" width="100" alt=""></td>
+												<td>
+													<a class="btn btn-success" title="编辑" @click="editColor(item.skuSelectId,'1');">编辑</a>
+													<a class="btn btn-default" title="删除" @click="delColor(item.skuSelectId);">删除</a>
+												</td>
+											</tr>
+											<tr class="main_info" v-else>
+												<td colspan="7">没有相关数据</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="page">
+										<div class="pull-left form form-inline">
+											<div class="form-group form-group-sm">
+												共 {{list.total}} 条数据,每页显示
+												<select @change="getColorList(1)" v-model="colorsList.pageSize" class="form-control">
+													<option value="10">10</option>
+													<option value="20">20</option>
+													<option value="30">30</option>
+													<option value="40">40</option>
+													<option value="50">50</option>
+												</select> 条
+											</div>
+										</div>
+										<div class="pagi pull-right"></div>
+									</div>
+								</div>
+							</div>
+							<!-- 颜色信息 end -->
+							<!-- 型号 start -->
+							<div class="panel" :class="{show:index==3}">
+								<div class="panel-body">
+									<em class="title">规格型号信息 <a class="btn btn-htz  btn-primary pull-right" title="新增" @click="addModel();"><i class="icon icon_plus"></i> 新增</a></em>
+									<table id="simple-table3" class="table table-responsive table-bordered table-hover">
+										<thead>
+											<tr>
+												<th width="10%">编号</th>
+												<th width="20%">规格（mm）</th>
+												<th width="20%">型号</th>
+												<th width="10%">材质</th>
+												<th width="10%">毛重（kg）</th>
+												<th width="10%">净重（kg）</th>
+												<th width="20%">操作</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr v-if="modelsList.total > 0" v-for="item in modelsList.list">
+												<td>{{item.skuSelectCode}}</td>
+												<td>{{item.standard}}</td>
+												<td>{{item.model}}</td>
+												<td>{{item.materialQuality}}</td>
+												<td>{{item.grossWeight}}</td>
+												<td>{{item.suttleWeight}}</td>
+												<td>
+													<a class="btn btn-success" title="编辑" @click="editModel(item.skuSelectId);">编辑</a>
+													<a class="btn btn-default" title="删除" @click="delModel(item.skuSelectId);">删除</a>
+												</td>
+											</tr>
+											<tr class="main_info" v-else>
+												<td colspan="7">没有相关数据</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="page">
+										<div class="pull-left form form-inline">
+											<div class="form-group form-group-sm">
+												共 {{list.total}} 条数据,每页显示
+												<select @change="getModelList(1)" v-model="modelsList.pageSize" class="form-control">
+													<option value="10">10</option>
+													<option value="20">20</option>
+													<option value="30">30</option>
+													<option value="40">40</option>
+													<option value="50">50</option>
+												</select> 条
+											</div>
+										</div>
+										<div class="pagi pull-right"></div>
+									</div>
+								</div>
+							</div>
+							<!-- 型号 end -->
+							<!-- 商品信息 start -->
+							<div class="panel" :class="{show:index==4}">
+								<div class="panel-body">
+									<em class="title">子商品 <a class="btn btn-htz  btn-primary pull-right" title="新增" @click="addSubGoods();"><i class="icon icon_plus"></i> 新增</a></em>
+									<table id="simple-table4" class="table table-responsive table-bordered table-hover">
+										<thead>
+											<tr>
+												<th width="20%">商品</th>
+												<th width="10%">采购价（元）</th>
+												<th width="10%">原价（元）</th>
+												<th width="10%">单价（元）</th>
+												<th width="10%">条形码</th>
+												<th width="10%">标签</th>
+												<th width="10%">状态</th>
+												<th width="20%">操作</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr v-if="goodsList.total > 0" v-for="item in goodsList.list">
+												<td>
+													<img class="goods_img pull-left" :src="item.mainImgPath" alt="">
+													<div class="goods_txt pull-left">
+														<p>{{item.skuName}}</p>
+														<p>{{item.colorName}}</p>
+														<p>{{item.standard}}</p>
+													</div>
+												</td>
+												<td>{{item.purchasePrice}}</td>
+												<td>{{item.oldPrice}}</td>
+												<td>{{item.price}}</td>
+												<td>{{item.barCode}}</td>
+												<td>{{item.labels}}</td>
+												<td v-if="item.isOnsell == 0">已下架</td>
+												<td v-if="item.isOnsell == 1">已上架</td>
+												<td>
+													<a class="btn btn-success" title="编辑" @click="editSubGoods(item.goodsSkuId);"> 编辑</a>
+													<a class="btn btn-success" v-if="item.isOnsell == 0" title="上架" @click="slotting(item.goodsSkuId,item.isOnsell);">上架</a>
+													<a class="btn btn-success" v-else-if="item.isOnsell == 1" title="下架" @click="driver(item.goodsSkuId,item.isOnsell);">下架</a>
+													<a class="btn btn-default" title="删除" @click="delSubGoods(item.goodsSkuId);"> 删除</a>
+												</td>
+											</tr>
+											<tr class="main_info" v-else-if="list.total == '0' ">
+												<td colspan="7">没有相关数据 {{list.total}}</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="page">
+										<div class="pull-left form form-inline">
+											<div class="form-group form-group-sm">
+												共 {{list.total}} 条数据,每页显示
+												<select @change="getSkuList(1)" v-model="goodsList.pageSize" class="form-control">
+													<option value="10">10</option>
+													<option value="20">20</option>
+													<option value="30">30</option>
+													<option value="40">40</option>
+													<option value="50">50</option>
+												</select> 条
+											</div>
+										</div>
+										<div class="pagi pull-right"></div>
+									</div>
+								</div>
+							</div>
+							<!-- 商品信息 end -->
+							<!-- 素材库 start -->
+							<!--<div class="panel" :class="{show:index==5}">
+                        <div class="panel-body">
+                            <em class="title">素材库</em>
+                        </div>
+                    </div>-->
+							<!-- 素材库 end -->
+							<!-- 商品描述 start -->
+							<div class="panel" :class="{show:index==6}">
+								<div class="panel-body">
+									<em class="title">商品描述</em>
+									<div class="description">
+										<script id="container" name="detailDescribe" type="text/plain">
+
+										</script>
+									</div>
+									<div class="ibox-content-btn clear" style="margin: 0px 0px 20px;">
+										<a title="保存" class="btn btn-htz  btn-primary" @click="editD">保存</a>
+									</div>
+								</div>
+							</div>
+							<!-- 商品描述 end -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 自定义属性弹框 start -->
+			<div class="bounced">
+				<div class="ibox-content">
+					<div class="form form-horizontal">
+						<div class="row_list" id="attribute">
+							<div class="col-sm-6 clear">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">属性名称 <em class="red">*</em></label>
+									<div class="col-sm-10">
+										<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入属性名称" v-model="skuAttributeName" />
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6 clear">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">属性值 <em class="red">*</em></label>
+									<div class="col-sm-10">
+										<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入属性值" v-model="skuSelectValue" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 自定义属性弹框 end -->
+			<!-- 颜色信息弹框 start -->
+			<div class="bounced">
+				<div class="ibox-content">
+					<div class="form form-horizontal">
+						<div class="row_list" id="color">
+							<div class="col-sm-6 clear">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">颜色名称 <em class="red">*</em></label>
+									<div class="col-sm-10">
+										<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入颜色名称" v-model="colorName" />
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6 clear">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">颜色图片 <em class="red"></em></label>
+									<div class="col-sm-10">
+										<div class="layui-upload" id="btn-uploader">
+											<div class="layui-upload-list pull-left" style="clear: both;">
+												<img v-if="colorPicType==0" style="width: 60%;" class="layui-upload-img" id="demo1">
+												<img v-if="colorPicType==1" style="width: 60%;" class="layui-upload-img" id="demo1" :src="imgPath">
+												<p id="demoText"></p>
+											</div>
+											<button type="button" class="layui-btn pull-left" id="pickfiles">上传图片</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 颜色信息弹框 end -->
+			<!-- 规格型号弹框 start -->
+			<div class="bounced">
+				<div class="ibox-content" id="model">
+					<div class="form form-horizontal">
+						<div class="row_list">
+							<div class="col-sm-6 clear">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">规格（mm）<em class="red">*</em></label>
+									<div class="col-sm-10">
+										<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入规格信息" v-model="standard" />
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6 clear">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">型号 <em class="red">*</em></label>
+									<div class="col-sm-10">
+										<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入型号" v-model="model" />
+									</div>
+								</div>
+							</div>
+
+							<div class="col-sm-6 clear">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">材质</label>
+									<div class="col-sm-10">
+										<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入材质" v-model="materialQuality" />
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6 clear">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">毛重（kg）</label>
+									<div class="col-sm-10">
+										<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入毛重" v-model="grossWeight" />
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6 clear">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">净重（kg）</label>
+									<div class="col-sm-10">
+										<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入净重" v-model="suttleWeight" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 规格型号弹框 end -->
+			<!-- 价格弹框 start -->
+			<div class="bounced">
+				<div class="ibox-content" id="subgoods">
+					<!-- 基本信息 start -->
+					<div class="form form-horizontal">
+						<em class="title">基本信息</em>
+						<div class="row_list">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">颜色 <em class="red">*</em></label>
+									<div class="col-sm-10">
+										<select name="sel" id="sel" class="form-control" data-placeholder="请选择颜色" @change="look" v-model="colorId">
+											<option value="">请选择颜色</option>
+											<option v-for="item in colorList" :value="item.skuSelectId">{{item.name}}</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">型号 <em class="red">*</em></label>
+									<div class="col-sm-10">
+										<select class="form-control" data-placeholder="请选择型号" v-model="modelId">
+											<option value="">请选择型号</option>
+											<option v-for="item in modelList" :value="item.skuSelectId">{{item.model}}</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">条形码 </label>
+									<div class="col-sm-10">
+										<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入条形码" v-model="barCode" />
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">采购价（元）</label>
+									<div class="col-sm-10">
+										<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入采购价" v-model="purchasePrice" />
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">原价（元）<em class="red">*</em> </label>
+									<div class="col-sm-10">
+										<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入原价" v-model="oldPrice" />
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">单价（元）<em class="red">*</em> </label>
+									<div class="col-sm-10">
+										<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入单价" v-model="price" />
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">上/下架状态<em class="red">*</em></label>
+									<div class="col-sm-10">
+										<select class="form-control" v-model="isOnsell">
+											<option value="">请选择上/下架状态</option>
+											<option value="0">下架</option>>
+											<option value="1">上架</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">是否展示<em class="red">*</em></label>
+									<div class="col-sm-10">
+										<select class="form-control" v-model="isShow">
+											<option value="0" selected="selected">否</option>>
+											<option value="1">是</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- 基本信息 end -->
+					<!-- 标签信息 start -->
+					<div class="form form-horizontal">
+						<em class="title">标签信息</em>
+						<div class="row row_list">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">颜色标签 <em class="red">*</em></label>
+									<div class="col-sm-10">
+										<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="颜色标签通过颜色自动传入" v-model="colorLabel" />
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">类型标签 <em class="red">*</em></label>
+									<div class="col-sm-10">
+										<select class="form-control" data-placeholder="请选择类型标签" v-model="typeLabelId_1">
+											<option value="">请选择类型标签</option>
+											<option v-for="item in labelList" :value="item.typeLabelId">{{item.typeName}}</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<!--<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-1 control-label">风格标签</label>
+									<div class="col-sm-11">
+										<input class="form-control" name="tagsinput" id="tagsinputval" class="tagsinput" data-role="tagsinput" value="" type="text" placeholder="输入后按回车" />
+									</div>
+								</div>
+							</div>-->
+							<!--<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-1 control-label">其他标签</label>
+									<div class="col-sm-11">
+										<input class="form-control" name="tagsinput" id="tagsinputval" class="tagsinput" data-role="tagsinput" value="" type="text" placeholder="输入后按回车" />
+									</div>
+								</div>
+							</div>-->
+						</div>
+					</div>
+					<!-- 标签信息 end -->
+					<!-- 图片信息 start -->
+					<div class="form form-horizontal">
+						<em class="title">图片信息</em>
+						<div class="row row_list">
+							<div class="col-sm-6">
+								<div class="goods_pic">
+									<div class="layui-upload" id="btn-uploader3">
+										<div class="layui-upload-list pull-left" style="clear: both;">
+											<img style="width: 60%;" class="layui-upload-img" id="demo3" src="">
+											<p id="demoText"></p>
+										</div>
+										<button type="button" class="layui-btn pull-left" id="pickfiles3">上传图片</button>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="goods_pic">
+									<div class="layui-upload" id="btn-uploader4">
+										<div class="layui-upload-list pull-left" style="clear: both;">
+											<img style="width: 60%;" class="layui-upload-img" id="demo4" src="">
+											<p id="demoText"></p>
+										</div>
+										<button type="button" class="layui-btn pull-left" id="pickfiles4">上传图片</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- 图片信息 end -->
+					<!-- 佣金信息 start -->
+					<!--<div class="form form-horizontal" id="commision">
+                <em class="title">佣金信息 <a class="btn btn-success pull-right" title="新增" @click="add();"><i class="icon icon_plus"></i>新增</a></em>
+                <div class="row row_list">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <th width="50%">分档指标</th>
+                        <th width="25%">提成系数(%)</th>
+                        <th>提成金额(元)</th>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="htz-td">
+                                <table class="increase hx1">
+                                    <tr>
+                                        <td align="middle">
+                                            <input type="number" class="form-control num" value="0" /><span class="htz-label">&lt;</span><span class="indicator">X</span><span class="htz-label">&le;</span><input type="number" class="form-control num" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="commission htz-td hx2">
+                                <div class="percentage"><input type="number" class="form-control htz-select percent" /></div>
+                            </td>
+                            <td align="middle" class="htz-td">
+                                提成比例 * 到款金额
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>-->
+					<!-- 佣金信息 end -->
+				</div>
+			</div>
+			<!-- 价格弹框 end -->
+			<!-- 价格弹框 start -->
+			<div class="bounced">
+				<div class="ibox-content" id="edit_subgoods">
+					<!-- 基本信息 start -->
+					<div class="form form-horizontal">
+						<em class="title">基本信息</em>
+						<div class="row_list">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">颜色 <em class="red">*</em></label>
+									<div class="col-sm-10">
+										<select class="form-control" data-placeholder="请选择颜色" @change="look" v-model="colorId">
+											<option value="">请选择颜色</option>
+											<option v-for="item in colorList" :value="item.skuSelectId">{{item.name}}</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">型号 <em class="red">*</em></label>
+									<div class="col-sm-10">
+										<select class="form-control" data-placeholder="请选择型号" v-model="modelId">
+											<option value="">请选择型号</option>
+											<option v-for="item in modelList" :value="item.skuSelectId">{{item.model}}</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">条形码 </label>
+									<div class="col-sm-10">
+										<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入条形码" v-model="barCode" />
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">采购价（元）</label>
+									<div class="col-sm-10">
+										<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入采购价" v-model="purchasePrice" />
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">原价（元）<em class="red">*</em> </label>
+									<div class="col-sm-10">
+										<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入原价" v-model="oldPrice" />
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">单价（元）<em class="red">*</em> </label>
+									<div class="col-sm-10">
+										<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入采购价" v-model="price" />
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">上/下架状态<em class="red">*</em></label>
+									<div class="col-sm-10">
+										<select class="form-control" v-model="isOnsell">
+											<option value="">请选择上/下架状态</option>
+											<option value="0">下架</option>>
+											<option value="1">上架</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">是否展示<em class="red">*</em></label>
+									<div class="col-sm-10">
+										<select class="form-control" v-model="isShow">
+											<option value="0" selected="selected">否</option>>
+											<option value="1">是</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- 基本信息 end -->
+					<!-- 标签信息 start -->
+					<div class="form form-horizontal">
+						<em class="title">标签信息</em>
+						<div class="row row_list">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">颜色标签 <em class="red">*</em></label>
+									<div class="col-sm-10">
+										<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="颜色标签通过颜色自动传入" v-model="colorLabel" />
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">类型标签 <em class="red">*</em></label>
+									<div class="col-sm-10">
+										<select class="form-control" data-placeholder="请选择类型标签" v-model="typeLabelId_1">
+											<option value="">请选择类型标签</option>
+											<option v-for="item in labelList" :value="item.typeLabelId">{{item.typeName}}</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<!--<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-1 control-label">风格标签</label>
+									<div class="col-sm-11">
+										<input class="form-control" name="tagsinput" id="tagsinputval2" class="tagsinput" data-role="tagsinput" value="" type="text" placeholder="输入后按回车" />
+									</div>
+								</div>
+							</div>-->
+							<!--<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-1 control-label">其他标签</label>
+									<div class="col-sm-11">
+										<input class="form-control" name="tagsinput" id="tagsinputval3" class="tagsinput" data-role="tagsinput" value="" type="text" placeholder="输入后按回车" />
+									</div>
+								</div>
+							</div>-->
+						</div>
+					</div>
+					<!-- 标签信息 end -->
+					<!-- 图片信息 start -->
+					<div class="form form-horizontal">
+						<em class="title">图片信息</em>
+						<div class="row row_list">
+							<div class="col-sm-6">
+								<div class="goods_pic">
+									<div class="layui-upload" id="btn-uploader5">
+										<div class="layui-upload-list pull-left" style="clear: both;">
+											<img style="width: 60%;" class="layui-upload-img" id="demo5" :src="mainImgPath1">
+											<p id="demoText"></p>
+										</div>
+										<button type="button" class="layui-btn pull-left" id="pickfiles5">上传图片</button>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="goods_pic">
+									<div class="layui-upload" id="btn-uploader6">
+										<div class="layui-upload-list pull-left" style="clear: both;">
+											<img style="width: 60%;" class="layui-upload-img" id="demo6" :src="quakerImgath1">
+											<p id="demoText"></p>
+										</div>
+										<button type="button" class="layui-btn pull-left" id="pickfiles6">上传图片</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- 图片信息 end -->
+					<!-- 佣金信息 start -->
+					<!--<div class="form form-horizontal" id="commisions">
+                <em class="title">佣金信息 <a class="btn btn-success pull-right" title="新增" @click="add();"><i class="icon icon_plus"></i>新增</a></em>
+                <div class="row row_list">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <th width="50%">分档指标</th>
+                        <th width="25%">提成系数(%)</th>
+                        <th>提成金额(元)</th>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="htz-td">
+                                <table class="increase hx1">
+                                    <tr>
+                                        <td align="middle">
+                                            <input type="number" class="form-control num" value="0" /><span class="htz-label">&lt;</span><span class="indicator">X</span><span class="htz-label">&le;</span><input type="number" class="form-control num" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="commission htz-td hx2">
+                                <div class="percentage"><input type="number" class="form-control htz-select percent" /></div>
+                            </td>
+                            <td align="middle" class="htz-td">
+                                提成比例 * 到款金额
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>-->
+					<!-- 佣金信息 end -->
+				</div>
+			</div>
+			<!-- 价格弹框 end -->
+		</div>
+		<!-- 全局js -->
+		<script src="../js/jquery-2.1.1.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/plugins/layer/layer.min.js"></script>
+		<script src="../js/jquery.navScroll.js"></script>
+		<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+		<script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
+		<script src="../js/custom/common.js"></script>
+		<script src="../js/plugins/layui/layui.js"></script>
+		<script src="../js/plugins/utf8-jsp/third-party/zeroclipboard/ZeroClipboard.js"></script>
+		<script src="../js/plugins/utf8-jsp/ueditor.config.js"></script>
+		<script src="../js/plugins/utf8-jsp/uemy.js"></script>
+		<script src="../js/plugins/utf8-jsp/lang/zh-cn/zh-cn.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/module/module_pagination.js"></script>
+		<script src="../js/tagsinput.js"></script>
+		<!-- 自定义js -->
+		<script src="../js/content.min.js?v=1.0.0"></script>
+		<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+		<script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
+		<script src="../js/custom/element-ui/index.js"></script>
+		<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+		<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+		<script src="../js/qiniuyun/qiniuImg1.js"></script>
+		<script src="../js/custom/goods/edit.js"></script>
+	</body>
+
+</html>

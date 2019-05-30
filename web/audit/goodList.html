@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>店铺产品审核</title>
+		<meta name="keywords" content="寒舍">
+		<meta name="description" content="寒舍">
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+		<link rel="stylesheet" href="../js/plugins/layui/css/layui.css">
+		<link rel="stylesheet" href="../css/animate.min.css">
+		<link rel="stylesheet" href="../css/style.css">
+		<link rel="stylesheet" href="../css/layout.css">
+		<link rel="stylesheet" href="../css/swiper.min.css">
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	</head>
+	<style>
+	.swiper-container {
+			width: 60%;
+			height: 80%;
+			position: fixed;
+			left: 0;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			margin: auto;
+			/*这行代码是关键*/
+			z-index: 200;
+		}
+		
+		.swiper-slide {
+			text-align: center;
+			font-size: 18px;
+			background: #fff;
+			/* Center slide text vertically */
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: -webkit-flex;
+			display: flex;
+			-webkit-box-pack: center;
+			-ms-flex-pack: center;
+			-webkit-justify-content: center;
+			justify-content: center;
+			-webkit-box-align: center;
+			-ms-flex-align: center;
+			-webkit-align-items: center;
+			align-items: center;
+			position: relative;
+		}
+		
+		.swiper-slide img {
+			/*cursor: pointer;*/
+		}
+		
+		.label {
+			position: absolute;
+			line-height: 24px;
+			font-size: 12px;
+			height: 24px;
+			border: 1px solid #D2D2D2;
+			padding: 0 5px;
+			cursor: pointer;
+			/*left: 50px;
+			top: 80px;*/
+		}
+		
+		.label:before {
+			content: "";
+			display: block;
+			width: 8px;
+			height: 8px;
+			border-radius: 50%;
+			background: red;
+			position: absolute;
+			left: -4px;
+			top: -4px;
+		}
+	}
+	</style>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content" id="app">
+			<div class="ibox-content">
+				<div class="row">
+					<div class="col-sm-12">
+						<!-- 检索 start -->
+						<div class="form-inline" id="customerForm">
+							<div class="form-group">
+								<input id="nav-search-input" placeholder="请输入店铺名称" value="" class="form-control" type="text" v-model="keywords">
+							</div>
+							<div class="form-group">
+								<em>店铺名称</em>
+								<template>
+									<el-select v-model="shopsId" clearable filterable placeholder="请选择店铺名称"  style='width: 140px;'>
+										<el-option v-for="item in shopsList" :key="item.shopsId" :label="item.shopsName" :value="item.shopsId">
+										</el-option>
+									</el-select>
+								</template>
+							</div>
+							<div class="form-group">
+								<em>审核状态</em>
+								<select name="type" class="form-control" style="width: 120px;" v-model="auditStatus">
+									<option value="">全部</option>
+									<option value="0">待审核</option>
+									<option value="1">审核通过</option>
+									<option value="2">审核失败</option>
+								</select>
+							</div>
+							<!--<div class="form-group">
+								<em>开始日期</em>
+								<input type="text" readonly="readonly" id="start" name='start' class="form-control" placeholder="请选择开始日期" v-model="startDate" />
+							</div>
+							<div class="form-group">
+								<em>结束日期</em>
+								<input type="text" readonly="readonly" id="end" name='end' class="form-control" placeholder="请选择结束日期" v-model="endDate" />
+							</div>-->
+							<button type="submit" class="btn btn-htz btn-primary" @click="search()">
+                        <i class="icon icon_search"></i> 搜索
+                    </button>
+						</div>
+						<!-- 检索 end -->
+					</div>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<table id="simple-table" class="table table-responsive table-bordered table-hover">
+					<thead>
+						<tr>
+							<th width="15%">店铺名称</th>
+							<th width="15%">商品名称</th>
+							<th width="10%">分类</th>
+							<th width="10%">品牌</th>
+							<th width="10%">图片</th>
+							<th width="10%">状态</th>
+							<th width="10%">审核状态</th>
+							<th width="10%">提成比例(%)</th>
+							<th width="10%">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<template v-if="list.total != 0">
+							<tr  v-for="item in list.list">
+								<td>{{item.shopsName}}</td>
+								<td>{{item.name}}</td>
+								<td>{{item.typeName}}</td>
+								<td>{{item.brandName}}</td>
+								<td><img :src="item.image" width="60" alt=""></td>
+								<td>{{item.isOnsell=='0'?'已下架':(item.isOnsell=='1'?'部分上架':'已上架')}}</td>
+								<td :class="{'htz-red':item.auditStatus=='2'}">{{item.auditStatus=='0'?'待审核':(item.auditStatus=='1'?'审核通过':'审核失败')}}</td>
+								<td>{{item.commissionPercent}}</td>
+								<td class="btn-hide">
+									<a class="btn btn-success" title="审核" @click="sh(item);">审核</a>
+								</td>
+							</tr>
+						</template>
+						<tr class="main_info" v-else>
+							<td colspan="9">没有相关数据</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="pull-left form form-inline">
+					<div class="form-group form-group-sm">
+						共 {{list.total}} 条数据,每页显示
+						<select @change="getData(1)" v-model="list.pageSize" class="form-control">
+							<option value="10">10</option>
+							<option value="20">20</option>
+							<option value="30">30</option>
+							<option value="40">40</option>
+							<option value="50">50</option>
+						</select> 条
+					</div>
+				</div>
+				<div class="pagi pull-right"></div>
+			</div>
+
+			<!--审核弹窗-->
+			<div class="bounced">
+				<div class="ibox-content">
+					<div class="form">
+						<div class="row_list" id="shenhe">
+							<div class="form form-horizontal">
+								<div class="row_list">
+									<div class="col-sm-12">
+										<div class="form-group">
+											<label class="col-sm-4 control-label">审核状态<em class="red">*</em></label>
+											<div class="col-sm-8">
+												<template>
+													<el-radio v-model="auditStatus1" label="1">通过</el-radio>
+													<el-radio v-model="auditStatus1" label="2">驳回</el-radio>
+												</template>
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-12" v-if="auditStatus1=='1'">
+										<div class="form-group">
+											<label class="col-sm-4 control-label">提成比例(%)<em class="red">*</em></label>
+											<div class="col-sm-8">
+												<input class="form-control" type="text" placeholder="请输入提成比例" v-model="commissionPercent">
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-12" v-if="auditStatus1=='2'">
+										<div class="form-group">
+											<label class="col-sm-4 control-label">驳回原因<em class="red">*</em></label>
+											<div class="col-sm-8">
+												<textarea class="form-control" placeholder="请输入驳回原因" v-model="reason"></textarea>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<!-- 全局js -->
+		<script src="../js/jquery-2.1.1.min.js"></script>
+		<script src="../js/swiper.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/plugins/layer/layer.min.js"></script>
+		<script src="../js/plugins/layui/layui.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/module/module_pagination.js"></script>
+		<script src="../js/custom/element-ui/index.js"></script>
+		<!-- 自定义js -->
+		<script src="../js/content.min.js?v=1.0.0"></script>
+		<script src="../js/custom/common.js"></script>
+		<script src="../js/custom/audit/goodList.js"></script>
+	</body>
+
+</html>

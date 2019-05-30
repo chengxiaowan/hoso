@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>新增供应商</title>
+		<meta name="keywords" content="寒舍">
+		<meta name="description" content="寒舍">
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+		<link rel="stylesheet" href="../css/animate.min.css">
+		<!--选择框-->
+		<link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+		<link rel="stylesheet" href="../css/style.css">
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<!--自定义样式-->
+		<link rel="stylesheet" href="../css/layout.css">
+	</head>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content animated fadeIn" id="app">
+			<div class="ibox-content">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="tabs-container">
+							<ul class="nav nav-tabs">
+								<li class="active">
+									<a data-toggle="tab" href="#tab-1" aria-expanded="true">基本信息</a>
+								</li>
+								<!--<li class=""><a data-toggle="tab" href="#tab-2" @click="initUploader" aria-expanded="false">相关附件</a></li>-->
+							</ul>
+							<div class="tab-content">
+								<!-- 供应商基本信息 start -->
+								<div id="tab-1" class="tab-pane active">
+									<div class="panel-body">
+										<div class="detail round-4">
+											<div id="contractForm" class="form form-horizontal">
+												<div class="row row_list">
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label class="col-sm-2 control-label">供应商名称 <em class="red">*</em></label>
+															<div class="col-sm-10">
+																<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入供应商名称" v-model="name">
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label class="col-sm-2 control-label">省份</label>
+															<div class="col-sm-10">
+																<template>
+																	<el-select v-model="provinceId" clearable filterable placeholder="请选择省" @change="selectProvince" style="width: 100%;">
+																		<el-option v-for="item in provinceList" :key="item.id" :label="item.text" :value="item.id">
+																		</el-option>
+																	</el-select>
+																</template>
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-6 clear">
+														<div class="form-group">
+															<label class="col-sm-2 control-label">市区</label>
+															<div class="col-sm-10">
+																<template>
+																	<el-select v-model="cityId" clearable filterable placeholder="请选择市" @change="selectCity" style="width: 100%;">
+																		<el-option v-for="item in cityList" :key="item.id" :label="item.text" :value="item.id">
+																		</el-option>
+																	</el-select>
+																</template>
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label class="col-sm-2 control-label">详细地址</label>
+															<div class="col-sm-10">
+																<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入详细地址" v-model="address">
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label class="col-sm-2 control-label">开户行</label>
+															<div class="col-sm-10">
+																<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入开户行" v-model="bankName">
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label class="col-sm-2 control-label">开户账号</label>
+															<div class="col-sm-10">
+																<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入开户账号" v-model="bankNumber">
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label class="col-sm-2 control-label">纳税人识别号</label>
+															<div class="col-sm-10">
+																<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入纳税人识别号" v-model="taxIdentificationNumber">
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label class="col-sm-2 control-label">传真</label>
+															<div class="col-sm-10">
+																<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入传真" v-model="fax">
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label class="col-sm-2 control-label">邮编</label>
+															<div class="col-sm-10">
+																<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入邮编" v-model="postcode">
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-12">
+														<div class="form-group">
+															<label class="col-sm-1 control-label">备注</label>
+															<div class="col-sm-11">
+																<textarea class="form-control" rows="6" placeholder="请输入备注" v-model="remark"></textarea>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!-- 供应商性情 end -->
+										<!-- 联系人 start -->
+										<!-- <div class="linkman">
+                                    <div class="l_title">
+                                        <span>联系人</span>
+                                        <a class="btn btn-default pull-right" title="新增" @click="jumpToLinkman(id);">+ 新增</a>
+                                    </div>
+                                    <table id="simple-table2" class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th width="10%">姓名</th>
+                                            <th width="20%">手机号码</th>
+                                            <th width="10%">职务</th>
+                                            <th width="15%">电话</th>
+                                            <th width="10%">邮箱</th>
+                                            <th width="15%">传真</th>
+                                            <th width="20%">操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr v-if="linkmanList.total > 0" v-for="item in linkmanList.list">
+                                            <td><a @click="viewLinkman(item.id)">{{item.name}}</a></td>
+                                            <td>{{item.phone}}</td>
+                                            <td>{{item.job}}</td>
+                                            <td>{{item.tel}}</td>
+                                            <td>{{item.mail}}</td>
+                                            <td>{{item.fax}}</td>
+                                            <td>
+                                                <a class="btn btn-success" title="编辑" @click="editLinkman(item.id);">编辑</a>
+                                                <a class="btn btn-default" title="删除" @click="delLinkman(item.id);">删除</a>
+                                            </td>
+                                        </tr>
+                                        <tr class="main_info" v-else>
+                                            <td colspan="7">没有相关数据</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="pull-left form form-inline">
+                                        <div class="form-group form-group-sm">
+                                            共 {{linkmanList.total}} 条数据,每页显示
+                                            <select @change="getData(1)" v-model="linkmanList.pageSize" class="form-control">
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="40">40</option>
+                                                <option value="50">50</option>
+                                            </select> 条
+                                        </div>
+                                    </div>
+                                    <div class="pagi pull-right"></div>
+                                </div>-->
+										<!-- 联系人 end -->
+										<div class="ibox-content-btn">
+											<a class="btn btn-htz  btn-primary" title="保存" @click="save();">保存</a>
+											<a class="btn btn-htz  btn-htz-default" title="取消" onclick="cancle();">取消</a>
+										</div>
+									</div>
+								</div>
+								<!-- 供应商基本信息 end -->
+								<!-- 相关附件 start -->
+								<div id="tab-2" class="tab-pane">
+									<div class="panel-body">
+										<div class="well well-sm">
+											<div id="fileUp"></div>
+										</div>
+										<table id="simple-table" class="table table-responsive table-bordered table-hover">
+											<thead>
+												<tr>
+													<th width="10%">姓名</th>
+													<th width="20%">手机号码</th>
+													<th width="10%">职务</th>
+													<th width="15%">电话</th>
+													<th width="10%">邮箱</th>
+													<th width="15%">传真</th>
+													<th width="20%">操作</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr v-for="(el,index) in c.attachs">
+													<td>张三</td>
+													<td>18912318756</td>
+													<td>总经理</td>
+													<td>0519-85107617</td>
+													<td>14691245@qq.com</td>
+													<td>0519-85107617</td>
+													<td>
+														<a class="btn btn-success" title="查看" @click="look">查看</a>
+														<a class="btn btn-default" title="删除" @click="del">删除</a>
+													</td>
+												</tr>
+												<tr class="main_info">
+													<td colspan="7">没有相关数据</td>
+												</tr>
+											</tbody>
+										</table>
+
+									</div>
+								</div>
+								<!-- 相关附件 end -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 全局js -->
+		<script src="../js/jquery-2.1.1.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/plugins/layer/layer.min.js"></script>
+		<script src="../js/plugins/layui/layui.js"></script>
+		<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+		<script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/plugins/utf8-jsp/third-party/zeroclipboard/ZeroClipboard.js"></script>
+		<script src="../js/plugins/utf8-jsp/ueditor.config.js"></script>
+		<script src="../js/plugins/utf8-jsp/uemy.js"></script>
+		<script src="../js/plugins/utf8-jsp/lang/zh-cn/zh-cn.js"></script>
+		<script src="../js/plugins/webuploader/webuploader.min.js"></script>
+		<script src="../js/module/module_pagination.js"></script>
+		<script src="../js/custom/element-ui/index.js"></script>
+		<!-- 自定义js -->
+		<script src="../js/content.min.js?v=1.0.0"></script>
+		<script src="../js/custom/common.js"></script>
+		<script src="../js/custom/provider/add.js"></script>
+	</body>
+
+</html>

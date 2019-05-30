@@ -1,0 +1,156 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+	<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+	<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+	<link href="/static/ui/css/animate.css" rel="stylesheet">
+	<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+	<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+	<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+</head>
+
+<body class="gray-bg">
+	<div class="wrapper wrapper-content hide" id="app">
+			<div class="panel panel-default">
+				<div class="panel-heading clearfix btns-hook">
+						<button class="btn btn-white" @click="readAll"><i class="fa fa-check"></i> 全部设为已读</button>
+					</form>
+				</div>
+				<div class="panel-body">
+					<table class="table table-responsive table-bordered table-hover" id="mainTable">
+						<thead>
+							<tr>
+								<th>信息类别</th>
+								<th>时间</th>
+							</tr>
+						</thead>
+						<tbody id="dataTable">
+							<tr v-for="(el,index) of c.list">
+								<td>
+									<a  href="javascript:;" @click="openMessage(el)">
+										<div v-if="el.flag==0">
+											<i class="fa fa-envelope fa-fw"></i>
+											<b>{{el.content}}</b>
+										</div>
+										<div v-if="el.flag==1">
+											<span>{{el.content}}</span>
+									</a>
+								</td>
+								<td>{{el.createTime}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pagi pull-right"></div>
+			</div>
+		</div>
+	</div>
+
+</body>
+<script src="/static/ui/js/jquery.min.js"></script>
+<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+<script src="/static/ui/js/plugins/layer/laydate/laydate.js"></script>
+<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+<script src="/static/ui/js/plugins/echarts/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/ui/js/vue.js"></script>
+<script src="/static/js/include/module/module_pagination.js"></script>
+
+<script type="text/javascript">
+
+
+	var config = {
+		role: localStorage.userRole || "",
+		type: yo.getQueryString("type") || "",
+		api_showDetail: '/saleCustomer/getNoticInfo.do',//查询
+	}
+
+	window.app = new Vue({
+		el: '#app',
+		data: {
+			role:config.role, 
+			c: []
+		},
+		created: function () {
+			var that = this;
+			document.getElementById("app").classList.remove("hide");
+		},
+		mounted: function () {
+			this.getData()
+		},
+		methods: {
+			/**
+			 * 载入中方法
+			 * 
+			 * @param {string} s 是否关闭
+			 */
+			loading: function (s) {
+				if (s == "close") layer.close(this.loadingSwitch)
+				else this.loadingSwitch = layer.load(3);
+				// else this.loadingSwitch = layer.load(3, { shade: [.6, "#fff"] });
+			},
+			getData: function (page) {
+				$('body,html').scrollTop(0)
+				if (page) this.c.pageNum = page
+				var that = this;
+				that.loading();
+				$.ajax({
+					url: config.api_showDetail,
+					async: false,
+					data: {
+						pageSize : that.c.pageSize || 10,
+						page : that.c.pageNum || 1
+					},
+					success: function (res) {
+						that.loading('close')
+						if (res.error == "00") {
+							that.c = res.result;
+							//分页
+							if (that.pagi) {
+								$('.pagi').pagination('updatePages', that.c.pages)
+								if (page == 1) $('.pagi').pagination('goToPage', that.c.pageNum)
+							} else {
+									that.pagi = $('.pagi').pagination({
+										pages: that.c.pages, //总页数
+										showCtrl: true,
+										displayPage: 6,
+										currentPage: that.c.pageNum,
+										onSelect: function (num) {
+											that.c.pageNum = num
+											that.getData()
+											yo.scrollTo('body')
+										}
+									})
+							}
+						} else {
+							layer.msg(res.msg)
+						}
+					}
+				});
+			},
+			openMessage: function (el) {
+				var that = this
+				el.flag = 1
+				top.openMessage(el.type,el.relateId,el.id)
+			},
+			readAll:function(){
+				var that = this
+				$.post("/saleCustomer/updateFlag").done(function(res){
+					top.newMessageBell_get(1)
+					that.getData()
+				})
+			}
+		}
+	})
+
+</script>
+
+</html>

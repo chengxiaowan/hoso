@@ -1,0 +1,357 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+		<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+		<link href="/static/ui/css/htz.css" rel="stylesheet">
+	</head>
+	<style>
+		.form-group {
+			line-height: 34px;
+		}
+		
+		.form-group label {
+			margin: 0 5px;
+		}
+	</style>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content hide" id="app">
+			<div class="">
+				<div class="panel panel-default">
+					<div class="panel-heading clearfix btns-hook">
+						<form role="form" class="form-inline" id="searchForm" @submit.prevent="getData">
+
+							<div class="form-group">
+								<label for="">省</label>
+								<select class="form-control" v-model="s.provinceName" name='provinceName'>
+									<option value="">全部</option>
+									<option v-for="el in citys['省份']" :value="el.regionName">{{el.regionName}}</option>
+								</select>
+							</div>
+
+							<div class="form-group">
+								<label for="">年份</label>
+								<input type="text" style="width: 100px;" readonly="readonly" class="form-control pull-right" name="startyear" v-model="year" id="startyear" readonly="readonly" />
+							</div>
+							<div class="form-group">
+								<label for="">排名类型</label>
+								<select class="form-control" style="width: 150px;" v-model="type">
+									<option value="0" selected="selected">到款总金额</option>
+									<option value="1">订单总金额</option>
+								</select>
+							</div>
+
+							<button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 查询</button>
+						</form>
+					</div>
+					<div style="height: 20px;    background-color: rgb(228, 233, 239);"></div>
+					<div class="panel-body">
+						<div :style="{width:'100%',height:'400px'}" id="main"></div>
+					</div>
+					<div style="height: 20px;    background-color: rgb(228, 233, 239);"></div>
+					<div class="panel-body">
+
+						<table class="table table-responsive table-bordered table-hover" id="mainTable">
+							<thead>
+								<tr>
+									<th>省份/市区</th>
+									<th>{{title}}</th>
+								</tr>
+							</thead>
+							<tbody id="dataTable">
+								<tr v-for="(el,index) of c">
+									<td v-if="pro">
+										<a href="javascript:;" @click="open(el.provinceName,0,0)">{{el.provinceName}}</a>
+									</td>
+									<td v-else>
+										<a href="javascript:;" @click="open(el.cityName,1,1)">{{el.cityName}}</a>
+									</td>
+
+									<td v-if="el.totalMoney">
+										<a v-if="pro" href="javascript:;" @click="openSalerList(el.provinceName,0,0)">{{el.totalMoney}}</a>
+										<a v-else href="javascript:;" @click="openSalerList(el.cityName,1,0)">{{el.totalMoney}}</a>
+									</td>
+									<td v-if="el.debtAmount">
+										<a v-if="pro" href="javascript:;" @click="openSalerList(el.provinceName,0,1)">{{el.debtAmount}}</a>
+										<a v-else href="javascript:;" @click="openSalerList(el.cityName,1,1)">{{el.debtAmount}}</a>
+									</td>
+
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+	<script src="/static/ui/js/jquery.min.js"></script>
+	<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+	<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+	<script src="/static/ui/js/plugins/laydate/laydate.js"></script>
+	<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+	<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+	<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+	<script src="/static/ui/js/plugins/echarts/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/static/ui/js/vue.js"></script>
+	<script type="text/javascript">
+		var config = {
+			role: localStorage.userRole || "",
+			api_salePhoneReport: '/report/showImportantCustomerResource', //查询
+
+		}
+
+		var option = {
+			title: {
+				text: '',
+				textStyle: {
+					fontSize: 18,
+					color: '#459df5'
+				}
+			},
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data: ['到款金额']
+			},
+			grid: {
+				x: 40, //距离容器上边界40像素
+				x2: 10 //距离容器下边界30像素
+			},
+			xAxis: [{
+				type: 'category',
+				data: [],
+			}],
+			yAxis: [{
+				type: 'value'
+			}],
+			series: [{
+				name: '到款金额',
+				type: 'bar',
+				data: [],
+				barWidth: 18, //柱图宽度
+				itemStyle: {
+					normal: {
+						color: '#4b5967'
+					}
+				},
+			}, ]
+		}
+
+		function salerList(name, type, a) {
+			var year = $("#startyear").val();
+			var url, title;
+			if(type == 0) {
+				url = "/static/page/index/saler_province_list.html?provinceName=" + name + "&year=" + year + "&type=" + a
+				title = '到款总金额列表'
+			} else {
+				url = "/static/page/index/saler_province_list.html?cityName=" + name + "&year=" + year + "&type=" + a
+				title = '订单总金额'
+			}
+			layer.open({
+				type: 2,
+				title: title,
+				area: ["100%", "100%"],
+				content: url
+			})
+
+		}
+
+		window.app = new Vue({
+			el: '#app',
+			data: {
+				c: [],
+				year: new Date().getFullYear().toString(),
+				type: 0,
+				title: '到款总金额',
+				s: {
+					provinceName: "",
+				},
+				select2: {
+					privince: {},
+				},
+				pro: true
+			},
+
+			computed: {
+				provinceName: function() {
+					var list = []
+					for(var i = 0; i < this.c.length; i++) {
+						var el = this.c[i];
+						list.push(el.provinceName)
+					}
+					return list;
+				},
+				cityName: function() {
+					var list = []
+					for(var i = 0; i < this.c.length; i++) {
+						var el = this.c[i];
+						list.push(el.cityName)
+					}
+					return list;
+				},
+				totalMoney: function() {
+					var list = []
+					for(var i = 0; i < this.c.length; i++) {
+						var el = this.c[i];
+						list.push(el.totalMoney)
+					}
+					return list;
+				},
+				debtAmount: function() {
+					var list = []
+					for(var i = 0; i < this.c.length; i++) {
+						var el = this.c[i];
+						list.push(el.debtAmount)
+					}
+					return list;
+				},
+			},
+			created: function() {
+				var that = this;
+				document.getElementById("app").classList.remove("hide");
+
+				//初始化城市数据
+				if(localStorage.citys) {
+					this.citys = JSON.parse(localStorage.citys)
+				}
+			},
+			mounted: function() {
+				let that = this;
+				this.getData(1);
+				var startyear = laydate.render({
+					elem: '#startyear',
+					type: 'year',
+					done: function(value, date) {
+						that.year = value;
+					}
+				});
+
+				this.select2.province = $('select[name=provinceName]').select2({
+					language: "zh-CN",
+					placeholder: '请选择',
+					allowClear: 1,
+				}).on('change', function() {
+					that.s.provinceName = this.value;
+				})
+
+			},
+			methods: {
+				/**
+				 * 载入中方法
+				 * 
+				 * @param {string} s 是否关闭
+				 */
+				loading: function(s) {
+					if(s == "close") layer.close(this.loadingSwitch)
+					else this.loadingSwitch = layer.load(3);
+					// else this.loadingSwitch = layer.load(3, { shade: [.6, "#fff"] });
+				},
+				getData: function(init) {
+					$('body,html').scrollTop(0)
+					var that = this;
+					if(that.s.provinceName != '') {
+						that.pro = false
+					}
+
+					that.loading();
+					$.ajax({
+						url: config.api_salePhoneReport,
+						async: false,
+						data: {
+							year: that.year,
+							type: that.type,
+							provinceName: that.s.provinceName
+						},
+						success: function(res) {
+							that.loading('close')
+							if(res.error == "00") {
+								that.c = res.result;
+								that.chart_init()
+							} else {
+								layer.msg(res.msg)
+							}
+						}
+					});
+				},
+				chart_init: function() {
+					let that = this;
+					this.myChart = echarts.init(document.getElementById('main'));
+					option.xAxis[0].data = this.provinceName;
+					if(that.s.provinceName != '') {
+						option.xAxis[0].data = this.cityName;
+					}
+					var legend = {};
+					if(this.type == 0) {
+						option.series[0].data = this.totalMoney;
+						option.series[0].name = '到款总金额';
+						option.title.text = '到款总金额';
+						that.title = '到款总金额';
+						legend = {
+							data: ['到款总金额']
+						};
+					} else if(this.type == 1) {
+						option.series[0].data = this.debtAmount;
+						option.series[0].name = '订单总金额';
+						option.title.text = '订单总金额';
+						that.title = '订单总金额';
+						legend = {
+							data: ['订单总金额']
+						};
+					}
+					option.legend = legend;
+					console.log(option.legend)
+					this.myChart.setOption(option)
+
+					this.myChart.off("click");
+					this.myChart.on("click",
+						function(params) {
+							if(that.s.provinceName == '') {
+								salerList(app.c[params.dataIndex].provinceName,0, that.type)
+							}else{
+								salerList(app.c[params.dataIndex].cityName,1, that.type)
+							}
+							
+						})
+				},
+				openSalerList: function(name, type, a) {
+					salerList(name, type, a);
+				},
+				open(name, type) {
+					let that = this;
+					var year = this.year;
+					var url;
+					if(type == 0) {
+						url = "/static/page/index/saler_province_list.html?provinceName=" + name + "&year=" + year + "&type=" + that.type
+						title = '到款总金额列表'
+					} else {
+						url = "/static/page/index/saler_province_list.html?cityName=" + name + "&year=" + year + "&type=" + that.type
+						title = '订单总金额列表'
+					}
+
+					layer.open({
+						type: 2,
+						title: title,
+						area: ["100%", "100%"],
+						content: url
+					})
+
+				}
+			}
+		})
+	</script>
+
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+	<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+	<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+	<link href="/static/ui/css/animate.css" rel="stylesheet">
+	<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+	<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+	<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+</head>
+
+<body class="gray-bg">
+	<div class="wrapper wrapper-content hide" id="app">
+		<div class="container-fluid" style="padding:15px;">
+			<div class="panel panel-default">
+				<div class="panel-heading clearfix btns-hook">
+					<form role="form" class="form-inline" id="searchForm" @submit.prevent="getData">
+						<div class="form-group">
+							<select style="width: 200px;" name="" id="saleId">
+								<option value="">请选择</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="">排序</label>
+							<select class="form-control" style="width: 200px;" name="sort" id="sort" v-model="sort">
+								<option value="1">合同金额</option>
+								<option value="0">合同数量</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="">开始日期</label>
+							<input class="span10 date-picker form-control" id="startTime" name="startTime" type="text" data-date-format="yyyy-mm-dd"
+							 readonly="readonly" placeholder="开始日期" style="width: 150px;" />
+						</div>
+						<div class="form-group">
+							<label for="">结束日期</label>
+							<input class="span10 date-picker form-control" id="endTime" name="endTime" type="text" data-date-format="yyyy-mm-dd" readonly="readonly"
+							 placeholder="结束日期" style="width: 150px;" />
+						</div>
+						<button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 查询</button>
+					</form>
+				</div>
+				<div class="panel-body">
+					<div :style="{width:'100%',height:'400px'}" id="main"></div>
+					<div class="alert alert-warning"><span class="alert-link"> 合计合同金额: </span> <span class="alert-link" style="font-size: 18px;"> {{htzje}} 元 </span>
+						<span
+						 class="alert-link">，合同数量: </span> <span class="alert-link" style="font-size: 18px;"> {{htzsl}}  </span></div>
+					<table class="table table-responsive table-bordered table-hover" id="mainTable">
+						<thead>
+							<tr>
+								<th>排名</th>
+								<th>姓名</th>
+								<th title="排序" style="cursor:pointer" class="yoSort" :class="{'text-info' : sort=='1' }" @click="sort='1'">合同金额
+									<i class="pull-right fa fa-sort-amount-desc" title="倒序"></i>
+								</th>
+								<th title="排序" style="cursor:pointer" class="yoSort" :class="{'text-info' : sort=='0' }" @click="sort='0'">合同数量
+									<i class="pull-right fa fa-sort-amount-desc" title="倒序"></i>
+								</th>
+							</tr>
+						</thead>
+						<tbody id="dataTable">
+							<tr v-for="(el,index) of c">
+								<td>{{index+1}}</td>
+								<td>{{el.name}}</td>
+								<td><a href="javascript:;" @click="openSalerList(el.saleId,el.name,2)">{{el.price || 0}}</a></td>
+								<td><a href="javascript:;" @click="openSalerList(el.saleId,el.name,1)">{{el.sl || 0}}</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+<script src="/static/ui/js/jquery.min.js"></script>
+<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+<script src="/static/ui/js/plugins/layer/laydate/laydate.js"></script>
+<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+<script src="/static/ui/js/plugins/echarts/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/ui/js/vue.js"></script>
+<script type="text/javascript">
+	var config = {
+		role: localStorage.userRole || "",
+		api_xspmReport: '/report/xspmReport.do',//查询
+
+	}
+
+	var firstDay = date("Y-m-d", getCurrentMonthFirst().getTime())
+	var lastDay = date("Y-m-d", getCurrentMonthLast().getTime())
+	var colors = ['#c23431', '#2f4554', '#675bba'];
+	var option = {
+		title: {
+			text: '销售额排名报表',
+		},
+		tooltip: {
+			trigger: 'axis'
+		},
+		legend: {
+			data: ['合同金额', '合同数量']
+		},
+		xAxis: [
+			{
+				type: 'category',
+				data: []
+			}
+		],
+		yAxis: [
+			{
+				type: 'value',
+				name: '合同金额',
+				position: 'left',
+				axisLine: {
+					lineStyle: {
+						color: colors[0]
+					}
+				},
+			},
+			{
+				type: 'value',
+				name: '合同数量',
+				position: 'right',
+				min: 0,
+				max: 100,
+				axisLine: {
+					lineStyle: {
+						color: colors[1]
+					}
+				},
+			},
+		],
+		series: [
+			{
+				name: '合同金额',
+				type: 'bar',
+				data: [],
+			},
+			{
+				name: '合同数量',
+				type: 'bar',
+				yAxisIndex: 1,
+				data: [],
+			}
+		]
+	}
+
+	function salerList(id, name, startTime, endTime, flag) {
+		layer.open({
+			type: 2,
+			title: "合同记录详情",
+			area: ["100%", "100%"],
+			content: "saler_sales_detail.html?saleId=" + id + "&saleName=" + name + "&startTime=" + startTime + "&endTime=" + endTime + "&flag=" + flag
+		})
+	}
+
+	window.app = new Vue({
+		el: '#app',
+		data: {
+			c: [],
+			sort: "1",
+			htzsl:0,
+			htzje:0
+		},
+		computed: {
+			name: function () {
+				var list = []
+				for (var i = 0; i < this.c.length; i++) {
+					var el = this.c[i];
+					list.push(el.name)
+				}
+				return list;
+			},
+			sl: function () {
+				var list = []
+				for (var i = 0; i < this.c.length; i++) {
+					var el = this.c[i];
+					list.push(el.sl || 0)
+				}
+				return list;
+			},
+			price: function () {
+				var list = []
+				for (var i = 0; i < this.c.length; i++) {
+					var el = this.c[i];
+					list.push(el.price || 0)
+				}
+				return list;
+			},
+		},
+		watch: {
+			sort: function () {
+				this.getData()
+			}
+		},
+		created: function () {
+			var that = this;
+			document.getElementById("app").classList.remove("hide");
+		},
+		mounted: function () {
+			this.getData(1)
+			$("#startTime").val(firstDay)
+			$("#endTime").val(lastDay)
+			$('.date-picker').datepicker({
+				autoclose: true,
+				todayHighlight: true
+			});
+			if ($("#startTime").val()) {
+				$("#endTime").datepicker('setStartDate',
+					new Date($("#startTime").val()))
+			}
+
+			if ($("#endTime").val()) {
+				$("#startTime").datepicker('setEndDate',
+					new Date($("#endTime").val()))
+			}
+
+			//开始日期
+			$("#startTime").datepicker({}).on(
+				'changeDate',
+				function (ev) {
+					if (ev.date) {
+						$("#endTime").datepicker('setStartDate',
+							new Date(ev.date.valueOf()))
+					} else {
+						$("#endTime").datepicker('setStartDate', null);
+					}
+				});
+			//结束日期
+			$("#endTime").datepicker({}).on(
+				'changeDate',
+				function (ev) {
+					if (ev.date) {
+						$("#startTime").datepicker('setEndDate',
+							new Date(ev.date.valueOf()))
+					} else {
+						$("#startTime").datepicker('setEndDate',
+							new Date());
+					}
+				});
+
+			$('#saleId').select2({
+				placeholder: "请选择销售",
+				language: 'zh-CN',
+				allowClear: 1,
+				ajax: {
+					url: "/user/getUserInfo",
+					dataType: 'json',
+					type: "post",
+					delay: 250,
+					data: function (params) {
+						return {
+							page: params.page || 1,
+							ROLE_ID: "b729e9334ad64c15a4e47d88b8c2638f,30b1487221464d369ca4c2462ccca920",
+							data: {
+								q: params.term || "", // search term
+							}
+						};
+					},
+					processResults: function (data, params) {
+						params.page = params.page || 1;
+						$.each(data, function () {
+							this.id = this.USER_ID;
+							this.text = this.NAME;
+						})
+						return {
+							results: data,
+							pagination: {
+								more: data.length == 10
+							}
+						};
+					},
+					cache: true
+				},
+				minimumInputLength: 0
+			})
+		},
+		methods: {
+			/**
+			 * 载入中方法
+			 * 
+			 * @param {string} s 是否关闭
+			 */
+			loading: function (s) {
+				if (s == "close") layer.close(this.loadingSwitch)
+				else this.loadingSwitch = layer.load(3);
+				// else this.loadingSwitch = layer.load(3, { shade: [.6, "#fff"] });
+			},
+			getData: function (init) {
+				$('body,html').scrollTop(0)
+				var that = this;
+				that.loading();
+				$.ajax({
+					url: config.api_xspmReport,
+					async: false,
+					data: {
+						startTime: init == 1 ? firstDay : $('[name=startTime]').val(),
+						endTime: init == 1 ? lastDay : $('[name=endTime]').val(),
+						flag: that.sort,
+						saleId: $("#saleId").val()
+					},
+					success: function (res) {
+						that.loading('close')
+						if (res.error == "00") {
+							that.c = res.result;
+							that.htzsl = res.htzsl;
+							that.htzje = res.htzje;
+							that.chart_init()
+						} else {
+							layer.msg(res.msg)
+						}
+					}
+				});
+			},
+			chart_init: function () {
+				this.myChart = echarts.init(document.getElementById('main'));
+				option.xAxis[0].data = this.name;
+				var price = this.price;
+				var amount = this.sl;
+
+				amount_MAX = Number(Math.max.apply(null, amount))
+				amount_MAX = (amount_MAX + amount_MAX * 0.1)
+				option.yAxis[1].max = Math.ceil(amount_MAX)
+				option.series[0].data = price
+				option.series[1].data = amount
+
+				this.myChart.setOption(option)
+				this.myChart.off("click");
+				this.myChart.on("click", function (params) {
+					var flag = params.seriesName=='合同数量' ? 1 : 2
+					salerList(app.c[params.dataIndex].saleId, app.c[params.dataIndex].name, $('#startTime').val(), $('#endTime').val(),flag)
+				})
+			},
+			openSalerList: function (id, name,flag) {
+				salerList(id, name, $('#startTime').val(), $('#endTime').val(),flag);
+			}
+		}
+	})
+
+</script>
+
+</html>

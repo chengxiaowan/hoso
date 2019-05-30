@@ -1,0 +1,204 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+		<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+		<link href="/static/ui/css/htz.css" rel="stylesheet">
+	</head>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content hide" id="app">
+			<div class="panel panel-default">
+				<div class="panel-heading clearfix btns-hook">
+					<form role="form" class="form-inline" id="searchForm" @submit.prevent="getData(1)">
+						<div class="form-group">
+							<input type="text" style="width: 120px;margin-right: 10px;" readonly="readonly" class="form-control pull-right" name="startyear" v-model="year" id="startyear" readonly="readonly" />
+						</div>
+
+						<button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 查询</button>
+					</form>
+				</div>
+				<div class="panel-body">
+					<table class="table table-responsive table-bordered table-hover" id="mainTable">
+						<thead>
+							<tr>
+								<th>客户名称</th>
+							<th>债务人(公司)</th>
+							<th>欠款总金额(元)</th>
+							<th>已回款金额(元)</th>
+							<th>剩余金额(元)</th>
+							<th>案件状态</th>
+							<th>合同签约日期</th>
+							<th>合同到期日期</th>
+							<th>订单委托日期</th>
+							<th>订单销售</th>
+							<th>运作</th>
+							</tr>
+						</thead>
+						<tbody id="dataTable">
+							<tr v-for="(el,index) of c">
+								<td>{{el.custoemrName}}</td>
+								<td>{{el.debtorName}}</td>
+								<td class="center">{{el.debtAmount}}</td>
+								<td class="center">
+									{{el.totalMoney || 0}}
+								</td>
+								<td class="center">{{el.syMoney||0}}</td>
+								<td class="center">
+									<span v-if=" el.status==0  ">运作中</span><span v-if=" el.status==1  ">已结案</span><span v-if=" el.status==2  ">已关闭</span><span v-if=" el.status==3  ">诉讼中</span><span v-if=" el.status==4  ">仲裁中</span>
+								</td>
+								<td>{{el.signingTime}}</td>
+								<td>{{el.endTime}}</td>
+								<td>{{el.createTime}}</td>
+								<td>{{el.saleName}}</td>
+								<td>{{el.runnerName}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<!--<div class="pull-left form form-inline">
+						<div class="form-group form-group-sm">
+							共 {{c.total}} 条数据,每页显示
+							<select @change="getData(1)" v-model="c.pageSize" class="form-control">
+								<option value="10">10</option>
+								<option value="20">20</option>
+								<option value="30">30</option>
+								<option value="40">40</option>
+								<option value="50">50</option>
+							</select> 条
+						</div>
+					</div>
+					<div class="pagi pull-right"></div>-->
+				</div>
+			</div>
+		</div>
+
+	</body>
+	<script src="/static/ui/js/jquery.min.js"></script>
+	<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+	<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+	<script src="/static/ui/js/plugins/laydate/laydate.js"></script>
+	<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+	<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+	<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+	<script src="/static/ui/js/plugins/echarts/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/static/ui/js/vue.js"></script>
+	<script src="/static/js/include/module/module_pagination.js"></script>
+
+	<script type="text/javascript">
+		var config = {
+			role: localStorage.userRole || "",
+			year: yo.getQueryString("year"),
+			name: yo.getQueryString("name"),
+			type: yo.getQueryString("type"),
+			provinceName: yo.getQueryString("provinceName"),
+			cityName: yo.getQueryString("cityName"),
+			api_showDetail: '/report/showImportantCustomerResourceDetail', //查询
+		}
+
+		window.app = new Vue({
+			el: '#app',
+			data: {
+				role: config.role,
+				c: [],
+				year: config.year
+			},
+			created: function() {
+				var that = this;
+				document.getElementById("app").classList.remove("hide");
+			},
+			mounted: function() {
+				let that =this
+				this.getData();
+				var startyear = laydate.render({
+					elem: '#startyear',
+					type: 'year',
+					done: function(value, date) {
+						that.year = value;
+					}
+				});
+
+			},
+			methods: {
+				/**
+				 * 载入中方法
+				 * 
+				 * @param {string} s 是否关闭
+				 */
+				loading: function(s) {
+					if(s == "close") layer.close(this.loadingSwitch)
+					else this.loadingSwitch = layer.load(3);
+				},
+				getData: function(page) {
+					$('body,html').scrollTop(0)
+					if(page) this.c.pageNum = page
+					var that = this;
+					that.loading();
+					var data
+					if(config.cityName) {
+						data = {
+							year: that.year,
+							pageSize: that.c.pageSize || 10,
+							pageNo: that.c.pageNum || 1,
+							name: config.saleName,
+							cityName: decodeURI(config.cityName),
+							provinceName: decodeURI(config.provinceName),
+							type:config.type
+						}
+					}else{
+						data = {
+							year: that.year,
+							pageSize: that.c.pageSize || 10,
+							pageNo: that.c.pageNum || 1,
+							name: config.saleName,
+							provinceName: decodeURI(config.provinceName),
+							type:config.type
+						}
+					}
+
+					$.ajax({
+						url: config.api_showDetail,
+						async: false,
+						data: data,
+						success: function(res) {
+							that.loading('close')
+							if(res.error == "00") {
+								that.c = res.result;
+								//分页
+								if(that.pagi) {
+									$('.pagi').pagination('updatePages', that.c.pages)
+									if(page == 1) $('.pagi').pagination('goToPage', that.c.pageNum)
+								} else {
+									that.pagi = $('.pagi').pagination({
+										pages: that.c.pages, //总页数
+										showCtrl: true,
+										displayPage: 6,
+										currentPage: that.c.pageNum,
+										onSelect: function(num) {
+											that.c.pageNum = num
+											that.getData()
+											yo.scrollTo('body')
+										}
+									})
+								}
+							} else {
+								layer.msg(res.msg)
+							}
+						}
+					});
+				}
+			}
+		})
+	</script>
+
+</html>

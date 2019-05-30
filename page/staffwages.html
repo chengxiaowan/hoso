@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+		<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+		<link href="/static/ui/css/htz.css" rel="stylesheet">
+		<style type="text/css">
+			body {
+				overflow: hidden;
+			}
+		</style>
+	</head>
+
+	<body class="gray-bg">
+		<div class="appWrapper">
+			<div class="wrapper wrapper-content hide" id="app">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="tabs-container">
+							<ul class="nav nav-tabs">
+								<li class="active">
+									<a data-toggle="tab" href="#tab-1" aria-expanded="true" @click="tab(1)"> 电销团队</a>
+								</li>
+								<li>
+									<a data-toggle="tab" href="#tab-2" aria-expanded="true" @click="tab(2)"> 商务顾问</a>
+								</li>
+								<li>
+									<a data-toggle="tab" href="#tab-6" aria-expanded="true" @click="tab(6)"> 电销商务顾问</a>
+								</li>
+								<li>
+									<a data-toggle="tab" href="#tab-3" aria-expanded="true" @click="tab(3)"> 特殊员工</a>
+								</li>
+								<li>
+									<a data-toggle="tab" href="#tab-4" aria-expanded="true" @click="tab(4)"> 行政人员</a>
+								</li>
+								<li>
+									<a data-toggle="tab" href="#tab-5" aria-expanded="true" @click="tab(5)"> 到款提成</a>
+								</li>
+							</ul>
+							<div class="tab-content">
+								<div id="tab-1" class="tab-pane active">
+									<div class="panel-body">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<div class="form-group" style="display: inline-block;">
+													<label style="margin:0 20px;">员工</label>
+													<select style="width:120px" id="searchName1" name="saleName">
+														<option value="">全部</option>
+													</select>
+													<label style="margin:0 20px;">月份</label>
+													<input style="width: 200px;display: inline-block;margin-right: 20px;" type="text" class="layui-input form-control test8 t1" placeholder=" - " lay-key="9">
+													<button class="btn btn-primary" type="submit" @click="search1"><i class="fa fa-search"></i> 查询</button>
+												</div>
+
+											</div>
+											<div class="panel-body htz-panel-body" style="border:none">
+												<table class="table table-bordered table-hover">
+													<thead>
+														<tr>
+															<th width="20%">姓名</th>
+															<th width="20%">岗位</th>
+															<th width="12%">底薪(元)</th>
+															<th width="12%">电话量提成(元)</th>
+															<th width="12%">意向客户数提成(元)</th>
+															<th width="12%">团队管理提成(元)</th>
+															<th width="12%">总薪资(元)</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr v-for="(el,index) of s.list">
+															<td>{{el.userName}}</td>
+															<td>{{el.roleName}}</td>
+															<td>{{el.je1}}</td>
+															<td>{{el.je2}}</td>
+															<td>{{el.je3}}</td>
+															<td>{{el.je4}}</td>
+															<td>{{el.zje}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div id="tab-2" class="tab-pane">
+									<div class="panel-body">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<div class="form-group" style="display: inline-block;">
+													<label style="margin:0 20px;">员工</label>
+													<select style="width:120px" id="searchName2" name="saleName">
+														<option value="">全部</option>
+													</select>
+													<label style="margin:0 20px;">月份</label>
+													<input style="width: 200px;display: inline-block;margin-right: 20px;" type="text" class="layui-input form-control test8 t2"  placeholder=" - " lay-key="10">
+													<button class="btn btn-primary" type="submit" @click="search2"><i class="fa fa-search"></i> 查询</button>
+												</div>
+
+											</div>
+											<div class="panel-body htz-panel-body" style="border:none">
+												<table class="table table-bordered table-hover">
+													<thead>
+														<tr>
+															<th width="20%">姓名</th>
+															<th width="20%">岗位</th>
+															<th width="12%">底薪(元)</th>
+															<th width="12%">浮动工资(元)</th>
+															<th width="12%">拜访奖金(元)</th>
+															<th width="12%">签单奖金(元)</th>
+															<th width="12%">总薪资(元)</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr v-for="(el,index) of s.list">
+															<td>{{el.userName}}</td>
+															<td>{{el.roleName}}</td>
+															<td>{{el.je1}}</td>
+															<td>{{el.je2}}</td>
+															<td>{{el.je3}}</td>
+															<td>{{el.je4}}</td>
+															<td>{{el.zje}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div id="tab-3" class="tab-pane">
+									<div class="panel-body">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<div class="form-group" style="display: inline-block;">
+													<label style="margin:0 20px;">员工</label>
+													<select style="width:120px" id="searchName3" name="saleName">
+														<option value="">全部</option>
+													</select>
+													<label style="margin:0 20px;">月份</label>
+													<input style="width: 200px;display: inline-block;margin-right: 20px;" type="text" class="layui-input form-control test8 t3"  placeholder=" - " lay-key="11">
+													<button class="btn btn-primary" type="submit" @click="search3"><i class="fa fa-search"></i> 查询</button>
+												</div>
+
+											</div>
+											<div class="panel-body htz-panel-body" style="border:none">
+												<table class="table table-bordered table-hover">
+													<thead>
+														<tr>
+															<th width="20%">姓名</th>
+															<th width="20%">岗位</th>
+															<th width="20%">到款金额(元)</th>
+															<th width="20%">提成比例(%)</th>
+															<th width="20%">总薪资(元)</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr v-for="(el,index) of s.list">
+															<td>{{el.userName}}</td>
+															<td>{{el.roleName}}</td>
+															<td>{{el.je1}}</td>
+															<td>{{el.tcbl}}</td>
+															<td>{{el.zje}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div id="tab-4" class="tab-pane">
+									<div class="panel-body">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<div class="form-group" style="display: inline-block;">
+													<label style="margin:0 20px;">员工</label>
+													<select style="width:120px" id="searchName4" name="saleName">
+														<option value="">全部</option>
+													</select>
+													<label style="margin:0 20px;">月份</label>
+													<input style="width: 200px;display: inline-block;margin-right: 20px;" type="text" class="layui-input form-control test8 t4"  placeholder=" - " lay-key="12">
+													<button class="btn btn-primary" type="submit" @click="search4"><i class="fa fa-search"></i> 查询</button>
+												</div>
+
+											</div>
+											<div class="panel-body htz-panel-body" style="border:none">
+												<table class="table table-bordered table-hover">
+													<thead>
+														<tr>
+															<th width="33%">姓名</th>
+															<th width="33%">岗位</th>
+															<th>底薪(元)</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr v-for="(el,index) of s.list">
+															<td>{{el.userName}}</td>
+															<td>{{el.roleName}}</td>
+															<td>{{el.je1}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div id="tab-5" class="tab-pane">
+									<div class="panel-body">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<div class="form-group" style="display: inline-block;">
+													<label style="margin:0 20px;">员工</label>
+													<select style="width:120px" id="searchName5" name="saleName">
+														<option value="">全部</option>
+													</select>
+													<label style="margin:0 20px;">月份</label>
+													<input style="width: 200px;display: inline-block;margin-right: 20px;" type="text" class="layui-input form-control test8 t5"  placeholder=" - " lay-key="13">
+													<button class="btn btn-primary" type="submit" @click="search5"><i class="fa fa-search"></i> 查询</button>
+												</div>
+
+											</div>
+											<div class="panel-body htz-panel-body" style="border:none">
+												<table class="table table-bordered table-hover">
+													<thead>
+														<tr>
+															<th width="20%">姓名</th>
+															<th width="20%">岗位</th>
+															<th width="12%">到款指标(元)</th>
+															<th width="12%">实际到款(元)</th>
+															<th width="12%">提成比例(%)</th>
+															<th width="12%">提成金额(元)</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr v-for="(el,index) of s.list">
+															<td>{{el.userName}}</td>
+															<td>{{el.roleName}}</td>
+															<td>{{el.je1}}</td>
+															<td>{{el.je2}}</td>
+															<td>{{el.tcbl}}</td>
+															<td>{{el.zje}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div id="tab-6" class="tab-pane">
+									<div class="panel-body">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<div class="form-group" style="display: inline-block;">
+													<label style="margin:0 20px;">员工</label>
+													<select style="width:120px" id="searchName6" name="saleName">
+														<option value="">全部</option>
+													</select>
+													<label style="margin:0 20px;">月份</label>
+													<input style="width: 200px;display: inline-block;margin-right: 20px;" type="text" class="layui-input form-control test8 t6"  placeholder=" - " lay-key="13">
+													<button class="btn btn-primary" type="submit" @click="search6"><i class="fa fa-search"></i> 查询</button>
+												</div>
+
+											</div>
+											<div class="panel-body htz-panel-body" style="border:none">
+												<table class="table table-bordered table-hover">
+													<thead>
+														<tr>
+															<th width="20%">姓名</th>
+															<th width="20%">岗位</th>
+															<th width="12%">到款指标(元)</th>
+															<th width="12%">实际到款(元)</th>
+															<th width="12%">提成比例(%)</th>
+															<th width="12%">提成金额(元)</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr v-for="(el,index) of s.list">
+															<td>{{el.userName}}</td>
+															<td>{{el.roleName}}</td>
+															<td>{{el.je1}}</td>
+															<td>{{el.je2}}</td>
+															<td>{{el.tcbl}}</td>
+															<td>{{el.zje}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<script src="/static/ui/js/jquery.min.js"></script>
+		<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+		<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+		<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+		<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+		<script src="/static/ui/js/plugins/laydate/laydate.js"></script>
+		<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+		<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+		<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+		<script src="/static/ui/js/vue.js"></script>
+		<script src="/static/ui/js/require.min.js" data-main="/static/js/include/dev/staffwages"></script>
+	</body>
+
+</html>

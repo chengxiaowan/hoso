@@ -1,0 +1,194 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+		<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+	</head>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content hide" style="padding-top:0;" id="app">
+			<div class="container-fluid">
+				<div class="panel panel-default m-t-md">
+					<div class="panel-body">
+						<!--记录;栏..-->
+							<div class="row">
+								<div class="col-sm-12">
+									<div id="tab-case-1" class="tab-pane active">
+										<div class="panel-body">
+											<!--案件跟进-->
+											<div id="vertical-timeline" class="vertical-container dark-timeline">
+												<div class="vertical-timeline-block">
+													<div class="vertical-timeline-icon blue-bg"><i class="fa fa-file-text"></i></div>
+													<div class="vertical-timeline-content">
+														<div>销售 : <span>{{c.saleName}}</span>
+															<div class="pull-right text-info">
+																{{c.gjTime}}
+															</div>
+														</div>
+														<p>跟进方式 :
+															<span class="text-success" v-if="c.type==0">电话</span>
+															<span class="text-success" v-if="c.type==1">QQ</span>
+															<span class="text-success" v-if="c.type==2">微信</span>
+															<span class="text-success" v-if="c.type==3">拜访</span>
+															<span class="text-success" v-if="c.type==4">邮件</span>
+															<span class="text-success" v-if="c.type==5">短信</span>
+															<span class="text-success" v-if="c.type==6">其他</span>
+														</p>
+														<p>跟进状态 :
+															<span class="label label-primary" v-if="c.status==0">未处理</span>
+															<span class="label label-primary" v-if="c.status==1">初步沟通</span>
+															<span class="label label-primary" v-if="c.status==2">无意向</span>
+															<span class="label label-primary" v-if="c.status==3">有意向</span>
+															<span class="label label-primary" v-if="c.status==4">销售外访</span>
+															<span class="label label-primary" v-if="c.status==5">客户来访</span>
+															<span class="label label-primary" v-if="c.status==6">需求确定</span>
+															<span class="label label-primary" v-if="c.status==7">方案/报价</span>
+															<span class="label label-primary" v-if="c.status==8">谈判/合同</span>
+															<span class="label label-primary" v-if="c.status==9">成交</span>
+															<span class="label label-primary" v-if="c.status==10">暂时搁置</span>
+															<span class="label label-primary" v-if="c.status==11">未成交</span>
+														</p>
+														<p v-if="c.type==0&&c.recordUrl">录音 :
+															<br>
+															<audio controls="controls" :src="c.recordUrl">
+																你的浏览器不支持audio标签
+															</audio>
+														</p>
+														<p>客户名称 : {{c.saleCustomerName}}</p>
+														<p>跟进记录 : {{c.content}}</p>
+														<div v-if="c.attachs&&c.attachs.length"><strong>相关附件 : </strong> </div>
+														<div v-for="els in c.attachs">
+															<a :href="els.url" target="_blank">{{els.originalFilename}}</a>
+														</div>
+														<p>下次跟进时间 :
+															<span class="text-info">{{c.xcgjTime}}</span>
+													
+													</p>
+													<p v-if="c.evaluate&&c.evaluate.length">点评 :</p>
+													<div class="media-body" v-if="c.evaluate&&c.evaluate.length" v-for="els in c.evaluate">
+														<hr />
+															<div>
+																<span class="text-success" style="font-size: 14px;">{{els.name}}</span> <small class="text-muted">{{els.createTime}}</small>
+															</div>
+															<div>
+																{{els.Content}}
+															</div>
+														</div>
+														<hr v-if="c.evaluate&&c.evaluate.length" />
+														</div>
+														<form @submit.prevent="submitCommit">
+													<div class="input-group">
+														
+															<input type="text" v-model="commit" placeholder="点评" class="input form-control">
+															<span class="input-group-btn">
+                                        <button type="submit" class="btn btn btn-primary"> <i class="fa fa-pencil"></i> 点评</button>
+                                      
+                                </span>
+														</div>
+														  </form>
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+	<script src="/static/ui/js/jquery.min.js"></script>
+	<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+	<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+	<script src="/static/ui/js/plugins/layer/laydate/laydate.js"></script>
+	<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+	<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+	<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+	<script src="/static/ui/js/plugins/echarts/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/static/ui/js/vue.js"></script>
+	<script src="/static/js/include/module/module_pagination.js"></script>
+
+	<script type="text/javascript">
+		var config = {
+			role: localStorage.userRole || "",
+			id: yo.getQueryString("id") || 0,    
+			api_showDetail: '/saleCustomer/showProcessDetail.do', //查询
+			api_saveEvaluate: '/saleCustomer/saveEvaluate.do' //保存点评
+		}
+
+		window.app = new Vue({
+			el: '#app',
+			data: {
+				role: config.role,
+				processId:0,
+				commit:"",
+				c: {}
+			},
+			created: function() {
+				var that = this;
+				document.getElementById("app").classList.remove("hide");
+			},
+			mounted: function() {
+				this.getData()
+			},
+			methods: {
+				/**
+				 * 载入中方法
+				 * 
+				 * @param {string} s 是否关闭
+				 */
+				loading: function(s) {
+					if(s == "close") layer.close(this.loadingSwitch)
+					else this.loadingSwitch = layer.load(3);
+					// else this.loadingSwitch = layer.load(3, { shade: [.6, "#fff"] });
+				},
+				submitCommit:function(){
+					var that = this;
+					$.post(config.api_saveEvaluate,{
+						processId:that.c.id,
+						Content:that.commit,
+						saleId:that.c.saleId
+					}).done(function(res){
+						if(res.error=="00"){
+							location.reload()
+						}
+					})
+				},
+				getData: function(page) {
+				$('body,html').scrollTop(0)
+					var that = this;
+					this.loading();
+					$.ajax({
+						url: config.api_showDetail,
+						async: false,
+						data: {
+							id:config.id
+						},
+						success: function(res) {
+							that.loading('close')
+							if(res.error == "00") {
+								that.c = res.result;
+							} else {
+								layer.msg(res.msg)
+							}
+						}
+					});
+				},
+			}
+		})
+	</script>
+
+</html>

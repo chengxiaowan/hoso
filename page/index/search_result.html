@@ -1,0 +1,282 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+		<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+	</head>
+	<style>
+		.panel-primary {
+			border-color: #459df5!important;
+		}
+		
+		.panel-primary>.panel-heading {
+			background: #459df5!important;
+			border-color: #459df5!important;
+		}
+		
+		td {
+			text-align: left!important;
+		}
+	</style>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content hide" id="app">
+			<div class="panel panel-primary" v-if="role!='公司内部运作'">
+				<div class="panel-heading clearfix">
+					已成交客户
+				</div>
+				<div class="panel-body">
+					<table class="table table-responsive table-bordered table-hover" id="mainTable">
+
+						<tbody>
+							<tr v-for="(el,index) of a.list">
+								<td>
+									<a href="javascript:;" onclick="view(0,this)">{{el.name}} <i class="hide">{{el.id}}</i></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pagi0 pull-right"></div>
+				</div>
+			</div>
+			<div class="panel panel-primary">
+				<div class="panel-heading clearfix">
+					债务人(公司)
+				</div>
+				<div class="panel-body">
+					<table class="table table-responsive table-bordered table-hover">
+
+						<tbody>
+							<tr v-for="(el,index) of b.list">
+								<td>
+									<a href="javascript:;" onclick="view(1,this)">{{el.name}} <i class="hide">{{el.id}}</i></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pagi1 pull-right"></div>
+				</div>
+			</div>
+			<div class="panel panel-primary" v-if="role!='公司内部运作'">
+				<div class="panel-heading clearfix">
+					潜在客户
+				</div>
+				<div class="panel-body">
+					<table class="table table-responsive table-bordered table-hover">
+
+						<tbody>
+							<tr v-for="(el,index) of c.list">
+								<td>
+									<a href="javascript:;" onclick="view(2,this,1)">{{el.name}} <i class="hide">{{el.id}}</i></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pagi2 pull-right"></div>
+				</div>
+			</div>
+			<div class="panel panel-primary" v-if="role!='公司内部运作'">
+				<div class="panel-heading clearfix">
+					客户公海
+				</div>
+				<div class="panel-body">
+					<table class="table table-responsive table-bordered table-hover">
+
+						<tbody>
+							<tr v-for="(el,index) of d.list">
+								<td>
+									<a href="javascript:;" onclick="view(2,this)">{{el.name}} <i class="hide">{{el.id}}</i></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pagi3 pull-right"></div>
+				</div>
+			</div>
+			<div class="panel panel-primary" v-if="role!='公司内部运作'">
+				<div class="panel-heading clearfix">
+					有意向公海
+				</div>
+				<div class="panel-body">
+					<table class="table table-responsive table-bordered table-hover">
+
+						<tbody>
+							<tr v-for="(el,index) of e.list">
+								<td>
+									<a href="javascript:;" onclick="view(2,this)">{{el.name}} <i class="hide">{{el.id}}</i></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pagi4 pull-right"></div>
+				</div>
+			</div>
+			<div class="panel panel-primary" v-if="role!='公司内部运作'">
+				<div class="panel-heading clearfix">
+					大客户公海
+				</div>
+				<div class="panel-body">
+					<table class="table table-responsive table-bordered table-hover">
+
+						<tbody>
+							<tr v-for="(el,index) of f.list">
+								<td>
+									<a href="javascript:;" onclick="view(2,this)">{{el.name}} <i class="hide">{{el.id}}</i></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pagi5 pull-right"></div>
+				</div>
+			</div>
+			<div class="panel panel-primary" v-if="role!='公司内部运作'">
+				<div class="panel-heading clearfix">
+					无意向公海
+				</div>
+				<div class="panel-body">
+					<table class="table table-responsive table-bordered table-hover">
+
+						<tbody>
+							<tr v-for="(el,index) of g.list">
+								<td>
+									<a href="javascript:;" onclick="view(2,this)">{{el.name}} <i class="hide">{{el.id}}</i></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pagi6 pull-right"></div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+	<script src="/static/ui/js/jquery.min.js"></script>
+	<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+	<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+	<script src="/static/ui/js/plugins/layer/laydate/laydate.js"></script>
+	<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+	<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+	<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+	<script src="/static/ui/js/plugins/echarts/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/static/ui/js/vue.js"></script>
+	<script src="/static/js/include/module/module_pagination.js"></script>
+
+	<script type="text/javascript">
+		var config = {
+			role: localStorage.userRole || "",
+			type: yo.getQueryString("type") || "",
+			keywords: decodeURI(yo.getQueryString("keywords")) || "",
+			api_searchKeywords: '/main/searchKeywords.do', //查询
+		}
+
+		window.app = new Vue({
+			el: '#app',
+			data: {
+				role: config.role,
+				seq: 'abcdefg',
+				pagi: {},
+				a: {},
+				b: {},
+				c: {},
+				d: {},
+				e: {},
+				f: {},
+				g: {},
+
+			},
+			created: function() {
+				var that = this;
+				document.getElementById("app").classList.remove("hide");
+			},
+			mounted: function() {
+				if(this.role != '电访销售' && this.role != '公司内部运作') {
+					this.getData(0, 1) //已成交客户
+				}
+				this.getData(1, 1) //债务人(公司)
+				if(this.role != '公司内部运作') {
+					this.getData(2, 1) //潜在客户
+					this.getData(3, 1) //客户公海
+					this.getData(4, 1) //有意向公海
+					this.getData(5, 1) //大客户公海
+					this.getData(6, 1) //无意向公海
+				}
+
+			},
+			methods: {
+				/**
+				 * 载入中方法
+				 * 
+				 * @param {string} s 是否关闭
+				 */
+				loading: function(s) {
+					if(s == "close") layer.close(this.loadingSwitch)
+					else this.loadingSwitch = layer.load(3);
+					// else this.loadingSwitch = layer.load(3, { shade: [.6, "#fff"] });
+				},
+				getData: function(flag, page) {
+					type = this.seq[flag]
+					if(page) this[type].pageNum = page || 1
+					var that = this;
+					that.loading();
+					$.ajax({
+						url: config.api_searchKeywords,
+						async: false,
+						data: {
+							pageSize: that[type].pageSize || 10,
+							page: that[type].pageNum || 1,
+							keywords: config.keywords,
+							flag: flag,
+						},
+						success: function(res) {
+							that.loading('close')
+							if(res.error == "00") {
+								Vue.set(that, type, res.result1)
+								//分页
+								if(that.pagi[type]) {
+									$('.pagi' + flag).pagination('updatePages', that[type].pages)
+									if(page == 1) $('.pagi' + flag).pagination('goToPage', that[type].pageNum)
+								} else {
+									that.pagi[type] = $('.pagi' + flag).pagination({
+										pages: that[type].pages, //总页数
+										showCtrl: true,
+										displayPage: 6,
+										currentPage: that[type].pageNum,
+										onSelect: function(num) {
+											that[type].pageNum = num
+											that.getData(flag)
+										}
+									})
+								}
+							} else {
+								layer.msg(res.msg)
+							}
+						}
+					});
+				}
+			}
+		})
+
+		function view(flag, el, isKhgh) {
+			if(config.role != '经理') return;
+			isKhgh = isKhgh ? 1 : 0
+			var id = $(el).find("i").text()
+			var index = layer.open({
+				type: 2,
+				area: ['100%', '100%'],
+				content: './search_result_view.html?flag=' + flag + '&id=' + id + '&isKhgh=' + isKhgh
+			})
+		}
+	</script>
+
+</html>

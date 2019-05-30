@@ -1,0 +1,291 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+	<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+	<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+	<link href="/static/ui/css/animate.css" rel="stylesheet">
+	<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+	<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+	<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+</head>
+
+<body class="gray-bg">
+	<div class="wrapper wrapper-content hide" id="app">
+		<div class="panel panel-default">
+			<div class="panel-heading clearfix btns-hook">
+				<form role="form" class="form-inline" id="searchForm" @submit.prevent="getData(1)">
+					<div class="form-group">
+						<select style="width: 200px;" name="" id="saleId">
+								<option value="">请选择</option>
+							</select>
+					</div>
+					<div class="form-group">
+						<label for="">开始日期</label>
+						<input class="span10 date-picker form-control" id="startTime" name="startTime" type="text" data-date-format="yyyy-mm"
+						 readonly="readonly" placeholder="开始日期" style="width: 150px;" />
+					</div>
+					<div class="form-group">
+						<label for="">结束日期</label>
+						<input class="span10 date-picker form-control" id="endTime" name="endTime" type="text" data-date-format="yyyy-mm" readonly="readonly"
+						 placeholder="结束日期" style="width: 150px;" />
+					</div>
+					<button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 查询</button>
+				</form>
+			</div>
+			<div class="panel-body">
+				<div class="alert alert-warning"><span class="alert-link"> 合计回款金额: </span> <span class="alert-link" style="font-size: 18px;"> {{hktotalMoney}} 元 </span>
+					<span
+					 class="alert-link">，佣金金额: </span> <span class="alert-link" style="font-size: 18px;"> {{yjtotalMoney}} 元 </span></div>
+				<table class="table table-responsive table-bordered table-hover" id="mainTable">
+					<thead>
+						<tr>
+							<th>姓名</th>
+							<th>客户名称</th>
+							<th @click="data_sort('hkMoney')" title="按回款金额排序" style="cursor:pointer" class="yoSort" :class="sort.hkMoney==='' ? 'text-default' : 'text-info'">回款金额(元)
+								<i v-show="sort.hkMoney===0" class="pull-right fa fa-sort-amount-asc" title="正序"></i>
+								<i v-show="(sort.hkMoney===1||sort.hkMoney==='')" :class="sort.hkMoney==='' ? 'text-default' : 'text-info'" class="pull-right fa fa-sort-amount-desc"
+								 title="倒序"></i>
+							</th>
+							<th @click="data_sort('commissionaMount')" title="按佣金金额排序" style="cursor:pointer" class="yoSort" :class="sort.commissionaMount==='' ? 'text-default' : 'text-info'">佣金金额(元)
+								<i v-show="sort.commissionaMount===0" class="pull-right fa fa-sort-amount-asc" title="正序"></i>
+								<i v-show="(sort.commissionaMount===1||sort.commissionaMount==='')" :class="sort.commissionaMount==='' ? 'text-default' : 'text-info'"
+								 class="pull-right fa fa-sort-amount-desc" title="倒序"></i>
+							</th>
+							<th @click="data_sort('planTime')" title="按回款日期排序" style="cursor:pointer" class="yoSort" :class="sort.planTime==='' ? 'text-default' : 'text-info'">回款日期
+								<i v-show="sort.planTime===0" class="pull-right fa fa-sort-amount-asc" title="正序"></i>
+								<i v-show="(sort.planTime===1||sort.planTime==='')" :class="sort.planTime==='' ? 'text-default' : 'text-info'" class="pull-right fa fa-sort-amount-desc"
+								 title="倒序"></i>
+							</th>
+						</tr>
+					</thead>
+					<tbody id="dataTable">
+						<tr v-for="(el,index) of c.list">
+							<td>{{el.saleName}}</td>
+							<td>{{el.custoemrName}}</td>
+							<td>{{el.hkMoney}}</td>
+							<td>{{el.commissionaMount}}</td>
+							<td>{{el.planTime}}</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="pagi pull-right"></div>
+			</div>
+		</div>
+	</div>
+
+</body>
+<script src="/static/ui/js/jquery.min.js"></script>
+<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+<script src="/static/ui/js/plugins/layer/laydate/laydate.js"></script>
+<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+<script src="/static/ui/js/plugins/echarts/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/ui/js/vue.js"></script>
+<script src="/static/js/include/module/module_pagination.js"></script>
+
+<script type="text/javascript">
+	var config = {
+		role: localStorage.userRole || "",
+		saleId: yo.getQueryString("saleId"),
+		saleName: decodeURI(yo.getQueryString("saleName")) || "",
+		startTime: yo.getQueryString("startTime") || "",
+		endTime: yo.getQueryString("endTime") || "",
+		billSeconds: yo.getQueryString("billSeconds") || "",
+		type: yo.getQueryString("type") || "",
+		api_showDetail: '/report/xshkReportDetail.do',//查询
+	}
+		//当前月份日期
+	var thisMonth = new Date().getMonth() + 1
+	thisMonth = thisMonth < 10 ? ("0" + thisMonth) : thisMonth
+	var thisYear  = new Date().getFullYear()
+	var thisTime = thisYear.toString()+"-"+thisMonth.toString()
+
+	window.app = new Vue({
+		el: '#app',
+		data: {
+			c: [],
+			yjtotalMoney: 0,
+			hktotalMoney: 0,
+			sort: {
+				planTime: 1,
+				hkMoney: "",
+				commissionaMount: ""
+			}
+		},
+		created: function () {
+			var that = this;
+			document.getElementById("app").classList.remove("hide");
+		},
+		mounted: function () {
+			$("#startTime").val(config.startTime)
+			$("#endTime").val(config.endTime)
+			
+			$('.date-picker').datepicker({
+				autoclose: true,
+				todayHighlight: true,
+				startView:3,
+				minViewMode :'months'
+			});
+
+			$("#endTime").datepicker('setStartDate',
+					config.startTime)
+
+				$("#startTime").datepicker('setEndDate',
+					config.endTime) 
+
+			//开始日期
+			$("#startTime").datepicker({}).on(
+				'changeDate',
+				function (ev) {
+					if (ev.date) {
+						$("#endTime").datepicker('setStartDate',
+							new Date(ev.date.valueOf()))
+					} else {
+						$("#endTime").datepicker('setStartDate', null);
+					}
+				});
+			//结束日期
+			$("#endTime").datepicker({}).on(
+				'changeDate',
+				function (ev) {
+					if (ev.date) {
+						$("#startTime").datepicker('setEndDate',
+							new Date(ev.date.valueOf()))
+					} else {
+						$("#startTime").datepicker('setEndDate',
+							new Date());
+					}
+				});
+			if (config.saleId) {
+				$('#saleId').html('"<option value="' + config.saleId + '">' + config.saleName + '</option>"')
+			}
+			$('#saleId').select2({
+				placeholder: "请选择销售",
+				language: 'zh-CN',
+				allowClear: 0,
+				ajax: {
+					url: "/user/getUserInfo",
+					dataType: 'json',
+					type: "post",
+					delay: 250,
+					data: function (params) {
+						return {
+							page: params.page || 1,
+							ROLE_ID: "b729e9334ad64c15a4e47d88b8c2638f",
+							data: {
+								q: params.term || "", // search term
+							}
+						};
+					},
+					processResults: function (data, params) {
+						params.page = params.page || 1;
+						$.each(data, function () {
+							this.id = this.USER_ID;
+							this.text = this.NAME;
+						})
+						return {
+							results: data,
+							pagination: {
+								more: data.length == 10
+							}
+						};
+					},
+					cache: true
+				},
+				minimumInputLength: 0
+			})
+
+			this.getData()
+		},
+		methods: {
+			/**
+			 * 载入中方法
+			 * 
+			 * @param {string} s 是否关闭
+			 */
+			loading: function (s) {
+				if (s == "close") layer.close(this.loadingSwitch)
+				else this.loadingSwitch = layer.load(3);
+				// else this.loadingSwitch = layer.load(3, { shade: [.6, "#fff"] });
+			},
+			getData: function (page) {
+				$('body,html').scrollTop(0)
+				if (page) this.c.pageNum = page
+				var that = this;
+				that.loading();
+				$.ajax({
+					url: config.api_showDetail,
+					async: false,
+					data: {
+						startTime: $('[name=startTime]').val(),
+						endTime: $('[name=endTime]').val(),
+						saleId: $("#saleId").val(),
+						pageSize: that.c.pageSize || 10,
+						page: that.c.pageNum || 1
+					},
+					success: function (res) {
+						that.loading('close')
+						if (res.error == "00") {
+							that.c = res.result;
+							that.hktotalMoney = res.hktotalMoney;
+							that.yjtotalMoney = res.yjtotalMoney
+							//分页
+							if (that.pagi) {
+								$('.pagi').pagination('updatePages', that.c.pages)
+								if (page == 1) $('.pagi').pagination('goToPage', that.c.pageNum)
+							} else {
+								that.pagi = $('.pagi').pagination({
+									pages: that.c.pages, //总页数
+									showCtrl: true,
+									displayPage: 6,
+									currentPage: that.c.pageNum,
+									onSelect: function (num) {
+										that.c.pageNum = num
+										that.getData()
+										yo.scrollTo('body')
+									}
+								})
+							}
+						} else {
+							layer.msg(res.msg)
+						}
+					}
+				});
+			},
+			data_sort: function (el) {
+				const that = this;
+				if (this.sort[el] === "") {
+					Vue.set(this.sort, el, 1)
+				} else if (this.sort[el] === 1) {
+					Vue.set(this.sort, el, 0)
+				} else {
+					Vue.set(this.sort, el, "")
+				}
+				for (var key in this.sort) {
+					if (el != key) {
+						Vue.set(this.sort, key, "")
+					}
+				}
+				Vue.nextTick(function () {
+					if (that.sort.planTime === "" && that.sort.commissionaMount === "" && that.sort.hkMoney === "") {
+						that.sort.planTime = 1
+					}
+					that.getData()
+				})
+
+			}
+		}
+	})
+
+</script>
+
+</html>

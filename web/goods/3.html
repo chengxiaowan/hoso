@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <select v-model='city' @change="look">
+        <option v-for="city in citys" :value="city.Id">{{city.name}}</option>
+    </select>
+</div>
+<script src="../js/vue.js"></script>
+<script>
+    window.app = new Vue({
+        el: '#app',
+        data: {
+            citys:[
+                {id:1,name:'北京'},
+                {id:2,name:'上海'}
+                ],
+            city:''
+        },
+        methods: {
+            look(){
+                console.log(this.citys.find(item => item.id === this.city)['name']);
+            }
+        }
+    })
+
+</script>
+</body>
+</html>

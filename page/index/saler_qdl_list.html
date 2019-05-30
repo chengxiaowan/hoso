@@ -1,0 +1,318 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+		<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+		<link href="/static/ui/css/htz.css" rel="stylesheet">
+	</head>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content hide" id="app">
+			<div class="panel panel-default">
+				<div class="panel-heading clearfix btns-hook">
+					<form role="form" class="form-inline" id="searchForm" @submit.prevent="getData(1)">
+						<div class="form-group">
+							<select style="width: 200px;" name="" id="saleId">
+								<option value="">请选择</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="">开始日期</label>
+							<input class="span10 date-picker form-control" id="startTime" name="startTime" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" placeholder="开始日期" style="width: 150px;" />
+						</div>
+						<div class="form-group">
+							<label for="">结束日期</label>
+							<input class="span10 date-picker form-control" id="endTime" name="endTime" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" placeholder="结束日期" style="width: 150px;" />
+						</div>
+						<button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 查询</button>
+					</form>
+				</div>
+				<div class="panel-body">
+					<table class="table table-responsive table-bordered table-hover" id="mainTable">
+						<thead>
+							<tr>
+								<th>客户名称</th>
+								<th>债务人(公司)</th>
+								<th>欠款总金额</th>
+								<th>佣金比例</th>
+								<th>合同类型</th>
+								<th>签约时间</th>
+								<th>到期时间</th>
+								<th>商务顾问</th>
+								<th width="200px">操作</th>
+							</tr>
+						</thead>
+						<tbody id="dataTable">
+							<tr v-for="(el,index) of c.list">
+								<td>{{el.customerName}}</td>
+								<td>{{el.debtorName}}</td>
+								<td>{{el.price}}</td>
+								<td>{{el.contractCommissionRate}}</td>
+								<td>{{el.type==0?'诉讼':'非诉讼'}}</td>
+								<td>{{el.signingTime}}</td>
+								<td>{{el.endTime}}</td>
+								<td>{{el.userName}}</td>
+								<td>
+									<a title="查看详情" @click="viewContract(el.id,el.type)" class="btn btn-primary"><i class="fa fa-search"></i> 查看</a>
+									<!--<a class="btn btn-success" title="编辑" @click="edit(el.id,el.type)"> <i class="ace-icon fa fa-pencil-square-o" title="编辑"></i> 编辑</a>-->
+									<!--<a class="btn btn-danger" @click="del(el.id,el.contractNo)"> <i class="ace-icon fa fa-trash-o" title="删除"></i> 删除</a>-->
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pull-left form form-inline">
+						<div class="form-group form-group-sm">
+							共 {{c.total}} 条数据,每页显示
+							<select @change="getData(1)" v-model="c.pageSize" class="form-control">
+								<option value="10">10</option>
+								<option value="20">20</option>
+								<option value="30">30</option>
+								<option value="40">40</option>
+								<option value="50">50</option>
+							</select> 条
+						</div>
+					</div>
+					<div class="pagi pull-right"></div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+	<script src="/static/ui/js/jquery.min.js"></script>
+	<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+	<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+	<script src="/static/ui/js/plugins/layer/laydate/laydate.js"></script>
+	<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+	<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+	<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+	<script src="/static/ui/js/plugins/echarts/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/static/ui/js/vue.js"></script>
+	<script src="/static/js/include/module/module_pagination.js"></script>
+
+	<script type="text/javascript">
+		var config = {
+			role: localStorage.userRole || "",
+			saleId: yo.getQueryString("saleId"),
+			dfSaleId: yo.getQueryString("dfSaleId"),
+			dfSaleName: decodeURIComponent(yo.getQueryString("dfSaleName")) || "",
+			saleName: decodeURIComponent(yo.getQueryString("saleName")) || "",
+			startTime: yo.getQueryString("startTime") || "",
+			endTime: yo.getQueryString("endTime") || "",
+			api_showDetail: '/contract/showAllContract', //查询
+		}
+
+		window.app = new Vue({
+			el: '#app',
+			data: {
+				role: config.role,
+				c: []
+			},
+			created: function() {
+				var that = this;
+				document.getElementById("app").classList.remove("hide");
+			},
+			mounted: function() {
+				//			tips
+				$(document).on('mouseenter', ".showTips", function() {
+					var tips = $(this).find('i').text()
+					var that = this
+					layer.yoTips(`<span style="color:#337ab7">${tips}</span>`, that, {
+						tips: [2, '#fff'],
+						time: 6000
+					})
+				})
+
+				$('.date-picker').datepicker({
+					autoclose: true,
+					todayHighlight: true
+				});
+				$("#startTime").val(config.startTime)
+				$("#endTime").val(config.endTime)
+				if($("#startTime").val()) {
+					$("#endTime").datepicker('setStartDate',
+						new Date($("#startTime").val()))
+				}
+
+				if($("#endTime").val()) {
+					$("#startTime").datepicker('setEndDate',
+						new Date($("#endTime").val()))
+				}
+
+				//开始日期
+				$("#startTime").datepicker({}).on(
+					'changeDate',
+					function(ev) {
+						if(ev.date) {
+							$("#endTime").datepicker('setStartDate',
+								new Date(ev.date.valueOf()))
+						} else {
+							$("#endTime").datepicker('setStartDate', null);
+						}
+					});
+				//结束日期
+				$("#endTime").datepicker({}).on(
+					'changeDate',
+					function(ev) {
+						if(ev.date) {
+							$("#startTime").datepicker('setEndDate',
+								new Date(ev.date.valueOf()))
+						} else {
+							$("#startTime").datepicker('setEndDate',
+								new Date());
+						}
+					});
+
+				var roleId = ""
+				if(config.dfSaleId) {
+					$('#saleId').html('"<option value="' + config.dfSaleId + '">' + config.dfSaleName + '</option>"')
+					roleId = "30b1487221464d369ca4c2462ccca920"
+				} else {
+					$('#saleId').html('"<option value="' + config.saleId + '">' + config.saleName + '</option>"')
+					roleId = "b729e9334ad64c15a4e47d88b8c2638f,30b1487221464d369ca4c2462ccca920"
+				}
+				$('#saleId').select2({
+					placeholder: "请选择销售",
+					language: 'zh-CN',
+					allowClear: 0,
+					ajax: {
+						url: "/user/getUserInfo",
+						dataType: 'json',
+						type: "post",
+						delay: 250,
+						data: function(params) {
+							return {
+								page: params.page || 1,
+								ROLE_ID: roleId,
+								data: {
+									q: params.term || "", // search term
+								}
+							};
+						},
+						processResults: function(data, params) {
+							params.page = params.page || 1;
+							$.each(data, function() {
+								this.id = this.USER_ID;
+								this.text = this.NAME;
+							})
+							return {
+								results: data,
+								pagination: {
+									more: data.length == 10
+								}
+							};
+						},
+						cache: true
+					},
+					minimumInputLength: 0
+				})
+				this.getData()
+			},
+			methods: {
+				/**
+				 * 载入中方法
+				 * 
+				 * @param {string} s 是否关闭
+				 */
+				loading: function(s) {
+					if(s == "close") layer.close(this.loadingSwitch)
+					else this.loadingSwitch = layer.load(3);
+				},
+				getData: function(page) {
+					$('body,html').scrollTop(0)
+					if(page) this.c.pageNum = page
+					var that = this;
+					that.loading();
+					var data = {
+						startTime: $('[name=startTime]').val(),
+						endTime: $('[name=endTime]').val(),
+						pageSize: that.c.pageSize || 10,
+						pageNo: that.c.pageNum || 1,
+						userId: config.dfSaleId
+					}
+					if(config.dfSaleId) {
+						data.userId = config.dfSaleId
+					} else {
+						data.userId = $('#saleId').val()
+					}
+					console.log(data);
+					$.ajax({
+						url: config.api_showDetail,
+						async: false,
+						data: data,
+						success: function(res) {
+							that.loading('close')
+							if(res.error == "00") {
+								that.c = res.result;
+								//分页
+								if(that.pagi) {
+									$('.pagi').pagination('updatePages', that.c.pages)
+									if(page == 1) $('.pagi').pagination('goToPage', that.c.pageNum)
+								} else {
+									that.pagi = $('.pagi').pagination({
+										pages: that.c.pages, //总页数
+										showCtrl: true,
+										displayPage: 6,
+										currentPage: that.c.pageNum,
+										onSelect: function(num) {
+											that.c.pageNum = num
+											that.getData()
+											yo.scrollTo('body')
+										}
+									})
+								}
+							} else {
+								layer.msg(res.msg)
+							}
+						}
+					});
+				},
+				openSalerList: function(id) {
+					salerList(id);
+				},
+				//查看
+				viewContract: function(id, type) {
+					const dialog = layer.open({
+						type: 2,
+						title: '客户详情',
+						content: '/contract/view.do?type=' + type + '&id=' + id + "#view",
+						area: ['100%', '100%'],
+					})
+				},
+				//编辑
+				edit(id, type) {
+					var index = layer.open({
+						type: 2,
+						title: '修改',
+						content: '/contract/goEdit.do?type=' + type + '&id=' + id,
+						area: ['90%', '90%']
+					});
+				},
+				del(id, msg) {
+					let that =this
+					const dialog = layer.confirm("确定要删除[" + msg + "]吗?",function(result) {
+								if(result) {
+									var url = "/contract/delete.do?ids=" +id + "&tm=" + new Date().getTime();
+									$.get(url, function(data) {
+										layer.close(dialog)
+										that.getData();
+									});
+								};
+							});
+				}
+
+			}
+		})
+	</script>
+
+</html>

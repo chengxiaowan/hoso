@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>爆款商品</title>
+		<meta name="keywords" content="寒舍">
+		<meta name="description" content="寒舍">
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+		<link rel="stylesheet" href="../js/plugins/layui/css/layui.css">
+		<link rel="stylesheet" href="../css/animate.min.css">
+		<link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+		<link rel="stylesheet" href="../css/style.css">
+		<link rel="stylesheet" href="../css/layout.css">
+		<style>
+			.control-label {
+				padding: 6px 12px
+			}
+			
+			.layui-upload-list {
+				margin: 0;
+			}
+		</style>
+	</head>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content" id="app">
+			<div class="ibox-content">
+				<div class="row">
+					<div class="col-sm-12">
+						<!-- 检索 start -->
+						<div class="form-inline" id="customerForm">
+							<div class="form-group">
+								<input id="nav-search-input" name="name" placeholder="请输入商品名称" class="form-control" type="text" v-model="keywords">
+							</div>
+							<div class="form-group">
+								<em>商品分类</em>
+								<select name="type" class="form-control" style="width: 150px;" data-placeholder="商品分类" v-model="typeId">
+									<option value="">请选择商品分类</option>
+									<option v-for="item in typeList" :value="item.parentId">{{item.parentName}}</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<em>供应商</em>
+								<select class="form-control" style="width: 150px;" v-select2="" data-placeholder="请选择供应商" v-model="supplierId" required="required">
+									<option value="">全部</option>
+									<option v-for="item in supplierList" :value="item.id">{{item.text}}</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<em>品牌</em>
+								<select class="form-control" style="width: 150px;" v-select22="" data-placeholder="请选择品牌" v-model="brandId">
+									<option value="">全部</option>
+									<option v-for="item in brandList" :value="item.id">{{item.text}}</option>
+								</select>
+							</div>
+							<button type="submit" class="btn btn-primary" @click="search()">
+                        		<i class="icon icon_search"></i> 搜索
+                    		</button>
+							<button type="reset" class="btn btn-success" @click="addGoods();">
+                        		<i id="nav-search-icon" class="icon icon_plus"></i> 新增
+                    		</button>
+						</div>
+						<!-- 检索 end -->
+					</div>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<table id="simple-table" class="table  table-bordered table-hover">
+					<thead>
+						<tr>
+							<th width="10%">商品编号</th>
+							<th width="10%">商品名称</th>
+							<th width="10%">分类</th>
+							<th width="15%">供应商</th>
+							<th width="10%">品牌</th>
+							<th width="15%">图片</th>
+							<th width="10%">创建日期</th>
+							<th width="20%">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<template v-if="list.total > 0">
+							<tr v-for="item in list.list">
+								<td>{{item.goodsCode}}</td>
+								<td>{{item.name}}</td>
+								<td>{{item.typeName}}</td>
+								<td>{{item.supplierName}}</td>
+								<td>{{item.brandName}}</td>
+								<td><img :src="item.image" style="width: 80%;"></td>
+								<td>{{item.createTime}}</td>
+								<td>
+									<a class="btn btn-success" title="佣金设置" @click="setUp(item.burstingGoodsId);">佣金设置</a>
+									<a class="btn btn-default" title="删除" @click="del(item.burstingGoodsId);">删除</a>
+								</td>
+							</tr>
+						</template>
+						<tr v-else class="main_info">
+							<td colspan="8">没有相关数据</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="pull-left form form-inline">
+					<div class="form-group form-group-sm">
+						共 {{list.total}} 条数据,每页显示
+						<select @change="getData(1)" v-model="list.pageSize" class="form-control">
+							<option value="10">10</option>
+							<option value="20">20</option>
+							<option value="30">30</option>
+							<option value="40">40</option>
+							<option value="50">50</option>
+						</select> 条
+					</div>
+				</div>
+				<div class="pagi pull-right"></div>
+			</div>
+
+			<!--新增一级分类产品-->
+			<div class="bounced">
+				<div class="ibox-content">
+					<div class="form">
+						<div class="row_list" id="attribute">
+							<div class="col-sm-12">
+								<!-- 检索 start -->
+								<div class="form-inline" id="customerForm">
+									<div class="form-group">
+										<input id="nav-search-input" name="name" placeholder="请输入分类商品名称,编号" class="form-control" type="text" v-model="keywords1">
+									</div>
+									<div class="form-group">
+										<em>商品分类</em>
+										<select name="type" class="form-control" style="width: 150px;" data-placeholder="商品分类" v-model="typeId1">
+											<option value="">请选择商品分类</option>
+											<option v-for="item in typeList1" :value="item.parentId">{{item.parentName}}</option>
+										</select>
+									</div>
+									<div class="form-group">
+										<em>供应商</em>
+										<select class="form-control" style="width: 200px;" data-placeholder="请选择供应商" v-model="supplierId1">
+											<option value="">全部</option>
+											<option v-for="item in supplierList1" :value="item.id">{{item.text}}</option>
+										</select>
+									</div>
+									<div class="form-group">
+										<em>品牌</em>
+										<select class="form-control" style="width: 150px;" data-placeholder="请选择品牌" v-model="brandId1">
+											<option value="">全部</option>
+											<option v-for="item in brandList1" :value="item.id">{{item.text}}</option>
+										</select>
+									</div>
+									<button type="submit" class="btn btn-primary" @click="searchGood()"><i class="icon icon_search"></i> 搜索</button>
+								</div>
+								<!-- 检索 end -->
+								<div class="ibox-content">
+									<table id="simple-table" class="table table-responsive table-bordered table-hover">
+										<thead>
+											<tr>
+												<th width="15%">商品编码</th>
+												<th width="15%">商品名称</th>
+												<th width="15%">图片</th>
+												<th width="15%">供应商</th>
+												<th width="10%">分类</th>
+												<th width="15%">品牌</th>
+												<th width="15%">操作</th>
+											</tr>
+										</thead>
+										<tbody>
+											<template v-if="list1.total > 0">
+												<tr v-for="(item,index) in list1.list">
+													<td>{{item.goodsCode}}</td>
+													<td>{{item.name}}</td>
+													<td><img :src="item.image" style="width: 40%;"></td>
+													<td>{{item.supplierName}}</td>
+													<td>{{item.typeName}}</td>
+													<td>{{item.brandName}}</td>
+													<td>
+														<a class="btn btn-primary" :class="{ 'btn-default': index==now }" @click="join(item.goodsId,index,item)">
+															<span v-if='index==now'>取消</span>
+															<span v-else>加入</span>
+														</a>
+													</td>
+												</tr>
+											</template>
+											<tr class="main_info" v-else>
+												<td colspan="7">没有相关数据</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="pull-left form form-inline">
+										<div class="form-group form-group-sm">
+											共 {{list1.total}} 条数据,每页显示
+											<select @change="getData1(1)" v-model="list1.pageSize" class="form-control">
+												<option value="5">5</option>
+												<option value="10">10</option>
+												<option value="20">20</option>
+												<option value="30">30</option>
+												<option value="40">40</option>
+												<option value="50">50</option>
+											</select> 条
+										</div>
+									</div>
+									<div class="pagi1 pull-right"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--佣金设置-->
+			<div class="bounced">
+				<div class="ibox-content">
+					<div class="form">
+						<div class="row_list" id="setUp">
+							<div class="col-sm-12">
+								<div class="ibox-content" style="padding-bottom: 0;" id="customerForm">
+									<button type="submit" class="btn btn-primary pull-right" @click="addRole()"><i class="icon icon_plus"></i> 新增</button>
+								</div>
+								<div class="ibox-content">
+									<table id="simple-table" class="table table-responsive table-bordered table-hover">
+										<thead>
+											<tr>
+												<th width="15%">角色</th>
+												<th width="15%">佣金比例(%)</th>
+												<th width="15%">销售时限(时)</th>
+												<th width="15%">创建时间</th>
+												<th width="40%">操作</th>
+											</tr>
+										</thead>
+										<tbody>
+											<template v-if="roleCommissionList.total > 0">
+												<tr v-for="(item,index) in roleCommissionList.list">
+													<td v-if="item.roleType == 1">设计师</td>
+													<td v-if="item.roleType == 2">个体</td>
+													<td v-if="item.roleType == 3">大V</td>
+													<td>{{item.commissionPercent}}</td>
+													<td>{{item.saleTime}}</td>
+													<td>{{item.createTime}}</td>
+													<td>
+														<a class="btn btn-success" title="自定义佣金" @click="defineRole(item.roleCommissionId)">自定义佣金</a>
+														<a class="btn btn-success" title="编辑" @click="editRole(item.roleCommissionId)">编辑</a>
+														<a class="btn btn-default" title="删除" @click="delRole(item.roleCommissionId)">删除</a>
+													</td>
+												</tr>
+											</template>
+											<tr class="main_info" v-else>
+												<td colspan="5">没有相关数据</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--新增角色-->
+			<div class="bounced">
+				<div class="ibox-content" id="addRole">
+					<div class="form form-horizontal">
+						<div class="row_list">
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-4 control-label">角色<em class="red">*</em></label>
+									<div class="col-sm-8">
+										<select class="form-control" v-model="roleType">
+											<option value="">请选择角色</option>
+											<option value="1">设计师</option>
+											<option value="2">个体</option>
+											<option value="3">大V</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-4 control-label">佣金比例(%)<em class="red">*</em></label>
+									<div class="col-sm-8">
+										<input class="form-control" type="text" placeholder="请输入佣金比例" v-model="commissionPercent">
+									</div>
+								</div>
+
+							</div>
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-4 control-label">购买时限(时)<em class="red">*</em></label>
+									<div class="col-sm-8">
+										<input class="form-control" type="text" placeholder="请输入购买时限" v-model="saleTime">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--自定义佣金-->
+			<div class="bounced">
+				<div class="ibox-content">
+					<div class="form">
+						<div class="row_list" id="define">
+							<div class="col-sm-12">
+								<!-- 检索 start -->
+								<div class="form-inline" id="customerForm">
+									<div class="form-group">
+										<input id="nav-search-input" name="name" placeholder="请输入姓名" class="form-control" type="text" v-model="keywords2">
+									</div>
+									<button type="submit" class="btn btn-primary" @click="searchCustom()"><i class="icon icon_search"></i> 搜索</button>
+									<button type="submit" class="btn btn-primary pull-right" @click="addCustom()"><i class="icon icon_plus"></i> 新增</button>
+								</div>
+								<!-- 检索 end -->
+								<div class="ibox-content">
+									<table id="simple-table" class="table table-responsive table-bordered table-hover">
+										<thead>
+											<tr>
+												<th width="20%">姓名</th>
+												<th width="20%">佣金比例(%)</th>
+												<th width="20%">销售时限(时)</th>
+												<th width="20%">创建时间</th>
+												<th width="20%">操作</th>
+											</tr>
+										</thead>
+										<tbody>
+											<template v-if="list2.total > 0">
+												<tr v-for="(item,index) in list2.list">
+													<td>{{item.distributorName}}</td>
+													<td>{{item.commissionPercent}}</td>
+													<td>{{item.saleTime}}</td>
+													<td>{{item.createTime}}</td>
+													<td>
+														<a class="btn btn-success" title="编辑" @click="editCustom(item.customCommissionId)">编辑</a>
+														<a class="btn btn-default" title="删除" @click="delCustom(item.customCommissionId)">删除</a>
+													</td>
+												</tr>
+											</template>
+											<tr class="main_info" v-else>
+												<td colspan="5">没有相关数据</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="pull-left form form-inline">
+										<div class="form-group form-group-sm">
+											共 {{list2.total}} 条数据,每页显示
+											<select @change="getData2(1)" v-model="list2.pageSize" class="form-control">
+												<option value="5">5</option>
+												<option value="10">10</option>
+												<option value="20">20</option>
+												<option value="30">30</option>
+												<option value="40">40</option>
+												<option value="50">50</option>
+											</select> 条
+										</div>
+									</div>
+									<div class="pagi2 pull-right"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--新增自定义佣金角色-->
+			<div class="bounced">
+				<div class="ibox-content" id="addDefine">
+					<div class="form form-horizontal">
+						<div class="row_list">
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-4 control-label">角色<em class="red">*</em></label>
+									<div class="col-sm-8">
+										<select name="type" class="form-control" data-placeholder="角色" v-model="distributorId">
+											<option value="">请选择角色</option>
+											<option v-for="item in customList" :value="item.distributorId">{{item.distributorName}}</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-4 control-label">佣金比例(%)<em class="red">*</em></label>
+									<div class="col-sm-8">
+										<input class="form-control" type="text" placeholder="请输入佣金比例" v-model="commissionPercent1">
+									</div>
+								</div>
+
+							</div>
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-4 control-label">购买时限(时)<em class="red">*</em></label>
+									<div class="col-sm-8">
+										<input class="form-control" type="text" placeholder="请输入购买时限" v-model="saleTime1">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- 全局js -->
+		<script src="../js/jquery-2.1.1.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/plugins/layer/layer.min.js"></script>
+		<script src="../js/plugins/layui/layui.js"></script>
+		<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+		<script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/module/module_pagination.js"></script>
+		<!-- 自定义js -->
+		<script src="../js/content.min.js?v=1.0.0"></script>
+		<script src="../js/custom/common.js"></script>
+		<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+		<script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
+		<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+		<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+		<script src="../js/qiniuyun/qiniuImg.js"></script>
+		<script src="../js/custom/distribution/hotGoodsList.js"></script>
+	</body>
+
+</html>

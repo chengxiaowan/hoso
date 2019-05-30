@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>编辑订单</title>
+		<meta name="keywords" content="寒舍">
+		<meta name="description" content="寒舍">
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+		<link rel="stylesheet" href="../css/animate.min.css">
+		<link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+		<link rel="stylesheet" href="../css/style.css">
+		<link rel="stylesheet" href="../css/layout.css">
+		<link rel="stylesheet" href="../css/htz.css" />
+	</head>
+	<style>
+		.input-container {
+			height: 34px!important;
+			line-height: 34px!important;
+		}
+		.select2-container{
+			z-index: 99999999999999;
+		}
+		
+		body {
+			font-size: 12px;
+		}
+	</style>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content" id="app">
+			<div class="row">
+				<div class="col-sm-12" style="margin-bottom: 5px;">
+					<h2 class="m-t-xs">订单编号: {{c.orderNo}} <small class="m-l-md">订单状态 :
+					<span v-if="c.orderStatus == 0">已取消</span>
+					<span v-if="c.orderStatus == 1">待付款</span>
+					<span v-if="c.orderStatus == 2">待收货</span>
+					<span v-if="c.orderStatus == 3">已审核</span>
+					<span v-if="c.orderStatus == 4">待出库</span>
+					<span v-if="c.orderStatus == 5">已完成</span>
+					
+					</small></h2>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="tabs-container">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a data-toggle="tab" @click="tab(1)" href="#tab-1" aria-expanded="true"> 订单信息</a>
+							</li>
+							<li class="">
+								<a data-toggle="tab" @click="tab(2)" href="#tab-2" aria-expanded="false">商品信息</a>
+							</li>
+							<!--<li>
+								<a data-toggle="tab" href="#tab-3" aria-expanded="false">附件</a>
+							</li>-->
+						</ul>
+						<div class="tab-content">
+							<div id="tab-1" class="tab-pane active">
+								<div class="panel-body">
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="panel panel-default">
+														<div class="panel-heading">
+															基本信息
+														</div>
+														<div class="panel-body">
+															<div class="row form form-horizontal">
+																<div class="col-md-6">
+																	<div class="">
+																		<b class="col-sm-3 control-label">订单编号：</b>
+																		<div class="col-sm-9 input-container ">
+																			{{c.orderNo}}
+																		</div>
+																	</div>
+																</div>
+
+																<div class="col-md-6">
+																	<div class="">
+																		<b class="col-sm-3 control-label">订单状态：</b>
+																		<div class="col-sm-8 input-container" @click="change('orderStatus')" @mouseenter="enter('orderStatus')" @mouseleave="leave">
+																			<span v-if="editParam!='orderStatus'&&c.orderStatus == 0" class="orderStatus">已取消</span>
+																			<span v-if="editParam!='orderStatus'&&c.orderStatus == 1" class="orderStatus">待付款</span>
+																			<span v-if="editParam!='orderStatus'&&c.orderStatus == 2" class="orderStatus">待收货</span>
+																			<span v-if="editParam!='orderStatus'&&c.orderStatus == 3" class="orderStatus">已审核</span>
+																			<span v-if="editParam!='orderStatus'&&c.orderStatus == 4" class="orderStatus">待出库</span>
+																			<span v-if="editParam!='orderStatus'&&c.orderStatus == 5" class="orderStatus">已完成</span>
+																			<form @submit.prevent="saveData" v-if="editParam=='orderStatus'">
+																				<select class="form-control" style="width:100%" v-if="editParam=='orderStatus'" v-focus v-model="c.orderStatus" name='orderStatus'>
+																					<option value="">请选择</option>
+																					<option value="2">待收货</option>
+																					<option value="4">待出库</option>
+																					<option value="5">已完成</option>
+																				</select>
+																			</form>
+																			<i v-if="hoverParam=='orderStatus'" class="fa fa-edit m-l-md"></i>
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-6">
+																	<div class="">
+																		<b class="col-sm-3 control-label">订单类型：</b>
+																		<div class="col-sm-9 input-container ">
+																			<span v-if="c.orderType == 0">其他</span>
+																			<span v-if="c.orderType == 1">商品</span>
+																			<span v-if="c.orderType == 2">商品组合</span>
+																			<span v-if="c.orderType == 3">场景</span>
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-6">
+																	<div class="">
+																		<b class="col-sm-3 control-label">实付金额(元)：</b>
+																		<div class="col-sm-9 input-container ">
+																			{{c.payAmount }}
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-6">
+																	<div class="">
+																		<b class="col-sm-3 control-label">是否使用优惠券：</b>
+																		<div class="col-sm-9 input-container ">
+																			{{c.isCoupon==0?'否':'是' }}
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-6" v-if='c.isCoupon==1'>
+																	<div class="">
+																		<b class="col-sm-3 control-label">优惠券名称：</b>
+																		<div class="col-sm-9 input-container ">
+																			{{c.couponName}}
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-6"  v-if='c.isCoupon==1'>
+																	<div class="">
+																		<b class="col-sm-3 control-label">优惠金额(元)：</b>
+																		<div class="col-sm-9 input-container ">
+																			{{c.money }}
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-6">
+																	<div class="">
+																		<b class="col-sm-3 control-label">订单金额(元)：</b>
+																		<div class="col-sm-9 input-container ">
+																			{{c.totalAmount}}
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-6">
+																	<div class="">
+																		<b class="col-sm-3 control-label">下单时间：</b>
+																		<div class="col-sm-9 input-container ">
+																			{{c.createTime}}
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-6">
+																	<div class="">
+																		<b class="col-sm-3 control-label">付款时间：</b>
+																		<div class="col-sm-9 input-container ">
+																			{{c.payTime}}
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-6">
+																	<div class="">
+																		<b class="col-sm-3 control-label">收货人：</b>
+																		<div class="col-sm-9 input-container ">
+																			{{c.name}}
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-6">
+																	<div class="">
+																		<b class="col-sm-3 control-label">联系电话：</b>
+																		<div class="col-sm-9 input-container ">
+																			{{c.tel}}
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-6">
+																	<div class="">
+																		<b class="col-sm-3 control-label">收货地址：</b>
+																		<div class="col-sm-9 input-container ">
+																			{{c.address}}
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-6">
+																	<div class="">
+																		<b class="col-sm-3 control-label">送货日期：</b>
+																		<div class="col-sm-9 input-container ">
+																			{{c.distributionDate}}
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-6">
+																	<div class="">
+																		<b class="col-sm-3 control-label">送货时间段：</b>
+																		<div class="col-sm-9 input-container ">
+																			{{c.distributionTime}}
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-12">
+																	<div class="">
+																		<b class="col-sm-2 control-label">备注：</b>
+																		<div class="col-sm-10 input-container ">
+																			{{c.remark}}
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<!--交易信息-->
+													<div class="panel panel-default">
+														<div class="panel-heading">
+															交易信息
+														</div>
+														<div class="panel-body">
+															<div class="row form form-horizontal">
+																<div class="col-md-12 clear">
+																	<div class="">
+																		<b class="col-sm-1 control-label">交易方式：</b>
+																		<div class="col-sm-11 input-container ">
+																			<span v-if="c.payType == 0">其他</span>
+																			<span v-if="c.payType == 1">微信支付</span>
+																			<span v-if="c.payType == 2">支付宝支付</span>
+																			<span v-if="c.payType == 3">货到付款</span>
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-12 clear">
+																	<div class="">
+																		<b class="col-sm-1 control-label">交易号：</b>
+																		<div class="col-sm-11 input-container ">
+																			{{c.payNo}}
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+
+													</div>
+
+													<!--发票信息-->
+													<div class="panel panel-default">
+														<div class="panel-heading">
+															发票信息
+														</div>
+														<div class="panel-body">
+															<div class="row form form-horizontal">
+																<div class="col-md-12 clear">
+																	<div class="">
+																		<b class="col-sm-1 control-label">发票类型：</b>
+																		<div class="col-sm-11 input-container" @click="change('headType')" @mouseenter="enter('headType')" @mouseleave="leave">
+																			<span v-if="editParam!='headType'&&c.headType == 0" class="headType">其他</span>
+																			<span v-if="editParam!='headType'&&c.headType == 1" class="headType">个人</span>
+																			<span v-if="editParam!='headType'&&c.headType == 2" class="headType">单位</span>
+																			<form @submit.prevent="saveData" v-if="editParam=='headType'">
+																				<select class="form-control" style="width:100%" v-if="editParam=='headType'" v-focus v-model="c.headType" name='headType'>
+																					<option value="">请选择</option>
+																					<option value="1">个人</option>
+																					<option value="2">单位</option>
+																				</select>
+																			</form>
+																			<i v-if="hoverParam=='headType'" class="fa fa-edit m-l-md"></i>
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-12 clear">
+																	<div class="">
+																		<b class="col-sm-1 control-label">发票内容：</b>
+																		<div class="col-sm-11 input-container ">
+																			<span v-if="c.headType == 0">其他</span>
+																			<span v-if="c.headType == 1">商品明细</span>
+																			<span v-if="c.headType == 2">商品类别</span>
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-12 clear">
+																	<div class="">
+																		<b class="col-sm-1 control-label">发票抬头：</b>
+																		<div class="col-sm-10  input-container" @click="change('headName')" @mouseenter="enter('headName')" @mouseleave="leave">
+																			<span v-if="editParam!='headName'">{{c.headName}}</span>
+																			<form @submit.prevent="saveData" v-if="editParam=='headName'">
+																				<input class="form-control" v-focus @blur="saveData" type="text" name="headName" v-model="c.headName">
+																			</form>
+																			<i v-if="hoverParam=='headName'" class="fa fa-edit m-l-md"></i>
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-12 clear" v-if="c.headType ==2">
+																	<div class="">
+																		<b class="col-sm-1 control-label">公司税号：</b>
+																		<div class="col-sm-10  input-container" @click="change('taxIdentificationNumber')" @mouseenter="enter('taxIdentificationNumber')" @mouseleave="leave">
+																			<span v-if="editParam!='taxIdentificationNumber'">{{c.taxIdentificationNumber}}</span>
+																			<form @submit.prevent="saveData" v-if="editParam=='taxIdentificationNumber'">
+																				<input class="form-control" v-focus @blur="saveData" type="text" name="taxIdentificationNumber" v-model="c.taxIdentificationNumber">
+																			</form>
+																			<i v-if="hoverParam=='taxIdentificationNumber'" class="fa fa-edit m-l-md"></i>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+							<!--商品信息-->
+							<div id="tab-2" class="tab-pane">
+								<div class="panel-body">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="panel panel-default">
+												<div class="panel-heading">
+													商品信息
+												</div>
+												<div class="panel-body">
+													<div class="ibox-content">
+														<table id="simple-table" class="table table-responsive table-bordered table-hover">
+															<thead>
+																<tr>
+																	<th width="10%">商品编号</th>
+																	<th width="21%">商品信息</th>
+																	<th width="6%">配送方式</th>
+																	<th width="6%">订单数量</th>
+																	<th width="6%">物流公司</th>
+																	<th width="6%">物流单号</th>
+																	<th width="5%">数量</th>
+																	<th width="10%">来源类型</th>
+																	<th width="5%">是否签收</th>
+																	<th width="25%">操作</th>
+																</tr>
+															</thead>
+															<tbody>
+																<template>
+																	<tr v-for="(item,index) of list.list">
+																		<td>{{item.skuCode}}</td>
+																		<td>
+																			<img class="goods_img pull-left" :src="item.mainImgPath" alt="">
+																			<div class="goods_txt pull-left">
+																				<p>{{item.skuName}}</p>
+																				<p>{{item.colorName}}</p>
+																				<p>{{item.standard}}</p>
+																			</div>
+																		</td>
+																		<td>{{item.deliveryType==0?'--':(item.deliveryType==1?'供应商配送':'我方配送')}}</td>
+																		<td>{{item.num}}</td>
+																		<td>{{item.companyName}}</td>
+																		<td>{{item.expressNo}}</td>
+																		<td>{{item.deliveryNum}}</td>
+																		<td>{{item.mark==1?'双11活动价':(item.mark ==2?'限时购活动':(item.mark ==3?'拼团':'--'))}}</td>
+																		<td>{{item.isSigned==0?'未签收':'已签收'}}</td>
+																		<td>
+																			<a class="btn btn-success" title="编辑" @click="editSku(item);">编辑</a>
+																			<a class="btn btn-success" title="物流信息" @click="wl(item);">物流信息</a>
+																			<a v-if="item.isSigned==0" class="btn btn-success" title="签收" @click="qs(item);">签收</a>
+																			<a class="btn btn-default" title="删除" @click="delSku(item);">删除</a>
+																		</td>
+																	</tr>
+																</template>
+																<tr v-else class="main_info">
+																	<td colspan="10">没有相关数据</td>
+																</tr>
+															</tbody>
+														</table>
+														<div class="pull-left form form-inline">
+															<div class="form-group form-group-sm">
+																共 {{list.total}} 条数据,每页显示
+																<select @change="goodSkuList(1)" v-model="list.pageSize" class="form-control">
+																	<option value="10">10</option>
+																	<option value="20">20</option>
+																	<option value="30">30</option>
+																	<option value="40">40</option>
+																	<option value="50">50</option>
+																</select> 条
+															</div>
+														</div>
+														<div class="pagi pull-right"></div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--编辑Sku-->
+			<div class="" style="height:0;overflow:hidden">
+				<div class="row">
+					<div class="col-sm-12 form form-horizontal" id="editSku">
+						<div class="form-group" style="margin-top: 20px;">
+							<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600;">配送方式：</span></label>
+							<div class="col-sm-9">
+								<select class="form-control col-sm-8" v-model="deliveryType">
+									<option value="">请选择配送方式</option>
+									<option value="1">供应商配送</option>
+									<option value="2">我方配送</option>
+								</select>
+							</div>
+						</div>
+						<template v-if="deliveryType==1">
+							<div class="form-group" style="margin-top: 20px;">
+								<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600;">配送公司：</span></label>
+								<div class="col-sm-9">
+									<select class="form-control col-sm-8" style="width: 100%;" v-model="expressCompanyCodeId" v-select2="" data-placeholder="请请选择配送公司">
+										<option v-for="item in expressCompanyCodeList" :value="item.expressCompanyCodeId" :id="item.expressCompanyCodeId" v-text="item.companyName"></option>
+										<option value="0">其它</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group" style="margin-top: 20px;">
+								<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600;">物流单号：</span></label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" value="" placeholder="请输入物流单号" v-model="expressNo">
+								</div>
+							</div>
+						</template>
+						<div class="form-group" style="margin-top: 20px;">
+							<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600;">数量：</span></label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" value="" placeholder="请输入数量" v-model="deliveryNum">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<!-- 全局js -->
+		<script src="../js/jquery-2.1.1.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/plugins/layer/layer.min.js"></script>
+		<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+		<script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/module/module_pagination.js"></script>
+		<!-- 自定义js -->
+		<script src="../js/content.min.js?v=1.0.0"></script>
+		<script src="../js/custom/common.js"></script>
+		<script src="../js/custom/sales/edit.js"></script>
+	</body>
+
+</html>

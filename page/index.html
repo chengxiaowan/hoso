@@ -1,0 +1,417 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<base href="/">
+		<meta charset="utf-8">
+		<!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<meta name="renderer" content="webkit">
+		<title></title>
+		<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+		<!-- webuploader上传插件js -->
+		<link rel="stylesheet" type="text/css" href="/static/ui/css/plugins/webuploader/webuploader.css">
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+		<base href="/">
+	</head>
+
+	<body class="gray-bg">
+		<div class="appWrapper">
+		
+		<div id="app" class="hide">
+			<div class=" wrapper border-bottom white-bg page-heading" style="padding-bottom: 13px">
+				<div class="row">
+					<div class="col-sm-12">
+						<h2>工作台
+						<button class="btn btn-white pull-right" title="刷新" onclick="location.reload()">
+			<i class="fa fa-refresh"></i>
+			</button>
+					</h2>
+					</div>
+				</div>
+			</div>
+
+			<div class="wrapper wrapper-content">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="ibox row-hook-1">
+							<div class="ibox-title">
+								<h5>我的任务</h5>
+								<a href="workBench/my/myTaskList.do" data-name="我的任务" class="btn btn-primary btn-outline pull-right btn-xs btn-more-hook"><i class="fa fa-list"></i> 更多</a>
+							</div>
+							<div class="ibox-content">
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<th>任务类型</th>
+											<th>完成状态</th>
+											<th>发起人</th>
+											<th v-if="flag!=0 && flag!=1 &&flag!=4" class="center">执行人</th>
+											<th>生成时间</th>
+											<th>操作</th>
+										</tr>
+									</thead>
+									<tbody class="render-container-hook">
+
+									</tbody>
+								</table>
+								<div class="hr-line-dashed"></div>
+								<div class="text-center">
+									<div class="page-nagivation"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-12" id="sale_box_hook" v-if="role=='销售精英'||role=='电访销售'||role=='销售总监'||role=='经理'||role=='电话销售总监'">
+						<div class="ibox ">
+							<div class="ibox-title">
+								<h5>销售简报</h5>
+								<input style="width:130px;margin-top: -8px;" readonly="readonly" type="text" class="form-control input-sm  pull-right" id="salerTimeEnd_hook" />
+								<div class="pull-right m-l-xs m-r-xs"> - </div>
+								<input style="width:130px;margin-top: -8px;" readonly="readonly" type="text" class="form-control input-sm  pull-right" id="salerTimeStart_hook" />
+							</div>
+							<div class="ibox-content text-center" style="padding:0;">
+								<table class="table table-bordered" style="position:relative;top:-1px">
+									<tbody>
+										<tr>
+											<td width="50%" v-if="role!='电访销售'">
+												<div class="row">
+													<small class=" col-xs-12 text-muted m-b-xs text-left">成交</small>
+													<div class="col-xs-4">
+														<h5>客户数</h5>
+														<h2 class="text-navy">
+																<a onclick="customer_case_view(1)" href="javascript:;">{{(prcessDetail.cj&&prcessDetail.cj.khsl) || 0}}</a>
+																  </h2>
+													</div>
+													<div class="col-xs-4">
+														<h5>订单总金额</h5>
+														<h2 class="text-navy">
+																<a onclick="customer_case_view(2)" href="javascript:;">¥{{(prcessDetail.cj&&prcessDetail.cj.price) || 0}}</a>
+																  </h2>
+													</div>
+													<div class="col-xs-4">
+														<h5>已回款金额</h5>
+														<h2 class="text-navy">
+																<a onclick="customer_case_view(3)" href="javascript:;">¥{{(prcessDetail.cj&&prcessDetail.cj.hkMoney) || 0}}</a>
+																  </h2>
+													</div>
+												</div>
+											</td>
+											<td width="50%">
+												<div class="row">
+													<small class=" col-xs-12 text-muted m-b-xs text-left">预测
+													<button v-if="role!='经理'" @click="forecast_add" class="btn btn-primary btn-outline btn-xs pull-right"><i class="fa fa-plus"></i> 新增预测</button>
+													</small>
+													<div class="col-xs-4" v-if="role!='电访销售'">
+														<h5>预测新增客户数</h5>
+														<h2 class="text-navy">
+																<a href="javascript:;" onclick="forecast_view(0)">{{prcessDetail.yc.khs || 0}}</a>
+																  </h2>
+													</div>
+													<div class="col-xs-4" v-if="role!='电访销售'">
+														<h5>预测新增金额</h5>
+														<h2 class="text-navy">
+																<a href="javascript:;" onclick="forecast_view(0)">¥{{prcessDetail.yc.price || 0}}</a>
+																  </h2>
+													</div>
+													<div class="col-xs-4" v-if="role=='电访销售'||role=='经理'">
+														<h5>预测新增意向客户数</h5>
+														<h2 class="text-navy">
+																<a href="javascript:;" onclick="forecast_view(1)">{{prcessDetail.yc.yckhs || 0}}</a>
+																  </h2>
+													</div>
+												</div>
+											</td>
+
+										</tr>
+										<tr>
+											<td>
+												<div class="row">
+
+													<small class=" col-xs-12 text-muted m-b-xs text-left">新增</small>
+													<div class="col-xs-4">
+														<h5>意向客户数</h5>
+														<h2 class="text-navy">
+																<a href="javascript:;" onclick="order_customer_view()">{{prcessDetail.xz.khs || 0}}</a>
+																  </h2>
+													</div>
+												</div>
+											</td>
+											<td>
+												<div class="row">
+													<small class=" col-xs-12 text-muted m-b-xs text-left">跟进</small>
+													<div :class="{'col-xs-3':role=='经理','col-xs-4':role!='经理'}">
+														<h5>写跟进次数</h5>
+														<h2 class="text-navy">
+																<a href="javascript:;" onclick="gj_view(0)">{{prcessDetail.gj.zcs}}</a>
+																  </h2>
+													</div>
+													<div :class="{'col-xs-3':role=='经理','col-xs-4':role!='经理'}">
+														<h5>电话量</h5>
+														<h2 class="text-navy">
+																<a href="javascript:;" onclick="gj_view(1)">{{prcessDetail.gj.dhzcs}}</a>
+																  </h2>
+													</div>
+													<div :class="{'col-xs-3':role=='经理','col-xs-4':role!='经理'}" v-if="role=='电访销售'||role=='经理'">
+														<h5>有效电话量</h5>
+														<h2 class="text-navy">
+															<a href="javascript:;" onclick="gj_view(1,1)">{{prcessDetail.gj.dhyxs}}</a>
+																  </h2>
+													</div>
+													<div :class="{'col-xs-3':role=='经理','col-xs-4':role!='经理'}" v-if="role!='电访销售'">
+														<h5>拜访量</h5>
+														<h2 class="text-navy">
+																<a href="javascript:;" onclick="visit_view()">{{prcessDetail.gj.bfl}}</a>
+																  </h2>
+													</div>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+
+							</div>
+						</div>
+					</div>
+
+					<div class="col-sm-12" v-if="flag==2||flag==3||flag==5 ">
+						<div class="ibox row-hook-5">
+							<div class="ibox-title">
+								<h5>我的审核</h5>
+							</div>
+							<div class="ibox-content">
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<th>类型</th>
+											<th>时间</th>
+											<th>申请人</th>
+											<th>操作</th>
+										</tr>
+									</thead>
+									<tbody class="render-container-hook">
+
+									</tbody>
+								</table>
+								<div class="hr-line-dashed"></div>
+								<div class="text-center">
+									<div class="page-nagivation"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-12">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="ibox row-hook-callInfo">
+									<div class="ibox-title no-padding">
+										<ul class="nav nav-tabs">
+											<li class="active">
+												<a style="border-top: 0;border-radius:0;border-left: none !important;" onclick="setCallInfoFlag(2)" data-toggle="tab" href="#tab-1" aria-expanded="true"> 我的提醒</a>
+											</li>
+											<li class="">
+												<a style="border-top: 0;border-radius:0;" data-toggle="tab" href="#tab-2" onclick="setCallInfoFlag(1)" aria-expanded="false"> 过期提醒</a>
+											</li>
+											<div class="pull-right form form-inline">
+												<div class="group-form">
+													<input style="width:130px;margin-top: 2px;margin-right: 10px;" readonly="readonly" placeholder="请选择时间" type="text" class="form-control input-sm " id="callInfoTime" />
+
+													<button class="btn btn-primary btn-outline btn-xs" id="newRemind" style="margin-top: 9px;margin-right: 15px;"><i class="fa fa-plus"></i> 新建提醒</button>
+												</div>
+											</div>
+
+										</ul>
+									</div>
+									<div class="ibox-content" style="border-top:none">
+										<table class="table table-hover">
+											<thead>
+												<tr>
+													<th class="center">提醒内容</th>
+													<th class="center">提醒时间</th>
+													<th class="center">操作</th>
+												</tr>
+											</thead>
+											<tbody class="render-container-hook">
+
+											</tbody>
+										</table>
+										<div class="hr-line-dashed"></div>
+										<div class="text-center">
+											<div class="page-nagivation"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="ibox ">
+									<div class="ibox-title">
+										<h5>销售助手</h5>
+									</div>
+									<div class="ibox-content">
+										<div class="feed-activity-list">
+											<div v-if="role=='销售精英' || role=='电访销售' ||role=='经理' " class="feed-element">
+												<a href="javascript:;" onclick="assis_view(0,'3天内即将划入公海的客户')">3天内即将划入公海的客户。</a>
+											</div>
+											<div v-if="role=='公司内部运作' || role=='运作总监'|| role=='经理'" class="feed-element">
+												<a href="javascript:;" onclick="assis_view(1,'7天内有回款的合同')">7天内计划回款的合同。</a>
+											</div>
+											<div v-if="role=='经理' || role=='销售精英' || role=='客服'" class="feed-element">
+												<a href="javascript:;" onclick="assis_view(2,'30天内将要到期的合同')">30天内将要到期的合同。</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="col-sm-12" v-if="role=='销售精英'||role=='销售总监'||role=='经理'">
+						<div class="ibox ">
+							<div class="ibox-title">
+								<h5>销售排行</h5>
+								<input style="width:130px;margin-top: -8px;" readonly="readonly" type="text" class="form-control input-sm  pull-right" id="ratingTimeEnd_hook" />
+								<div class="pull-right m-l-xs m-r-xs"> - </div>
+								<input style="width:130px;margin-top: -8px;" readonly="readonly" type="text" class="form-control input-sm  pull-right" id="ratingTimeStart_hook" />
+								<div class="pull-right">
+									<select name="ratingSort" @change="rating_get" class="pull-right form-control m-r-xs" style="width:180px;margin-top: -8px;">
+										<option value="1">合同金额</option>
+										<option value="0">客户数量</option>
+									</select>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<div class="ratingChart-hook" style="height: 350px;width: 100%;">
+
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-12" v-if="role=='经理'||role=='电访销售'">
+						<div class="ibox ">
+							<div class="ibox-title">
+								<h5>销售有意向排行</h5>
+								<input style="width:130px;margin-top: -8px;" readonly="readonly" type="text" class="form-control input-sm  pull-right" id="intentionalTimeEnd_hook" />
+								<div class="pull-right m-l-xs m-r-xs"> - </div>
+								<input style="width:130px;margin-top: -8px;" readonly="readonly" type="text" class="form-control input-sm  pull-right" id="intentionalStart_hook" />
+								<div class="pull-right">
+									<select name="intentionalSort" @change="intentional_get" class="pull-right form-control m-r-xs" style="width:180px;margin-top: -8px;">
+										<option value="0">电话量</option>
+										<option value="1">意向客户数</option>
+									</select>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<div class="IntentionalChart-hook" style="height: 350px;width: 100%;">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-12">
+						<div class="row">
+							<div class="col-sm-6" v-if="role=='销售精英'||role=='电访销售'||role=='销售总监'||role=='经理'||role=='电话销售总监'">
+								<div class="ibox ">
+									<div class="ibox-title">
+										<h5>销售转化率</h5>
+										<input style="width:130px;margin-top: -8px;" readonly="readonly" type="text" class="form-control input-sm  pull-right" id="transTimeEnd_hook" />
+										<div class="pull-right m-l-xs m-r-xs"> - </div>
+										<input style="width:130px;margin-top: -8px;" readonly="readonly" type="text" class="form-control input-sm  pull-right" id="transTimeStart_hook" />
+										<select name="transFlag" class="pull-right form-control m-r-xs" style="width:180px;margin-top: -8px;">
+											<option value="0">有意向转化率</option>
+											<option value="1" v-if="role!='电访销售'">意向成交量转化率</option>
+											<option value="2" v-if="role!='电访销售'">目标成交量转化率</option>
+											<option value="3" v-if="role!='电访销售'">目标成交金额转化率</option>
+										</select>
+									</div>
+									<div class="ibox-content">
+										<div class="transChart-hook" style="height: 350px;width: 100%;">
+
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6" v-if="role=='经理'">
+								<div class="ibox">
+									<div class="ibox-title">
+										<h5>销售漏斗</h5>
+									</div>
+									<div class="ibox-content">
+										<div class="funnelChart-hook" style="height: 350px;width: 100%;">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+			<div style="height:0;overflow:hidden;">
+				<form class="form form-horizontal" id="remind_box">
+					<div class="m-t-md">
+						<div class="col-xs-10 col-xs-offset-1">
+							<div class="form-group">
+								<label class="control-label">提醒内容：</label>
+								<input class="form-control" type="text" name="remark" value="">
+							</div>
+							<div class="form-group">
+								<label class="control-label">提醒时间：</label>
+								<input class="form-control" type="text" id="remind_time" readonly name="time" value="">
+							</div>
+						</div>
+					</div>
+				</form>
+
+				<form class="form form-horizontal" id="forecast_box">
+					<div class="m-t-md">
+						<div class="col-xs-10 col-xs-offset-1">
+							<div class="form-group">
+								<label class="control-label">客户名称：</label>
+								<select style="width: 100%;" name="customerId" id="customerId"></select>
+
+							</div>
+							<div class="form-group" v-if="role!='电访销售'">
+								<label class="control-label">预测金额(元)：</label>
+								<input class="form-control" type="number" name="forecast" id="price" value="" />
+							</div>
+						</div>
+					</div>
+				</form>
+
+			</div>
+		</div>
+		</div>
+		<!-- 全局js -->
+		<script src="/static/ui/js/jquery.min.js"></script>
+		<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+		<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+		<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+		<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+		<script src="/static/ui/js/plugins/laydate5/laydate.js"></script>
+		<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+		<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+		<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+		<script src="/static/ui/js/plugins/echarts/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/static/ui/js/vue.js"></script>
+		<!--workspace-->
+		<script type="text/javascript" src="/static/js/lib/workspace.js"></script>
+		<script type="text/javascript" src="/static/js/include/business/workBenchManage/index.js"></script>
+	</body>
+
+</html>

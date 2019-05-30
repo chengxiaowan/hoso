@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="inputLine" id="app">
+    <span>所在区域</span>
+    <select v-model="countryName" @change="selectCountry">
+        <option value="0">请选择</option>
+        <option :value="item" v-for="(item,index) in area">{{item.country}}</option>
+    </select>
+    <select v-model="cityName">
+        <option value="">请选择</option>
+        <option :value="item" v-for="(item,index) in countryName.city">{{item}}</option>
+    </select>
+</div>
+
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/custom/provider/index.js"></script>
+</body>
+</html>

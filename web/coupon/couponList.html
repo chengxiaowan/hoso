@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>新增商品</title>
+		<meta name="keywords" content="寒舍">
+		<meta name="description" content="寒舍">
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+		<link rel="stylesheet" href="../js/plugins/layui/css/layui.css">
+		<link rel="stylesheet" href="../css/animate.min.css">
+		<link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+		<link rel="stylesheet" href="../css/style.css">
+		<link rel="stylesheet" href="../css/layout.css">
+		<link rel="stylesheet" href="../css/htz.css" />
+	</head>
+	<style>
+		.layui-upload-list {
+			margin: 0;
+		}
+		
+		.control-label {
+			padding: 7px 10px;
+			color: #000;
+			font-weight: normal;
+			text-align: left;
+		}
+	</style>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content" id="app">
+			<div class="ibox-content">
+				<div class="row">
+					<div class="col-sm-12">
+						<!-- 检索 start -->
+						<div class="form-inline" id="customerForm">
+							<div class="form-group">
+								<input id="nav-search-input" name="name" placeholder="请输入优惠券名称" value="" class="form-control" type="text" v-model="keywords">
+							</div>
+							<div class="form-group">
+								<em>类型</em>
+								<select class="form-control" v-model="limitType">
+									<option value="">全部</option>
+									<option value="0">天数限制</option>
+									<option value="1">日期限制</option>
+									<option value="2">无限制</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<em>开始日期</em>
+								<input type="text" readonly="readonly" id="start" name='start' class="form-control" placeholder="请选择开始日期" v-model="createTimeStart" />
+							</div>
+							<div class="form-group">
+								<em>结束日期</em>
+								<input type="text" readonly="readonly" id="end" name='end' class="form-control" placeholder="请选择结束日期" v-model="createTimeEnd" />
+							</div>
+							<button type="submit" class="btn btn-primary" @click="search()">
+								<i class="icon icon_search"></i> 搜索
+                    		</button>
+							<button  class="btn btn-success" @click="add()">
+                        		<i id="nav-search-icon" class="icon icon_plus"></i> 新增
+                    		</button>
+						</div>
+						<!-- 检索 end -->
+					</div>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<table id="simple-table" class="table table-responsive table-bordered table-hover">
+					<thead>
+						<tr>
+							<th width="10%">名称</th>
+							<th width="8%">金额(元)</th>
+							<th width="8%">条件金额(元)</th>
+							<th width="8%">类型</th>
+							<th width="8%">时限(天)</th>
+							<th width="8%">开始日期</th>
+							<th width="8%">结束日期</th>
+							<th width="8%">人均可领次数</th>
+							<th width="8%">活动类型</th>
+							<th width="8%">状态</th>
+							<th width="8%">创建时间</th>
+							<th width="10%">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<template v-if="list.total > 0">
+							<tr v-for="item in list.list">
+								<td>{{item.name}}</td>
+								<td>{{item.money}}</td>
+								<td>{{item.conditionMoney}}</td>
+								<td>{{item.limitType==0?'天数限制':(item.limitType==1?'日期限制':'无限制')}}</td>
+								<td>{{item.timeLimit}}</td>
+								<td>{{item.startDateLimit}}</td>
+								<td>{{item.endDateLimit}}</td>
+								<td>{{item.receiveTimes}}</td>
+								<td>{{item.type==0?'双11':'通用'}}</td>
+								<td>{{item.status==0?'下线':'上线'}}</td>
+								<td>{{item.createTime}}</td>
+								<td>
+									<a class="btn btn-default" title="删除" @click="del(item.couponImageBindId)">删除</a>
+								</td>
+							</tr>
+						</template>
+						<tr v-else class="main_info" v-else>
+							<td colspan="12">没有相关数据</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="pull-left form form-inline">
+					<div class="form-group form-group-sm">
+						共 {{list.total}} 条数据,每页显示
+						<select @change="getData(1)" v-model="list.pageSize" class="form-control">
+							<option value="10">10</option>
+							<option value="20">20</option>
+							<option value="30">30</option>
+							<option value="40">40</option>
+							<option value="50">50</option>
+						</select> 条
+					</div>
+				</div>
+				<div class="pagi pull-right"></div>
+			</div>
+		</div>
+
+		<!-- 全局js -->
+		<script src="../js/jquery-2.1.1.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/plugins/layer/layer.min.js"></script>
+		<script src="../js/plugins/layui/layui.js"></script>
+		<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+		<script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/module/module_pagination.js"></script>
+		<script src="../js/tagsinput.js"></script>
+		<!-- 自定义js -->
+		<script src="../js/content.min.js?v=1.0.0"></script>
+		<script src="../js/custom/common.js"></script>
+		<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+		<script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
+		<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+		<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+		<script src="../js/qiniuyun/qiniuImgL.js"></script>
+		<script src="../js/custom/coupon/couponList.js"></script>
+	</body>
+
+</html>

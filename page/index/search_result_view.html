@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+		<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+	</head>
+
+	<body>
+		<div class="wrapper wrapper-content hide" id="app">
+			<div class="col-sm-10 col-sm-offset-1 form form-horizontal m-t-sm">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group" v-for='(el,key) in d'>
+							<label class="col-sm-3 control-label">{{el.name}}：</label>
+							<div class="col-sm-9">
+								<input v-if="key!='linkmans'" class="form-control" disabled="" type="text" v-model="el.value" value="">
+								<table v-if="key=='linkmans'" class="table table-striped table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>姓名</th>
+									<th>职务</th>
+									<th>电话</th>
+									<th>手机</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="els in d.linkmans.value">
+									<td>{{els.name}}</td>
+									<td>{{els.postion}}</td>
+									<td>{{els.landline}}</td>
+									<td>{{els.mobilePhone}}</td>
+								</tr>
+							</tbody>
+						</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="/static/ui/js/jquery.min.js"></script>
+	<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+	<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+	<script src="/static/ui/js/plugins/layer/laydate/laydate.js"></script>
+	<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+	<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+	<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+	<script src="/static/ui/js/plugins/echarts/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/static/ui/js/vue.js"></script>
+	<script src="/static/js/include/module/module_pagination.js"></script>
+
+	<script type="text/javascript">
+		var config = {
+			flag: yo.getQueryString("flag"),
+			id: yo.getQueryString("id"),
+			iskhgh : yo.getQueryString("isKhgh"),
+			role: localStorage.userRole || "",
+			api_showDetail: '/main/showCompayDetail', //查询
+		}
+
+		window.app = new Vue({
+					el: '#app',
+					data: {
+						flag: config.flag,
+						role: config.role,
+						c: {},
+						flagMap0: '企业名称,所在省,所在市,具体地址,开户行,开户行帐号,纳税人识别号,传真,邮政编码,合同销售人,订单销售人,备注,联系人',
+						flagKey0: 'name,provinceName,cityName,companyAddress,bankName,bankNumber,taxIdentificationNumber,fax,postCode,contractSaleName,orderSaleName,remark,linkmans',
+						flagMap1: '企业名称,所在省,所在市,具体地址,公司电话,传真,邮政编码,营业现状,运作,联系人列表',
+						flagKey1: 'debtorName,provinceName,cityName,debtorAddress,debtorMobilePhone,debtorFax,debtorPostcode,debtorStatus,runnerName,linkmans',
+						flagMap2: '企业名称,所在省,所在市,具体地址,联系人,职务,电话,手机,邮箱,微信号,QQ号,当前跟进销售人,备注,联系人',
+						flagKey2: 'name,provinceName,cityName,address,linkmanName,postion,linkmanLandline,linkmanMobilePhone,email,weChat,qq,lastSaleName,remark,linkmans',
+					},
+						computed: {
+							d: function() {
+								var that = this;
+								var names = this['flagMap' + config.flag].split(',');
+								var keys = this['flagKey' + config.flag].split(',');
+								var j = {}
+								$.each(names, function(i) {
+									var ni = keys[i]
+									j[ni] = {
+										name: names[i],
+										value: ""
+									}
+								});
+								if(that.c.linkMan) {
+									that.c.linkmans = that.c.linkMan
+									var type = that.c.debtorStatus
+									if(type==0) that.c.debtorStatus = '营业中'
+									if(type==0) that.c.debtorStatus = '停止/暂停营业'
+									if(type==0) that.c.debtorStatus = '不详'
+									if(type==0) that.c.debtorStatus = '债务主体破产/已注销'
+								}
+								if(that.c.lastSaleName&&config.iskhgh!="1") that.c.lastSaleName = "" 
+								for(var k in that.c) {
+									if(j[k]) j[k].value = that.c[k]
+								}
+								j.linkmans.value = that.c.linkmans || that.c.linkMan
+								return j
+							}
+						},
+						created: function() {
+							var that = this;
+							document.getElementById("app").classList.remove("hide");
+						},
+						mounted: function() {
+							this.getData()
+						},
+						methods: {
+							/**
+							 * 载入中方法
+							 * 
+							 * @param {string} s 是否关闭
+							 */
+							loading: function(s) {
+								if(s == "close") layer.close(this.loadingSwitch)
+								else this.loadingSwitch = layer.load(3);
+							},
+							getData: function(page) {
+				$('body,html').scrollTop(0)
+								var that = this;
+								$.post(config.api_showDetail, {
+									flag: config.flag,
+									id: config.id
+								}).done(function(res) {
+									that.c = res.result1
+								})
+							}
+						}
+					})
+	</script>
+
+</html>

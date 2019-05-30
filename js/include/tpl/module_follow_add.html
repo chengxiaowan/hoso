@@ -1,0 +1,52 @@
+<form class="form form-horizontal" id="follow_add">
+	<div class="m-t-md">
+		<div class="col-xs-10 col-xs-offset-1">
+			<div class="form-group">
+				<label class="control-label">跟进方式：</label>
+				<select class="form-control" name="link">
+					<option value="电话">电话</option>
+					<option value="QQ">QQ</option>
+					<option value="微信">拜访</option>
+					<option value="邮件">邮件</option>
+					<option value="短信">短信</option>
+					<option value="其他">其他</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="control-label">跟进状态：</label>
+				<select class="form-control" name="gjStatus">
+					<option value="0">未处理</option>
+					<option value="1">初步沟通</option>
+					<option value="2">无意向还款</option>
+					<option value="3">有意向还款</option>
+					<option value="4">外访</option>
+					<option value="5">部分还款</option>
+					<option value="6">已结清</option>
+					<option value="7">已立案</option>
+					<option value="8">已诉讼保全</option>
+					<option value="9">判决/仲裁</option>
+					<option value="10">已申请强制执行</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="control-label">跟进时间：</label>
+				<input id="log_createTime" class="form-control" type="text" name="createTime" value="">
+			</div>
+			<div class="form-group">
+				<label class="control-label">下次跟进时间：</label>
+				<input id="log_xcgjTime" class="form-control" type="text" name="xcgjTime" value="">
+			</div>
+			<div class="form-group">
+				<label class="control-label">跟进记录：</label>
+				<textarea class="form-control" name="remark" style="height: 120px"></textarea>
+			</div>
+			<div class="form-group">
+				<label class="control-label">附件：</label>
+				<div class="well well-sm">
+					<div id="follow_fileUp"></div>
+				</div>
+				<div class="file-list"></div>
+			</div>
+		</div>
+	</div>
+</form>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="js/select2/select2.min.css" />
+    <style>
+        html, body {
+            font: 13px/18px sans-serif;
+        }
+        select {
+            min-width: 300px;
+        }
+    </style>
+</head>
+<body>
+<div id="el">
+    <p>选中的: {{ selected }}</p>
+    <select2 :options="options" v-model="selected"></select2>
+</div>
+<link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+<script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/custom/common.js"></script>
+<script>
+    var config = {
+        role: localStorage.userRole,
+        api_supplierList: api_url+'/supplier/supplierList', //获取供应商列表
+
+    }
+    Vue.component('select2', {
+        props: ['options', 'value'],
+        template: '<select><slot></slot></select>',
+        mounted: function () {
+            var vm = this;// init select2
+            $(this.$el).select2({ data: this.options }).val(this.value).trigger('change').on('change', function () {
+                // emit event on change.
+                vm.$emit('input', this.value)
+            })
+        },
+        watch: {
+            value: function (value) {
+                // update value
+                $(this.$el).val(value).trigger('change')
+            },
+            options: function (options) {
+                // update options
+                $(this.$el).empty().select2({ data: options })
+            }
+        },
+        destroyed: function () {
+            $(this.$el).off().select2('destroy')
+        }
+    })
+    var vm = new Vue({
+        el: '#el',
+        data: {
+            selected: 2,
+            options: [
+                { id: 0, name: '苹果' },
+                { id: 1, name: '香蕉' },
+                { id: 2, name: '香梨' },
+                { id: 3, name: '榴莲' },
+                { id: 4, name: '西瓜' }
+            ]
+        },
+        mounted: function() {
+            const that = this;
+            that.getsupplierList();
+        },
+        methods: {
+
+            // 获取供应商
+            getsupplierList(){
+                const that = this;
+                $.ajax({
+                    url: config.api_supplierList,
+                    async: true,
+                    type: 'post',
+                    data: {
+                        keywords: ''
+                    },
+                    success: function(res) {
+                        if(res.error == "00") {
+                            // that.options = res.result;
+                            // console.log(that.options);
+                            var arr = [];
+                            var obj = {};
+                            for(var i in res.result){
+                                obj.id = res.result[i].id;
+                                obj.text = res.result[i].name;
+                                arr.push(obj);
+                            }
+
+                            that.options = arr;
+
+                        } else {
+                            layer.msg(res.msg)
+                        }
+                    }
+                });
+            },
+        }
+    })
+</script>
+</body>
+</html>

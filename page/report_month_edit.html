@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" href="favicon.ico">
+	<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+	<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+	<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+	<link href="/static/ui/css/animate.css" rel="stylesheet">
+	<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+	<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+</head>
+<style>
+	body {
+		font-size: 15px
+	}
+
+	.text-decoration-line {
+		text-decoration: underline;
+	}
+	.text-font-normal{
+		font-weight: normal !important;
+	}
+</style>
+
+<body class="gray-bg">
+	<div class="wrapper wrapper-content hide" id="app">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox-content m-b-sm border-bottom">
+					<div class="p-xs text-center">
+						<h2 id="title">{{year}}年度工作报告{{month}}月</h2>
+						<span>姓名 : {{userName}}</span>
+					</div>
+				</div>
+				<div class="ibox-content">
+					<div class="forum-title">
+						<h3>一、业绩部分</h3>
+					</div>
+					<div class="forum-item">
+						<div class="row">
+							<div class="col-sm-12">
+								<a class="forum-item-title col-sm-1 p-r-0" style="width:4%">1.</a>
+								<div class="col-sm-11 p-l-0" style="width:96%">
+									<p>
+										本月客户委托（订单）{{Number(c.xydd)+Number(c.byja)+Number(c.bygb)+Number(c.wtdd)}} 件；
+									</p>
+									<p>
+										现有订单 {{c.xydd||0}} 个，总金额 {{c.xyje||0}} 元 ；
+									</p>
+									<p>
+										本月结案 {{c.byja||0}} 个，关闭 {{c.bygb||0}} 个；
+									</p>
+									<p>本月新增 {{c.wtdd || 0}} 个，委托金额 {{c.wtje || 0}} 元；</p>
+									<p class="form form-inline">季度既定目标(元) <input v-model="c.jdjdmb" class="form-control input-sm m-b-xs" type="number" name="" placeholder="季度既定目标" value=""> ，截止目前实际完成(元)<input v-model="c.sjwc" class="form-control input-sm m-b-xs" type="number" name="" placeholder="截止目前实际完成" value=""> ，占季度计划的 {{computed_jhrate}}（完成本月计划的 {{computed_sjrate}} ）。</p>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<a class="forum-item-title col-sm-1 p-r-0" style="width:4%">2.</a>
+								<div class="col-sm-11 p-l-0" style="width:96%">
+									<p>
+										本月账单共 {{thisMonth.length || 0}} 张，产生佣金 {{thisMonth_yjsr.toFixed(2)}} 元。账单构成如下：
+									</p>
+									<table class="table table-bordered table-hover text-center">
+										<tr>
+											<td>日期</td>
+											<td>债权人</td>
+											<td>债务人</td>
+											<td>回款金额</td>
+											<td>佣金收入</td>
+											<td>计划内/外账单</td>
+										</tr>
+										<tr v-for="el of thisMonth">
+											<td>{{el.rq}}</td>
+											<td>{{el.zqr}}</td>
+											<td>{{el.zwr}}</td>
+											<td>{{el.hkje}}</td>
+											<td>{{el.yjsr}}</td>
+											<td>{{el.jhnwzd}}</td>
+										</tr>
+										<tr>
+											<td>合计</td>
+											<td></td>
+											<td></td>
+											<td><b>{{thisMonth_hkje.toFixed(2)}}</b></td>
+											<td><b>{{thisMonth_yjsr.toFixed(2)}}</b></td>
+											<td></td>
+										</tr>
+									</table>
+									<ul>
+										<li>
+											<div class="text-decoration-line m-b-sm">
+												重点/特殊订单贡献描述（有针对性的总结及分析，以期得到公司的关注或更直接支持）：
+											</div>
+											<p class="form">
+												<textarea v-model="c.zdms" class="form-control" placeholder="重点/特殊订单贡献描述"></textarea>
+											</p>
+										</li>
+										<li>
+											<div class="text-decoration-line m-b-sm">
+												业绩未完成原因分析（对应具体案件，可以谈工作量的饱和度、应对措施、需要的直接支持，不要谈案件资源不足）。：
+											</div>
+											<p class="form">
+												<textarea v-model="c.yjwwcfx" class="form-control" placeholder="业绩未完成原因分析"></textarea>
+											</p>
+										</li>
+										<li>
+											<div class="text-decoration-line m-b-sm">
+												本月工作状态自我分析和评定：
+											</div>
+											<p class="form" >
+												<textarea v-model="c.zwpj" class="form-control" placeholder="本月工作状态自我分析和评定"></textarea>
+											</p>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="forum-title">
+						<h3>二、存在的问题分析及工作要求（包括对团队管理的要求及建议）：</h3>
+					</div>
+					<div class="forum-item">
+						<div class="row">
+							<div class="col-sm-12 form">
+									<textarea v-model="c.gzyq" class="form-control" rows="" cols="" placeholder="存在的问题分析及工作要求"></textarea>
+							</div>
+						</div>
+					</div>
+
+					<div class="forum-title">
+						<h3>三、本月对客服、销售工作质量评定及建议<span class="text-font-normal text-decotration">（每期评定对该部门人员的年终绩效与日常管理有直接的关系，我们需要把支持部及销售部的问题挖掘出来，有成效的帮助改进，有目的、持续的帮助他们把工作做得更好、积极帮助他们发现和解决实际出现的问题）</span>：</h3>
+					</div>
+					<div class="forum-item">
+						<div class="row">
+							<div class="col-sm-12 form">
+									<textarea v-model="c.zdsjyxsj" class="form-control" rows="" cols="" placeholder="本月对客服、销售工作质量评定及建议"></textarea>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="forum-title">
+						<h3>四、下月账单数和佣金金额具体预计分解如下：</h3>
+					</div>
+					<div class="forum-item">
+						<div class="row">
+							<div class="col-sm-12 form">
+								<table class="table table-bordered table-hover text-center">
+										<tr>
+											<td>账单预计实现时间</td>
+											<td>债权人</td>
+											<td>债务人</td>
+											<td>回款金额</td>
+											<td>佣金收入</td>
+											<td>难点分析</td>
+										</tr>
+										<tr v-for="(el,index) of nextMonth">
+											<td>{{el.rq}}</td>
+											<td>{{el.zqr}}</td>
+											<td>{{el.zwr}}</td>
+											<td>{{el.hkje}}</td>
+											<td>{{el.yjsr}}</td>
+											<td class="form">
+<textarea v-model="el.ndfx" class="form-control" placeholder="难点分析" rows="" cols=""></textarea>
+											</td>
+										</tr>
+<tr>
+											<td>总计</td>
+											<td></td>
+											<td></td>
+											<td><b>{{nextMonth_hkje.toFixed(2)}}</b></td>
+											<td><b>{{nextMonth_yjsr.toFixed(2)}}</b></td>
+											<td></td>
+										</tr>
+										<tr>
+						<td colspan="6">
+						合计：追回金额 {{nextMonth_hkje.toFixed(2)}} 元，帐单 {{nextMonth.length}} 笔，佣金收入 {{nextMonth_yjsr.toFixed(2)}} 元      ；
+						<br>
+						<div class="form form-inline">
+预计结案  <input type="number" class="form-control input-sm" v-model="c.yjja" placeholder="预计结案"> 笔.　关闭数  <input type="number" class="form-control input-sm" v-model="c.gbs" placeholder="预计关闭"> 
+						</div>
+						</td>
+										</tr>
+									</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+
+	<script src="/static/ui/js/jquery.min.js"></script>
+	<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+	<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+	<script src="/static/ui/js/plugins/layer/laydate/laydate.js"></script>
+	<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+	<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+	<script src="/static/ui/js/vue.js"></script>
+	<script src="/static/ui/js/require.min.js" data-main="/static/js/include/page/report_month_edit"></script>
+</body>
+
+</html>

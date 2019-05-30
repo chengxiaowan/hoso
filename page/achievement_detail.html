@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+		<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+		<link href="/static/ui/css/htz.css" rel="stylesheet">
+		<style type="text/css">
+			body {
+				overflow: hidden;
+			}
+			.col-sm-9{
+				width: 71%;
+			}
+		</style>
+	</head>
+
+	<body class="gray-bg">
+		<div class="appWrapper">
+			<div class="wrapper wrapper-content" id="app">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="tabs-container">
+							<div class="tab-content">
+								<div id="tab-1" class="tab-pane active">
+									<div class="panel-body">
+										<div class="panel panel-default">
+											<div class="panel-body htz-panel-body" style="border:none">
+												<table class="table table-bordered table-hover">
+													<thead>
+														<tr>
+															<th>姓名</th>
+															<th>岗位</th>
+															<th>四月</th>
+															<th>五月</th>
+															<th>六月</th>
+															<th>七月</th>
+															<th>八月</th>
+															<th>九月</th>
+															<th>十月</th>
+															<th>十一月</th>
+															<th>十二月</th>
+															<th>一月</th>
+															<th>二月</th>
+															<th>三月</th>
+														</tr>
+													</thead>
+													<tbody id="htz_zb"  >
+														<tr v-for="(el,index) of c.list" :data-id="el.user_id">
+															<td>{{el.NAME}}</td>
+															<td>{{el.roleName}}</td>
+															<td><input data-month="4" type="text" class="form-control"></td>
+															<td><input  data-month="5" type="text" class="form-control"></td>
+															<td><input  data-month="6" type="text" class="form-control"></td>
+															<td><input  data-month="7" type="text" class="form-control"></td>
+															<td><input  data-month="8" type="text" class="form-control"></td>
+															<td><input  data-month="9" type="text" class="form-control"></td>
+															<td><input  data-month="10" type="text" class="form-control"></td>
+															<td><input  data-month="11" type="text" class="form-control"></td>
+															<td><input  data-month="12" type="text" class="form-control"></td>
+															<td><input  data-month="1" type="text" class="form-control"></td>
+															<td><input  data-month="2" type="text" class="form-control"></td>
+															<td><input  data-month="3" type="text" class="form-control"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="text-center" style="margin-bottom: 30px;">
+												<a class="btn btn-mini btn-primary" @click="save"><i class="fa fa-save"></i> 保存</a>
+												<a class="btn btn-mini btn-danger"><i class="fa fa-save"></i> 取消</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		
+		<script src="/static/ui/js/jquery.min.js"></script>
+		<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+		<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+		<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+		<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+		<script src="/static/ui/js/plugins/layer/laydate/laydate.js"></script>
+		<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+		<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+		<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+		<script src="/static/ui/js/vue.js"></script>
+		<script src="/static/ui/js/require.min.js" data-main="/static/js/include/dev/achievement_detail"></script>
+	</body>
+
+</html>

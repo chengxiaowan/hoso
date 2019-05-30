@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>商品列表</title>
+		<meta name="keywords" content="寒舍">
+		<meta name="description" content="寒舍">
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+		<link rel="stylesheet" href="../css/animate.min.css">
+		<!--选择框-->
+		<link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+		<link rel="stylesheet" href="../css/style.css">
+		<link rel="stylesheet" href="../css/layout.css">
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	</head>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content  animated fadeInRight" id="app">
+			<div class="ibox-content">
+				<div class="row">
+					<div class="col-sm-12">
+						<!-- 检索 start -->
+						<div class="form-inline" id="customerForm">
+							<div class="form-group">
+								<input id="nav-search-input" name="name" placeholder="请输入商品名称" class="form-control" type="text" v-model="keywords">
+							</div>
+							<div class="form-group">
+								<em>商品分类</em>
+								<template>
+									<el-select v-model="typeId" clearable filterable placeholder="请选择商品分类"  style='width: 140px;'>
+										<el-option v-for="item in typeList" :key="item.parentId" :label="item.parentName" :value="item.parentId">
+										</el-option>
+									</el-select>
+								</template>
+							</div>
+							<div class="form-group">
+								<em>供应商</em>
+								<template>
+									<el-select v-model="supplierId" clearable filterable placeholder="请选择供应商"  style='width: 140px;'>
+										<el-option v-for="item in supplierList" :key="item.id" :label="item.text" :value="item.id">
+										</el-option>
+									</el-select>
+								</template>
+							</div>
+							<div class="form-group">
+								<em>品牌</em>
+								<template>
+									<el-select v-model="brandId" clearable filterable placeholder="请选择品牌"  style='width: 140px;'>
+										<el-option v-for="item in brandList" :key="item.id" :label="item.text" :value="item.id">
+										</el-option>
+									</el-select>
+								</template>
+							</div>
+							<div class="form-group">
+								<em>状态</em>
+								<el-select clearable v-model="status" placeholder="请选择状态"  style='width: 120px;'>
+									<el-option label="已下架" value="0"> </el-option>
+									<el-option label="部分上架" value="1"> </el-option>
+									<el-option label="已上架" value="2"> </el-option>
+								</el-select>
+							</div>
+							<button type="submit" class="btn btn-htz btn-primary" @click="search()">
+                        <i class="icon icon_search"></i> 搜索
+                    </button>
+							<button type="reset" class="btn btn-htz btn-success" @click="jumpToGoods();">
+                        <i id="nav-search-icon" class="icon icon_plus"></i> 新增
+                    </button>
+						</div>
+						<!-- 检索 end -->
+					</div>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<table id="simple-table" class="table  table-bordered table-hover">
+					<thead>
+						<tr>
+							<th width="20%">商品名称</th>
+							<th width="10%">分类</th>
+							<th width="10%">供应商</th>
+							<th width="10%">品牌</th>
+							<th width="10%">图片</th>
+							<th width="10%">价格区间（元）</th>
+							<th width="10%">上下架状态</th>
+							<th width="20%">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-if="list.total > 0" v-for="item in list.list">
+							<td>{{item.name}}</td>
+							<td>{{item.typeName}}</td>
+							<td>{{item.supplierName}}</td>
+							<td>{{item.brandName}}</td>
+							<td><img :src="item.image" width="60" alt=""></td>
+							<td>{{item.minPrice}}-{{item.maxPrice}}</td>
+							<td v-if="item.isOnsell == 0">已下架</td>
+							<td v-if="item.isOnsell == 1">部分上架</td>
+							<td v-if="item.isOnsell == 2">已上架</td>
+							<td class="btn-hide">
+								<a class="btn btn-success" title="编辑" @click="edit(item.id);">编辑</a>
+								<a class="btn btn-success" title="二维码" @click="ewm(item);">二维码</a>
+								<a class="btn btn-default" title="删除" @click="del(item.id);">删除</a>
+							</td>
+						</tr>
+						<tr class="main_info" v-else>
+							<td colspan="8">没有相关数据</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="pull-left form form-inline">
+					<div class="form-group form-group-sm">
+						共 {{list.total}} 条数据,每页显示
+						<select @change="getData(1)" v-model="list.pageSize" class="form-control">
+							<option value="10">10</option>
+							<option value="20">20</option>
+							<option value="30">30</option>
+							<option value="40">40</option>
+							<option value="50">50</option>
+						</select> 条
+					</div>
+				</div>
+				<div class="pagi pull-right"></div>
+			</div>
+
+			<!--背景-->
+			<div v-cloak v-if="bg_show1==true" @click="hide1" class="mb-bg"></div>
+			<div v-cloak v-if="bg_show1==true" class="ewm">
+				<a><img :src="image_ewm" @click="downs()"></a>
+			</div>
+
+		</div>
+		<!-- 全局js -->
+		<script src="../js/jquery-2.1.1.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/plugins/layer/layer.min.js"></script>
+		<script src="../js/jquery.navScroll.js"></script>
+		<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+		<script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/module/module_pagination.js"></script>
+		<script src="../js/custom/element-ui/index.js"></script>
+		<!-- 自定义js -->
+		<script src="../js/content.min.js?v=1.0.0"></script>
+		<script src="../js/custom/common.js"></script>
+		<script src="../js/custom/goods/index.js"></script>
+	</body>
+
+</html>

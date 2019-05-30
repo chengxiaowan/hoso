@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>角色管理</title>
+		<meta name="keywords" content="寒舍">
+		<meta name="description" content="寒舍">
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+		<link rel="stylesheet" href="../css/animate.min.css">
+		<link rel="stylesheet" href="../js/plugins/laydate/theme/default/laydate.css">
+		<link rel="stylesheet" href="../css/style.css">
+		<link rel="stylesheet" href="../css/layout.css">
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	</head>
+	<style>
+		.input-container {
+			height: 34px!important;
+			line-height: 34px!important;
+		}
+		.el-select-dropdown{
+			z-index: 9999999999999!important;
+		}
+	</style>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content" id="app">
+			<div class="ibox-content">
+				<div class="row">
+					<div class="col-sm-12">
+						<!-- 检索 start -->
+						<div class="form-inline" id="customerForm">
+							<div class="form-group">
+								<input placeholder="请输入角色名称" class="form-control" type="text" v-model="keywords">
+							</div>
+							<div class="form-group">
+								<em>类型</em>
+								<el-select clearable v-model="roleType" placeholder="请选择类型">
+									<el-option label="系统" value="1"></el-option>
+									<el-option label="店铺" value="2"></el-option>
+								</el-select>
+							</div>
+							<button type="submit" class="btn btn-htz btn-primary" @click="search()">
+                        		<i class="icon icon_search"></i> 搜索
+                    		</button>
+							<button type="submit" class="btn btn-htz btn-success" @click="add()">
+                        		<i id="nav-search-icon" class="icon icon_plus"></i> 新增
+                   			 </button>
+						</div>
+						<!-- 检索 end -->
+					</div>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<table id="simple-table" class="table table-responsive table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>角色名称</th>
+							<th>类型</th>
+							<th>创建日期</th>
+							<th width="25%">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<template v-if="list.total!=0">
+							<tr v-for="(item,index) of list.list">
+								<td>{{item.roleName}}</td>
+								<td>{{item.roleType==1?'系统':'店铺'}}</td>
+								<td>{{item.createTime}}</td>
+								<td class="btn-hide">
+									<a class="btn btn-success" title="编辑" @click="edit(item.roleId);">编辑</a>
+									<a class="btn btn-success" title="权限管理" @click="edit(item.roleId);">权限管理</a>
+									<a class="btn btn-default" title="删除" @click="del(item.roleId);">删除</a>
+								</td>
+							</tr>
+						</template>
+						<template v-else>
+							<tr class="main_info">
+								<td colspan="6">暂无数据</td>
+							</tr>
+						</template>
+
+					</tbody>
+				</table>
+				<div class="pull-left form form-inline">
+					<div class="form-group form-group-sm">
+						共 {{list.total}} 条数据,每页显示
+						<select @change="getData(1)" v-model="list.pageSize" class="form-control">
+							<option value="10">10</option>
+							<option value="20">20</option>
+							<option value="30">30</option>
+							<option value="40">40</option>
+							<option value="50">50</option>
+						</select> 条
+					</div>
+				</div>
+				<div class="pagi pull-right"></div>
+			</div>
+
+			<!--新建用户-->
+			<div class="bounced">
+				<div class="ibox-content" id="addPeople">
+					<div class="form form-horizontal">
+						<div class="row_list">
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">类型<em class="red">*</em></label>
+									<div class="col-sm-9">
+										<el-select clearable v-model="roleType1" placeholder="请选择类型" style="width: 100%;">
+											<el-option label="系统" value="1"></el-option>
+											<el-option label="店铺" value="2"></el-option>
+										</el-select>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">角色名称<em class="red">*</em></label>
+									<div class="col-sm-9">
+										<input class="form-control" type="text" placeholder="请输入角色名称" v-model="roleName">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 全局js -->
+		<script src="../js/jquery-2.1.1.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/plugins/layer/layer.min.js"></script>
+		<script src="../js/plugins/layui/layui.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/module/module_pagination.js"></script>
+		<script src="../js/custom/element-ui/index.js"></script>
+		<!-- 自定义js -->
+		<script src="../js/content.min.js?v=1.0.0"></script>
+		<script src="../js/custom/common.js"></script>
+		<script src='../js/custom/system/roleManagement.js'></script>
+	</body>
+
+</html>
