@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>轮播图管理</title>
+		<meta name="keywords" content="寒舍">
+		<meta name="description" content="寒舍">
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+		<link rel="stylesheet" href="../css/animate.min.css">
+		<link rel="stylesheet" href="../js/plugins/laydate/theme/default/laydate.css">
+		<link rel="stylesheet" href="../css/style.css">
+		<link rel="stylesheet" href="../css/layout.css">
+	</head>
+	<style>
+		.input-container {
+			height: 34px!important;
+			line-height: 34px!important;
+		}
+	</style>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content" id="app">
+			<div class="ibox-content">
+				<div class="row">
+					<div class="col-sm-12">
+						<!-- 检索 start -->
+						<div class="form-inline" id="customerForm">
+							<div class="form-group">
+								<input name="name" placeholder="请输入名称" class="form-control" type="text" v-model="keywords">
+							</div>
+							<div class="form-group">
+								<em>类型</em>
+								<select name="type" class="form-control" style="width: 150px;" v-model="type">
+									<option value="">全部</option>
+									<option value="1">商品</option>
+									<option value="2">场景</option>
+									<option value="3">专题</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<em>开始日期</em>
+								<input type="text" readonly="readonly" id="start" style="width: 120px;" class="form-control" placeholder="请选择开始日期" />
+							</div>
+							<div class="form-group">
+								<em>结束日期</em>
+								<input type="text" readonly="readonly" id="end" style="width: 120px;" class="form-control" placeholder="请选择结束日期" />
+							</div>
+
+							<button type="submit" class="btn btn-htz btn-primary" @click="search()">
+                        <i class="icon icon_search"></i> 搜索
+                    </button>
+                    
+                    <button type="submit" class="btn btn-htz btn-success" @click="add()">
+                        <i class="icon icon_plus"></i> 新增
+                    </button>
+						</div>
+						<!-- 检索 end -->
+					</div>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<table id="simple-table" class="table table-responsive table-bordered table-hover">
+					<thead>
+						<tr>
+							<th width="20%">名称</th>
+							<th width="10%">类型</th>
+							<th width="25%">封面</th>
+							<th width="10%">顺序号</th>
+							<th width="15%">创建日期</th>
+							<th width="20%">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<template v-if="isZw">
+							<tr v-for="(item,index) of list.list">
+								<td>{{item.name}}</td>
+								<td>{{item.type==1?'商品':(item.type==2?'场景':'专题')}}</td>
+								<td><img :src="item.imageUrl" style="width: 80px;"></td>
+								<td>{{item.sortNo}}</td>
+								<td>{{item.createTime}}</td>
+								<td class="btn-hide">
+									<a class="btn btn-success" title="编辑" @click="edit(item.carouselId);">编辑</a>
+									<a class="btn btn-default" title="删除" @click="del(item.carouselId);">删除</a>
+								</td>
+							</tr>
+						</template>
+						<template v-else>
+							<tr class="main_info">
+								<td colspan="6">暂无数据</td>
+							</tr>
+						</template>
+
+					</tbody>
+				</table>
+				<div class="pull-left form form-inline">
+					<div class="form-group form-group-sm">
+						共 {{list.total}} 条数据,每页显示
+						<select @change="getData(1)" v-model="list.pageSize" class="form-control">
+							<option value="10">10</option>
+							<option value="20">20</option>
+							<option value="30">30</option>
+							<option value="40">40</option>
+							<option value="50">50</option>
+						</select> 条
+					</div>
+				</div>
+				<div class="pagi pull-right"></div>
+			</div>
+
+			<!-- 全局js -->
+			<script src="../js/jquery-2.1.1.min.js"></script>
+			<script src="../js/bootstrap.min.js"></script>
+			<script src="../js/plugins/layer/layer.min.js"></script>
+			<script src="../js/plugins/layui/layui.js"></script>
+			<script src="../js/vue.js"></script>
+			<script src="../js/module/module_pagination.js"></script>
+			<!-- 自定义js -->
+			<script src="../js/content.min.js?v=1.0.0"></script>
+			<script src="../js/custom/common.js"></script>
+			<script src="../js/custom/banner/bannerList.js"></script>
+	</body>
+
+</html>

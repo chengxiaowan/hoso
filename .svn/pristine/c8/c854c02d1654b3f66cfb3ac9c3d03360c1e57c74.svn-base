@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+		<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+		<link href="/static/ui/css/htz.css" rel="stylesheet">
+		<style type="text/css">
+			body {
+				overflow: hidden;
+			}
+		</style>
+	</head>
+
+	<body class="gray-bg">
+		<div class="appWrapper">
+			<div class="wrapper wrapper-content hide" id="app">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="tabs-container">
+							<ul class="nav nav-tabs">
+								<li v-if="role=='高级商务顾问S2' || role=='高级商务顾问S3'|| role=='经理'" v-bind:class="{ active: isActive1 }">
+									<a data-toggle="tab" href="#tab-3" aria-expanded="true" @click="tab(6)"> 上市公司公海</a>
+								</li>
+								<li v-if="role=='高级商务顾问S2' || role=='高级商务顾问S3'|| role=='高级商务顾问S1'|| role=='经理'" v-bind:class="{ active: isActive2 }">
+									<a data-toggle="tab" href="#tab-3" aria-expanded="true" @click="tab(7)"> 新三板公海</a>
+								</li>
+								<li v-if="role=='高级商务顾问S2' || role=='高级商务顾问S3'|| role=='高级商务顾问S1'|| role=='商务顾问J'|| role=='经理'"  v-bind:class="{ active: isActive3 }">
+									<a data-toggle="tab" href="#tab-3" aria-expanded="true" @click="tab(4)"> 大客户公海</a>
+								</li>
+								<li v-if="role=='电销员工' || role=='电销主管'|| role=='经理'"  v-bind:class="{ active: isActive4 }">
+									<a data-toggle="tab" href="#tab-3" aria-expanded="true" @click="tab(5)" > 有意向存疑公海</a>
+								</li>
+								
+								
+								
+								<li v-if="isGh==1 && role=='电销商务顾问'|| role=='经理'"   v-bind:class="{ active: isActive5 }">
+									<a data-toggle="tab" href="#tab-3" aria-expanded="true" @click="tab(3)"> 有意向公海</a>
+								</li>
+								<li v-else-if="isGh==2 &&(role=='高级商务顾问S2' || role=='高级商务顾问S3'|| role=='高级商务顾问S1'|| role=='商务顾问J')|| role=='经理'">
+									<a data-toggle="tab" href="#tab-3" aria-expanded="true" @click="tab(3)" > 有意向公海</a>
+								</li>
+							
+								
+								
+								<li v-if="role=='高级商务顾问S2' || role=='高级商务顾问S3'|| role=='高级商务顾问S1'|| role=='商务顾问J'||role=='电销员工' || role=='电销主管'|| role=='经理'">
+									<a data-toggle="tab" href="#tab-1" aria-expanded="true" @click="tab(0)"> 客户公海</a>
+								</li>
+								<li v-if="role=='高级商务顾问S2' || role=='高级商务顾问S3'|| role=='高级商务顾问S1'|| role=='商务顾问J'||role=='电销员工' || role=='电销主管'|| role=='经理'">
+									<a data-toggle="tab" href="#tab-2" aria-expanded="false" @click="tab(1)"> 无意向公海</a>
+								</li>
+							</ul>
+							<div class="tab-content">
+								<div id="tab-1" class="tab-pane active">
+									<div class="panel-body">
+										<div class="panel panel-default">
+											<div class="panel-heading clearfix">
+												<form role="form" class="form-inline pull-left" id="searchForm" @submit.prevent="search">
+													<div class="form-group">
+														<input class="form-control" type="text" name="keywords" value="" placeholder="请输入关键词">
+													</div>
+													<div class="form-group">
+														<select style="width:190px" name="saleName" id="saleName">
+														</select>
+													</div>
+													<div class="form-group">
+														<label for="">跟进状态</label>
+														<select name="status" id="status" class="form-control">
+															<option value="">全部</option>
+															<option value="0">未处理</option>
+															<option value="1">初步沟通</option>
+															<option value="2">无意向</option>
+															<option value="13">潜在客户</option>
+															<option value="12">有意向存疑</option>
+															<option value="3">有意向</option>
+															<option value="4">销售外访</option>
+															<option value="5">客户来访</option>
+															<option value="6">需求确定</option>
+															<option value="7">方案/报价</option>
+															<option value="8">谈判/合同</option>
+															<option value="9">成交</option>
+															<option value="10">暂时搁置</option>
+															<option value="11">未成交</option>
+														</select>
+													</div>
+													<label for="">省</label>
+													<select class="form-control" v-model="s.provinceName" name='provinceName'>
+														<option value="">全部</option>
+														<option v-for="el in citys['省份']" :value="el.regionName">{{el.regionName}}</option>
+													</select>
+													<label for="">市</label>
+													<select style="width:120px" v-model="s.cityName" class="form-control" name='cityName' id="city">
+														<option value="">全部</option>
+														<option v-for="el in citys_sub" :value="el.regionName" :key="el.id">{{el.regionName}}</option>
+													</select>
+													<label for="">区</label>
+													<select style="width:120px" v-model="s.areaName" class="form-control" name='area'>
+														<option value="">全部</option>
+														<option v-for="el in citys_sub1" :value="el.regionName" :key="el.id">{{el.regionName}}</option>
+													</select>
+													<!-- <div class="form-group">
+                                <input class="span10 date-picker form-control" id="createTimeStart" name="createTimeStart" type="text" data-date-format="yyyy-mm-dd"
+                                    readonly="readonly" placeholder="转入开始日期" style="width: 150px;" />
+                            </div>
+                            <div class="form-group">
+                                <input class="span10 date-picker form-control" id="createTimeEnd" name="createTimeEnd" type="text" data-date-format="yyyy-mm-dd"
+                                    readonly="readonly" placeholder="转入结束日期" style="width: 150px;" />
+                            </div> -->
+													<button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 搜索</button>
+													<button type="reset" @click="clear" class="btn">
+							<i id="nav-search-icon" class="fa fa-refresh nav-search-icon "></i> 重置
+						</button>
+												</form>
+												<div class="pull-right" style="position:relative;height:34px">
+													<button v-show="isKhGh==0||role=='经理'" v-if="role=='经理'" class="btn btn-white" @click="shiftToOther"><i class="fa fa-reply"></i> 转移</button>
+													<button v-if="role!='经理'" class="btn btn-primary" @click="sale_Get">批量抢</button>
+													<button v-show="role=='经理'" v-if="role=='经理'" class="btn btn-danger" @click="del"><i class="fa fa-remove"></i> 删除</button>
+													<div v-show="role=='高级商务顾问S3'||role=='高级商务顾问S2'||role=='高级商务顾问S1'||role=='商务顾问J'||role=='电销员工'||role=='电销主管'||role=='经理'" id="excel_fileUp" style="float: right;margin-left:5px">导入客户</div>
+												</div>
+											</div>
+											<div class="panel-body" style="border:none">
+												<table class="table table-bordered table-hover">
+													<thead>
+														<tr>
+															<th><input type="checkbox" name="checkALl" v-model="checkAll" @change="btn_checkAll" value=""></th>
+															<th>序号</th>
+															<th>客户名称</th>
+															<th>联系人</th>
+															<th>职务</th>
+															<th>手机号码</th>
+															<th>固定电话</th>
+															<th>跟进状态</th>
+															<th>创建时间</th>
+															<th>最新转入时间</th>
+															<th>前负责人</th>
+															<th v-if="(isKhGh==0||isKhGh==3||isKhGh==1) && role!='经理'">操作</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr v-for="(el,index) of c.list">
+															<td><input type="checkbox" v-model="checks" name="checkbox" :value="el.id"></td>
+															<td>{{index+1}}</td>
+															<td>{{el.name}}</td>
+															<td>{{el.linkmanName}}</td>
+															<td>{{el.postion}}</td>
+															<td>{{el.linkmanMobilePhone}}</td>
+															<td>{{el.linkmanLandline}}</td>
+															<td v-if="el.gjStatus==0">未处理</td>
+															<td v-if="el.gjStatus==1">初步沟通</td>
+															<td v-if="el.gjStatus==2">无意向</td>
+															<td v-if="el.gjStatus==3">有意向</td>
+															<td v-if="el.gjStatus==4">销售外访</td>
+															<td v-if="el.gjStatus==5">客户来访</td>
+															<td v-if="el.gjStatus==6">需求确定</td>
+															<td v-if="el.gjStatus==7">方案/报价</td>
+															<td v-if="el.gjStatus==8">谈判/合同</td>
+															<td v-if="el.gjStatus==9">成交</td>
+															<td v-if="el.gjStatus==10">暂时搁置</td>
+															<td v-if="el.gjStatus==11">未成交</td>
+															<td v-if="el.gjStatus==12">有意向存疑</td>
+															<td v-if="el.gjStatus==13">潜在客户</td>
+															<td>{{el.createTime}}</td>
+															<td>{{el.zyTime}}</td>
+															<td>{{el.lastSaleName}}</td>
+															<td v-if="(isKhGh==0||isKhGh==3||isKhGh==1||isKhGh==4)&& role!='经理'">
+																<button type="button" class="btn btn-sm btn-primary" @click="sale_Get(el.id)">抢</button>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+												<div class="pull-left form form-inline">
+													<div class="form-group form-group-sm">
+														共 {{c.total}} 条数据,每页显示
+														<select @change="search" v-model="c.pageSize" class="form-control">
+															<option value="10">10</option>
+															<option value="20">20</option>
+															<option value="30">30</option>
+															<option value="40">40</option>
+															<option value="50">50</option>
+														</select> 条
+													</div>
+												</div>
+												<div class="pagi pull-right">
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="" style="height:0;overflow:hidden">
+					<div class="col-sm-12 form" id="salerBox">
+						<div class="form-group m-t-lg">
+							<label class="col-sm-4" for="">新负责人</label>
+							<div class="col-sm-8">
+								<select style="width:100%" id="salerId">
+
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<script src="/static/ui/js/jquery.min.js"></script>
+		<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+		<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+		<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+		<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+		<script src="/static/ui/js/plugins/layer/laydate/laydate.js"></script>
+		<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+		<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+		<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+		<script src="/static/ui/js/vue.js"></script>
+		<script src="/static/ui/js/require.min.js" data-main="/static/js/include/page/customer_commons"></script>
+	</body>
+
+</html>

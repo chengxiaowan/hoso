@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>用户列表</title>
+		<meta name="keywords" content="寒舍">
+		<meta name="description" content="寒舍">
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+		<link rel="stylesheet" href="../css/animate.min.css">
+		<link rel="stylesheet" href="../js/plugins/laydate/theme/default/laydate.css">
+		<link rel="stylesheet" href="../css/style.css">
+		<link rel="stylesheet" href="../css/layout.css">
+	</head>
+	<style>
+		.input-container {
+			height: 34px!important;
+			line-height: 34px!important;
+		}
+	</style>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content" id="app">
+			<div class="ibox-content">
+				<div class="row">
+					<div class="col-sm-12">
+						<!-- 检索 start -->
+						<div class="form-inline" id="customerForm">
+							<div class="form-group">
+								<input placeholder="请输入姓名" class="form-control" type="text" v-model="keywords">
+							</div>
+							<div class="form-group">
+								<em>是否为销售人员</em>
+								<select name="type" class="form-control" style="width: 150px;" v-model="isDistributor ">
+									<option value="">全部</option>
+									<option value="0">否</option>
+									<option value="1">是</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<em>开始日期</em>
+								<input type="text" readonly="readonly" id="start" style="width: 120px;" class="form-control" placeholder="请选择开始日期" />
+							</div>
+							<div class="form-group">
+								<em>结束日期</em>
+								<input type="text" readonly="readonly" id="end" style="width: 120px;" class="form-control" placeholder="请选择结束日期" />
+							</div>
+
+							<button type="submit" class="btn btn-htz btn-primary" @click="search()">
+                        <i class="icon icon_search"></i> 搜索
+                    </button>
+						</div>
+						<!-- 检索 end -->
+					</div>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<table id="simple-table" class="table table-responsive table-bordered table-hover">
+					<thead>
+						<tr>
+							<th width="15%">昵称</th>
+							<th width="10%">手机号</th>
+							<th width="10%">性别</th>
+							<th width="10%">省</th>
+							<th width="10%">市</th>
+							<th width="10%">头像</th>
+							<th width="10%">是否为分销人员</th>
+							<th width="15%">创建时间</th>
+							<th width="10%">详情</th>
+						</tr>
+					</thead>
+					<tbody>
+						<template v-if="isZw">
+							<tr v-for="(item,index) of list.list">
+								<td>{{item.nickName}}</td>
+								<td>{{item.phone}}</td>
+								<td>{{item.sex==0?'未知':(item.sex==1?'男':'女')}}</td>
+								<td>{{item.province}}</td>
+								<td>{{item.city}}</td>
+								<td><img :src="item.headImage" style="width: 40%;"></td>
+								<td>{{item.isDistributor==0?'否':'是'}}</td>
+								<td>{{item.createTime}}</td>
+								<td class="btn-hide">
+									<a class="btn btn-success" title="详情" @click="look(item.customerId);">详情</a>
+								</td>
+							</tr>
+						</template>
+						<template v-else>
+							<tr class="main_info">
+								<td colspan="9">暂无数据</td>
+							</tr>
+						</template>
+
+					</tbody>
+				</table>
+				<div class="pull-left form form-inline">
+					<div class="form-group form-group-sm">
+						共 {{list.total}} 条数据,每页显示
+						<select @change="getData(1)" v-model="list.pageSize" class="form-control">
+							<option value="10">10</option>
+							<option value="20">20</option>
+							<option value="30">30</option>
+							<option value="40">40</option>
+							<option value="50">50</option>
+						</select> 条
+					</div>
+				</div>
+				<div class="pagi pull-right"></div>
+			</div>
+
+		</div>
+		<!-- 全局js -->
+		<script src="../js/jquery-2.1.1.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/plugins/layer/layer.min.js"></script>
+		<script src="../js/plugins/layui/layui.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/module/module_pagination.js"></script>
+		<!-- 自定义js -->
+		<script src="../js/content.min.js?v=1.0.0"></script>
+		<script src="../js/custom/common.js"></script>
+		<script src='../js/custom/customer/customerList.js'></script>
+	</body>
+
+</html>

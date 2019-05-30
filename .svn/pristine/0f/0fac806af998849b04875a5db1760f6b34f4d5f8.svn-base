@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>新增合同</title>
+		<meta name="keywords" content="寒舍">
+		<meta name="description" content="寒舍">
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+		<link rel="stylesheet" href="../js/plugins/layui/css/layui.css">
+		<!--选择框-->
+		<link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+		<link rel="stylesheet" href="../css/animate.min.css">
+		<link rel="stylesheet" href="../css/style.css">
+		<!--自定义样式-->
+		<link rel="stylesheet" href="../css/layout.css">
+	</head>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content animated fadeIn" id="app">
+			<div class="ibox-content">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="tabs-container">
+							<ul class="nav nav-tabs">
+								<li class="active">
+									<a data-toggle="tab" href="#tab-1" aria-expanded="true">基本信息</a>
+								</li>
+								<li class="">
+									<a data-toggle="tab" @click="initUploader" href="#tab-2" aria-expanded="false">相关附件</a>
+								</li>
+							</ul>
+							<div class="tab-content">
+								<!-- 供应商基本信息 start -->
+								<div id="tab-1" class="tab-pane active">
+									<div class="panel-body">
+										<!-- 供应商性情 start -->
+										<div class="detail round-4">
+											<form name="contractForm" id="contractForm" class="form form-horizontal">
+												<div class="row row_list">
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label class="col-sm-2 control-label">合同编号 <em class="red">*</em></label>
+															<div class="col-sm-10">
+																<input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入合同编号" v-model="contractNo">
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label class="col-sm-2 control-label">供应商 <em class="red">*</em></label>
+															<div class="col-sm-10">
+																<select class="form-control" v-select2="" data-placeholder="请选择供应商" v-model="supplierId">
+																	<option value="" disabled></option>
+																	<option v-for="item in supplierList" v-bind:value="item.id">{{item.text}}</option>
+																</select>
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-6  clear">
+														<div class="form-group">
+															<label class="col-sm-2 control-label">合同签订时间</label>
+															<div class="col-sm-10">
+																<input class="form-control" readonly="readonly" id="start" data-validate="require|maxLength=50" type="text" placeholder="请选择合同签订时间" v-model="signingTime">
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label class="col-sm-2 control-label">合同到期时间</label>
+															<div class="col-sm-10">
+																<input class="form-control" id="end" readonly="readonly" data-validate="require|maxLength=50" type="text" placeholder="请选择合同到期时间" v-model="endTime">
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-12">
+														<div class="form-group">
+															<label class="col-sm-1 control-label">备注</label>
+															<div class="col-sm-11">
+																<textarea class="form-control" rows="6" placeholder="请输入备注" v-model="remark"></textarea>
+															</div>
+														</div>
+													</div>
+												</div>
+											</form>
+											<div class="ibox-content-btn">
+												<a class="btn btn-htz  btn-primary" title="保存" @click="save();">保存</a>
+												<a class="btn btn-htz  btn-htz-default" title="取消" onclick="cancle();">取消</a>
+											</div>
+										</div>
+										<!-- 供应商性情 end -->
+									</div>
+								</div>
+								<!-- 供应商基本信息 end -->
+								<!-- 相关附件 start -->
+								<div id="tab-2" class="tab-pane">
+									<div class="panel-body">
+										<div class="well well-sm">
+											<div id="fileUp"></div>
+										</div>
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+													<th>文件名</th>
+													<!--<th>文件类型</th>
+												<th>上传人</th>-->
+													<th>上传时间</th>
+													<th>操作</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr v-for="(el,index) in c.attachs">
+													<td>{{el.originalFilename}}</td>
+													<!--<td>{{el.type}}</td>
+												<td>{{el.uploader}}</td>-->
+													<td>{{el.uploadTime}}</td>
+													<td>
+														<a :href="el.url" class="btn btn-primary"><i class="fa fa-eye"></i> 查看</a>
+														<a @click="attachs_delete(index)" class="btn btn-default"><i class="fa fa-trash"></i> 删除</a>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<!-- 相关附件 end -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 全局js -->
+		<script src="../js/jquery-2.1.1.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/plugins/webuploader/webuploader.min.js"></script>
+		<script src="../js/plugins/layer/layer.min.js"></script>
+		<script src="../js/plugins/layui/layui.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+		<!-- 自定义js -->
+		<script src="../js/content.min.js?v=1.0.0"></script>
+		<script src="../js/custom/common.js"></script>
+
+		<script src="../js/custom/contract/add.js"></script>
+	</body>
+
+</html>

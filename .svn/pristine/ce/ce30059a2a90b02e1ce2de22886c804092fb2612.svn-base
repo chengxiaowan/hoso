@@ -1,0 +1,233 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+		<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+		<link href="/static/ui/css/htz.css" rel="stylesheet">
+		<style>
+			td {
+				height: 51px;
+			}
+		</style>
+	</head>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content hide" id="app">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<input type="text" class="form-control" placeholder="请输入关键词" style="width: 240px; display: inline-block; vertical-align: middle;" v-model="gjc">
+					<select class="form-control" style="width: 150px; display: inline-block; vertical-align: middle;" v-model="userId">
+						<option value="" selected="selected">选择操作人员</option>
+						<option v-for="(item,index) in list" :value="item.USER_ID" v-text="item.NAME" :key="item.USER_ID"></option>
+					</select>
+					<select class="form-control" style="width: 150px; display: inline-block; vertical-align: middle;" v-model="flag">
+						<option value="" selected="selected">选择模块</option>
+						<option value="0">潜在客户</option>
+						<option value="1">合同</option>
+						<option value="2">客户</option>
+						<option value="3">联系人</option>
+						<option value="4">订单</option>
+					</select>
+					<input style="width: 250px; display: inline-block; vertical-align: middle;" class="form-control" type="text" id="time" readonly="readonly" v-model="alltime">
+					<button class="btn btn-primary" type="submit" @click="search"><i class="fa fa-search"></i> 查询</button>
+				</div>
+
+				<div class="panel-body">
+					<table class="table table-responsive table-bordered table-hover" id="mainTable">
+						<thead>
+							<tr>
+								<th>操作时间</th>
+								<th>操作人员</th>
+								<th>所属模块</th>
+								<th>操作类型</th>
+								<th>旧字段值</th>
+								<th>新字段值</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(el,index) of c.list">
+								<td>{{el.createTime}}</td>
+								<td>{{el.name}}</td>
+								<td v-if="el.flag == 0">潜在客户</td>
+								<td v-if="el.flag == 1">合同</td>
+								<td v-if="el.flag == 2">客户</td>
+								<td v-if="el.flag == 3">联系人</td>
+								<td v-if="el.flag == 4">订单</td>
+								<td>{{el.type}}</td>
+								<td>{{el.qzdz||'无'}}</td>
+								<td>{{el.hzdz||'无'}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pull-left form form-inline">
+						<div class="form-group form-group-sm">
+							共 {{c.total}} 条数据,每页显示
+							<select @change="getData(1)" v-model="c.pageSize" class="form-control">
+								<option value="10">10</option>
+								<option value="20">20</option>
+								<option value="30">30</option>
+								<option value="40">40</option>
+								<option value="50">50</option>
+							</select> 条
+						</div>
+					</div>
+					<div class="pagi pull-right"></div>
+				</div>
+			</div>
+			<!--新增关键词弹窗-->
+			<div class="" style="height:0;overflow:hidden">
+				<div class="row">
+					<div class="col-sm-12 form form-horizontal" id="achievementBox">
+						<div class="form-group" style="margin-top: 20px;">
+							<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600;">关键词：</span></label>
+							<div class="col-sm-9">
+								<input class="form-control " v-model="gjc" placeholder="请填写关键词">
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+	</body>
+	<script src="/static/ui/js/jquery.min.js"></script>
+	<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+	<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+	<script src="/static/ui/js/plugins/laydate/laydate.js"></script>
+	<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+	<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+	<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+	<script src="/static/ui/js/plugins/echarts/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/static/ui/js/vue.js"></script>
+	<script src="/static/js/include/module/module_pagination.js"></script>
+
+	<script type="text/javascript">
+		var config = {
+			role: localStorage.userRole,
+			api_list: '/log/getLogs', //日志列表
+			staff_list: '/user/getUserInfo',
+		}
+
+		window.app = new Vue({
+			el: '#app',
+			data: {
+				role: config.role,
+				c: [],
+				gjc: '',
+				userId: '',
+				flag: '',
+				postData: {},
+				list: [],
+				alltime: ''
+			},
+			created: function() {
+				var that = this;
+				document.getElementById("app").classList.remove("hide");
+			},
+			mounted: function() {
+				const that = this
+				laydate.render({
+					elem: '#time',
+					range: true,
+					done: function(value, date) {
+						that.alltime = value
+					}
+				});
+
+				that.getData();
+				that.staff_list()
+
+			},
+			methods: {
+				/**
+				 * 载入中方法
+				 * 
+				 * @param {string} s 是否关闭
+				 */
+				loading: function(s) {
+					if(s == "close") layer.close(this.loadingSwitch)
+					else this.loadingSwitch = layer.load(3);
+				},
+
+				getData: function(page) {
+					if(page) this.c.pageNum = page
+					var that = this;
+					that.postData.pageSize = that.c.pageSize || 10;
+					that.postData.pageNo = that.c.pageNum || 1;
+					that.loading();
+					$.ajax({
+						url: config.api_list,
+						async: true,
+						type: 'post',
+						data: that.postData,
+						success: function(res) {
+							that.loading('close')
+							if(res.error == "00") {
+								that.c = res.result;
+								//分页
+								if(that.pagi) {
+									$('.pagi').pagination('updatePages', that.c.pages)
+									if(page == 1) $('.pagi').pagination('goToPage', that.c.pageNum)
+								} else {
+									that.pagi = $('.pagi').pagination({
+										pages: that.c.pages, //总页数
+										showCtrl: true,
+										displayPage: 6,
+										currentPage: that.c.pageNum,
+										onSelect: function(num) {
+											that.c.pageNum = num
+											that.getData()
+											yo.scrollTo('body')
+										}
+									})
+								}
+							} else {
+								layer.msg(res.msg)
+							}
+						}
+					});
+				},
+				staff_list() {
+					let that = this
+					$.ajax({
+						type: "post",
+						url: config.staff_list,
+						async: true,
+						data: {
+							ROLE_ID: ''
+						},
+						success: function(res) {
+							that.list = res
+						}
+					});
+				},
+				search() {
+					let that = this;
+					that.postData.gjc = that.gjc;
+					that.postData.userId = that.userId;
+					that.postData.flag = that.flag;
+					console.log(that.alltime);
+					if(that.alltime) {
+						that.postData.timeStart = that.alltime.split(' - ')[0];
+						that.postData.timeEnd = that.alltime.split(' - ')[1];
+					}
+					that.getData()
+				}
+			}
+		})
+	</script>
+
+</html>

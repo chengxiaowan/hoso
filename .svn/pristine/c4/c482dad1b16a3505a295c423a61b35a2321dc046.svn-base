@@ -1,0 +1,234 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+		<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+		<link href="/static/ui/css/htz.css" rel="stylesheet">
+		<style>
+			td {
+				height: 51px;
+			}
+		</style>
+	</head>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content hide" id="app">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<button class="btn btn-primary" type="submit" @click="addgjc"><i class="fa fa-plus"></i> 新增关键词</button>
+				</div>
+
+				<div class="panel-body">
+					<table class="table table-responsive table-bordered table-hover" id="mainTable">
+						<thead>
+							<th width="70%">关键词</th>
+							<th width="30%">操作</th>
+						</thead>
+						<tbody>
+							<tr v-for="(el,index) of c.list">
+								<td>
+									{{el.keywords}}
+								</td>
+								<td>
+									<a class="btn btn-success htz_hide" title="编辑" @click="addgjc(el)"> <i class="ace-icon fa fa-pencil-square-o" title="编辑"></i> 编辑</a>
+									<a class="btn btn-danger htz_hide" @click="del(el.id)"> <i class="ace-icon fa fa-trash-o" title="删除"></i>删除</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pull-left form form-inline">
+						<div class="form-group form-group-sm">
+							共 {{c.total}} 条数据,每页显示
+							<select @change="getData(1)" v-model="c.pageSize" class="form-control">
+								<option value="10">10</option>
+								<option value="20">20</option>
+								<option value="30">30</option>
+								<option value="40">40</option>
+								<option value="50">50</option>
+							</select> 条
+						</div>
+					</div>
+					<div class="pagi pull-right"></div>
+				</div>
+			</div>
+			<!--新增关键词弹窗-->
+			<div class="" style="height:0;overflow:hidden">
+				<div class="row">
+					<div class="col-sm-12 form form-horizontal" id="achievementBox">
+						<div class="form-group" style="margin-top: 20px;">
+							<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600;">关键词：</span></label>
+							<div class="col-sm-9">
+								<input class="form-control " v-model="gjc" placeholder="请填写关键词">
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+	</body>
+	<script src="/static/ui/js/jquery.min.js"></script>
+	<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+	<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+	<script src="/static/ui/js/plugins/laydate/laydate.js"></script>
+	<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+	<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+	<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+	<script src="/static/ui/js/plugins/echarts/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/static/ui/js/vue.js"></script>
+	<script src="/static/js/include/module/module_pagination.js"></script>
+
+	<script type="text/javascript">
+		var config = {
+			role: localStorage.userRole,
+			api_add: '/label/add', //新加或修改,删除关键词,
+			api_list: '/label/dataList', //关键词列表
+		}
+
+		window.app = new Vue({
+			el: '#app',
+			data: {
+				role: config.role,
+				c: [],
+				gjc: '',
+				postData: {},
+			},
+			created: function() {
+				var that = this;
+				document.getElementById("app").classList.remove("hide");
+			},
+			mounted: function() {
+				const that = this
+				that.getData();
+
+			},
+			methods: {
+				/**
+				 * 载入中方法
+				 * 
+				 * @param {string} s 是否关闭
+				 */
+				loading: function(s) {
+					if(s == "close") layer.close(this.loadingSwitch)
+					else this.loadingSwitch = layer.load(3);
+				},
+
+				getData: function(page) {
+					$('body,html').scrollTop(0)
+					if(page) this.c.pageNum = page
+					var that = this;
+					that.loading();
+					$.ajax({
+						url: config.api_list,
+						async: true,
+						type: 'post',
+						data: {
+							pageSize: that.c.pageSize || 10,
+							pageNo: that.c.pageNum || 1,
+						},
+						success: function(res) {
+							that.loading('close')
+							if(res.error == "00") {
+								that.c = res.result;
+								//分页
+								if(that.pagi) {
+									$('.pagi').pagination('updatePages', that.c.pages)
+									if(page == 1) $('.pagi').pagination('goToPage', that.c.pageNum)
+								} else {
+									that.pagi = $('.pagi').pagination({
+										pages: that.c.pages, //总页数
+										showCtrl: true,
+										displayPage: 6,
+										currentPage: that.c.pageNum,
+										onSelect: function(num) {
+											that.c.pageNum = num
+											that.getData()
+											yo.scrollTo('body')
+										}
+									})
+								}
+							} else {
+								layer.msg(res.msg)
+							}
+						}
+					});
+				},
+				addgjc(el) {
+					const that = this;
+					var word;
+					if(el){
+						that.gjc=el.keywords; 
+						that.postData.id = el.id;
+						word="修改成功"
+						
+					}else{
+						that.gjc=''; 
+						word="添加成功"
+					}
+					const dialog = layer.open({
+						type: 1,
+						title: '新增关键词',
+						closeBtn: 1,
+						content: $('#achievementBox'),
+						area: ['480px', '180px'],
+						btn: "确定",
+						btnAlign: 'c',
+						yes() {
+							that.postData.keywords = that.gjc;
+							if(that.gjc == "") {
+								layer.msg("请填写关键词")
+								return;
+							}
+							$.get(config.api_add, that.postData, function(data) { // 回调函数
+								if(data.error == '00') {
+									layer.close(dialog)
+									layer.msg(word)
+									setTimeout(function() {
+										parent.app && parent.parentFnc()
+									}, 2000);
+									that.getData();
+								} else {
+									layer.msg(data.msg)
+								}
+
+							});
+						}
+					});
+				},
+				del(id) {
+					const that = this;
+					const dialog = layer.confirm("确认删除该关键词?", {
+						title: "提示"
+					}, () => {
+						$.get(config.api_add, {
+							id: id,
+							delflag:'1'
+						}, function(data) { // 回调函数
+							if(data.error == '00') {
+								layer.close(dialog)
+								layer.msg("删除成功")
+								that.getData()
+							} else {
+								layer.msg(data.msg)
+							}
+						})
+					})
+				},
+			}
+		})
+	</script>
+
+</html>

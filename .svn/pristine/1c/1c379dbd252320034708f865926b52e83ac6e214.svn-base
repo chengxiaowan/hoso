@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>线下店铺列表</title>
+		<meta name="keywords" content="寒舍">
+		<meta name="description" content="寒舍">
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+		<link rel="stylesheet" href="../js/plugins/layui/css/layui.css">
+		<link rel="stylesheet" href="../css/animate.min.css">
+		<link rel="stylesheet" href="../css/style.css">
+		<link rel="stylesheet" href="../css/layout.css">
+	</head>
+	<style>
+	</style>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content " id="app">
+			<div class="ibox-content">
+				<div class="row">
+					<div class="col-sm-12">
+						<!-- 检索 start -->
+						<div class="form-inline" id="customerForm">
+							<div class="form-group">
+								<input id="nav-search-input" style="width: 220px;" placeholder="请输入店铺名称，地址，联系方式" value="" class="form-control" type="text" v-model="keywords">
+							</div>
+							<div class="form-group">
+								<em>类型</em>
+								<select name="type" class="form-control" v-model="typeId">
+									<option value="">全部</option>
+									<option value="1">酒店</option>
+									<option value="2">民宿</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<em>审核状态</em>
+								<select name="type" class="form-control" v-model="status">
+									<option value="">全部</option>
+									<option value="0">待审核</option>
+									<option value="1">审核通过</option>
+									<option value="2">审核失败</option>
+								</select>
+							</div>
+							<button type="submit" class="btn btn-htz btn-primary" @click="search()">
+                        <i class="icon icon_search"></i> 搜索
+                    </button>
+							<button type="reset" class="btn btn-htz btn-success" @click="jumpToProvider();">
+                        <i id="nav-search-icon" class="icon icon_plus"></i> 新增
+                    </button>
+						</div>
+						<!-- 检索 end -->
+					</div>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<table id="simple-table" class="table table-responsive table-bordered table-hover">
+					<thead>
+						<tr>
+							<th width="20%">店铺名称</th>
+							<th width="10%">联系电话</th>
+							<th width="10%">店铺类型</th>
+							<!--<th width="20%">店铺标签</th>-->
+							<!--<th width="10%">营业时间</th>-->
+							<th width="30%">店铺地址</th>
+							<th width="10%">审核状态</th>
+							<!--<th width="10%">创建时间</th>-->
+							<th width="20%">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<template v-if="list.total != 0">
+							<tr v-for="item in list.list">
+								<td><a @click="view(item);">{{item.shopsName}}</a></td>
+								<td>{{item.phone}}</td>
+								<td>{{item.shopsType=='1'?'酒店':'民宿'}}</td>
+								<!--<td>{{item.labels}}</td>-->
+								<!--<td>{{item.businessHours}}</td>-->
+								<td>{{item.address}}</td>
+								<td :class="{'htz-red':item.status=='2'}">{{item.status=='0'?'待审核':(item.status=='1'?'审核通过':'审核失败')}}</td>
+								<!--<td>{{item.createTime}}</td>-->
+								<td class="btn-hide">
+									<a class="btn btn-success" title="查看" @click="view(item);">查看</a>
+									<a v-if="item.status=='1'" class="btn btn-success" title="二维码" @click="ewm(item);">二维码</a>
+									<a class="btn btn-default" title="删除" @click="del(item.shopsId);">删除</a>
+								</td>
+							</tr>
+						</template>
+						<tr class="main_info" v-else>
+							<td colspan="9">没有相关数据</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="pull-left form form-inline">
+					<div class="form-group form-group-sm">
+						共 {{list.total}} 条数据,每页显示
+						<select @change="getData(1)" v-model="list.pageSize" class="form-control">
+							<option value="10">10</option>
+							<option value="20">20</option>
+							<option value="30">30</option>
+							<option value="40">40</option>
+							<option value="50">50</option>
+						</select> 条
+					</div>
+				</div>
+				<div class="pagi pull-right"></div>
+			</div>
+			<!--背景-->
+			<div v-cloak v-if="bg_show1==true" @click="hide1" class="mb-bg"></div>
+			<div v-cloak v-if="bg_show1==true" class="ewm">
+				<a><img :src="image_ewm" @click="downs()"></a>
+			</div>
+		</div>
+		<!-- 全局js -->
+		<script src="../js/jquery-2.1.1.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/plugins/layer/layer.min.js"></script>
+		<script src="../js/plugins/layui/layui.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/module/module_pagination.js"></script>
+		<!-- 自定义js -->
+		<script src="../js/content.min.js?v=1.0.0"></script>
+		<script src="../js/custom/common.js"></script>
+		<script src="../js/custom/OfflineShop/index.js"></script>
+	</body>
+
+</html>

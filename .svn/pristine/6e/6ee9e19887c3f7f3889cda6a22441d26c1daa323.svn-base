@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+		<style>
+			.control-label {
+				text-align: left !important;
+			}
+		</style>
+	</head>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content hide" id="app">
+			<div class="row">
+				<div class="col-sm-12">
+					<h2 class="m-t-xs"> {{c.name}}</h2>
+
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="tabs-container">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a data-toggle="tab" href="#tab-1" aria-expanded="true">客户全景</a>
+							</li>
+							<li class="">
+								<a data-toggle="tab" href="#tab-2" aria-expanded="false">联系人信息</a>
+							</li>
+							<li class="">
+								<a data-toggle="tab" href="#tab-3" aria-expanded="false">合同信息</a>
+							</li>
+							<li class="">
+								<a data-toggle="tab" href="#tab-4" aria-expanded="false">订单信息</a>
+							</li>
+
+							<li>
+								<a data-toggle="tab" href="#tab-6" @click="initUploader" aria-expanded="false">附件</a>
+							</li>
+							<li>
+								<a data-toggle="tab" href="#tab-7">操作日志</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div id="tab-1" class="tab-pane active">
+								<div class="panel-body">
+									<div class="row">
+										<div class="col-md-6 col-sm-12">
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="panel panel-default">
+														<div class="panel-heading">
+															基本资料
+														</div>
+														<div class="panel-body">
+															<div class="row form form-horizontal">
+																<div class="col-md-12">
+																	<div class="">
+																		<b class="col-sm-4 control-label">客户名称：</b>
+																		<div class="col-sm-8 input-container" @click="change('name')" @mouseenter="enter('name',$event)" @mouseleave="leave">
+																			<span v-if="editParam!='name'">{{c.name}}</span>
+																			<form @submit.prevent="saveData" v-if="editParam=='name'">
+																				<input class="form-control" v-focus @blur="saveData" type="text" name="name" v-model="c.name">
+																			</form>
+																			<i v-if="hoverParam=='name'" class="fa fa-edit m-l-md"></i>
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-12">
+																	<div class="">
+																		<b class="col-sm-4 control-label">所在省：</b>
+																		<div class="col-sm-8 input-container" @click="change('province1')" @mouseenter="enter('province1')" @mouseleave="leave">
+																			<span v-if="editParam!='province1'" class="province1">{{c.provinceName}}</span>
+																			<form @submit.prevent="saveData" v-if="editParam=='province1'">
+																				<select style="width:100%" v-if="editParam=='province1'" v-focus v-model="c.provinceName" name='province1'>
+																					<option value="">请选择</option>
+																					<option v-for="el in citys['省份']" :selected="c.province==el.regionName" :value="el.regionName">{{el.regionName}}</option>
+																				</select>
+																			</form>
+																			<i v-if="hoverParam=='province1'" class="fa fa-edit m-l-md"></i>
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-12">
+																	<div class="">
+																		<b class="col-sm-4 control-label">所在市：</b>
+																		<div class="col-sm-8 input-container" @click="change('cityName1')" @mouseenter="enter('cityName1')" @mouseleave="leave">
+																			<span v-if="editParam!='cityName1'" class="cityName1">{{c.cityName}}</span>
+																			<form @submit.prevent="saveData" v-if="editParam=='cityName1'">
+																				<select style="width:100%" v-if="editParam=='cityName1'" v-focus v-model="c.cityName" name='cityName1'>
+																					<option value="">请选择</option>
+																					<option v-for="el in citys_sub" :selected="c.cityName==el.regionName" :value="el.regionName">{{el.regionName}}</option>
+																				</select>
+																			</form>
+																			<i v-if="hoverParam=='cityName1'" class="fa fa-edit m-l-md"></i>
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-12">
+																	<div class="">
+																		<b class="col-sm-4 control-label">公司地址：</b>
+																		<div class="col-sm-8 input-container" @click="change('companyAddress')" @mouseenter="enter('companyAddress')" @mouseleave="leave">
+																			<span v-if="editParam!='companyAddress'">{{c.companyAddress}}</span>
+																			<form @submit.prevent="saveData" v-if="editParam=='companyAddress'">
+																				<input class="form-control" v-focus @blur="saveData" type="text" name="companyAddress" v-model="c.companyAddress">
+																			</form>
+																			<i v-if="hoverParam=='companyAddress'" class="fa fa-edit m-l-md"></i>
+																		</div>
+																	</div>
+																</div>
+
+																<div class="col-md-12">
+																	<div class="">
+																		<b class="col-sm-4 control-label">开户行：</b>
+																		<div class="col-sm-8 input-container" @click="change('bankName')" @mouseenter="enter('bankName')" @mouseleave="leave">
+																			<span v-if="editParam!='bankName'">{{c.bankName}}</span>
+																			<form @submit.prevent="saveData" v-if="editParam=='bankName'">
+																				<input class="form-control" v-focus @blur="saveData" type="text" name="bankName" v-model="c.bankName">
+																			</form>
+																			<i v-if="hoverParam=='bankName'" class="fa fa-edit m-l-md"></i>
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-12">
+																	<div class="">
+																		<b class="col-sm-4 control-label">开户行账号：</b>
+																		<div class="col-sm-8 input-container" @click="change('bankNumber')" @mouseenter="enter('bankNumber')" @mouseleave="leave">
+																			<span v-if="editParam!='bankNumber'">{{c.bankNumber}}</span>
+																			<form @submit.prevent="saveData" v-if="editParam=='bankNumber'">
+																				<input class="form-control" v-focus @blur="saveData" type="number" name="bankNumber" v-model="c.bankNumber">
+																			</form>
+																			<i v-if="hoverParam=='bankNumber'" class="fa fa-edit m-l-md"></i>
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-12">
+																	<div class="">
+																		<b class="col-sm-4 control-label">纳税人识别号：</b>
+																		<div class="col-sm-8 input-container" @click="change('taxIdentificationNumber')" @mouseenter="enter('taxIdentificationNumber')" @mouseleave="leave">
+																			<span v-if="editParam!='taxIdentificationNumber'">{{c.taxIdentificationNumber}}</span>
+																			<form @submit.prevent="saveData" v-if="editParam=='taxIdentificationNumber'">
+																				<input class="form-control" v-focus @blur="saveData" type="text" name="taxIdentificationNumber" v-model="c.taxIdentificationNumber">
+																			</form>
+																			<i v-if="hoverParam=='taxIdentificationNumber'" class="fa fa-edit m-l-md"></i>
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-12">
+																	<div class="">
+																		<b class="col-sm-4 control-label">传真：</b>
+																		<div class="col-sm-8 input-container" @click="change('fax')" @mouseenter="enter('fax')" @mouseleave="leave">
+																			<span v-if="editParam!='fax'">{{c.fax}}</span>
+																			<form @submit.prevent="saveData" v-if="editParam=='fax'">
+																				<input class="form-control" v-focus @blur="saveData" type="text" name="fax" v-model="c.fax">
+																			</form>
+																			<i v-if="hoverParam=='fax'" class="fa fa-edit m-l-md"></i>
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-12">
+																	<div class="">
+																		<b class="col-sm-4 control-label">邮政编码：</b>
+																		<div class="col-sm-8 input-container" @click="change('postCode')" @mouseenter="enter('postCode')" @mouseleave="leave">
+																			<span v-if="editParam!='postCode'">{{c.postCode}}</span>
+																			<form @submit.prevent="saveData" v-if="editParam=='postCode'">
+																				<input class="form-control" v-focus @blur="saveData" type="number" name="postCode" v-model="c.postCode">
+																			</form>
+																			<i v-if="hoverParam=='postCode'" class="fa fa-edit m-l-md"></i>
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-12">
+																	<div class="">
+																		<b class="col-sm-4 control-label">合同销售人：</b>
+																		<div class="col-sm-8 input-container" @click="change('contractSaleName')" @mouseenter="enter('contractSaleName')" @mouseleave="leave">
+																			<span v-if="editParam!='contractSaleName'">{{contractSaleName}}</span>
+																			<form @submit.prevent="saveData" v-if="editParam=='contractSaleName'">
+																				<select style="width:100%" v-if="editParam=='contractSaleName'" v-focus v-model="c.contractSaleName" name='contractSaleName'>
+																					<option value="">请选择</option>
+																					<option v-for="el in contractSaleList" :selected="c.contractSaleName==el.NAME" :value="el.USER_ID+','+el.NAME">{{el.NAME}}</option>
+																				</select>
+																			</form>
+																			<i v-if="hoverParam=='contractSaleName'" class="fa fa-edit m-l-md"></i>
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-12">
+																	<div class="">
+																		<b class="col-sm-4 control-label">订单销售人：</b>
+																		<div class="col-sm-8 input-container" @click="change('orderSaleName')" @mouseenter="enter('orderSaleName')" @mouseleave="leave">
+																			<span v-if="editParam!='orderSaleName'">{{orderSaleName}}</span>
+																			<form @submit.prevent="saveData" v-if="editParam=='orderSaleName'">
+																				<select style="width:100%" v-if="editParam=='orderSaleName'" v-focus v-model="c.orderSaleName" name='orderSaleName'>
+																					<option value="">请选择</option>
+																					<option v-for="el in orderSaleList" :selected="c.orderSaleName==el.NAME" :value="el.USER_ID+','+el.NAME">{{el.NAME}}</option>
+																				</select>
+																			</form>
+																			<i v-if="hoverParam=='orderSaleName'" class="fa fa-edit m-l-md"></i>
+																		</div>
+																	</div>
+																</div>
+
+																<div class="col-md-12">
+																	<div class="">
+																		<b class="col-sm-4 control-label">备注：</b>
+																		<div class="col-sm-8 input-container" @click="change('remark')" @mouseenter="enter('remark',$event)" @mouseleave="leave">
+																			<span v-if="editParam!='remark'">{{c.remark}}</span>
+																			<form @submit.prevent="saveData" v-if="editParam=='remark'">
+																				<input class="form-control" v-focus @blur="saveData" type="text" name="remark" v-model="c.remark">
+																			</form>
+																			<i v-if="hoverParam=='remark'" class="fa fa-edit m-l-md"></i>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<!--债权人(公司)-->
+													<div class="panel panel-default">
+														<div class="panel-heading">
+															联系人
+															<button class="btn btn-xs btn-white pull-right" @click="linkman_add"><i class="fa fa-plus"></i></button>
+														</div>
+														<div class="panel-body">
+															<div class="row form form-horizontal linkman-box">
+																<div class="col-sm-6" v-for="(el,index) in c.linkmans">
+																	<div class="contact-box shadow">
+																		<div class="row m-b-xs">
+																			<b class="col-sm-4">姓名：</b>
+																			<div class="col-sm-8" style="font-weight: 700">
+																				<a href="javascript:;" style="text-decoration:underline" title="点击编辑" @click="linkman_edit(el)">
+																					{{el.name}}
+																				</a>
+																			</div>
+																		</div>
+																		<div class="row m-b-xs">
+																			<b class="col-sm-4">手机：</b>
+																			<div class="col-sm-8" style="height:auto" :id="'mobilePhone_'+index" @mouseenter="enter(index,$event)" @mouseleave="leave">
+																				{{el.mobilePhone}}
+																				<button v-if="(hoverParam==('mobilePhone_'+index))&&el.mobilePhone" @click="call(c,el.mobilePhone,el.name)" class="btn btn-success btn-xs"> <i class="fa fa-phone"></i>
+                                                                    </button>
+																			</div>
+																		</div>
+																		<div class="row m-b-xs">
+																			<b class="col-sm-4">电话：</b>
+																			<div class="col-sm-8" style="height:auto">
+																				<div v-for="(sel,sindex) of el.landline.split('/')" :id="'landline_'+index+'_s'+sindex" @mouseenter="enter(index,$event)" @mouseleave="leave">
+																					{{sel}}
+																					<button v-if="(hoverParam==('landline_'+index+'_s'+sindex))&&sel" @click="call(c,sel,el.name)" class="btn btn-success btn-xs"> <i class="fa fa-phone"></i>
+                                                                    </button>
+																				</div>
+																			</div>
+																		</div>
+																		<div class="row m-b-xs">
+																			<b class="col-sm-4">邮箱：</b>
+																			<div class="col-sm-8">
+																				{{el.email}}
+																			</div>
+																		</div>
+																		<div class="row m-b-xs">
+
+																			<b class="col-sm-4">职务：</b>
+																			<div class="col-sm-8">
+																				{{el.postion}}
+																			</div>
+																		</div>
+																		<div class="row m-b-xs">
+																			<b class="col-sm-4">传真：</b>
+																			<div class="col-sm-8">
+																				{{el.fax}}
+																			</div>
+																		</div>
+
+																		<div class="row m-b-xs">
+																			<b class="col-sm-4">备注：</b>
+																			<div class="col-sm-8 ellipsis" @mouseenter="enter(index,$event)" @mouseleave="leave">
+																				{{el.remark}}
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!--记录;栏..-->
+										<div class="col-md-6 col-sm-12">
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="tabs-container">
+
+														<ul class="nav nav-tabs">
+															<li class="active">
+																<a data-toggle="tab" href="#tab-case-1" @click="getCaseRecord(3)"> 商务顾问动态</a>
+															</li>
+															<button @click="record_add" class="btn btn-success btn-sm pull-right"><i class="fa fa-plus"></i> 新增</button>
+														</ul>
+														<div class="tab-content ">
+															<div id="tab-case-1" class="tab-pane active">
+																<div class="panel-body">
+																	<!--案件跟进-->
+																	<div id="vertical-timeline" class="vertical-container dark-timeline" v-if="type==3">
+																		<div v-if="!sa.length" style="text-indent:3em;">暂无记录</div>
+																		<div class="vertical-timeline-block" v-for="(el,index) in sa">
+																			<div class="vertical-timeline-icon blue-bg"><i class="fa fa-file-text"></i></div>
+																			<div class="vertical-timeline-content">
+																				<div>跟进方式 :
+																					<span class="text-success" v-if="el.type==0">电话</span>
+																					<span class="text-success" v-if="el.type==1">QQ</span>
+																					<span class="text-success" v-if="el.type==2">微信</span>
+																					<span class="text-success" v-if="el.type==3">拜访</span>
+																					<span class="text-success" v-if="el.type==4">邮件</span>
+																					<span class="text-success" v-if="el.type==5">短信</span>
+																					<span class="text-success" v-if="el.type==6">其他</span>
+																					<span class="text-info pull-right">{{el.gjTime}}</span>
+																				</div>
+
+																				<p>联系人 : {{el.name}}</p>
+																				<p>跟进记录 : {{el.content}}</p>
+																				<div v-if="el.attachs.length"><strong>相关附件 : </strong> </div>
+																				<div v-for="els in el.attachs">
+																					<a :href="els.url" target="_blank">{{els.originalFilename}}</a>
+																				</div>
+																				<p class="ellipsis" v-if="el.warnMans&&el.warnMans.length">提醒给谁看 : <span v-for="(els,index) in el.warnMans"><i v-if="index!=0">，</i>{{els.userName}}</span></p>
+																				<p>下次跟进时间 :
+																					<span class="text-info">{{el.xcgjTime}}</span>
+																					<!--<a href="javascript:;" :id="'sid_'+el.id" @click="record_add(1,index)" class="btn btn-xs btn-primary"> 编辑</a>-->
+																				</p>
+																				<!--<p v-if="el.evaluate.length">点评 :
+																					<div class="media-body" v-if="el.evaluate.length" v-for="els in el.evaluate">
+																						<hr style="margin-top: 0;" />
+																						<div>
+																							<span class="text-success" style="font-size: 14px;">{{els.name}}</span> <small class="text-muted">{{els.createTime}}</small>
+																						</div>
+																						<div>
+																							{{els.Content}}
+																						</div>
+																					</div>
+																					<hr v-if="el.evaluate.length" />
+																				</p>-->
+																			</div>
+																		</div>
+																	</div>
+																</div>
+
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+							<!--联系人-->
+							<div id="tab-2" class="tab-pane">
+								<div class="panel-body">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="well well-sm clearfix"><button @click="linkman_add" class="btn btn-success"><i class="fa fa-plus"></i> 新增联系人</button></div>
+											<table class="table table-striped table-bordered table-hover">
+												<thead>
+													<tr>
+														<th>姓名</th>
+														<th>职务</th>
+														<th width="165">电话</th>
+														<th width="165">手机</th>
+														<th>邮箱</th>
+														<th>传真</th>
+														<th>备注</th>
+														<th width="150">操作</th>
+													</tr>
+												</thead>
+
+												<tbody>
+													<tr v-for="(els,index) in c.linkmans" style="height:40px">
+														<td>{{els.name}}</td>
+														<td>{{els.postion}}</td>
+														<td>
+															<div style="height:28px;line-height:28px" v-for="(sel,sindex) of els.landline.split('/')" :id="'slandline_'+index+'_s'+sindex" @mouseenter="enter(index,$event)" @mouseleave="leave">
+																{{sel}}
+																<button v-if="(hoverParam==('slandline_'+index+'_s'+sindex))&&sel" @click="call(c,sel,els.name)" class="btn btn-success btn-xs"> <i class="fa fa-phone"></i>
+                                                                    </button>
+															</div>
+
+														</td>
+														<td>
+															<div style="height:28px;line-height:28px" v-for="(sel,sindex) of els.mobilePhone.split('/')" :id="'smobilePhone_'+index+'_s'+sindex" @mouseenter="enter(index,$event)" @mouseleave="leave">
+																{{sel}}
+																<button v-if="(hoverParam==('smobilePhone_'+index+'_s'+sindex))&&sel" @click="call(c,sel,els.name)" class="btn btn-success btn-xs"> <i class="fa fa-phone"></i>
+                                                                    </button>
+															</div>
+														</td>
+														<td>{{els.email}}</td>
+														<td>{{els.fax}}</td>
+														<td>{{els.remark}}</td>
+														<td>
+															<a title="查看详情" @click="delLink(els.id)" class="btn btn-primary"><i class="fa fa-search"></i> 删除</a>
+														</td>
+													</tr>
+													<tr v-if="!c.linkmans.length" class="main_info">
+														<td colspan="13" class="center">没有相关数据</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!--合同信息-->
+							<div id="tab-3" class="tab-pane">
+								<div class="panel-body">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="panel panel-default">
+												<div class="panel-heading">
+													合同信息
+												</div>
+												<div class="panel-body">
+													<table class="table table-responsive table-bordered table-hover" id="mainTable">
+														<thead>
+															<tr>
+																<th>客户名称</th>
+																<th>债务人(公司)</th>
+																<th>欠款总金额</th>
+																<th>佣金比例(%)</th>
+																<th>签约时间</th>
+																<th>到期时间</th>
+																<th>合同销售</th>
+																<th width="100px">操作</th>
+															</tr>
+														</thead>
+														<tbody id="dataTable">
+															<tr v-for="(el,index) of contracts">
+																<td>{{el.customerName}}</td>
+																<td>{{el.debtorName}}</td>
+																<td>{{el.price}}</td>
+																<td>{{el.contractCommissionRate}}</td>
+																<td>{{el.signingTime}}</td>
+																<td>{{el.endTime}}</td>
+																<td>{{el.userName}}</td>
+																<td>
+																	<a title="查看详情" @click="viewContract(el.id)" class="btn btn-primary"><i class="fa fa-search"></i> 查看</a>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+
+							</div>
+							<!--订单信息-->
+							<div id="tab-4" class="tab-pane">
+								<div class="panel-body">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="panel panel-default">
+												<div class="panel-heading">
+													订单信息
+												</div>
+												<div class="panel-body">
+													<table class="table table-responsive table-bordered table-hover" id="mainTable">
+														<thead>
+															<tr>
+																<th>客户名称</th>
+																<th>债务人(公司)</th>
+																<th>欠款总金额</th>
+																<th>已回款金额(元)</th>
+																<th>佣金比例(诉讼/非诉)</th>
+																<th>案件类型</th>
+																<th>案件状态</th>
+																<th>订单销售</th>
+																<th>运作</th>
+																<th width="100px">操作</th>
+															</tr>
+														</thead>
+														<tbody id="dataTable">
+															<tr v-for="(el,index) of orders">
+																<td>{{el.custoemrName}}</td>
+																<td>{{el.debtorName}}</td>
+																<td>{{el.debtAmount}}</td>
+																<td>{{el.totalMoney||0}}</td>
+																<td>{{el.commissionRate}}</td>
+																<td>{{el.type == 0?'非诉讼':(el.type ==1?'诉讼':'仲裁')}}</td>
+																<td>{{el.status}}</td>
+																<td>{{el.saleName}}</td>
+																<td>{{el.runnerName}}</td>
+																<td>
+																	<a title="查看详情" @click="vieworders(el.id)" class="btn btn-primary"><i class="fa fa-search"></i> 查看</a>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+							<!--附件-->
+							<div id="tab-6" class="tab-pane">
+								<div class="panel-body">
+									<!--<div class="well well-sm">
+										<div id="fileUp"></div>
+									</div>-->
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th>文件名</th>
+												<th>文件类型</th>
+												<th>上传人</th>
+												<th>上传时间</th>
+												<th>操作</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr v-for="(el,index) in c.attachs">
+												<td>{{el.originalFilename}}</td>
+												<td>{{el.type}}</td>
+												<td>{{el.uploader}}</td>
+												<td>{{el.uploadTime}}</td>
+												<td>
+													<a :href="el.url" class="btn btn-primary"><i class="fa fa-eye"></i> 查看</a>
+													<a @click="attachs_delete(index)" class="btn btn-danger"><i class="fa fa-trash"></i> 删除</a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<!--操作日志-->
+							<div id="tab-7" class="tab-pane">
+								<div class="panel-body">
+
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th>操作时间</th>
+												<th>操作人员</th>
+												<th>操作类型</th>
+												<th>旧字段值</th>
+												<th>新字段值</th>
+
+											</tr>
+										</thead>
+										<tbody>
+											<tr v-for="(el,index) in c.logs">
+												<td>{{el.createTime}}</td>
+												<td>{{el.name}}</td>
+												<td>{{el.type}}</td>
+												<td>{{el.qzdz}}</td>
+												<td>{{el.hzdz}}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="" style="height:0;overflow:hidden">
+				<div class="col-sm-12 form" id="salerBox">
+					<div class="form-group m-t-lg">
+						<label class="col-sm-4" for="">新负责人</label>
+						<div class="col-sm-8">
+							<select style="width:100%" id="salerId">
+
+							</select>
+						</div>
+					</div>
+				</div>
+				<sale-follow :dialog-mode="saleFollowMode" ref="follow"></sale-follow>
+			</div>
+		</div>
+
+		</div>
+
+		<script src="/static/ui/js/jquery.min.js"></script>
+		<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+		<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+		<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+		<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+		<script src="/static/ui/js/plugins/layer/laydate/laydate.js"></script>
+		<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+		<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+		<script src="/static/ui/js/vue.js"></script>
+		<script src="/static/ui/js/require.min.js" data-main="/static/js/include/page/customerN_detail"></script>
+	</body>
+
+</html>

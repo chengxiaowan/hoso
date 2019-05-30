@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>新增商品</title>
+		<meta name="keywords" content="寒舍">
+		<meta name="description" content="寒舍">
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+		<link rel="stylesheet" href="../js/plugins/layui/css/layui.css">
+		<link rel="stylesheet" href="../css/animate.min.css">
+		<link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+		<link rel="stylesheet" href="../css/style.css">
+		<link rel="stylesheet" href="../css/layout.css">
+		<link rel="stylesheet" href="../css/htz.css" />
+	</head>
+	<style>
+		.layui-upload-list {
+			margin: 0;
+		}
+		
+		.control-label {
+			padding: 7px 10px;
+			color: #000;
+			font-weight: normal;
+			text-align: left;
+		}
+	</style>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content" id="app">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="tabs-container">
+						<div class="tab-content">
+							<div id="tab-1" class="tab-pane active">
+								<div class="panel-body">
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="ibox-content">
+												<div class="row">
+													<div class="col-sm-12">
+														<!-- 检索 start -->
+														<div class="form-inline" id="customerForm">
+															<div class="form-group">
+																<input id="nav-search-input" name="name" placeholder="请输入商品名称" class="form-control" type="text" v-model="keywords">
+															</div>
+															<div class="form-group">
+																<em>商品分类</em>
+																<select name="type" class="form-control" style="width: 150px;" data-placeholder="商品分类" v-model="typeId">
+																	<option value="">请选择商品分类</option>
+																	<option v-for="item in typeList" :value="item.parentId">{{item.parentName}}</option>
+																</select>
+															</div>
+															<div class="form-group">
+																<em>供应商</em>
+																<select class="form-control" style="width: 150px;" v-select2="" data-placeholder="请选择供应商" v-model="supplierId" required="required">
+																	<option value="">全部</option>
+																	<option v-for="item in supplierList" :value="item.id">{{item.text}}</option>
+																</select>
+															</div>
+															<div class="form-group">
+																<em>品牌</em>
+																<select class="form-control" style="width: 150px;" v-select22="" data-placeholder="请选择品牌" v-model="brandId">
+																	<option value="">全部</option>
+																	<option v-for="item in brandList" :value="item.id">{{item.text}}</option>
+																</select>
+															</div>
+															<button type="submit" class="btn btn-htz btn-primary" @click="search()">
+																<i class="icon icon_search"></i> 搜索
+															</button>
+														</div>
+														<!-- 检索 end -->
+													</div>
+												</div>
+											</div>
+											<div class="ibox-content">
+												<table id="simple-table" class="table  table-bordered table-hover">
+													<thead>
+														<tr>
+															<th width="15%">商品编码</th>
+															<th width="25%">商品</th>
+															<th width="10%">单价(元)</th>
+															<th width="20%">标签</th>
+															<th width="10%">状态</th>
+															<th width="20%">操作</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr v-if="list.total > 0" v-for="(item,index) in list.list">
+															<td>{{item.skuCode}}</td>
+															<td>
+																<img class="goods_img pull-left" :src="item.mainImgPath" alt="">
+																<div class="goods_txt pull-left">
+																	<p>{{item.skuName}}</p>
+																	<p>{{item.colorName}}</p>
+																	<p>{{item.standard}}</p>
+																</div>
+															</td>
+															<td>{{item.price}}</td>
+															<td>{{item.labels}}</td>
+															<td v-if="item.isOnsell == 0">已下架</td>
+															<td v-if="item.isOnsell == 1">部分上架</td>
+															<td v-if="item.isOnsell == 2">已上架</td>
+															<td>
+																<a class="btn btn-success" :class="{ 'btn-default': index==now }" @click="join(item.goodsSkuId,index,item)">
+																	<span v-if='index==now'>取消</span>
+																	<span v-else>加入</span>
+																</a>
+															</td>
+														</tr>
+														<tr class="main_info" v-else>
+															<td colspan="6">没有相关数据</td>
+														</tr>
+													</tbody>
+												</table>
+												<div class="pull-left form form-inline">
+													<div class="form-group form-group-sm">
+														共 {{list.total}} 条数据,每页显示
+														<select @change="getData(1)" v-model="list.pageSize" class="form-control">
+															<option value="5">5</option>
+															<option value="10">10</option>
+															<option value="20">20</option>
+															<option value="30">30</option>
+															<option value="40">40</option>
+															<option value="50">50</option>
+														</select> 条
+													</div>
+												</div>
+												<div class="pagi pull-right"></div>
+											</div>
+											<div class="col-sm-12 clear">
+												<div class="form-group">
+													<label class="col-sm-1 control-label">标签 <em class="red"></em></label>
+													<div class="col-sm-11">
+														<input class="form-control" name="tagsinput" id="tagsinputval" class="tagsinput" data-role="tagsinput" value="" type="text" placeholder="输入后按回车" />
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-12 clear">
+												<div class="form-group">
+													<label class="col-sm-1 control-label">商品封面 <em class="red">*</em></label>
+													<div class="col-sm-11">
+														<div class="layui-upload" id="btn-uploader">
+															<div class="layui-upload-list">
+																<img style="width: 40%;" class="layui-upload-img" id="demo1" src="">
+																<p id="demoText"></p>
+															</div>
+															<button type="button" class="layui-btn pull-left" id="pickfiles">上传图片</button>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="ibox-content-btn">
+												<a class="btn btn-htz btn-primary" title="确定" @click="save();">确定</a>
+												<a class="btn btn-htz  btn-htz-default" title="取消" onclick="cancle();">取消</a>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<!-- 全局js -->
+		<script src="../js/jquery-2.1.1.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/plugins/layer/layer.min.js"></script>
+		<script src="../js/plugins/layui/layui.js"></script>
+		<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+		<script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/module/module_pagination.js"></script>
+		<script src="../js/tagsinput.js"></script>
+		<!-- 自定义js -->
+		<script src="../js/content.min.js?v=1.0.0"></script>
+		<script src="../js/custom/common.js"></script>
+		<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+		<script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
+		<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+		<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+		<script src="../js/qiniuyun/qiniuImgL.js"></script>
+		<script src="../js/custom/recommend/addRecommand.js"></script>
+	</body>
+
+</html>

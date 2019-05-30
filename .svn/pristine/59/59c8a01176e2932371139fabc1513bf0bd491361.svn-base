@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+		<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+		<link href="/static/ui/css/htz.css" rel="stylesheet">
+		<style type="text/css">
+			body {
+				overflow: hidden;
+			}
+		</style>
+	</head>
+
+	<body class="gray-bg">
+		<div class="appWrapper">
+			<div id="app">
+				<div class="wrapper wrapper-content">
+					<div class="row">
+						<div class="col-sm-12 ">
+							<div class="ibox htz-box-1">
+								<div class="htz-title">
+									商务顾问业绩目标-到款金额完成情况
+									<input type="text" style="width: 100px;text-align: center;" readonly="readonly" class="form-control pull-right" v-model="dxmonth" id="dxmonth" />
+								</div>
+								<div class="ibox-content ibox-content1" style="overflow: hidden;">
+									<div class="col-sm-9">
+										<div :style="{width:'100%',height:'400px'}" id="main"></div>
+									</div>
+									<div class="col-sm-3">
+										<div :style="{width:'100%',height:'300px'}" id="pie"></div>
+										<div :style="{width:'100%',height:'60px'}" class="canshu"><span v-text="dx.dkje" style="color: #fdb44d"></span><span>/</span><span v-text="dx.mbdkje"></span></div>
+									</div>
+								</div>
+							</div>
+							<div class="ibox htz-box-1">
+								<div class="htz-title">
+									商务顾问业绩目标-合同数量完成情况
+									<input type="text" style="width: 100px;text-align: center;" readonly="readonly" class="form-control pull-right" v-model="dxmonth2" id="dxmonth2" />
+								</div>
+								<div class="ibox-content ibox-content1" style="overflow: hidden;">
+									<div class="col-sm-9">
+										<div :style="{width:'100%',height:'400px'}" id="main2"></div>
+									</div>
+									<div class="col-sm-3">
+										<div :style="{width:'100%',height:'300px'}" id="pie2"></div>
+										<div :style="{width:'100%',height:'60px'}" class="canshu"><span v-text="dx.htsl" style="color: #53c1a6"></span><span>/</span><span v-text="dx.mbhtsl"></span></div>
+									</div>
+								</div>
+							</div>
+							<div class="ibox htz-box-1">
+								<div class="htz-title">
+									商务顾问业绩目标-委案金额完成情况
+									<input type="text" style="width: 100px;text-align: center;" readonly="readonly" class="form-control pull-right" v-model="dxmonth3" id="dxmonth3" />
+								</div>
+								<div class="ibox-content ibox-content1" style="overflow: hidden;">
+									<div class="col-sm-9">
+										<div :style="{width:'100%',height:'400px'}" id="main3"></div>
+									</div>
+									<div class="col-sm-3">
+										<div :style="{width:'100%',height:'300px'}" id="pie3"></div>
+										<div :style="{width:'100%',height:'60px'}" class="canshu"><span v-text="dx.ddje" style="color: #fdb44d"></span><span>/</span><span v-text="dx.mbddje"></span></div>
+									</div>
+								</div>
+							</div>
+							<div class="ibox htz-box-1">
+								<div class="htz-title">
+									商务顾问业绩目标-拜访量完成情况
+									<input type="text" style="width: 100px;text-align: center;" readonly="readonly" class="form-control pull-right" v-model="dxmonth4" id="dxmonth4" />
+								</div>
+								<div class="ibox-content ibox-content1" style="overflow: hidden;">
+									<div class="col-sm-9">
+										<div :style="{width:'100%',height:'400px'}" id="main4"></div>
+									</div>
+									<div class="col-sm-3">
+										<div :style="{width:'100%',height:'300px'}" id="pie4"></div>
+										<div :style="{width:'100%',height:'60px'}" class="canshu"><span v-text="dx.yxkhs" style="color: #53c1a6"></span><span>/</span><span v-text="dx.mbyxkhs"></span></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<script src="/static/ui/js/jquery.min.js"></script>
+		<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+		<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+		<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+		<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+		<script src="/static/ui/js/plugins/laydate/laydate.js"></script>
+		<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+		<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+		<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+		<script src="/static/ui/js/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/static/ui/js/vue.js"></script>
+		<script src="/static/ui/js/require.min.js" data-main="/static/js/include/dev/swPerson_self"></script>
+	</body>
+	<script>
+	</script>
+
+</html>

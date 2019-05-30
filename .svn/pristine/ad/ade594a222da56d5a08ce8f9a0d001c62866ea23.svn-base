@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>我爱我家列表</title>
+		<meta name="keywords" content="寒舍">
+		<meta name="description" content="寒舍">
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+		<link rel="stylesheet" href="../css/animate.min.css">
+		<link rel="stylesheet" href="../js/plugins/layui/css/layui.css">
+		<!--选择框-->
+		<link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+		<link rel="stylesheet" href="../css/style.css">
+		<link rel="stylesheet" href="../css/layout.css">
+		<link rel="stylesheet" href="../css/swiper.min.css">
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	</head>
+	<style>
+		label {
+			line-height: 34px;
+		}
+		
+		.swiper-container {
+			width: 60%;
+			height: 80%;
+			position: fixed;
+			left: 0;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			margin: auto;
+			/*这行代码是关键*/
+			z-index: 999999999;
+		}
+		
+		.swiper-slide {
+			text-align: center;
+			font-size: 18px;
+			background: #fff;
+			/* Center slide text vertically */
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: -webkit-flex;
+			display: flex;
+			-webkit-box-pack: center;
+			-ms-flex-pack: center;
+			-webkit-justify-content: center;
+			justify-content: center;
+			-webkit-box-align: center;
+			-ms-flex-align: center;
+			-webkit-align-items: center;
+			align-items: center;
+			position: relative;
+		}
+		
+		.swiper-slide img {
+			/*cursor: pointer;*/
+		}
+		
+		.mb-bg {
+			z-index: 999999999;
+		}
+		.ibox-content .form-group{
+			line-height: 34px;
+		}
+		.ibox-content label{
+			margin-bottom: 0px;
+		}
+	</style>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content" id="app">
+			<div class="ibox-content">
+				<div class="row">
+					<div class="col-sm-12">
+						<!-- 检索 start -->
+						<div class="form-inline" id="customerForm">
+							<div class="form-group">
+								<input id="nav-search-input" name="name" placeholder="请输入标题" value="" class="form-control" type="text" v-model="keywords">
+							</div>
+							<div class="form-group">
+								<em>开始日期</em>
+								<input type="text" readonly="readonly" id="start" name='start' class="form-control" placeholder="请选择开始日期" v-model="polishTimeStart" />
+							</div>
+							<div class="form-group">
+								<em>结束日期</em>
+								<input type="text" readonly="readonly" id="end" name='end' class="form-control" placeholder="请选择结束日期" v-model="polishTimeEnd" />
+							</div>
+							<div class="form-group">
+								<em>状态</em>
+								<el-select clearable v-model="status" placeholder="请选择状态" style='width: 120px;'>
+									<el-option label="未审核" value="0"> </el-option>
+									<el-option label="审核通过" value="1"> </el-option>
+									<el-option label="审核驳回" value="2"> </el-option>
+								</el-select>
+							</div>
+							<button type="submit" class="btn btn-htz btn-primary" @click="search()">
+								<i class="icon icon_search"></i> 搜索
+                    		</button>
+						</div>
+						<!-- 检索 end -->
+					</div>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<table id="simple-table" class="table table-responsive table-bordered table-hover">
+					<thead>
+						<tr>
+							<th width="20%">标题</th>
+							<th width="20%">发布人</th>
+							<!--<th width="20%">许愿配图</th>-->
+							<th width="10%">点赞数</th>
+							<th width="10%">审核状态</th>
+							<th width="10%">发布时间</th>
+							<th width="10%">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<template v-if="list.total != 0">
+							<tr v-for="item in list.list">
+								<td>
+									<a style="cursor: pointer;color: #449cf6 ;" @click="look(item.customerWishId);">{{item.title}}</a>
+								</td>
+								<td>{{item.nickName}}</td>
+								<!--<td>
+									<div @click="show(item.picPath)" style="cursor: pointer;">
+										<img v-for="list in item.picPath" :src="list" style="width: 28%; margin-right: 3%; display: inline-block;">
+									</div>
+								</td>-->
+								<td>{{item.admiredNum}}</td>
+								<td :class="{'htz-red':item.auditStatus=='2'}">{{item.auditStatus=='0'?'未审核':(item.auditStatus=='1'?'审核通过':'审核驳回')}}</td>
+								<td>{{item.createTime}}</td>
+								<td class="btn-hide">
+									<a v-if="item.auditStatus=='0'" class="btn btn-success" title="审核" @click="audit(item,item.customerWishId);">审核</a>
+									<a class="btn btn-default" title="删除" @click="del(item.customerWishId)">删除</a>
+								</td>
+							</tr>
+						</template>
+						<tr v-else class="main_info" v-else>
+							<td colspan="6">没有相关数据</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="pull-left form form-inline">
+					<div class="form-group form-group-sm">
+						共 {{list.total}} 条数据,每页显示
+						<select @change="getData(1)" v-model="list.pageSize" class="form-control">
+							<option value="10">10</option>
+							<option value="20">20</option>
+							<option value="30">30</option>
+							<option value="40">40</option>
+							<option value="50">50</option>
+						</select> 条
+					</div>
+				</div>
+				<div class="pagi pull-right"></div>
+			</div>
+			<!--轮播图背景-->
+			<div v-cloak v-if="bg_show==true" @click="hide" class="mb-bg"></div>
+			<!--轮播图-->
+			<div v-cloak v-show="pic_show == true" class="swiper-container ">
+				<div class="swiper-wrapper">
+					<div class="swiper-slide swiper-no-swiping" v-for="(item,index) in picList"><img class="img" style="height: 100%;" :src="item"></div>
+				</div>
+				<!-- Add Pagination -->
+				<div class="swiper-pagination"></div>
+				<!-- Add Arrows -->
+				<div class="swiper-button-next"></div>
+				<div class="swiper-button-prev"></div>
+			</div>
+			<!--审核-->
+			<div class="bounced">
+				<div class="ibox-content" id="audit">
+					<div class="row">
+						<div class="ibox-content">
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="form-group clear">
+										<label class="col-sm-1 control-label">标题:</label>
+										<div class="col-sm-11">
+											{{title}}
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group clear">
+										<label class="col-sm-2 control-label">发起人:</label>
+										<div class="col-sm-10">
+											{{nickName}}
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group clear">
+										<label class="col-sm-2 control-label">发布时间:</label>
+										<div class="col-sm-10">
+											{{createTime}}
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<div class="form-group clear">
+										<label class="col-sm-1 control-label">描述:</label>
+										<div class="col-sm-12" style="text-indent: 28px;">
+											{{description}}
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<div class="form-group clear">
+										<label class="col-sm-1 control-label">图片:</label>
+										<div class="col-sm-11" style="display: flex;justify-content: flex-start;align-items: center;vertical-align: middle;cursor: pointer;">
+											<li style="margin-right: 10px;" v-for="(item,index) of  picPath" @click="show(picPath)" ><img :src="item" style="width: 60px"></li>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12" style="margin-top: 20px;">
+									<div class="form-group">
+										<label class="col-sm-1 control-label">审核状态 <em class="red">*</em></label>
+										<div class="col-sm-11">
+											<select class="form-control" v-model="auditStatus">
+												<option value="1">审核通过</option>
+												<option value="2">审核驳回</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12" style="margin-top: 20px;" v-if="auditStatus==2">
+									<label class="col-sm-1 control-label">驳回原因 <em class="red">*</em></label>
+									<div class="col-sm-11">
+										<textarea class="form-control" placeholder="请输入驳回理由" style="height: 120px; resize: none;" v-model="reason"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<!-- 全局js -->
+		<script src="../js/jquery-2.1.1.min.js"></script>
+		<script src="../js/swiper.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/plugins/layer/layer.min.js"></script>
+		<script src="../js/plugins/layui/layui.js"></script>
+		<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+		<script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/module/module_pagination.js"></script>
+		<!-- 自定义js -->
+		<script src="../js/content.min.js?v=1.0.0"></script>
+		<script src="../js/custom/common.js"></script>
+		<script src="../js/plugins/utf8-jsp/third-party/zeroclipboard/ZeroClipboard.js"></script>
+		<script src="../js/plugins/utf8-jsp/ueditor.config.js"></script>
+		<script src="../js/plugins/utf8-jsp/uemy.js"></script>
+		<script src="../js/plugins/utf8-jsp/lang/zh-cn/zh-cn.js"></script>
+		<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+		<script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
+		<script src="../js/custom/element-ui/index.js"></script>
+		<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+		<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+		<script src="../js/qiniuyun/qiniuImg.js"></script>
+		<script src="../js/custom/activityManagement/customerWishList.js"></script>
+	</body>
+
+</html>

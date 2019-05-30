@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+    <link href="/static/ui/css/animate.css" rel="stylesheet">
+    <link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+    <link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+    <style>
+    .control-label{
+        text-align: left !important;
+    }
+    </style>
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content hide" id="app">
+        <div class="row">
+            <div class="col-sm-12">
+                <h2 class="m-t-xs"> {{c.customerName}} <small class="m-l-md">销售人 : {{c.userName}}</small>
+                	<small v-if="c.status == '3'" class="m-l-md">诉讼中</small>
+                	<small v-if="c.status == '4'" class="m-l-md">仲裁中</small>
+                </h2>
+                <div class="m-b-xs" v-if="role=='公司内部运作'||role=='运作经理'">
+                    <button :disabled="precalc" @click="doTask(8)" class="btn btn-white"><i class="fa fa-cny"></i> 下月回款预估</button>
+                    <button :disabled="supplylaw" @click="doTask(5)" class="btn btn-white"><i class="fa fa-legal"></i> 申请诉讼仲裁</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#tab-1"  aria-expanded="true"> 案件全景</a>
+                        </li>
+                        <li class=""><a data-toggle="tab" href="#tab-2"  aria-expanded="false">案件资料</a>
+                        </li>
+                        <li v-if="role!='公司内部运作'" class=""><a data-toggle="tab" href="#tab-3"  aria-expanded="false">债权人(公司)</a>
+                        </li>
+                        <li class=""><a data-toggle="tab" href="#tab-4"  aria-expanded="false">债务人(公司)</a>
+                        </li>
+                         <li class=""><a data-toggle="tab" href="#tab-5"  aria-expanded="false">提醒</a>
+                        </li>
+                          <li><a data-toggle="tab" href="#tab-7"  aria-expanded="false">函件</a>
+                        </li>
+                        <li><a data-toggle="tab" href="#tab-6" @click="initUploader"  aria-expanded="false">附件</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane active">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-12">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        案件概览
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="row form form-horizontal">
+                                                            <div class="col-md-12">
+                                                                <div class="">
+                                                                    <b class="col-sm-4 control-label">债权人(公司)：</b>
+                                                                    <div class="col-sm-8 input-container showTips">
+                                                                        {{c.customerName}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-12">
+                                                                <div class="">
+                                                                    <b class="col-sm-4 control-label">委托时间：</b>
+                                                                    <div class="col-sm-8 input-container">
+                                                                        {{c.orderPlacement}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-12">
+                                                                <div class="">
+                                                                    <b class="col-sm-4 control-label">债务人(公司)：</b>
+                                                                    <div class="col-sm-8 input-container showTips">
+                                                                        {{c.debtorName}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="">
+                                                                    <b class="col-sm-4 control-label">债务公司电话：</b>
+                                                                    <div class="col-sm-8 input-container">
+                                                                        {{c.debtorMobilePhone}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="">
+                                                                    <b class="col-sm-4 control-label">欠款总金额(元)：</b>
+                                                                    <div class="col-sm-8 input-container">
+                                                                        {{c.debtAmount}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="">
+                                                                    <b class="col-sm-4 control-label">最近一次付款时间：</b>
+                                                                    <div class="col-sm-8 input-container">
+                                                                        {{c.lastPaymentDate}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="">
+                                                                    <b class="col-sm-4 control-label">账龄(月)：</b>
+                                                                    <div class="col-sm-8 input-container">
+                                                                        {{c.ageOfDebt}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-12" v-if="c.cType==0">
+                                                                <div class="">
+                                                                    <b class="col-sm-4 control-label">佣金比例(%)：</b>
+                                                                    <div class="col-sm-8 input-container">
+                                                                        {{c.commissionRate}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12" v-if="c.cType==1">
+                                                                <div class="">
+                                                                    <b class="col-sm-4 control-label">佣金金额(元)：</b>
+                                                                    <div class="col-sm-8 input-container">
+                                                                        {{c.fixedMoney}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                             <div class="col-md-12">
+                                                                <div class="">
+                                                                    <b class="col-sm-4 control-label">已回款金额(元)：</b>
+                                                                    <div class="col-sm-8 input-container">
+                                                                        {{c.totalMoney || 0}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="">
+                                                                    <b class="col-sm-4 control-label">剩余金额(元)：</b>
+                                                                    <div class="col-sm-8 input-container">
+                                                                        {{c.syMoney}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-12">
+                                                                <div class="">
+                                                                    <b class="col-sm-4 control-label">销售人：</b>
+                                                                    <div class="col-sm-8 input-container">
+                                                                        {{c.userName}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="">
+                                                                    <b class="col-sm-4 control-label">债务性质类型：</b>
+                                                                    <div class="col-sm-8 input-container">
+                                                                        <span v-if="c.debtType==0">产品交易欠款</span>
+                                                                        <span v-if="c.debtType==1">信用保险索赔欠款</span>
+                                                                        <span v-if="c.debtType==3">其他类型</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!--债权人(公司)-->
+                                                <div class="panel panel-default"  v-if="role!='公司内部运作'">
+                                                    <div class="panel-heading">
+                                                        债权人(公司)联系人
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="row">
+                                                            <div class="col-sm-6" v-for="el in c.linkMan5">
+                                                                <div class="contact-box shadow">
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">姓名：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.name}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+
+                                                                        <b class="col-sm-4">职务：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.postion}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">电话：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.landline}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">手机：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.mobilePhone}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <!--债务人(公司)-->
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        债务人(公司)联系人
+                                                        <button class="btn btn-xs btn-white pull-right" @click="linkman_add"><i class="fa fa-plus"></i></button>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="row">
+                                                            <div class="col-sm-6" v-for="el in c.linkMan6">
+                                                                <div class="contact-box shadow">
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4" style="height:22px;line-height:22px;">姓名：</b>
+                                                                        <div class="col-sm-8">
+                                                                            <a href="javascript:;" style="text-decoration:underline" title="点击编辑" @click="linkman_edit(el)">
+                                                                            {{el.name}}
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+
+                                                                        <b class="col-sm-4" style="height:22px;line-height:22px;">职务：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.postion}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">电话：</b>
+                                                                        <div class="col-sm-8" style="height:22px;line-height:22px;" @mouseover="call_btn($event,0)" @mouseleave="call_btn($event,1)">
+                                                                            {{el.landline}}
+                                                                            <span @click="call(el,el.landline)" style="display: none;" class="btn btn-xs btn-success"><i class="fa fa-phone"></i></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4" style="height:22px;line-height:22px;">手机：</b>
+                                                                          <div class="col-sm-8" style="height:22px;line-height:22px;" @mouseover="call_btn($event,0)" @mouseleave="call_btn($event,1)">
+                                                                            {{el.mobilePhone}}
+                                                                            <span @click="call(el,el.mobilePhone)" style="display: none;" class="btn btn-xs btn-success"><i class="fa fa-phone"></i></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">邮箱：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.email}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">传真：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.fax}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">备注：</b>
+                                                                        <div class="col-sm-8 showTips">
+                                                                            {{el.remark}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--债务人(公司)-->
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        函件信息
+                                                    </div>
+                                                    <div class="panel-body">
+                                <table class="table table-bordered">
+								                            <thead>
+								                                <tr>
+								                                    <th>函件内容</th>
+								                                    <th>发件日期</th>
+                                                                    <th>收件日期</th>
+								                                </tr>
+								                            </thead>
+								                            <tbody>
+								 										<tr v-for="(el,index) in c.expressInfo">
+                                                                             <td><a href="javascript:;" @click="viewhj(el.id)">{{el.jjnr}}</a></td>
+                                                                             <td>{{el.sendTime.split(' ')[0]}}</td>
+                                                                               <td>{{el.reciveTime.split(' ')[0]}}</td>
+                                                                                 </tr>                           		
+								                            </tbody>
+								                        </table>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--记录;栏..-->
+                                    <div class="col-md-6 col-sm-12">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                    <div class="tabs-container">
+
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#tab-case-1" @click="getCaseRecord(3)"> 案件跟进</a>
+                            </li>
+                            <li class=""><a data-toggle="tab" href="#tab-case-2" @click="getCaseRecord(1)"> 案件报告</a>
+                            </li>
+                            <li class=""><a data-toggle="tab" href="#tab-case-4" @click="getCaseRecord(5)"> 案件回款计划</a>
+                            </li>
+                            <li class=""><a data-toggle="tab" href="#tab-case-5" @click="getCaseRecord(2)"> 案件回款</a>
+                            </li>
+                            <button @click="record_add" class="btn btn-success btn-sm pull-right"><i class="fa fa-plus"></i> 新增</button>
+                        </ul>
+                        <div class="tab-content ">
+                            <div id="tab-case-1" class="tab-pane active">
+                                <div class="panel-body">
+                                    <!--案件跟进-->
+    <div id="vertical-timeline" class="vertical-container dark-timeline" v-if="type==3">
+        <div v-if="!sa.length" style="text-indent:3em;">暂无记录</div>
+        <div class="vertical-timeline-block" v-for="(el,index) in sa">
+            <div class="vertical-timeline-icon blue-bg"><i class="fa fa-file-text"></i></div>
+            <div class="vertical-timeline-content">
+                <div>跟进方式 : <span class="text-success">{{el.link}}</span>
+                    <span class="text-info pull-right">{{el.createTime}}</span>
+                </div>
+                <p>跟进状态 : 
+                    <span v-if="el.gjStatus==0" class="label label-warning label-outline">未处理</span>
+                    <span v-if="el.gjStatus==1" class="label label-warning label-outline">初步沟通</span>
+                    <span v-if="el.gjStatus==2" class="label label-warning label-outline">无意向还款</span>
+                    <span v-if="el.gjStatus==3" class="label label-warning label-outline">有意向还款</span>
+                    <span v-if="el.gjStatus==4" class="label label-warning label-outline">外访</span>
+                    <span v-if="el.gjStatus==5" class="label label-warning label-outline">部分还款</span>
+                    <span v-if="el.gjStatus==6" class="label label-warning label-outline">已结清</span>
+                    <span v-if="el.gjStatus==7" class="label label-warning label-outline">已立案</span>
+                    <span v-if="el.gjStatus==8" class="label label-warning label-outline">已诉讼保全</span>
+                    <span v-if="el.gjStatus==9" class="label label-warning label-outline">判决/仲裁</span>
+                    <span v-if="el.gjStatus==10" class="label label-warning label-outline">已申请强制执行</span>
+                </p>
+                <p>跟进记录 : {{el.remark}}</p>
+                <p v-if="el.link=='电话'&&el.recordUrl">录音 :
+                    <br>
+                    <audio controls="controls" :src="el.recordUrl">
+                        你的浏览器不支持audio标签
+                    </audio>
+                </p>
+                <div v-if="el.attachs.length"><strong>相关附件 : </strong> </div>
+                <div v-for="els in el.attachs"><a :href="els.url" target="_blank">{{els.originalFilename}}</a></div>
+                <div class="vertical-date">下次跟进时间 : 
+                    <span class="text-info">{{el.xcgjTime}}</span></div>
+                    <a href="javascript:;" :id="'sid_'+el.id" @click="record_add(1,index)" class="btn btn-xs btn-primary"> 编辑</a></div>
+        </div>
+    </div>
+
+<!--案件报告-->
+<div id="vertical-timeline" class="vertical-container dark-timeline" v-if="type==1">
+     <div v-if="!sb.length" style="text-indent:3em;">暂无记录</div>
+       <div class="vertical-timeline-block" v-for="(el,index) in sb">
+    <div class="vertical-timeline-icon blue-bg"><i class="fa fa-file-text"></i></div>
+    <div class="vertical-timeline-content">
+        <div>标题 : {{el.title}}</div>
+        <p>状态: 
+            <span v-if="el.status==0" class="label label-warning label-outline">草稿</span>
+            <span v-if="el.status==1" class="label label-warning label-outline">已提交</span>
+            <span v-if="el.status==2" class="label label-warning label-outline">审核通过</span>
+            <span v-if="el.status==3" class="label label-warning label-outline">审核未通过</span>
+        </p>
+        <p>类型: 
+            <span v-if="el.reportType==0" class="label label-outline">进展</span>
+            <span v-if="el.reportType==1" class="label label-outline">结案</span>
+            <span v-if="el.reportType==2" class="label label-outline">关闭</span>
+        </p>
+        <p>报告内容 : {{el.remark}}</p>
+        <div v-if="el.attachs.length"><strong>相关附件 : </strong> </div>
+        <div v-for="els in el.attachs"><a :href="els.url" target="_blank">{{els.originalFilename}}</a></div>
+        <p>时间 : <span class="text-info">{{el.createTime}}</span>
+        <a v-if="(role=='公司内部运作' || role=='运作总监' || role=='客服')&&(el.status==0||el.status==3)"  href="javascript:;" :id="'sid_'+el.id" @click="record_add(1,index)" class="btn btn-xs pull-right btn-primary"> 编辑</a>
+        </p>
+        <p v-if="el.status==3">审核意见 : {{el.content}}</p>
+         <!--<a v-if="el.status==1" href="javascript:;" :id="'sid_'+el.id" onclick="log_add(this,1)" class="btn btn-xs btn-primary"> 审核</a>-->
+         </div>
+    </div>
+</div>
+
+<!--案件回款计划-->
+<div id="vertical-timeline" class="vertical-container dark-timeline" v-if="type==5">
+     <div v-if="!sd.length" style="text-indent:3em;">暂无记录</div>
+      <div class="vertical-timeline-block" v-for="(el,index) in sd">
+    <div class="vertical-timeline-icon blue-bg"><i class="fa fa-file-text"></i></div>
+    <div class="vertical-timeline-content">
+        <div class="row">
+            <div class="col-md-12 text-muted" v-if="el.planTime">计划开始回款时间 ： <span class="text-success">{{el.planTime.split(" ")[0]}}</span></div>
+            <div class="col-md-12 text-muted" v-if="el.time">计划开始回款时间 ： <span class="text-success">{{el.time.split(" ")[0]}}</span></div>
+            <div class="col-md-12 text-muted" v-if="el.onceMoney">单次回款金额(元) ： <span class="text-danger">{{el.onceMoney}}</span></div>
+            <div class="col-md-12 text-muted" v-if="el.periods">回款期数 ： <span class="text-danger">{{el.periods}}</span></div>
+            <div class="col-md-12 text-muted" v-if="el.money">回款金额(元) ： <span class="text-danger">{{el.money}}</span></div>
+        </div>
+        <p v-if="el.type==0">备注 :{{el.remark }} </p>
+        <p v-if="el.type==1">备注 :{{el.remark1}} </p>
+        <a v-if="role=='经理'" href="javascript:;"  @click="record_add(1,index,el)"
+            class="btn btn-xs btn-primary"> 编辑</a>
+    </div>
+</div>
+</div>
+<!--案件回款明细-->
+<div id="vertical-timeline" class="vertical-container dark-timeline" v-if="type==2">
+     <div v-if="!se.length" style="text-indent:3em;">暂无记录</div>
+      <div class="vertical-timeline-block" v-for="(el,index) in se">
+    <div class="vertical-timeline-icon blue-bg"><i class="fa fa-file-text"></i></div>
+    <div class="vertical-timeline-content">
+        <div class="row">
+            <div class="col-md-12 text-muted">本次回款金额 (元)： <span class="text-danger">{{el.currentMoney}}</span></div>
+            <div class="col-md-12 text-muted">本次回款时间 ： <span class="text-success">{{el.currentTime}}</span></div>
+            <div class="col-md-12 text-muted">当前余额 ： <span class="text-success">{{el.currentBalance}}</span></div>
+            <div class="col-md-12 text-muted">计划金额 ： <span class="text-success">{{el.onceMoney}}</span></div>
+            <div class="col-md-12 text-muted">计划时间 ： <span class="text-success">{{el.planTime}}</span></div>
+        </div>
+        <p>备注 : {{el.remark}}</p>
+        <a v-if="role=='经理'" href="javascript:;"  @click="record_add(1,index)"
+            class="btn btn-xs btn-primary"> 编辑</a>
+    </div>
+</div>
+</div>
+
+    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        <!--案件资料-->
+                        <div id="tab-2" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                订单信息
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="row form form-horizontal">
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">订单编号：</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                {{c.contractNo}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">委托时间：</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                {{c.orderPlacement}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">欠款总金额(元)：</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                {{c.debtAmount}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">最近一次付款时间：</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                {{c.lastPaymentDate}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">账龄(月)：</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                {{c.ageOfDebt}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">佣金类型：</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                <span v-if="c.cType==0">佣金比例</span>
+                                                                <span v-if="c.cType==1">固定金额</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <span v-if="c.cType==0"><b class="col-sm-4 control-b">佣金比例(%)：</b></span>
+                                                            <span v-if="c.cType==1"><b class="col-sm-4 control-b">佣金金额：</b></span>
+                                                            <div class="col-sm-8 input-container">
+                                                                <span v-if="c.cType==0">
+                                                                    {{c.commissionRate}}
+                                                                </span>
+                                                                <span v-if="c.cType==1">   {{c.fixedMoney}}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12" v-if="c.cType==0">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">佣金比例折扣(1-100)：</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                <span v-if="c.cType==0">
+                                                                    {{c.discount}}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">销售人：</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                {{c.userName}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                债权人(公司)基本信息
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="row form form-horizontal">
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">名称：</b>
+                                                            <div class="col-sm-8 input-container showTips">
+                                                                {{c.customerName}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">传真：</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                {{c.customerFax}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">所在省：</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                {{c.provinceName}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">所在市：</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                {{c.cityName}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">详细地址：</b>
+                                                            <div class="col-sm-8 input-container showTips">
+                                                                {{c.addressDetail}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                债务人(公司)基本信息
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="row form form-horizontal">
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">名称：</b>
+                                                            <div class="col-sm-8 input-container showTips">
+                                                                {{c.debtorName}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">传真：</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                {{c.debtorFax}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">所在省：</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                {{c.provinceName1}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">所在市：</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                {{c.cityName1}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">详细地址：</b>
+                                                            <div class="col-sm-8 input-container showTips">
+                                                                {{c.debtorAddress}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                案件其他信息
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="row form form-horizontal">
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">债务性质类别：</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                <span v-if="c.debtType==0">产品交易欠款</span>
+                                                                <span v-if="c.debtType==1">信用保险索赔欠款</span>
+                                                                <span v-if="c.debtType==3">其他类型</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">最近一次联络时间：</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                {{c.lastContactTime}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">债务有无争议：</b>
+                                                            <div class="col-sm-8 input-container">
+                                                               <span v-if="!c.isDispute">无</span>
+                                                                <span v-if="c.isDispute=='1'">有</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12" v-if="c.isDispute=='1'">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">争议原因：</b>
+                                                            <div class="col-sm-8 input-container">
+                                                               {{c.disputedReasons}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">其他拖欠理由：</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                {{c.nonPayReasons}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">已往收款行为描述：</b>
+                                                            <div class="col-sm-8 input-container showTips">
+                                                                {{c.collectHistory}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">其他说明：</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                {{c.othersRequest}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--债权人-->
+                        <div id="tab-3" class="tab-pane"  v-if="role!='公司内部运作'">
+                            <div class="panel-body">
+                                 <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                基本信息
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="row form form-horizontal">
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">债权人(公司)：</b>
+                                                            <div class="col-sm-8 input-container showTips">
+                                                                {{c.customerName}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">传真:</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                {{c.customerFax}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">邮政编码:</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                {{c.customerPostCode}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">开户行:</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                {{c.customerBankAccountName}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">开户行帐号:</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                {{c.customerBankNumber}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">所属省:</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                 {{c.provinceName}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                         <b class="col-sm-4 control-label">所属市:</b>
+                                                            <div class="col-sm-8 input-container">
+                                                                 {{c.cityName}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12" >
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">具体地址:</b>
+                                                            <div class="col-sm-8 input-container showTips">
+                                                                  {{c.customerAddress}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                              案件知情人
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="row form form-horizontal">
+                                                     <div class="col-sm-6" v-for="el in c.linkMan3">
+                                                                <div class="contact-box shadow">
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">姓名：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.ajzqrName}}
+                                                                        </div> 
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+
+                                                                        <b class="col-sm-4">职务：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.ajzqrPostion}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">电话：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.ajzqrLandline}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">手机：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.ajzqrMobilePhone}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                               工作汇报对象人
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="row form form-horizontal">
+                                                     <div class="col-sm-6" v-for="el in c.linkMan4">
+                                                                <div class="contact-box shadow">
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">姓名：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.hbdxrName}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+
+                                                                        <b class="col-sm-4">职务：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.hbdxrPostion}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">电话：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.hbdxrLandline}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">手机：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.MobilePhone}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--债务人-->
+                        <div id="tab-4" class="tab-pane">
+                            <div class="panel-body">
+                               <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                基本信息
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="row form form-horizontal">
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">
+                                                                债务人(公司)：</b>
+                                                            <div class="col-sm-8 input-container showTips" @click="change('debtorName')" @mouseenter="enter('debtorName')" @mouseleave="leave">
+                                                                <span v-if="editParam!='debtorName'">{{c.debtorName}}</span>
+                                                                <form @submit.prevent="saveData"  v-if="editParam=='debtorName'">
+                                                                <input class="form-control" v-focus @blur="saveData" type="text" name="debtorName" v-model="c.debtorName">
+                                                                </form>
+                                                                <i v-if="hoverParam=='debtorName'" class="fa fa-edit m-l-md"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">债务公司电话：</b>
+                                                                <div class="col-sm-8 input-container" @click="change('debtorMobilePhone')" @mouseenter="enter('debtorMobilePhone')" @mouseleave="leave">
+                                                                <span v-if="editParam!='debtorMobilePhone'">{{c.debtorMobilePhone}}</span>
+                                                                <form @submit.prevent="saveData"  v-if="editParam=='debtorMobilePhone'">
+                                                                <input class="form-control" v-focus @blur="saveData" type="text" name="debtorMobilePhone" v-model="c.debtorMobilePhone">
+                                                                </form>
+                                                                <i v-if="hoverParam=='debtorMobilePhone'" class="fa fa-edit m-l-md"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">公司传真：</b>
+                                                             <div class="col-sm-8 input-container" @click="change('debtorFax')" @mouseenter="enter('debtorFax')" @mouseleave="leave">
+                                                                <span v-if="editParam!='debtorFax'">{{c.debtorFax}}</span>
+                                                                <form @submit.prevent="saveData"  v-if="editParam=='debtorFax'">
+                                                                <input class="form-control" v-focus @blur="saveData" type="text" name="debtorFax" v-model="c.debtorFax">
+                                                                </form>
+                                                                <i v-if="hoverParam=='debtorFax'" class="fa fa-edit m-l-md"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">其他联系：</b>
+                                                             <div class="col-sm-8 input-container" @click="change('debtorOtherContract')" @mouseenter="enter('debtorOtherContract')" @mouseleave="leave">
+                                                                <span v-if="editParam!='debtorOtherContract'">{{c.debtorOtherContract}}</span>
+                                                                <form @submit.prevent="saveData"  v-if="editParam=='debtorOtherContract'">
+                                                                <input class="form-control" v-focus @blur="saveData" type="text" name="debtorOtherContract" v-model="c.debtorOtherContract">
+                                                                </form>
+                                                                <i v-if="hoverParam=='debtorOtherContract'" class="fa fa-edit m-l-md"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">所属省：</b>
+                                                            <div class="col-sm-8 input-container" @click="change('provinceName1')" @mouseenter="enter('provinceName1')" @mouseleave="leave">
+                                                                <span v-if="editParam!='provinceName1'" class="provinceName1">{{c.provinceName1}}</span>
+                                                                  <form @submit.prevent="saveData"  v-if="editParam=='provinceName1'">
+                                                                <select style="width:100%" v-if="editParam=='provinceName1'" v-focus v-model="c.provinceName1" name='provinceName1'>
+                                                                     <option value="">请选择</option>
+                                                                    <option v-for="el in citys['省份']" :selected="c.provinceName1==el.regionName" :value="el.regionName">{{el.regionName}}</option>
+                                                                </select>
+                                                                </form>
+                                                                 <i v-if="hoverParam=='provinceName1'" class="fa fa-edit m-l-md"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">所属市：</b>
+                                                             <div class="col-sm-8 input-container" @click="change('cityName1')" @mouseenter="enter('cityName1')" @mouseleave="leave">
+                                                                <span v-if="editParam!='cityName1'" class="cityName1">{{c.cityName1}}</span>
+                                                                  <form @submit.prevent="saveData"  v-if="editParam=='cityName1'">
+                                                                <select style="width:100%" v-if="editParam=='cityName1'" v-focus v-model="c.provinceName1" name='provinceName1'>
+                                                                     <option value="">请选择</option>
+                                                                    <option v-for="el in citys_sub" :selected="c.cityName1==el.regionName" :value="el.regionName">{{el.regionName}}</option>
+                                                                </select>
+                                                                </form>
+                                                                 <i v-if="hoverParam=='cityName1'" class="fa fa-edit m-l-md"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                         <b class="col-sm-4 control-label">具体地址：</b>
+                                                         <div class="col-sm-8 input-container showTips" @click="change('debtorAddress')" @mouseenter="enter('debtorAddress')" @mouseleave="leave">
+                                                                <span v-if="editParam!='debtorAddress'">{{c.debtorAddress}}</span>
+                                                                <form @submit.prevent="saveData"  v-if="editParam=='debtorAddress'">
+                                                                <input class="form-control" v-focus @blur="saveData" type="text" name="debtorAddress" v-model="c.debtorAddress">
+                                                                </form>
+                                                                <i v-if="hoverParam=='debtorAddress'" class="fa fa-edit m-l-md"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12" >
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">邮政编码：</b>
+                                                            <div class="col-sm-8 input-container" @click="change('debtorPostcode')" @mouseenter="enter('debtorPostcode')" @mouseleave="leave">
+                                                                <span v-if="editParam!='debtorPostcode'">{{c.debtorPostcode}}</span>
+                                                                <form @submit.prevent="saveData"  v-if="editParam=='debtorPostcode'">
+                                                                <input class="form-control" v-focus @blur="saveData" type="text" name="debtorPostcode" v-model="c.debtorPostcode">
+                                                                </form>
+                                                                <i v-if="hoverParam=='debtorPostcode'" class="fa fa-edit m-l-md"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                     <div class="col-md-12" >
+                                                        <div class="">
+                                                            <b class="col-sm-4 control-label">债务人营业现状：</b>
+                                                            <div class="col-sm-8 input-container" @click="change('debtorStatus')" @mouseenter="enter('debtorStatus')" @mouseleave="leave">
+                                                                 <span v-if="(c.debtorStatus==0)&&(editParam!='debtorStatus')">营业中</span>
+                                                                 <span v-if="(c.debtorStatus==1)&&(editParam!='debtorStatus')">停止/暂停营业（但营业主体存在）</span>
+                                                                 <span v-if="(c.debtorStatus==2)&&(editParam!='debtorStatus')">不详</span>
+                                                                 <span v-if="(c.debtorStatus==3)&&(editParam!='debtorStatus')">债务主体破产/已注销</span>
+                                                                  <form @submit.prevent="saveData"  v-if="editParam=='debtorStatus'">
+                                                                <select style="width:100%" v-if="editParam=='debtorStatus'" v-focus v-model="c.debtorStatus" name='debtorStatus'>
+                                                                    <option value="">请选择</option>
+                                                                    <option  :selected="c.debtorStatus==0" value="0">营业中</option>
+                                                                    <option  :selected="c.debtorStatus==1" value="1">停止/暂停营业（但营业主体存在）</option>
+                                                                    <option  :selected="c.debtorStatus==2" value="2">不详</option>
+                                                                    <option  :selected="c.debtorStatus==3" value="3">债务主体破产/已注销</option>
+                                                                </select>
+                                                                </form>
+                                                                 <i v-if="hoverParam=='debtorStatus'" class="fa fa-edit m-l-md"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                              债务知情人
+                                              <button class="btn btn-xs btn-white pull-right" @click="debtor_linkman_add(0)"><i class="fa fa-plus"></i></button>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="row form form-horizontal">
+                                                     <div class="col-sm-6" v-for="el in c.linkMan1">
+                                                                <div class="contact-box shadow">
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">姓名：</b>
+                                                                        <div class="col-sm-8">
+                                                                            <a href="javascript:;" style="text-decoration:underline" title="点击编辑" @click="linkman_edit(el)">
+                                                                                {{el.zqrName}}
+                                                                                </a>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">职务：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.zqrPostion}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">电话：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.zqrLandline}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">手机：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.zqrMobilePhone}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">邮箱：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.zqrEmail}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">传真：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.zqrFax}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">备注：</b>
+                                                                        <div class="col-sm-8 showTips">
+                                                                            {{el.zqrRemark}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                               其他负责人
+                                               <button class="btn btn-xs btn-white pull-right" @click="debtor_linkman_add(1)"><i class="fa fa-plus"></i></button>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="row form form-horizontal">
+                                                     <div class="col-sm-6" v-for="el in c.linkMan2">
+                                                                <div class="contact-box shadow">
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">姓名：</b>
+                                                                        <div class="col-sm-8">
+                                                                            <a href="javascript:;" style="text-decoration:underline" title="点击编辑" @click="linkman_edit(el)">
+                                                                            {{el.fzrName}}
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+
+                                                                        <b class="col-sm-4">职务：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.fzrPostion}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">电话：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.fzrLandline}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">手机：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.fzrMobilePhone}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">邮箱：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.fzrEmail}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">传真：</b>
+                                                                        <div class="col-sm-8">
+                                                                            {{el.fzrFax}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-xs">
+                                                                        <b class="col-sm-4">备注：</b>
+                                                                        <div class="col-sm-8 showTips">
+                                                                            {{el.fzrRemark}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div id="tab-5" class="tab-pane">
+                            <div class="panel-body">
+                                <div  class="well well-sm clearfix" v-if="role=='公司内部运作' || role =='运作经理'">
+                               <button @click="remind_add" class="btn btn-success"><i class="fa fa-plus"></i> 新增提醒</button>
+                                </div>
+                                <table class="table table-bordered">
+								                            <thead>
+								                                <tr>
+								                                    <th>提醒内容</th>
+								                                    <th>提醒时间</th>
+								                                    <th>操作</th>
+								                                </tr>
+								                            </thead>
+								                            <tbody>
+								 										<tr v-for="(el,index) in c.callInfo">
+                                                                             <td>{{el.remark}}</td>
+                                                                             <td>{{el.time}}</td>
+                                                                             <td width=85>
+                                                                                 <a v-if="el.flag==0" @click.prevent="remind_complete(index,el)" class="btn btn-primary"><i class="fa fa-check"></i> 完成</a> 
+                                                                                 <a v-if="el.flag==1" disabled class="btn btn-default"><i class="fa fa-check"></i> 已完成</a> 
+                                                                                 </td></tr>                           		
+								                            </tbody>
+								                        </table>
+                            </div>
+                        </div>
+
+ <!--函件-->
+                        <div id="tab-7" class="tab-pane">
+                            <div class="panel-body">
+                                <div  class="well well-sm clearfix">
+                                    <button class="btn btn-success pull-right" @click="letter_add"><i class="fa fa-plus"></i> 新增函件</button>
+                                </div>
+                                <table class="table table-bordered">
+								                            <thead>
+								                                <tr>
+								                                    <th>函件内容</th>
+								                                    <th>发件方式</th>
+								                                    <th>发件类型</th>
+								                                    <th>发件单位</th>
+								                                    <th>发件日期</th>
+                                                                    <th>收件日期</th>
+                                                                    <th>操作</th>
+								                                </tr>
+								                            </thead>
+								                            <tbody>
+								 										<tr v-for="(el,index) in c.expressInfo">
+                                                                             <td>{{el.jjnr}}</td>
+                                                                             <td v-if="el.sendway==0">快递</td>
+                                                                             <td v-if="el.sendway==1">客户自取</td>
+                                                                             <td v-if="el.sendway==2">代发</td>
+                                                                             <td v-if="el.expressType==1">询证函</td>
+                                                                             <td v-if="el.expressType==2">催款函</td>
+                                                                             <td v-if="el.expressType==3">律师函</td>
+                                                                             <td v-if="el.expressType==4">合同</td>
+                                                                             <td v-if="el.expressType==5">发票</td>
+                                                                             <td v-if="el.expressType==6">其他</td>
+                                                                             <td>{{el.fjdw}}</td>
+                                                                             <td>{{el.sendTime.split(' ')[0]}}</td>
+                                                                               <td>{{el.reciveTime.split(' ')[0]}}</td>
+                                                                               <td><button class="btn btn-primary" @click="viewhj(el.id)"><i class="fa fa-search"></i> 查看</button></td>
+                                                                                 </tr>                           		
+								                            </tbody>
+								                        </table>
+                            </div>
+                        </div>
+
+                        <!--附件-->
+                        <div id="tab-6" class="tab-pane">
+                            <div class="panel-body">
+                                <div  class="well well-sm" v-if="role=='公司内部运作' || role =='运作经理'">
+                                <div id="fileUp"></div>
+                                </div>
+                                <table class="table table-bordered">
+								                            <thead>
+								                                <tr>
+								                                    <th>文件名</th>
+								                                    <th>文件类型</th>
+								                                    <th>上传人</th>
+								                                    <th>上传时间</th>
+								                                    <th>操作</th>
+								                                </tr>
+								                            </thead>
+								                            <tbody>
+								 										<tr v-for="(el,index) in c.attachs">
+                                                                             <td>{{el.originalFilename}}</td>
+                                                                             <td>{{el.type}}</td>
+                                                                             <td>{{el.uploader}}</td>
+                                                                             <td>{{el.uploadTime}}</td>
+                                                                             <td>
+                                                                                 <a target="_blank" :href="el.url" class="btn btn-primary"><i class="fa fa-eye"></i> 查看</a> 
+                                                                                   <a v-if="role!='公司内部运作'" target="_blank" @click="attachs_delete(index)" class="btn btn-danger"><i class="fa fa-trash"></i> 删除</a> 
+                                                                                 </td></tr>                           		
+								                            </tbody>
+								                        </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+<!--组件-->
+        <div style="height:0;overflow:hidden;">
+            <pay-plan :order-id="orderId" v-on:refresh="getCaseRecord" ref="payplan"></pay-plan>
+            <pay-planedit :order-id="orderId" v-on:refresh="getCaseRecord" ref="payplan_edit"></pay-plan-edit>
+        </div>
+
+
+    </div>
+
+    <script src="/static/ui/js/jquery.min.js"></script>
+    <script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+    <script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+    <script src="/static/ui/js/plugins/layer/laydate/laydate.js"></script>
+    <link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+    <script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+    <script src="/static/ui/js/vue.js"></script>
+    <script src="/static/ui/js/require.min.js" data-main="/static/js/include/page/case_detail"></script>
+</body>
+
+</html>

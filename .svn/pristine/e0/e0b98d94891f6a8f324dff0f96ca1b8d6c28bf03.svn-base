@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新增商品自定义参数</title>
+<meta name="keywords" content="寒舍">
+<meta name="description" content="寒舍">
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+<link rel="stylesheet" href="../css/animate.min.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/layout.css">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content  animated fadeInRight" id="app">
+    <div class="ibox-content">
+        <div id="contractForm" class="form form-horizontal">
+            <div class="row row_list">
+                <div class="col-sm-6 clear">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">属性名称 <em class="red">*</em></label>
+                        <div class="col-sm-10">
+                            <input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入属性名称" v-model="skuAttributeName" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 clear">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">属性值 <em class="red">*</em></label>
+                        <div class="col-sm-10">
+                            <input class="form-control" data-validate="require|maxLength=50" type="text" placeholder="请输入属性值"  v-model="skuSelectValue" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ibox-content-btn">
+            <a class="btn btn-success" title="确定" @click="confirm();">确定</a>
+            <a class="btn btn-htz  btn-htz-default" title="取消" onclick="cancle();">取消</a>
+        </div>
+    </div>
+</div>
+<!-- 全局js -->
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/vue.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/custom/attribute/add.js"></script>
+</body>
+</html>

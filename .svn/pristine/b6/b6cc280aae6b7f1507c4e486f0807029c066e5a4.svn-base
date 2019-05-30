@@ -1,0 +1,299 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+		<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+	</head>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content hide" style="padding-top:0;" id="app">
+			<div class="container-fluid">
+				<div class="panel panel-default m-t-md">
+					<div class="panel-heading clearfix btns-hook" style="position:fixed;top:0;left:35px;
+				right:35px;z-index:9">
+						<form role="form" class="form-inline" id="searchForm" @submit.prevent="getData(1)">
+							<div class="form-group" v-if="role=='经理'">
+								<select style="width: 200px;" name="" id="saleId">
+									<option value="">请选择</option>
+								</select>
+							</div>
+							<div class="form-group" v-if="valid">
+								<label for="">有效电话时间(秒)</label>
+								<input style="width:100px" class="form-control" type="number" id="billSeconds" name="billSeconds" value="90">
+							</div>
+							<div class="form-group">
+								<label for="">开始日期</label>
+								<input class="span10 date-picker form-control" id="startTime" name="startTime" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" placeholder="开始日期" style="width: 150px;" />
+							</div>
+							<div class="form-group">
+								<label for="">结束日期</label>
+								<input class="span10 date-picker form-control" id="endTime" name="endTime" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" placeholder="结束日期" style="width: 150px;" />
+							</div>
+							<button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 查询</button>
+						</form>
+					</div>
+					<div class="panel-body">
+						<!--记录;栏..-->
+						<div class="col-md-8 col-sm-12">
+							<div class="row">
+								<div class="col-sm-12">
+									<div id="tab-case-1" class="tab-pane active">
+										<div class="panel-body">
+											<!--案件跟进-->
+											<div id="vertical-timeline" class="vertical-container dark-timeline">
+												<div class="vertical-timeline-block" v-for="(el,index) in c.list">
+													<div class="vertical-timeline-icon blue-bg"><i class="fa fa-file-text"></i></div>
+													<div class="vertical-timeline-content">
+														<div>销售 : <span>{{el.saleName}}</span>
+															<div class="pull-right text-info">
+																{{el.gjTime}}
+															</div>
+														</div>
+														<p>跟进方式 :
+															<span class="text-success" v-if="el.type==0">电话</span>
+															<span class="text-success" v-if="el.type==1">QQ</span>
+															<span class="text-success" v-if="el.type==2">微信</span>
+															<span class="text-success" v-if="el.type==3">拜访</span>
+															<span class="text-success" v-if="el.type==4">邮件</span>
+															<span class="text-success" v-if="el.type==5">短信</span>
+															<span class="text-success" v-if="el.type==6">其他</span>
+														</p>
+														<p>跟进状态 :
+															<span class="label label-primary" v-if="el.STATUS==0">未处理</span>
+															<span class="label label-primary" v-if="el.STATUS==1">初步沟通</span>
+															<span class="label label-primary" v-if="el.STATUS==2">无意向</span>
+															<span class="label label-primary" v-if="el.STATUS==3">有意向</span>
+															<span class="label label-primary" v-if="el.STATUS==4">销售外访</span>
+															<span class="label label-primary" v-if="el.STATUS==5">客户来访</span>
+															<span class="label label-primary" v-if="el.STATUS==6">需求确定</span>
+															<span class="label label-primary" v-if="el.STATUS==7">方案/报价</span>
+															<span class="label label-primary" v-if="el.STATUS==8">谈判/合同</span>
+															<span class="label label-primary" v-if="el.STATUS==9">成交</span>
+															<span class="label label-primary" v-if="el.STATUS==10">暂时搁置</span>
+															<span class="label label-primary" v-if="el.STATUS==11">未成交</span>
+														</p>
+														<p v-if="el.type==0&&el.recordUrl">录音 :
+															<br>
+															<audio controls="controls" :src="el.recordUrl">
+																你的浏览器不支持audio标签
+															</audio>
+														</p>
+														<p>联系人 : {{el.NAME}}</p>
+														<p>客户名称 : {{el.saleCustomerName}}</p>
+														<p>跟进记录 : {{el.content}}</p>
+														<div v-if="el.attachs&&el.attachs.length"><strong>相关附件 : </strong> </div>
+														<div v-for="els in el.attachs">
+															<a :href="els.url" target="_blank">{{els.originalFilename}}</a>
+														</div>
+														<p class="vertical-date">下次跟进时间 :
+															<span class="text-info">{{el.xcgjTime}}</span></div>
+													</p>
+												</div>
+											</div>
+
+										</div>
+										<div class="pagi pull-right"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+	<script src="/static/ui/js/jquery.min.js"></script>
+	<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+	<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+	<script src="/static/ui/js/plugins/layer/laydate/laydate.js"></script>
+	<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+	<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+	<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+	<script src="/static/ui/js/plugins/echarts/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/static/ui/js/vue.js"></script>
+	<script src="/static/js/include/module/module_pagination.js"></script>
+
+	<script type="text/javascript">
+		var config = {
+			role: localStorage.userRole || "",
+			type: yo.getQueryString("type") || 0, //0/显示全部/1//显示电话
+			saleId: yo.getQueryString("saleId"),
+			valid: yo.getQueryString("valid") || "", //是否显示有效电话
+			saleName: decodeURI(yo.getQueryString("saleName")) || "",
+			startTime: yo.getQueryString("startTime") || "",
+			endTime: yo.getQueryString("endTime") || "",
+			api_showDetail: '/main/showDetail.do', //查询
+		}
+
+		window.app = new Vue({
+			el: '#app',
+			data: {
+				role: config.role,
+				valid: config.valid,
+				c: []
+			},
+			created: function() {
+				var that = this;
+				document.getElementById("app").classList.remove("hide");
+			},
+			mounted: function() {
+				$('.date-picker').datepicker({
+					autoclose: true,
+					todayHighlight: true
+				});
+				$("#startTime").val(config.startTime)
+				$("#endTime").val(config.endTime)
+				if($("#startTime").val()) {
+					$("#endTime").datepicker('setStartDate',
+						new Date($("#startTime").val()))
+				}
+
+				if($("#endTime").val()) {
+					$("#startTime").datepicker('setEndDate',
+						new Date($("#endTime").val()))
+				}
+
+				//开始日期
+				$("#startTime").datepicker({}).on(
+					'changeDate',
+					function(ev) {
+						if(ev.date) {
+							$("#endTime").datepicker('setStartDate',
+								new Date(ev.date.valueOf()))
+						} else {
+							$("#endTime").datepicker('setStartDate', null);
+						}
+					});
+				//结束日期
+				$("#endTime").datepicker({}).on(
+					'changeDate',
+					function(ev) {
+						if(ev.date) {
+							$("#startTime").datepicker('setEndDate',
+								new Date(ev.date.valueOf()))
+						} else {
+							$("#startTime").datepicker('setEndDate',
+								new Date());
+						}
+					});
+				if(config.saleId) {
+					$('#saleId').html('"<option value="' + config.saleId + '">' + config.saleName + '</option>"')
+				}
+				$('#saleId').select2({
+					placeholder: "请选择销售",
+					language: 'zh-CN',
+					allowClear: 1,
+					ajax: {
+						url: "/user/getUserInfo",
+						dataType: 'json',
+						type: "post",
+						delay: 250,
+						data: function(params) {
+							return {
+								page: params.page || 1,
+								ROLE_ID: "b729e9334ad64c15a4e47d88b8c2638f,30b1487221464d369ca4c2462ccca920",
+								data: {
+									q: params.term || "", // search term
+								}
+							};
+						},
+						processResults: function(data, params) {
+							params.page = params.page || 1;
+							$.each(data, function() {
+								this.id = this.USER_ID;
+								this.text = this.NAME;
+							})
+
+							return {
+								results: data,
+								pagination: {
+									more: data.length == 10
+								}
+							};
+						},
+						cache: true
+					},
+					minimumInputLength: 0
+				})
+
+				this.getData()
+			},
+			methods: {
+				/**
+				 * 载入中方法
+				 * 
+				 * @param {string} s 是否关闭
+				 */
+				loading: function(s) {
+					if(s == "close") layer.close(this.loadingSwitch)
+					else this.loadingSwitch = layer.load(3);
+					// else this.loadingSwitch = layer.load(3, { shade: [.6, "#fff"] });
+				},
+				getData: function(page) {
+					$('body,html').scrollTop(0)
+					var billSeconds = $('[name=billSeconds]').val();
+					if(Number(billSeconds) == NaN || Number(billSeconds) < 0) {
+						$('[name=billSeconds]').val(0)
+					}
+					if(page) this.c.pageNum = page
+					var that = this;
+					that.loading();
+					$.ajax({
+						url: config.api_showDetail,
+						async: false,
+						data: {
+							type: config.type || 0,
+							startTime: $('[name=startTime]').val(),
+							endTime: $('[name=endTime]').val(),
+							saleId: $("#saleId").val(),
+							billSeconds: $.trim($("#billSeconds").val()),
+							pageSize: that.c.pageSize || 10,
+							page: that.c.pageNum || 1
+						},
+						success: function(res) {
+							that.loading('close')
+							if(res.error == "00") {
+								that.c = res.result;
+								//分页
+								if(that.pagi) {
+									$('.pagi').pagination('updatePages', that.c.pages)
+									if(page == 1) $('.pagi').pagination('goToPage', that.c.pageNum)
+								} else {
+									that.pagi = $('.pagi').pagination({
+										pages: that.c.pages, //总页数
+										showCtrl: true,
+										displayPage: 6,
+										currentPage: that.c.pageNum,
+										onSelect: function(num) {
+											that.c.pageNum = num
+											that.getData()
+											yo.scrollTo('body')
+										}
+									})
+								}
+							} else {
+								layer.msg(res.msg)
+							}
+						}
+					});
+				},
+				openSalerList: function(id) {
+					salerList(id);
+				}
+			}
+		})
+	</script>
+
+</html>

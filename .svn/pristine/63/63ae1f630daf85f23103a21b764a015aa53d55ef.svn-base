@@ -1,0 +1,279 @@
+/**ͷ��**/
+
+#top-search {
+	display: inline-block;
+	padding: 0px 0px;
+	height: 35px;
+	margin-top: 10px;
+	margin-left: 15px;
+	text-indent: 20px;
+	background: #fff;
+	border-radius: 4px 0 0 4px;
+}
+
+.navbar {
+	min-height: 55px
+}
+
+.htz-btn {
+	border-radius: 0px;
+	margin-left: -3px;
+	margin-top: -4px;
+	background: #e4e9ef;
+	padding: 0px 0px 0px 0px;
+	width: 35px;
+	height: 35px;
+	text-align: center;
+	line-height: 35px;
+	border-radius: 0px 4px 4px 0px;
+}
+
+.fa-search {
+	font-size: 16px;
+}
+
+.layui-layer-title {
+	background: #444a63!important;
+	color: #fff!important;
+	font-weight: 700;
+	font-size: 15px;
+}
+
+.layui-layer-ico {
+	background: url(../js/plugins/layer/skin/default/htz-icon.png) 1px -40px no-repeat !important;
+}
+
+
+/** �л�**/
+
+.tabs-container .nav-tabs>li.active>a {
+	color: #459df5;
+}
+
+.nav-tabs>li>a {
+	margin-right: 0!important;
+}
+
+.layui-layer-btn a {
+	height: 30px!important;
+	line-height: 30px!important;
+	padding: 0 24px;
+}
+
+.form-control[readonly] {
+	background: #fff
+}
+
+
+/**����ͷ**/
+
+.panel-default>.panel-heading {
+	background: #fff
+}
+
+.table>thead>tr>th {
+	background: #459df5!important;
+	color: #fff;
+	text-align: center;
+}
+
+.btn[type=reset] {
+	background: #a8b2b4;
+	color: #fff
+}
+
+.btn[type=reset]:hover {
+	background: #90999c;
+}
+
+
+/*显示,隐藏*/
+
+.htz_hide {
+	display: none;
+}
+
+.htz-panel-body th {
+	height: 51px;
+}
+
+.htz-panel-body tbody tr td {
+	height: 51px;
+}
+
+.panel-body tbody tr:hover .htz_hide {
+	display: inline-block;
+}
+
+.htz-select {
+	margin: 15px 0;
+}
+
+.htz-label {
+	display: block;
+	width: 17.5%;
+	height: 34px;
+	border: 1px solid #e5e6e7;
+	border-right: none;
+	background: #f6f7f8;
+	text-align: center;
+	line-height: 34px;
+}
+
+
+/*首页*/
+
+.htz-title {
+	background-color: #ffffff;
+	border-color: #e7eaec;
+	-webkit-border-image: none;
+	-o-border-image: none;
+	border-image: none;
+	border-style: solid solid none;
+	border-width: 4px 0px 0;
+	color: inherit;
+	margin-bottom: 0;
+	padding: 14px 15px 7px;
+	line-height: 34px;
+}
+
+.htz-box {
+	background: #f7f7f7;
+	padding: 20px 0;
+	margin: 0 2.33% 0 1%;
+}
+.htz-box span {
+	width: 50px;
+	height: 50px;
+	background: #a2b9cb;
+	margin: 0 10px;
+	border-radius: 50%;
+	text-align: center;
+	line-height: 50px;
+}
+
+.htz-box div div {
+	line-height: 25px;
+}
+
+.htz-box .blue {
+	color: #1ca0f2;
+}
+
+.htz-box-no{
+	background: #f7f7f7;
+	padding: 20px 0;
+	margin-bottom: 15px;
+	width: 240px!important;
+	margin-right: 15px;
+}
+.htz-box-no span {
+	width: 50px;
+	height: 50px;
+	background: #a2b9cb;
+	margin: 0 10px;
+	border-radius: 50%;
+	text-align: center;
+	line-height: 50px;
+}
+
+.htz-box-no div div {
+	line-height: 25px;
+}
+
+.htz-box-no .blue {
+	color: #1ca0f2;
+}
+
+.bg-white {
+	background: #FFFFFF!important;
+}
+
+.htz-change {
+	background: none!important;
+}
+
+.htz-change span {
+	margin-right: 10px;
+	line-height: 34px;
+	padding: 0 20px;
+	cursor: pointer;
+	border-radius: 3px;
+	display: inline-block;
+}
+
+.htz-change a {
+	border-radius: 3px;
+}
+
+.htz-change cite {
+	width: 200px;
+}
+
+.htz-change .active {
+	background: #459df5;
+	color: #FFFFFF;
+}
+
+.htz-change a {
+	display: inline-block;
+	width: 50px;
+	text-align: center;
+}
+
+.ibox-content .col-sm-6:nth-child(even) {
+	margin-left: -15px;
+}
+
+.htz-box-1 .col-sm-6:first-child {
+	padding-left: 0!important;
+}
+
+.htz-box-1 .col-sm-6:last-child {
+	padding-right: 0!important;
+}
+
+.htz-nav li {
+	display: block;
+	float: left;
+}
+
+.htz-nav a {
+	font-weight: 600;
+	padding: 10px 20px 10px 0;
+	color: #737373;
+	display: block;
+}
+
+.htz-nav {
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
+}
+
+.htz-nav .active a {
+	color: #459df5;
+}
+
+.canshu {
+	font-size: 16px;
+	text-align: center;
+	line-height: 60px;
+	border: 1px solid #ebebeb;
+	-moz-box-shadow: 0px 0px 10px #d0c8c8;
+	-webkit-box-shadow: 0px 0px 10px #d0c8c8;
+	box-shadow: 0px 0px 10px #d0c8c8;
+	border-radius: 10px;
+}
+
+.nav-tabs li {
+	border-right: 1px solid #e4e9ef;
+}
+
+.nav-tabs li:last-child {
+	border-right: none;
+}
+
+.nav-tabs>li>a {
+	border-radius: 0 0 0 0!important;
+}

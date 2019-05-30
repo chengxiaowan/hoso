@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .tab-header li{
+            padding: 0 20px;
+            list-style: none;
+            float: left;
+        }
+        .tab-header li.active{
+            color: #f00;
+        }
+        .tab-content{
+            display: none;
+            clear: both;
+        }
+        .show{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <ul class="tab-header">
+        <li class="name" @click="activateTab(0)" :class="{active:index==0}">New</li>
+        <li class="name" @click="activateTab(1)" :class="{active:index==1}">Existed&Copy</li>
+    </ul>
+    <div class="tab-content new-tab" :class="{show:index==0}">1</div>
+    <div class="tab-content existed-tab" :class="{show:index==1}">2</div></code>
+</div>
+
+<script src="../js/vue.js"></script>
+<script>
+    var vm=new Vue({
+        el: '#app',
+        data: {
+            index: 0
+        },
+        methods: {
+            activateTab: function (index_chosen) {
+                this.index = index_chosen;
+            },
+        }
+    })
+</script>
+</body>
+</html>

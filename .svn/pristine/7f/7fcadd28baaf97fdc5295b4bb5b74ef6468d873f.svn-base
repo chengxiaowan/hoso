@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>用户列表</title>
+		<meta name="keywords" content="寒舍">
+		<meta name="description" content="寒舍">
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+		<link rel="stylesheet" href="../css/animate.min.css">
+		<link rel="stylesheet" href="../js/plugins/laydate/theme/default/laydate.css">
+		<link rel="stylesheet" href="../css/style.css">
+		<link rel="stylesheet" href="../css/layout.css">
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	</head>
+	<style>
+		.input-container {
+			height: 34px!important;
+			line-height: 34px!important;
+		}
+		.el-select-dropdown{
+			z-index: 9999999999999!important;
+		}
+	</style>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content" id="app">
+			<div class="ibox-content">
+				<div class="row">
+					<div class="col-sm-12">
+						<!-- 检索 start -->
+						<div class="form-inline" id="customerForm">
+							<div class="form-group">
+								<input placeholder="请输入姓名" class="form-control" type="text" v-model="keywords">
+							</div>
+							<div class="form-group">
+								<em>角色</em>
+								<template>
+									<el-select v-model="roleId" clearable filterable placeholder="请选择角色"  style='width: 140px;'>
+										<el-option v-for="item in roleList" :key="item.roleId" :label="item.roleName" :value="item.roleId">
+										</el-option>
+									</el-select>
+								</template>
+							</div>
+							<button type="submit" class="btn btn-htz btn-primary" @click="search()">
+                        		<i class="icon icon_search"></i> 搜索
+                    		</button>
+							<button type="submit" class="btn btn-htz btn-success" @click="add()">
+                        		<i id="nav-search-icon" class="icon icon_plus"></i> 新增
+                   			 </button>
+						</div>
+						<!-- 检索 end -->
+					</div>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<table id="simple-table" class="table table-responsive table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>用户名</th>
+							<th>姓名</th>
+							<th>手机号码</th>
+							<th>角色</th>
+							<th>状态</th>
+							<th width="20%">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<template v-if="isZw">
+							<tr v-for="(item,index) of list.list">
+								<td>{{item.userName}}</td>
+								<td>{{item.name}}</td>
+								<td>{{item.mobilePhone}}</td>
+								<td>{{item.roleName}}</td>
+								<td>{{item.isQuit==0?'在职':'离职'}}</td>
+								<td class="btn-hide">
+									<a class="btn btn-success" title="编辑" @click="edit(item.userId);">编辑</a>
+									<a v-if="item.isQuit==0" class="btn btn-success" title="离职" @click="quit(item.userId);">离职</a>
+									<a v-if="item.isQuit==1" class="btn btn-default" title="已离职">已离职</a>
+									<!--<a class="btn btn-default" title="删除" @click="del(item.userId);">删除</a>-->
+								</td>
+							</tr>
+						</template>
+						<template v-else>
+							<tr class="main_info">
+								<td colspan="6">暂无数据</td>
+							</tr>
+						</template>
+
+					</tbody>
+				</table>
+				<div class="pull-left form form-inline">
+					<div class="form-group form-group-sm">
+						共 {{list.total}} 条数据,每页显示
+						<select @change="getData(1)" v-model="list.pageSize" class="form-control">
+							<option value="10">10</option>
+							<option value="20">20</option>
+							<option value="30">30</option>
+							<option value="40">40</option>
+							<option value="50">50</option>
+						</select> 条
+					</div>
+				</div>
+				<div class="pagi pull-right"></div>
+			</div>
+
+			<!--新建用户-->
+			<div class="bounced">
+				<div class="ibox-content" id="addPeople">
+					<div class="form form-horizontal">
+						<div class="row_list">
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">用户名<em class="red">*</em></label>
+									<div class="col-sm-9">
+										<input class="form-control" type="text" placeholder="请输入用户名" v-model="form.userName">
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">姓名<em class="red">*</em></label>
+									<div class="col-sm-9">
+										<input class="form-control" type="text" placeholder="请输入姓名" v-model="form.name">
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12" v-if="!show">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">密码<em class="red">*</em></label>
+									<div class="col-sm-9">
+										<input class="form-control" type="text" placeholder="请输入密码" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')" v-model="form.password">
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12" v-if="!show">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">确认密码<em class="red">*</em></label>
+									<div class="col-sm-9">
+										<input class="form-control" type="text" placeholder="请确认密码" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')" v-model="form.password1">
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">手机号码<em class="red">*</em></label>
+									<div class="col-sm-9">
+										<input class="form-control" type="text" placeholder="请输入手机号码" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" v-model="form.mobilePhone">
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">角色<em class="red">*</em></label>
+									<div class="col-sm-9">
+										<template>
+											<el-select v-model="form.roleId" clearable filterable placeholder="请选择角色" style='width: 100%;'>
+												<el-option v-for="item in roleList" :key="item.roleId" :label="item.roleName" :value="item.roleId">
+												</el-option>
+											</el-select>
+										</template>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">QQ号码</label>
+									<div class="col-sm-9">
+										<input class="form-control" type="text" placeholder="请输入QQ号码" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" v-model="form.QQ">
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">微信号</label>
+									<div class="col-sm-9">
+										<input class="form-control" type="text" placeholder="请输入微信号" v-model="form.weChatId">
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">邮箱</label>
+									<div class="col-sm-9">
+										<input class="form-control" type="text" placeholder="请输入邮箱" v-model="form.email">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 全局js -->
+		<script src="../js/jquery-2.1.1.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/plugins/layer/layer.min.js"></script>
+		<script src="../js/plugins/layui/layui.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/module/module_pagination.js"></script>
+		<script src="../js/custom/element-ui/index.js"></script>
+		<!-- 自定义js -->
+		<script src="../js/content.min.js?v=1.0.0"></script>
+		<script src="../js/custom/common.js"></script>
+		<script src='../js/custom/system/userList.js'></script>
+	</body>
+
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+		<style>
+			.control-label {
+				text-align: left !important;
+			}
+		</style>
+	</head>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content hide" id="app">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="tabs-container">
+						<div class="tab-content">
+							<div class="tab-pane active">
+								<div class="panel-body">
+									<div class="row">
+										<div class="col-md-12 col-sm-12 hide" id="report_detail">
+											<div class="animated fadeInRight">
+												<div class="mail-box-header">
+													<h2>
+                    {{d.name}} 的 {{d.type ==0 ? '周报' : '月报'}} 
+													<span v-if="d.type==0">
+														({{d.zbtimeStart}} - {{d.zbtimeEnd}})
+													</span>
+													<span v-if="d.type==1">
+														({{d.time}}) 
+													</span>
+													</h2>
+													<div class="mail-tools tooltip-demo m-t-md">
+														<h5>
+                       {{d.creatTime}}
+                    </h5>
+													</div>
+												</div>
+												<div class="mail-box">
+
+													<div class="mail-body">
+														<h4>总结：</h4>
+														<div v-html="d.content">
+															</div>
+														<h4 class="m-t-lg">计划：</h4>
+														<div v-html="d.plan">
+															 </div>
+													</div>
+													<div class="mail-attachment">
+														<p>
+															<span><i class="fa fa-paperclip"></i> {{d.attachs&&d.attachs.length}} 个附件  </span>
+														</p>
+
+														<div class="attachment">
+															<div class="file-box">
+																<div class="file" style="display: inline-block;" v-for="el in  d.attachs">
+																	<a target="_blank" :href="el.url">
+																		<span class="corner"></span>
+																		<div class="file-name" style="border: none;">
+																			{{el.originalFilename}}
+																		</div>
+																	</a>
+																</div>
+															</div>
+
+															<div class="clearfix"></div>
+														</div>
+													</div>
+													<div class="mail-body tooltip-demo">
+														<div v-for="el in d.evaluate" class="media-body" style="border-bottom: 1px solid #eee;padding-top: 10px;">
+															<div>
+																<div v-if="el.type!=2">
+																	{{el.name}} <span class="text-success">{{el.type==0 ? '已批阅' : '点评'}}</span>
+																</div>
+																<div v-if="el.type==2">
+																	{{el.name}} <span class="text-success"> 回复 </span> {{el.dprName}}
+																</div>
+															<button class="pull-right btn btn-primary btn-xs btn-reply" @click="commentReplyBoxId=el.id">回复</button>
+															</div>
+															<small class="text-muted">{{el.createTime}}</small>
+															<p>
+																{{el.Content}}
+															</p>
+													<form class="form form-horizontal m-b-xs comment-reply" v-show="commentReplyBoxId==el.id" @submit.prevent="submitReply(d.id,el.userId)" onsubmit="return false">
+															<div class="input-group">
+																<input v-model="commentReply" type="text" placeholder="回复" class="input form-control">
+																<span class="input-group-btn">
+								                                        <button type="submit" class="btn btn-primary"> <i class="fa fa-pencil"></i> 回复</button>
+								                                </span>
+															</div>
+														</form>
+														</div>
+														<form v-if="(d.isDo || (userId!=d.readMan) )&& tabStatus!=2" @submit.prevent="submitCommit(d.id)" class="form form-horizontal m-t-xs">
+															<div class="input-group">
+																<input v-model="commit" type="text" placeholder="点评" class="input form-control">
+																<span class="input-group-btn">
+                                        <button type="submit" class="btn btn btn-primary"> <i class="fa fa-pencil"></i> 点评</button>
+                                </span>
+															</div>
+														</form>
+														<form v-if="!d.isDo&&(userId==d.readMan)&&tabStatus!=2" class="form form-horizontal m-t-xs" @submit.prevent="submitCommit(d.id)">
+															<div class="input-group">
+																<input v-model="commit" type="text" placeholder="批阅" class="input form-control">
+																<span class="input-group-btn">
+                                        <button type="submit" class="btn btn btn-primary"> <i class="fa fa-pencil"></i> 批阅</button>
+                                </span>
+															</div>
+														</form>
+													</div>
+													<div class="clearfix"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		</div>
+
+		<script src="/static/ui/js/jquery.min.js"></script>
+		<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+		<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+		<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+		<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+		<script src="/static/ui/js/plugins/layer/laydate/laydate.js"></script>
+		<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+		<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+		<script src="/static/ui/js/vue.js"></script>
+		<script src="/static/ui/js/require.min.js" data-main="/static/js/include/page/workreport_view"></script>
+	</body>
+
+</html>

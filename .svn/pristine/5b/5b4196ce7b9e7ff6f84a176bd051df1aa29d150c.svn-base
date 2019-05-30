@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+		<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+		<link href="/static/ui/css/htz.css" rel="stylesheet">
+		<style type="text/css">
+			body {
+				overflow: hidden;
+			}
+		</style>
+	</head>
+
+	<body class="gray-bg">
+		<div class="appWrapper">
+			<div id="app">
+				<div class="wrapper wrapper-content">
+					<div class="row">
+						<div class="col-sm-12 ">
+							<div class="ibox htz-box-1">
+								<div class="htz-title">
+									运作业绩目标完成情况
+									<input type="text" style="width: 100px;text-align: center;" readonly="readonly" class="form-control pull-right" v-model="dxmonth" id="dxmonth" />
+									<select style="width: 120px; margin-right: 20px;" v-model="saleId"  class="form-control pull-right">
+										<option v-for="item in listId" :value="item.USER_ID" v-text="item.NAME" :key="item.USER_ID"></option>
+									</select>
+								</div>
+								<div class="ibox-content ibox-content1" style="overflow: hidden;">
+									<div class="col-sm-9">
+										<div :style="{width:'100%',height:'400px'}" id="main"></div>
+									</div>
+									<div class="col-sm-3">
+										<div :style="{width:'100%',height:'300px'}" id="pie"></div>
+										<div :style="{width:'100%',height:'60px'}" class="canshu"><span v-text="dx.dkje" style="color: #fdb44d"></span><span>/</span><span v-text="dx.mbdkje"></span></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<script src="/static/ui/js/jquery.min.js"></script>
+		<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+		<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+		<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+		<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+		<script src="/static/ui/js/plugins/laydate/laydate.js"></script>
+		<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+		<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+		<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+		<script src="/static/ui/js/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/static/ui/js/vue.js"></script>
+		<script src="/static/ui/js/require.min.js" data-main="/static/js/include/dev/yunzuo"></script>
+	</body>
+	<script>
+	</script>
+
+</html>

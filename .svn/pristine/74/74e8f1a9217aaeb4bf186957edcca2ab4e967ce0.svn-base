@@ -1,0 +1,330 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+		<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+		<link href="/static/ui/css/htz.css" rel="stylesheet">
+	</head>
+	<style>
+		.form-group {
+			line-height: 34px;
+		}
+		
+		.form-group label {
+			margin: 0 5px;
+		}
+	</style>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content hide" id="app">
+			<div class="">
+				<div class="panel panel-default">
+					<div class="panel-heading clearfix btns-hook">
+						<form role="form" class="form-inline" id="searchForm" @submit.prevent="getData">
+							<div class="form-group">
+								<select style="width: 200px; vertical-align: middle;" name="" id="saleId">
+									<option value="">请选择</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="">开始日期</label>
+								<input type="text" style="width: 100px;" readonly="readonly" class="form-control pull-right" name="startyear" v-model="startyear" id="startyear" readonly="" />
+							</div>
+							<div class="form-group">
+								<label for="">结束日期</label>
+								<input type="text" style="width: 100px;" readonly="readonly" class="form-control pull-right" name="endyear" v-model="endyear" id="endyear" readonly="" />
+							</div>
+							<button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 查询</button>
+						</form>
+					</div>
+					<div style="height: 20px;    background-color: rgb(228, 233, 239);"></div>
+					<div class="panel-body">
+						<div :style="{width:'100%',height:'400px'}" id="main"></div>
+					</div>
+					<div style="height: 20px;    background-color: rgb(228, 233, 239);"></div>
+					<div class="panel-body">
+
+						<table class="table table-responsive table-bordered table-hover" id="mainTable">
+							<thead>
+								<tr>
+									<th>商务顾问</th>
+									<th>签到次数</th>
+									<th>签到客户数</th>
+								</tr>
+							</thead>
+							<tbody id="dataTable">
+								<tr v-for="(el,index) of c">
+									<td>
+										{{el.NAME}}
+									</td>
+									<td>
+										<a href="javascript:;" @click="openSalerList(el.userId,el.NAME,1)">{{el.bfl}}</a>
+									</td>
+									<td>
+										<a href="javascript:;" @click="openSalerList(el.userId,el.NAME,2)">{{el.bfkhs}}</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+	<script src="/static/ui/js/jquery.min.js"></script>
+	<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+	<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+	<script src="/static/ui/js/plugins/laydate/laydate.js"></script>
+	<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+	<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+	<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+	<script src="/static/ui/js/plugins/echarts/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/static/ui/js/vue.js"></script>
+	<script type="text/javascript">
+		var config = {
+			role: localStorage.userRole || "",
+			api_salePhoneReport: '/report/showSwgwVisitReport', //查询
+
+		}
+
+		var option = {
+			title: {
+				text: '拜访量',
+				textStyle: {
+					fontSize: 18,
+					color: '#459df5'
+				}
+			},
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data: ['意向客户数', '拜访量', '合同数量']
+			},
+			grid: {
+				x: 40, //距离容器上边界40像素
+				x2: 10 //距离容器下边界30像素
+			},
+			xAxis: [{
+				type: 'category',
+				data: [],
+			}],
+			yAxis: [{
+				type: 'value'
+			}],
+			series: [{
+					name: '拜访量',
+					type: 'bar',
+					data: [],
+					barWidth: 18, //柱图宽度
+					itemStyle: {
+						normal: {
+							color: '#4b5967'
+						}
+					},
+				},
+			]
+		}
+
+		function salerList(id, name, startTime, endTime, type) {
+			if(type == 1) {
+				layer.open({
+					type: 2,
+					title: "签到次数列表",
+					area: ["100%", "100%"],
+					content: "/static/page/index/saler_bfl_list.html?saleName=" + name +"&saleId="+ id + "&startTime=" + startTime + "&endTime=" + endTime
+				})
+			} else if(type == 2) {
+				layer.open({
+					type: 2,
+					title: "签到客户数列表",
+					area: ["100%", "100%"],
+					content: "/static/page/index/saler_bfl_list.html?saleName=" + name +"&saleId="+ id + "&startTime=" + startTime + "&endTime=" + endTime 
+				})
+			}
+
+		}
+
+		window.app = new Vue({
+			el: '#app',
+			data: {
+				c: [],
+				startyear: '',
+				endyear: '',
+			},
+
+			computed: {
+				name: function() {
+					var list = []
+					for(var i = 0; i < this.c.length; i++) {
+						var el = this.c[i];
+						list.push(el.NAME)
+					}
+					return list;
+				},
+				bfl: function() {
+					var list = []
+					for(var i = 0; i < this.c.length; i++) {
+						var el = this.c[i];
+						list.push(el.bfl)
+					}
+					return list;
+				},
+			},
+			created: function() {
+				var that = this;
+				document.getElementById("app").classList.remove("hide");
+			},
+			mounted: function() {
+				let that = this;
+				that.showMonthFirstDay();
+				this.getData(1);
+				var startyear = laydate.render({
+					elem: '#startyear',
+					max: that.endyear,
+					done: function(value, date) {
+						that.startyear = value;
+						if(value !== '') {
+							endyear.config.min.year = date.year;
+							endyear.config.min.month = date.month - 1;
+							endyear.config.min.date = date.date;
+						} else {
+							endyear.config.min.year = '';
+							endyear.config.min.month = '';
+							endyear.config.min.date = '';
+						}
+					}
+				});
+				var endyear = laydate.render({
+					elem: '#endyear',
+					min: that.startyear,
+					done: function(value, date) {
+						that.endyear = value;
+						if(value !== '') {
+							startyear.config.max.year = date.year;
+							startyear.config.max.month = date.month - 1;
+							startyear.config.max.date = date.date;
+						} else {
+							startyear.config.max.year = '';
+							startyear.config.max.month = '';
+							startyear.config.max.date = '';
+						}
+					}
+				});
+
+				$('#saleId').select2({
+					placeholder: "请选择销售",
+					language: 'zh-CN',
+					allowClear: 1,
+					ajax: {
+						url: "/user/getUserInfo",
+						dataType: 'json',
+						type: "post",
+						delay: 250,
+						data: function(params) {
+							return {
+								page: params.page || 1,
+								ROLE_ID: "b729e9334ad64c15a4e47d88b8c2638f,e350acd05a6244c79136616302b7dfd6,008615f04f39499fb73e5f323add988a,6f247fed28e94194ac66020e55957496,28f1842e2463492a9eb6ddf0def91658,73340766cf3d43af91daff3128adad84,b62d6d19bed64ee199f2c1a5b252b57b",
+								data: {
+									q: params.term || "", // search term
+								}
+							};
+						},
+						processResults: function(data, params) {
+							params.page = params.page || 1;
+							$.each(data, function() {
+								this.id = this.USER_ID;
+								this.text = this.NAME;
+							})
+							return {
+								results: data,
+								pagination: {
+									more: data.length == 10
+								}
+							};
+						},
+						cache: true
+					},
+					minimumInputLength: 0
+				})
+			},
+			methods: {
+				/**
+				 * 载入中方法
+				 * 
+				 * @param {string} s 是否关闭
+				 */
+				loading: function(s) {
+					if(s == "close") layer.close(this.loadingSwitch)
+					else this.loadingSwitch = layer.load(3);
+					// else this.loadingSwitch = layer.load(3, { shade: [.6, "#fff"] });
+				},
+				getData: function(init) {
+					$('body,html').scrollTop(0)
+					var that = this;
+					that.loading();
+					$.ajax({
+						url: config.api_salePhoneReport,
+						async: false,
+						data: {
+							startTime: init == 1 ? that.startyear : $('[name=startyear]').val(),
+							endTime: init == 1 ? that.endyear : $('[name=endyear]').val(),
+							userId: $("#saleId").val()
+						},
+						success: function(res) {
+							that.loading('close')
+							if(res.error == "00") {
+								that.c = res.result;
+								that.chart_init()
+							} else {
+								layer.msg(res.msg)
+							}
+						}
+					});
+				},
+				chart_init: function() {
+					this.myChart = echarts.init(document.getElementById('main'));
+					option.xAxis[0].data = this.name;
+					option.series[0].data = this.bfl;
+					this.myChart.setOption(option)
+					this.myChart.off("click");
+					this.myChart.on("click", function(params) {
+						salerList(app.c[params.dataIndex].saleId, app.c[params.dataIndex].NAME, $('[name=startyear]').val(), $('[name=endyear]').val(),1)
+					})
+				},
+				openSalerList: function(id, name, type) {
+					salerList(id, name, $('[name=startyear]').val(), $('[name=endyear]').val(), type);
+				},
+				//本月范围
+				showMonthFirstDay() {
+					const that = this;
+					var d = new Date();
+					d.setMonth(d.getMonth() + 1);
+					d.setDate(0);
+					var day = new Date(d).getDate();
+					var year = new Date().getFullYear().toString();
+					var month = new Date().getMonth() + 1;
+					month = (month < 10 ? "0" + month : month);
+					var riqi = year + '-' + month + '-01';
+					var riqi1 = year + '-' + month + '-' + day;
+					that.startyear = riqi;
+					that.endyear = riqi1;
+					return that.startyear, that.endyear
+				},
+			}
+		})
+	</script>
+
+</html>

@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+		<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+		<link href="/static/ui/css/htz.css" rel="stylesheet">
+		<style type="text/css">
+			body {
+				overflow: hidden;
+			}
+			
+			.col-sm-9 {
+				width: 71%;
+			}
+			
+			.col-sm-10 {
+				width: 81.333333%;
+			}
+			
+			.xz {
+				background: #FFFFFF;
+				margin-top: 10px;
+				border: 1px solid #e5e6e7;
+				display: inline-block;
+				padding: 6px 12px;
+				margin-bottom: 0;
+				font-size: 14px;
+				font-weight: 400;
+				line-height: 1.42857143;
+				text-align: center;
+				white-space: nowrap;
+				vertical-align: middle;
+				-ms-touch-action: manipulation;
+				touch-action: manipulation;
+				cursor: pointer;
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+				background-image: none;
+				border-radius: 4px;
+				margin-left: 5%;
+			}
+			
+			.edit_mode_dialog {
+				left: 80px!important;
+			}
+			
+		</style>
+	</head>
+
+	<body class="gray-bg">
+		<div class="appWrapper">
+			<div class="wrapper wrapper-content hide" id="app">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="tabs-container">
+							<ul class="nav nav-tabs">
+								<li class="active">
+									<a data-toggle="tab" href="#tab-1" aria-expanded="true" @click="tab(1)"> 业绩指标设置</a>
+								</li>
+								<li>
+									<a data-toggle="tab" href="#tab-2" aria-expanded="true" @click="tab(2)"> 绩效薪资设置</a>
+								</li>
+								<li>
+									<a data-toggle="tab" href="#tab-3" aria-expanded="true" @click="tab(3)"> 电销提成设置</a>
+								</li>
+								<li>
+									<a data-toggle="tab" href="#tab-7" aria-expanded="true" @click="tab(7)"> 电销商务顾问提成设置</a>
+								</li>
+								<li>
+									<a data-toggle="tab" href="#tab-8" aria-expanded="true" @click="tab(8)"> 商务顾问提成设置</a>
+								</li>
+								<li>
+									<a data-toggle="tab" href="#tab-4" aria-expanded="true" @click="tab(4)"> 到款提成设置</a>
+								</li>
+								<li>
+									<a data-toggle="tab" href="#tab-5" aria-expanded="true" @click="tab(5)"> 底薪设置</a>
+								</li>
+								<li>
+									<a data-toggle="tab" href="#tab-6" aria-expanded="true" @click="tab(6)"> 特殊员工提成设置</a>
+								</li>
+
+							</ul>
+							<div class="tab-content">
+								<!--业绩指标-->
+								<div id="tab-1" class="tab-pane active">
+									<div class="panel-body">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<label style="margin: 10px;">年份</label>
+												<input id="newYear" style="width: 100px; display: inline-block;margin-right: 10px;" v-model="newYear" readonly="readonly" placeholder="请选择年度" class="form-control ">
+												<label style="margin: 10px;">指标类型</label>
+												<select class="form-control" v-model="aType" style="width: 250px; display: inline-block">
+													<option value="">请选择指标类型</option>
+													<option value="0" >电销电话量</option>
+													<option value="1">电销意向客户数</option>
+													<option value="2">商务顾问到款任务</option>
+													<option value="3">商务顾问合同数量</option>
+													<option value="4">商务顾问订单金额</option>
+													<option value="5">商务顾问拜访量</option>
+													<!--<option value="6">运作到款任务</option>-->
+													<option value="7">商务顾问辞退待定指标</option>
+													<option value="8">电销商务顾问客户约访数</option>
+													<option value="9">电销商务顾问客户签约数</option>
+													<option value="10">电销商务顾问订单标的金额</option>
+												</select>
+												<button type="submit" @click="dSearch" class="btn btn-primary"><i class="fa fa-search"></i> 查询</button>
+												<button class="btn btn-primary pull-right" type="submit" @click="addAchievement"><i class="fa fa-plus"></i> 新增业绩目标</button>
+											</div>
+											<div class="panel-body htz-panel-body" style="border:none">
+												<table class="table table-bordered table-hover">
+													<thead>
+														<tr>
+															<th width="25%">年度</th>
+															<th width="40%">指标类型</th>
+															<th width="35%">操作</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr v-for="(el,index) of c.list">
+															<td>{{el.year}}</td>
+															<td v-if="el.type==0">
+																<a @click="customer_edit(el)">电销电话量</a>
+															</td>
+															<td v-if="el.type==1">
+																<a @click="customer_edit(el)">电销意向客户数</a>
+															</td>
+															<td v-if="el.type==2">
+																<a @click="customer_edit(el)">商务顾问到款任务</a>
+															</td>
+															<td v-if="el.type==3">
+																<a @click="customer_edit(el)">商务顾问合同数量</a>
+															</td>
+															<td v-if="el.type==4">
+																<a @click="customer_edit(el)">商务顾问订单金额</a>
+															</td>
+															<td v-if="el.type==5">
+																<a @click="customer_edit(el)">商务顾问拜访量</a>
+															</td>
+															<!--<td v-if="el.type==6">
+																<a @click="customer_edit(el)">运作到款任务</a>
+															</td>-->
+															<td v-if="el.type==7">
+																<a @click="customer_edit(el)">商务顾问辞退待定指标</a>
+															</td>
+															<td v-if="el.type==8">
+																<a @click="customer_edit(el)">电销商务顾问客户约访数</a>
+															</td>
+															<td v-if="el.type==9">
+																<a @click="customer_edit(el)">电销商务顾问客户签约数</a>
+															</td>
+															<td v-if="el.type==10">
+																<a @click="customer_edit(el)">电销商务顾问订单标的金额</a>
+															</td>
+															<td>
+																<a class="btn btn-success htz_hide" title="编辑" @click="customer_edit(el)"> <i class="ace-icon fa fa-pencil-square-o" title="编辑"></i> 编辑</a>
+																<a class="btn btn-danger htz_hide" @click="del(el.id)"> <i class="ace-icon fa fa-trash-o" title="删除"></i>删除</a>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--绩效薪资-->
+								<div id="tab-2" class="tab-pane ">
+									<div class="panel-body">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<button class="btn btn-primary" type="submit" @click="addSalary"><i class="fa fa-plus"></i> 新增绩效薪资</button>
+											</div>
+											<div class="panel-body htz-panel-body" style="border:none">
+												<table class="table table-bordered table-hover">
+													<thead>
+														<tr>
+															<th width="25%">绩效薪资名称</th>
+															<th width="40%">绩效薪资类别</th>
+															<th width="35%">操作</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr v-for="(el,index) of d.list">
+															<td>
+																<a class="edit_mode_box" v-if="editEl.show!='name' || editEl.el!=el" @mouseenter="edit_hover('name',el)" @mouseleave="hoverEl.name.show=0" href="javascript:;">
+																	<span>{{el.name || "&nbsp;"}} </span>
+																	<div class="edit_mode_dialog" style="width:50px" v-if="hoverEl.name.show==1&&hoverEl.name.el==el">
+																		<div class='btn-group'>
+																			<button @click="edit_el('name',el)" class='btn btn-success btn-sm'><i class='fa fa-edit'></i></button>
+																		</div>
+																	</div>
+																</a>
+																<form onsubmit="return false;" v-if="editEl.show=='name'&&editEl.el==el">
+																	<input class="form-control input-sm" v-focus @keyup.enter="edit_keyup('name',el)" @blur="edit_submit('name',el)" type="text" v-model="el.name">
+																</form>
+															</td>
+															<td v-if="el.type==0">电销绩效薪资</td>
+															<td v-if="el.type==1">团队管理绩效薪资</td>
+															<td v-if="el.type==2">商务顾问浮动薪资</td>
+															<td>
+																<a class="btn btn-success htz_hide" title="编辑" @click="Salary_edit(el)"> <i class="ace-icon fa fa-pencil-square-o" title="编辑"></i> 编辑</a>
+																<a class="btn btn-danger htz_hide" @click="del_xz(el.id)"> <i class="ace-icon fa fa-trash-o" title="删除"></i>删除</a>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--提成规则-->
+								<div id="tab-3" class="tab-pane">
+									<div class="panel-body">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<button class="btn btn-primary" type="submit" @click="addRule"><i class="fa fa-plus"></i> 新增提成规则</button>
+											</div>
+											<div class="panel-body htz-panel-body" style="border:none">
+												<table class="table table-bordered table-hover">
+													<thead>
+														<tr>
+															<th width="15%">规则名称</th>
+															<th width="15%">岗位/部门</th>
+															<th width="15%">提成规则</th>
+															<th width="15%">分档指标</th>
+															<th width="15%">提成指标</th>
+															<th width="25%">操作</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr v-for="(el,index) of rule.list">
+															<td>{{el.name}}</td>
+															<td>{{el.roleName}}</td>
+															<td v-if="el.tcStandard==0">
+																<a>绝对值全额累进</a>
+															</td>
+															<td v-if="el.tcStandard==1">
+																<a>绝对值超额累进</a>
+															</td>
+															<td v-if="el.fdStandard==0">
+																<a>电销电话量</a>
+															</td>
+															<td v-if="el.fdStandard==1">
+																<a>电销意向客户数</a>
+															</td>
+															<td v-if="el.fdStandard==2">
+																<a>电销主管团队管理提成</a>
+															</td>
+															<td>
+																<a v-if="el.yjStandard==0">电销绩效薪资</a>
+																<a v-else-if="el.yjStandard==1">团队管理绩效薪资</a>
+																<a v-else>无</a>
+															</td>
+															<td>
+																<a class="btn btn-success htz_hide" title="编辑" @click="xg_tc(el)"> <i class="ace-icon fa fa-pencil-square-o" title="编辑"></i> 编辑</a>
+																<a class="btn btn-danger htz_hide" @click="deltc(el.id,'3')"> <i class="ace-icon fa fa-trash-o" title="删除"></i>删除</a>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--到款提成设置-->
+								<div id="tab-4" class="tab-pane">
+									<div class="panel-body">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<div class="form-group" style="display: inline-block;">
+													<label style="margin-right:10px ;">岗位</label>
+													<select style="width:150px;display: inline-block;vertical-align: middle;" v-model="s.gwName" id="gwName" name="gwName" @change="gwName()" class="form-control">
+														<option value="">请选择岗位</option>
+														<option v-for="(item,index) in s.job" :value="item.roleId" v-text="item.roleName" :key="item.roleId"></option>
+													</select>
+													<label style="margin: 0 10px;">姓名</label>
+													<select style="width:150px;display: inline-block;vertical-align: middle;" v-model="s.dkName" id="dkName" name="dkName" class="form-control">
+														<option value="">请选择姓名</option>
+														<option v-for="(item,index) in s.jobName" :value="item.userId" v-text="item.name" :key="item.roleId"></option>
+													</select>
+												</div>
+												<button class="btn btn-primary" type="submit" @click="searchDk"><i class="fa fa-search"></i> 查询</button>
+												<button class="btn btn-primary pull-right" type="submit" @click="adddk"><i class="fa fa-plus"></i> 新增提成规则</button>
+											</div>
+											<div class="panel-body htz-panel-body" style="border:none">
+												<table class="table table-bordered table-hover">
+													<thead>
+														<tr>
+															<th width="20%">姓名</th>
+															<th width="20%">岗位</th>
+															<th width="20%">分档指标</th>
+															<th width="40%">操作</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr v-for="(el,index) of rule.list1">
+															<td>{{el.userName}}</td>
+															<td>
+																{{el.roleName}}
+															</td>
+															<td>
+																<a v-if="el.fdStandard==6">运作到款指标</a>
+																<a v-else-if="el.fdStandard==5">商务顾问到款指标</a>
+															</td>
+
+															<td>
+																<a class="btn btn-success htz_hide" title="编辑" @click="xg_dk(el)"> <i class="ace-icon fa fa-pencil-square-o" title="编辑"></i> 编辑</a>
+																<a class="btn btn-danger htz_hide" @click="deltc(el.id,'4')"> <i class="ace-icon fa fa-trash-o" title="删除"></i>删除</a>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--底薪设置-->
+								<div id="tab-5" class="tab-pane ">
+									<div class="panel-body">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<div class="form-group" style="display: inline-block;">
+													<label>姓名</label>
+													<select style="width:120px" id="searchName" class="searchName_1" name="saleName">
+														<option value="">全部</option>
+													</select>
+												</div>
+												<button class="btn btn-primary" type="submit" @click="search"><i class="fa fa-search"></i> 搜索</button>
+												<button type="reset" class="btn" @click="reset"><i id="nav-search-icon" class="fa fa-refresh nav-search-icon "></i> 重置</button>
+												<button class="btn btn-primary pull-right" type="submit" @click="adddixin"><i class="fa fa-plus"></i> 新增底薪</button>
+											</div>
+
+											<div class="panel-body htz-panel-body" style="border:none">
+												<table class="table table-bordered table-hover">
+													<thead>
+														<tr>
+															<th width="20%">姓名</th>
+															<th width="20%">底薪(元)</th>
+															<th width="20%">岗位</th>
+															<th width="40%">操作</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr v-for="(el,index) of dixin.list">
+															<td>{{el.name}}</td>
+															<td>{{el.targetDetail}}</td>
+															<td>{{el.roleName}}</td>
+															<td>
+																<a class="btn btn-success htz_hide" title="编辑" @click="dixi_edit(el)"> <i class="ace-icon fa fa-pencil-square-o" title="编辑"></i> 编辑</a>
+																<a class="btn btn-danger htz_hide" @click="del_other(el.id)"> <i class="ace-icon fa fa-trash-o" title="删除"></i>删除</a>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--特殊员工提成设置-->
+								<div id="tab-6" class="tab-pane ">
+									<div class="panel-body">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<div class="form-group" style="display: inline-block;">
+													<label>姓名</label>
+													<select style="width:120px" id="searchName1" name="saleName1">
+														<option value="">全部</option>
+													</select>
+												</div>
+												<button class="btn btn-primary" type="submit" @click="search1"><i class="fa fa-search"></i> 搜索</button>
+												<button type="reset" class="btn" @click="reset1"><i id="nav-search-icon" class="fa fa-refresh nav-search-icon "></i> 重置</button>
+												<button class="btn btn-primary pull-right" type="submit" @click="addteshu"><i class="fa fa-plus"></i> 新增特殊员工提成</button>
+											</div>
+
+											<div class="panel-body htz-panel-body" style="border:none">
+												<table class="table table-bordered table-hover">
+													<thead>
+														<tr>
+															<th width="20%">姓名</th>
+															<th width="20%">提成比例(%)</th>
+															<th width="20%">岗位</th>
+															<th width="40%">操作</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr v-for="(el,index) of teshu.list">
+															<td>{{el.name}}</td>
+															<td>{{el.targetDetail}}</td>
+															<td>{{el.roleName}}</td>
+															<td>
+																<a class="btn btn-success htz_hide" title="编辑" @click="teshu_edit(el)"> <i class="ace-icon fa fa-pencil-square-o" title="编辑"></i> 编辑</a>
+																<a class="btn btn-danger htz_hide" @click="del_other(el.id)"> <i class="ace-icon fa fa-trash-o" title="删除"></i>删除</a>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--电销商务外协提成规则设置-->
+								<div id="tab-7" class="tab-pane ">
+									<div class="panel-body">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<button class="btn btn-primary" type="submit" @click="s2"><i class="fa fa-plus"></i> 新增电销商务顾问提成设置</button>
+											</div>
+											<div class="panel-body htz-panel-body" style="border:none">
+												<table class="table table-bordered table-hover">
+													<thead>
+														<tr>
+															<th width="15%">规则名称</th>
+															<th width="15%">岗位/部门</th>
+															<th width="15%">提成规则</th>
+															<th width="15%">分档指标</th>
+															<th width="25%">操作</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr v-for="(el,index) of dxswgwList.list">
+															<td>{{el.name}}</td>
+															<td>{{el.roleName}}</td>
+															<td v-if="el.tcStandard==0">
+																<a>绝对值全额累进</a>
+															</td>
+															<td v-if="el.tcStandard==1">
+																<a>绝对值超额累进</a>
+															</td>
+															<td v-if="el.fdStandard==7">
+																<a>电销商务顾问客户约访数</a>
+															</td>
+															<td v-if="el.fdStandard==8">
+																<a>电销商务顾问客户签约数</a>
+															</td>
+															<td v-if="el.fdStandard==9">
+																<a>电销商务顾问订单标的金额</a>
+															</td>
+															<td>
+																<a class="btn btn-success htz_hide" title="编辑" @click="xg_dxswgwtc(el)"> <i class="ace-icon fa fa-pencil-square-o" title="编辑"></i> 编辑</a>
+																<a class="btn btn-danger htz_hide" @click="deltc(el.id,'5')"> <i class="ace-icon fa fa-trash-o" title="删除"></i>删除</a>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--商务顾问提成规则设置-->
+								<div id="tab-8" class="tab-pane ">
+									<div class="panel-body">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<label style="margin: 10px;">年份</label>
+												<input id="newYear1" style="width: 100px; display: inline-block;margin-right: 10px;" v-model="newYear1" readonly="readonly" placeholder="请选择年度" class="form-control ">
+												<button type="submit" @click="dSearch1" class="btn btn-primary"><i class="fa fa-search"></i> 查询</button>
+												<button class="btn btn-primary pull-right" type="submit" @click="s1"><i class="fa fa-plus"></i> 新增商务顾问提成设置</button>
+											</div>
+											<div class="panel-body htz-panel-body" style="border:none">
+												<table class="table table-bordered table-hover">
+													<thead>
+														<tr>
+															<th width="25%">年份</th>
+															<th width="40%">指标类型</th>
+															<th width="35%">操作</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr v-for="(el,index) of swgwList.list">
+															<td>{{el.year}}</td>
+															<td v-if="el.type==11">拜访量</td>
+															<td v-if="el.type==12">签单量</td>
+															<td>
+																<a class="btn btn-success htz_hide" title="编辑" @click="customer_editSw(el)"> <i class="ace-icon fa fa-pencil-square-o" title="编辑"></i> 编辑</a>
+																<a class="btn btn-danger htz_hide" @click="del_sw(el.id)"> <i class="ace-icon fa fa-trash-o" title="删除"></i>删除</a>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!--全都是弹窗-->
+				<!--新增业绩目标弹窗-->
+				<div class="" style="height:0;overflow:hidden">
+					<div class="row">
+						<div class="col-sm-12 form form-horizontal" id="achievementBox">
+							<div class="form-group" style="margin-top: 20px;">
+								<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600;">对应年度：</span></label>
+								<div class="col-sm-9">
+									<input class="form-control " id="year" readonly="readonly" placeholder="请选择年度">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600;">指标类型：</span></label>
+								<div class="col-sm-9">
+									<select class="form-control" id="achievementType">
+										<option value="0" selected>电销电话量</option>
+										<option value="1">电销意向客户数</option>
+										<option value="2">商务顾问到款任务</option>
+										<option value="3">商务顾问合同数量</option>
+										<option value="4">商务顾问订单金额</option>
+										<option value="5">商务顾问拜访量</option>
+										<!--<option value="6">运作到款任务</option>-->
+										<option value="7">商务顾问辞退待定指标</option>
+										<option value="8">电销商务顾问客户约访数</option>
+										<option value="9">电销商务顾问客户签约数</option>
+										<option value="10">电销商务顾问订单标的金额</option>
+									</select>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+
+				<!--新增绩效薪资弹窗-->
+				<div class="" style="height:0;overflow:hidden">
+					<div class="row">
+						<div class="col-sm-12 form form-horizontal" id="salaryBox">
+
+							<div class="form-group" style="margin-top: 20px;">
+								<label class="col-sm-4 control-label"><font color="red">*</font><span style="font-weight: 600;">绩效薪资类别：</span></label>
+								<div class="col-sm-8">
+									<select class="form-control" id="salaryType">
+										<option value="0" selected>电销绩效薪资</option>
+										<option value="1">团队管理绩效薪资</option>
+										<option value="2">商务顾问浮动薪资</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label"><font color="red">*</font><span style="font-weight: 600;">绩效薪资名称：</span></label>
+								<div class="col-sm-8">
+									<input placeholder="请输入绩效名称" type="text" id="salaryName" class="form-control">
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<!--新增电销提成规则弹窗-->
+				<div class="" style="height:0;overflow:hidden">
+					<div class="row">
+						<div class="col-sm-12 form form-horizontal" id="ruleBox">
+							<div class="form-group" style="margin-top: 20px;">
+								<label class="col-sm-2 control-label"><font color="red">*</font><span style="font-weight: 600;">规则名称：</span></label>
+								<div class="col-sm-10">
+									<input class="form-control" placeholder="请填写规则名称" name="ruleName" v-model="rule.ruleName" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label"><font color="red">*</font><span style="font-weight: 600;">提成规则：</span></label>
+								<div class="col-sm-9">
+									<select class="form-control" v-model="rule.ruleList">
+										<option value="" selected>请选择提成规则</option>
+										<option value="0">绝对值全额累进</option>
+										<option value="1">绝对值超额累进</option>
+									</select>
+								</div>
+								<i class="col-sm-1 fa fa-question-circle" style="font-size: 24px;line-height: 34px;"></i>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label"><font color="red">*</font><span style="font-weight: 600;">分档指标：</span></label>
+								<div class="col-sm-10">
+									<select class="form-control" v-model="rule.ruleBracket" @change="changeRule()">
+										<option value="" selected>请选择分档指标</option>
+										<option value="0">电销电话量</option>
+										<option value="1">电销意向客户数</option>
+										<option value="2">电销主管团队管理提成</option>
+									</select>
+								</div>
+							</div>
+							<div v-if="htz_tczb" class="form-group">
+								<label class="col-sm-2 control-label"><font color="red">*</font><span style="font-weight: 600;">提成指标：</span></label>
+								<div class="col-sm-10">
+									<select class="form-control" v-model="rule.ruleBonus">
+										<option value="" selected>请选择提成指标</option>
+										<option value="0" selected>电销绩效薪资</option>
+										<option value="1">团队管理绩效薪资</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label"><font color="red">*</font><span style="font-weight: 600;">{{jobName}}：</span></label>
+								<div class="col-sm-10">
+									<select class="form-control" v-model="rule.ruleJob">
+										<option value="" selected>请选择提成岗位</option>
+										<option v-for="(item,index) in rule.job" :value="item.roleId" v-text="item.name" :key="item.roleId"></option>
+									</select>
+								</div>
+							</div>
+							<!--电销电话量-->
+							<div v-if="htz_table.dhl" class="form-group aaa">
+								<table class="table table-bordered" style="margin: 0 auto; width: 90%;">
+									<thead>
+										<th width="33%">分档指标</th>
+										<th width="33%">提成比例</th>
+										<th>提成金额</th>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<select class="form-control htz-select a1">
+													<option value="0" selected>达标</option>
+													<option value="1">未达标</option>
+												</select>
+												<select class="form-control htz-select a1">
+													<option value="0" selected>达标</option>
+													<option value="1">未达标</option>
+												</select>
+											</td>
+											<td>
+												<input type="number" class="form-control htz-select a2" value="0" />
+												<input type="number" class="form-control htz-select a2" value="0" />
+											</td>
+											<td align="middle">
+												提成比例*提成指标
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<!--电销意向客户数-->
+							<div v-if="htz_table.khs" class="form-group aaa">
+								<table class="table table-bordered" style="margin: 0 auto; width: 90%;">
+									<thead>
+										<th width="33%">分档指标</th>
+										<th width="33%">提成比例</th>
+										<th>提成金额</th>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<select class="form-control htz-select a1">
+													<option value="0" selected>达标</option>
+													<option value="1">未达标</option>
+													<option value="2">超标</option>
+												</select>
+												<select class="form-control htz-select a1">
+													<option value="0" selected>达标</option>
+													<option value="1">未达标</option>
+													<option value="2">超标</option>
+												</select>
+												<select class="form-control htz-select a1">
+													<option value="0" selected>达标</option>
+													<option value="1">未达标</option>
+													<option value="2">超标</option>
+												</select>
+											</td>
+											<td>
+												<input type="number" class="form-control htz-select a2" value="0" />
+												<input type="number" class="form-control htz-select a2" value="0" />
+												<div class="form-group htz-select">
+													每超过<input type="text" class="form-control a2" style="text-align:center;width: 20%;padding:0;display: inline-block;" onkeyup="value=value.replace(/[^\d]/g,'') " ng-pattern="/[^a-zA-Z]/" value="0" />个 额外奖励
+													<input type="text" class="form-control a2" style="text-align:center;width: 20%;padding:0;display: inline-block;" onkeyup="value=value.replace(/[^\d]/g,'') " ng-pattern="/[^a-zA-Z]/" value="0" />元
+												</div>
+											</td>
+											<td align="middle">
+												提成比例*提成指标
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<!--电销主管团队管理提成-->
+							<div v-if="htz_table.zg" class="form-group aaa">
+								<table class="table table-bordered" style="margin: 0 auto; width: 90%;">
+									<thead>
+										<th>提成金额</th>
+									</thead>
+									<tbody>
+										<tr>
+											<td>(电销团队意向客户指标完成人数/电销团队总人数)*提成指标</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<!--商务顾问签单量提成-->
+							<div v-if="htz_table.qdl" class="form-group aaa">
+								<table class="table table-bordered" style="margin: 0 auto; width: 90%;">
+									<thead>
+										<th width="33%">分档指标</th>
+										<th width="33%">提成比例</th>
+										<th>提成金额</th>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<table style="width: 100%;">
+													<tr>
+														<td><span class="htz-label pull-left" style="margin-bottom: 4px;">&lsaquo;</span><input type="number" class="form-control pull-left a1" style="width: 82.5%;" value="0" /></td>
+													</tr>
+													<tr>
+														<td><span class="htz-label pull-left" style="margin-top: 10px;">&ge;</span><input type="number" class="form-control pull-left a1" style="width: 82.5%; margin-top: 10px;" value="0" /></td>
+													</tr>
+												</table>
+											</td>
+											<td>
+												<input type="number" class="form-control htz-select a2" value="0" />
+												<input type="number" class="form-control htz-select a2" value="0" />
+											</td>
+											<td align="middle">
+												提成系数*提成指标
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<!--商务顾问拜访量提成-->
+							<div v-if="htz_table.bfl" class="form-group aaa">
+								<table class="table table-bordered" style="margin: 0 auto; width: 90%;">
+									<thead>
+										<th width="33%">分档指标</th>
+										<th width="33%">提成系数</th>
+										<th>提成金额</th>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<table style="width: 100%;">
+													<tr>
+														<td><span class="htz-label pull-left" style="margin-bottom: 4px;">&lt;</span><input type="number" class="form-control pull-left a1" style="width: 82.5%;" value="0" /></td>
+													</tr>
+													<tr>
+														<td><span class="htz-label pull-left" style="margin-top: 10px;">&ge;</span><input type="number" class="form-control pull-left a1" style="width: 82.5%; margin-top: 10px;" value="0" /></td>
+													</tr>
+												</table>
+											</td>
+											<td>
+												<input type="number" class="form-control htz-select a2" value="0" />
+												<input type="number" class="form-control htz-select a2" value="0" />
+											</td>
+											<td align="middle">
+												提成系数*提成指标
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				
+				<!--新增电销商务顾问提成规则-->
+				<div class="" style="height:0;overflow:hidden">
+					<div class="row">
+						<div class="col-sm-12 form form-horizontal" id="s2">
+							<div class="form-group" style="margin-top: 20px;">
+								<label class="col-sm-2 control-label"><font color="red">*</font><span style="font-weight: 600;">规则名称：</span></label>
+								<div class="col-sm-10">
+									<input class="form-control" placeholder="请填写规则名称" name="dxswgwName" v-model="dxswgw.ruleName" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label"><font color="red">*</font><span style="font-weight: 600;">提成规则：</span></label>
+								<div class="col-sm-9">
+									<select class="form-control" v-model="dxswgw.ruleList">
+										<option value="" selected>请选择提成规则</option>
+										<option value="0">绝对值全额累进</option>
+										<option value="1">绝对值超额累进</option>
+									</select>
+								</div>
+								<i class="col-sm-1 fa fa-question-circle" style="font-size: 24px;line-height: 34px;"></i>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label"><font color="red">*</font><span style="font-weight: 600;">分档指标：</span></label>
+								<div class="col-sm-10">
+									<select class="form-control" v-model="dxswgw.ruleBracket" @change="changedxswgw()">
+										<option value="" selected>请选择分档指标</option>
+										<option value="7">电销商务顾问客户约访数</option>
+										<option value="8">电销商务顾问客户签约数</option>
+										<option value="9">电销商务顾问订单标的金额</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label"><font color="red">*</font><span style="font-weight: 600;">提成岗位：</span></label>
+								<div class="col-sm-10">
+									<select class="form-control" v-model="dxswgw.ruleJob">
+										<option value="" selected>电销商务顾问</option>
+									</select>
+								</div>
+							</div>
+							<!--客户约访促成户数-->
+							<div v-if="dxswgw.a" class="form-group eee">
+								<table class="table table-bordered" style="margin: 0 auto; width: 90%;">
+									<thead>
+										<th width="33%">分档指标</th>
+										<th width="33%">提成金额</th>
+										<th>计算方法</th>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<select class="form-control htz-select a1">
+													<option value="0" selected>达标</option>
+												</select>
+												<select class="form-control htz-select a1">
+													<option value="1" selected="selected">未达标</option>
+												</select>
+											</td>
+											<td>
+												<input type="number" class="form-control htz-select a2" value="0" />
+												<input type="number" class="form-control htz-select a2" value="0" />
+											</td>
+											<td align="middle">
+												分档指标 * 提成金额
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<!--客户签约促成户数-->
+							<div v-if="dxswgw.b" class="form-group eee">
+								<table class="table table-bordered" style="margin: 0 auto; width: 90%;">
+									<thead>
+										<th width="33%">分档指标</th>
+										<th width="33%">提成金额</th>
+										<th>计算方法</th>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<select class="form-control htz-select a1">
+													<option value="0" selected>达标</option>
+												</select>
+												<select class="form-control htz-select a1">
+													<option value="1" selected="selected">未达标</option>
+												</select>
+											</td>
+											<td>
+												<input type="number" class="form-control htz-select a2" value="0" />
+												<input type="number" class="form-control htz-select a2" value="0" />
+											</td>
+											<td align="middle">
+												分档指标 * 提成金额
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<!--订单标的促成金额-->
+							<div v-if="dxswgw.c" class="form-group eee">
+								<table class="table table-bordered" style="margin: 0 auto; width: 90%;">
+									<thead>
+										<th width="33%">分档指标</th>
+										<th width="33%">提成金额</th>
+										<th>计算方法</th>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<select class="form-control htz-select a1">
+													<option value="0" selected>达标</option>
+												</select>
+												<select class="form-control htz-select a1">
+													<option value="1" selected="selected">未达标</option>
+												</select>
+											</td>
+											<td>
+												<input type="number" class="form-control htz-select a2" value="0" />
+												<input type="number" class="form-control htz-select a2" value="0" />
+											</td>
+											<td align="middle">
+												分档指标 * 提成金额
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				
+					
+					
+					
+				<!--新增到款提成弹窗-->
+				<div class="" style="height:0;overflow:hidden">
+					<div class="row">
+						<div class="col-sm-12 form form-horizontal" id="daokuanBox">
+							<div class="form-group" style="margin-top: 20px;">
+								<label class="col-sm-2 control-label"><font color="red">*</font><span style="font-weight: 600;">分档指标：</span></label>
+								<div class="col-sm-10">
+									<select class="form-control" v-model="rule.ruleBracket1" @change="changeRule1()">
+										<option value="" selected>请选择分档指标</option>
+										<option value="5">商务顾问到款指标</option>
+										<option value="6">运作到款指标</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label"><font color="red">*</font><span style="font-weight: 600;">提成员工：</span></label>
+								<div class="col-sm-10">
+									<select class="form-control" v-model="rule.ruleJob1">
+										<option value="" selected>请选择提成员工</option>
+										<option v-for="(item,index) in rule.job1" :value="item.userId" v-text="item.name" :key="item.userId"></option>
+									</select>
+								</div>
+							</div>
+							<!--到款提成表格-->
+							<div class="form-group bbb">
+								<table class="table table-bordered" style="margin: 0 auto; width: 90%;">
+									<thead>
+										<th width="50%">分档指标</th>
+										<th width="25%">提成比例</th>
+										<th>提成金额</th>
+									</thead>
+									<tbody>
+										<tr>
+											<td class="htz-td">
+												<table style="width: 100%;" class="xinzeng">
+													<tr>
+														<td>
+															<input type="number" class="form-control pull-left a1 ymd1" style="width: 35%;" value="0" /><span class="htz-label pull-left" style="margin-bottom: 4px;width: 10%;">&le;</span>
+															<span class="pull-left" style="display: block;width: 10%; text-align: center;line-height: 34px;">X</span>
+															<span class="htz-label pull-left" style="margin-bottom: 4px; width: 10%;">&lt;</span>
+															<input type="number" class="form-control pull-left a1 dkje ymd2" style="width: 35%;" />
+														</td>
+													</tr>
+												</table>
+											</td>
+											<td class="xinzeng1 htz-td">
+												<input type="number" class="form-control htz-select a2 ymd3" />
+											</td>
+											<td align="middle" class="htz-td">
+												提成比例*提成指标
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<div @click="xinzen()" class="pull-left xz"><i class="fa fa-plus"></i>新增分档</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+				<!--新增底薪弹窗-->
+				<div class="" style="height:0;overflow:hidden">
+					<div class="row">
+						<div class="col-sm-12 form form-horizontal" id="dixinBox">
+
+							<div class="form-group" style="margin-top: 20px;">
+								<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600;">员工姓名：</span></label>
+								<div class="col-sm-9">
+									<select class="form-control col-sm-12 htz-sale" id="salechange" name="saleName" style="width: 309px">
+										<option value="">请选择员工</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600;">员工岗位：</span></label>
+								<div class="col-sm-9">
+									<input type="text" placeholder="员工岗位" class="yggw form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600;">底薪(元)：</span></label>
+								<div class="col-sm-9">
+									<input placeholder="请输入底薪" type="number" id="dixin" class="form-control">
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+
+				<!--新增特殊员工弹窗-->
+				<div class="" style="height:0;overflow:hidden">
+					<div class="row">
+						<div class="col-sm-12 form form-horizontal" id="teshuBox">
+
+							<div class="form-group" style="margin-top: 20px;">
+								<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600;">员工姓名：</span></label>
+								<div class="col-sm-9">
+									<select class="form-control col-sm-12 htz-sale" id="tssalechange" name="saleName1" style="width: 309px">
+										<option value="">请选择员工</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600;">员工岗位：</span></label>
+								<div class="col-sm-9">
+									<input type="text" placeholder="员工岗位" class="tsyggw form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600; font-size: 12px;">提成比例(%)：</span></label>
+								<div class="col-sm-9">
+									<input placeholder="请输入提成比例" type="number" id="tcbl" class="form-control">
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+
+				<!--修改底薪弹窗-->
+				<div class="" style="height:0;overflow:hidden">
+					<div class="row">
+						<div class="col-sm-12 form form-horizontal" id="xgdixinBox">
+
+							<div class="form-group" style="margin-top: 20px;">
+								<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600;">员工姓名：</span></label>
+								<div class="col-sm-9">
+									<input type="text" placeholder="员工岗位" class="xgsale form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600;">员工岗位：</span></label>
+								<div class="col-sm-9">
+									<input type="text" placeholder="员工岗位" class="xgsaleJob form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600;">底薪(元)：</span></label>
+								<div class="col-sm-9">
+									<input placeholder="请输入底薪" type="number" id="xgdixin" class="form-control">
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+
+				<!--修改特殊员工弹窗-->
+				<div class="" style="height:0;overflow:hidden">
+					<div class="row">
+						<div class="col-sm-12 form form-horizontal" id="xgdixinBox1">
+
+							<div class="form-group" style="margin-top: 20px;">
+								<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600;">员工姓名：</span></label>
+								<div class="col-sm-9">
+									<input type="text" placeholder="员工岗位" class="xgsale form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600;">员工岗位：</span></label>
+								<div class="col-sm-9">
+									<input type="text" placeholder="员工岗位" class="xgsaleJob1 form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600; font-size: 12px;">提成比例(%)：</span></label>
+								<div class="col-sm-9">
+									<input placeholder="请输入提成比例" type="number" id="xgdixin1" class="form-control">
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+
+				<!--修改到款提成弹窗-->
+				<div class="" style="height:0;overflow:hidden">
+					<div class="row">
+						<div class="col-sm-12 form form-horizontal" id="daokuanBox1">
+							<div class="form-group" style="margin-top: 20px;">
+								<label class="col-sm-2 control-label"><font color="red">*</font><span style="font-weight: 600;">分档指标：</span></label>
+								<div class="col-sm-10">
+									<select class="form-control" v-model="rule.ruleBracket2" @change="changeRule2()">
+										<option value="" selected>请选择分档指标</option>
+										<option value="5">商务顾问到款指标</option>
+										<option value="6">运作到款指标</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label"><font color="red">*</font><span style="font-weight: 600;">提成员工：</span></label>
+								<div class="col-sm-10">
+									<select class="form-control" v-model="rule.ruleJob2">
+										<option value="" selected>请选择提成员工</option>
+										<option v-for="(item,index) in rule.job2" :value="item.userId" v-text="item.name" :key="item.userId"></option>
+									</select>
+								</div>
+							</div>
+							<!--到款提成表格-->
+							<div class="form-group ccc">
+								<table class="table table-bordered" style="margin: 0 auto; width: 90%;">
+									<thead>
+										<th width="50%">分档指标</th>
+										<th width="25%">提成比例</th>
+										<th>提成金额</th>
+									</thead>
+									<tbody>
+										<tr>
+											<td class="htz-td htz-td1">
+												<table style="width: 100%;" class="xinzeng xz1">
+													<tr>
+														<td>
+															<input type="number" class="form-control pull-left a1" style="width: 35%;" /><span class="htz-label pull-left" style="margin-bottom: 4px;width: 10%;">&le;</span>
+															<span class="pull-left" style="display: block;width: 10%; text-align: center;line-height: 34px;">X</span>
+															<span class="htz-label pull-left" style="margin-bottom: 4px; width: 10%;">&lt;</span>
+															<input type="number" class="form-control pull-left a1" style="width: 35%;" />
+														</td>
+													</tr>
+												</table>
+											</td>
+											<td class="xinzeng1 htz-td xz2 htz-td1">
+												<input type="number" class="form-control htz-select a2" />
+											</td>
+											<td align="middle" class="htz-td htz-td1">
+												提成比例*提成指标
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<div @click="xinzen()" class="pull-left xz"><i class="fa fa-plus"></i>新增分档</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+				
+				<!--新增商务顾问提成规则设置-->
+				<div class="" style="height:0;overflow:hidden">
+					<div class="row">
+						<div class="col-sm-12 form form-horizontal" id="s1">
+							<div class="form-group" style="margin-top: 20px;">
+								<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600;">对应年度：</span></label>
+								<div class="col-sm-9">
+									<input class="form-control " v-model="newYear2" id="newYear2" readonly="readonly" placeholder="请选择年度">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"><font color="red">*</font><span style="font-weight: 600;">指标类型：</span></label>
+								<div class="col-sm-9">
+									<select class="form-control hello">
+										<option value="11" selected="selected">拜访量</option>
+										<option value="12">签单量</option>
+									</select>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+		<script src="/static/ui/js/jquery.min.js"></script>
+		<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+		<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+		<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+		<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+		<script src="/static/ui/js/plugins/laydate/laydate.js"></script>
+		<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+		<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+		<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+		<script src="/static/ui/js/vue.js"></script>
+		<script src="/static/ui/js/require.min.js" data-main="/static/js/include/dev/achievement"></script>
+	</body>
+
+</html>

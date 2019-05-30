@@ -1,0 +1,14 @@
+<form class="form form-horizontal" id="remind_box">
+    <div class="m-t-md">
+        <div class="col-xs-10 col-xs-offset-1">
+				<div class="form-group">
+					<label class="control-label">提醒内容：</label> 
+                    <input class="form-control" type="text" name="remark" value="">
+				</div>
+				<div class="form-group">
+					<label class="control-label">提醒时间：</label> 
+                    <input class="form-control" type="text" id="remind_time" readonly name="time" value="">
+				</div>
+        </div>
+    </div>
+</form>

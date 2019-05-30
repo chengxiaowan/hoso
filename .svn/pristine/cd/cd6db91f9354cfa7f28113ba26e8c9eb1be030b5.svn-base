@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+    <link href="/static/ui/css/animate.css" rel="stylesheet">
+    <link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+    <link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+    <link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+    <link href="/static/ui/css/htz.css" rel="stylesheet">
+    <style>
+    	.btn-toggle .active{
+    		background-color: #459df5!important;
+    		border-color: #459df5!important;
+    	}
+    </style>
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content hide" id="app">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading clearfix">
+                            <button  class="btn btn-primary pull-right" @click="add" ><i class="fa fa-plus"></i> 新增规则</button>
+                    </div>
+                    <div class="panel-body"  style="border:none">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th width="50">序号</th>
+                                    <!--<th width="100">公海类型</th>-->
+                                    <th>公海成员</th>
+                                    <th width="100">检测时间</th>
+                                    <th width="150">划入公海天数</th>
+                                    <th width="160" >操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(el,index) of c.list">
+                                    <td>{{index+1}}</td>
+                                    <!--<td>{{el.type==0? '客户公海':'无意向公海'  }}</td>-->
+                                    <td>
+                                        <div class="ellipsis">
+                                             {{el.saleNames}}
+                                        </div>
+                                       </td>
+                                    <td>{{el.time  }}</td>
+                                    <td>{{el.days  }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-success" @click="edit(el)"><i class="fa fa-edit"></i> 编辑</button>
+                                         <button type="button" class="btn btn-sm btn-danger" @click="del(index,el.id)"><i class="fa fa-remove"></i> 删除</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="pull-left form form-inline">
+                            <div class="form-group form-group-sm">
+                                共 {{c.total}} 条数据,每页显示 <select @change="search" v-model="c.pageSize" class="form-control">
+                                     <option value="10">10</option>
+                                     <option value="20">20</option>
+                                     <option value="30">30</option>
+                                     <option value="40">40</option>
+                                     <option value="50">50</option>
+                                 </select> 条
+                            </div>
+                        </div>
+                        <div class="pagi pull-right">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+                    <div class="" style="height:0;overflow:hidden">
+    <sea-config ref='sea_config'></sea-config>
+            </div>
+                </div>
+    <script src="/static/ui/js/jquery.min.js"></script>
+    <script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+    <script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+    <script src="/static/ui/js/plugins/layer/laydate/laydate.js"></script>
+    <link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+    <script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+    <script src="/static/ui/js/vue.js"></script>
+    <script src="/static/ui/js/require.min.js" data-main="/static/js/include/page/sea_config_list"></script>
+</body>
+
+</html>

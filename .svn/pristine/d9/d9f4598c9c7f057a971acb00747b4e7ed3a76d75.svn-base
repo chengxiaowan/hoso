@@ -1,0 +1,308 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+		<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+	</head>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content hide" id="app">
+			<div class="panel panel-default">
+				<div class="panel-heading clearfix btns-hook">
+					<form role="form" class="form-inline" id="searchForm" @submit.prevent="getData(1)">
+						<div class="form-group">
+							<select style="width: 200px;" name="" id="saleId">
+								<option value="">请选择</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="">开始日期</label>
+							<input class="span10 date-picker form-control" id="startTime" name="startTime" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" placeholder="开始日期" style="width: 150px;" />
+						</div>
+						<div class="form-group">
+							<label for="">结束日期</label>
+							<input class="span10 date-picker form-control" id="endTime" name="endTime" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" placeholder="结束日期" style="width: 150px;" />
+						</div>
+						<button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 查询</button>
+					</form>
+				</div>
+				<div class="panel-body">
+					<div class="alert alert-warning"><span class="alert-link"> 合计欠款总金额: </span>
+						<span v-if="flag=='1'" class="alert-link" style="font-size: 18px;"> {{htzje}} 元 </span>
+						<span v-if="flag=='2'" class="alert-link" style="font-size: 18px;"> {{qkzje}} 元 </span>
+					</div>
+					<table class="table table-responsive table-bordered table-hover" id="mainTable">
+						<thead v-if="flag==1">
+							<tr>
+								<th>客户名称</th>
+								<th>债务人(公司)</th>
+								<th>合同类型</th>
+								<th>欠款总金额(元)</th>
+								<th>签约时间</th>
+								<th>到期时间</th>
+								<th>销售人</th>
+							</tr>
+						</thead>
+						<thead v-if="flag==2">
+							<tr>
+								<th class="center">运作人</th>
+								<th class="center">债权人(公司)</th>
+								<th class="center">债务人(公司)</th>
+								<th class="center">欠款总金额(元)</th>
+								<th class="center">已回款金额(元)</th>
+								<th class="center">剩余金额(元)</th>
+								<th class="center">佣金比例<br>(诉讼/非诉讼)</th>
+								<th class="center">案件类型</th>
+								<th class="center">案件状态</th>
+								<th class="center">是否归档</th>
+								<th class="center">销售人</th>
+							</tr>
+						</thead>
+						<tbody id="dataTable" v-if="flag==1">
+							<tr v-for="(el,index) of c.list">
+								<td>{{el.customerName}}</td>
+								<td>{{el.debtorName}}</td>
+								<td>
+									<span v-if="el.type==0">非诉合同</span>
+									<span v-if="el.type==1">诉讼合同</span>
+								</td>
+								<td>{{el.price}}</td>
+								<td>{{el.signingTime}}</td>
+								<td>{{el.endTime}}</td>
+								<td>{{el.userName}}</td>
+
+							</tr>
+						</tbody>
+						<tbody id="dataTable" v-if="flag==2">
+							<tr v-for="(el,index) in c.list">
+								<td class="center">{{el.runnerName}}</td>
+								<td class="center">{{el.custoemrName}}</td>
+								<td class="center">{{el.debtorName}}</td>
+								<td class="center">{{el.debtAmount}}</td>
+								<td class="center">{{el.totalMoney}}</td>
+								<td class="center">{{el.syMoney}}</td>
+								<td class="center">
+									<div v-if="el.cType==0">
+										{{el.commissionRate}}
+										<span v-if="el.lawCommissionRate">/{{el.lawCommissionRate}}</span></div>
+									<div v-if="el.cType==1">-</div>
+								</td>
+								<td class="center">
+									<span v-if="el.type=='0'">非诉讼</span><span v-if="el.type=='1'">诉讼</span><span v-if="el.type=='2'">仲裁</span></td>
+								<td class="center"><span v-if="el.status==0">运作中</span><span v-if="el.status==1">已结案</span><span v-if="el.status==2">已关闭</span><span v-if="el.status==3">诉讼中</span><span v-if="el.status==4">仲裁中</span></td>
+								<td class="center"><span v-if="el.isFiled==1">是</span><span v-if="el.isFiled==0">否</span></td>
+								<td class="center">{{el.saleName}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pull-left form form-inline">
+                            <div class="form-group form-group-sm">
+                                共 {{c.total}} 条数据,每页显示 <select @change="getData(1)" v-model="c.pageSize" class="form-control">
+                                     <option value="10">10</option>
+                                     <option value="20">20</option>
+                                     <option value="30">30</option>
+                                     <option value="40">40</option>
+                                     <option value="50">50</option>
+                                 </select> 条
+                            </div>
+                        </div>
+					<div class="pagi pull-right"></div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+	<script src="/static/ui/js/jquery.min.js"></script>
+	<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+	<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+	<script src="/static/ui/js/plugins/layer/laydate/laydate.js"></script>
+	<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+	<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+	<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+	<script src="/static/ui/js/plugins/echarts/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/static/ui/js/vue.js"></script>
+	<script src="/static/js/include/module/module_pagination.js"></script>
+
+	<script type="text/javascript">
+		var config = {
+			role: localStorage.userRole || "",
+			saleId: yo.getQueryString("saleId"),
+			saleName: decodeURI(yo.getQueryString("saleName")) || "",
+			startTime: yo.getQueryString("startTime") || "",
+			endTime: yo.getQueryString("endTime") || "",
+			billSeconds: yo.getQueryString("billSeconds") || "",
+			type: yo.getQueryString("type") || "",
+			api_showDetail: '/report/xspmReportDetail.do', //查询
+			flag: yo.getQueryString("flag")
+		}
+
+		window.app = new Vue({
+			el: '#app',
+			data: {
+				flag: config.flag,
+				c: [],
+				htzje: 0,
+				syzje: 0,
+				qkzje:0
+			},
+			created: function() {
+				var that = this;
+				document.getElementById("app").classList.remove("hide");
+			},
+			mounted: function() {
+				$('.date-picker').datepicker({
+					autoclose: true,
+					todayHighlight: true
+				});
+				$("#startTime").val(config.startTime)
+				$("#endTime").val(config.endTime)
+				if($("#startTime").val()) {
+					$("#endTime").datepicker('setStartDate',
+						new Date($("#startTime").val()))
+				}
+
+				if($("#endTime").val()) {
+					$("#startTime").datepicker('setEndDate',
+						new Date($("#endTime").val()))
+				}
+
+				//开始日期
+				$("#startTime").datepicker({}).on(
+					'changeDate',
+					function(ev) {
+						if(ev.date) {
+							$("#endTime").datepicker('setStartDate',
+								new Date(ev.date.valueOf()))
+						} else {
+							$("#endTime").datepicker('setStartDate', null);
+						}
+					});
+				//结束日期
+				$("#endTime").datepicker({}).on(
+					'changeDate',
+					function(ev) {
+						if(ev.date) {
+							$("#startTime").datepicker('setEndDate',
+								new Date(ev.date.valueOf()))
+						} else {
+							$("#startTime").datepicker('setEndDate',
+								new Date());
+						}
+					});
+				if(config.saleId) {
+					$('#saleId').html('"<option value="' + config.saleId + '">' + config.saleName + '</option>"')
+				}
+				$('#saleId').select2({
+					placeholder: "请选择销售",
+					language: 'zh-CN',
+					allowClear: 0,
+					ajax: {
+						url: "/user/getUserInfo",
+						dataType: 'json',
+						type: "post",
+						delay: 250,
+						data: function(params) {
+							return {
+								page: params.page || 1,
+								ROLE_ID: "b729e9334ad64c15a4e47d88b8c2638f",
+								data: {
+									q: params.term || "", // search term
+								}
+							};
+						},
+						processResults: function(data, params) {
+							params.page = params.page || 1;
+							$.each(data, function() {
+								this.id = this.USER_ID;
+								this.text = this.NAME;
+							})
+							return {
+								results: data,
+								pagination: {
+									more: data.length == 10
+								}
+							};
+						},
+						cache: true
+					},
+					minimumInputLength: 0
+				})
+
+				this.getData()
+			},
+			methods: {
+				/**
+				 * 载入中方法
+				 * 
+				 * @param {string} s 是否关闭
+				 */
+				loading: function(s) {
+					if(s == "close") layer.close(this.loadingSwitch)
+					else this.loadingSwitch = layer.load(3);
+					// else this.loadingSwitch = layer.load(3, { shade: [.6, "#fff"] });
+				},
+				getData: function(page) {
+				$('body,html').scrollTop(0)
+					if(page) this.c.pageNum = page
+					var that = this;
+					that.loading();
+					$.ajax({
+						url: config.api_showDetail,
+						async: false,
+						data: {
+							srot: $('#sort').val(),
+							startTime: $('[name=startTime]').val(),
+							endTime: $('[name=endTime]').val(),
+							saleId: $("#saleId").val(),
+							flag: config.flag,
+							pageSize: that.c.pageSize || 10,
+							page: that.c.pageNum || 1
+						},
+						success: function(res) {
+							that.loading('close')
+							if(res.error == "00") {
+								that.c = res.result;
+								that.htzje = res.htzje;
+								that.qkzje = res.qkzje;
+								//分页
+								if(that.pagi) {
+									$('.pagi').pagination('updatePages', that.c.pages)
+									if(page == 1) $('.pagi').pagination('goToPage', that.c.pageNum)
+								} else {
+									that.pagi = $('.pagi').pagination({
+										pages: that.c.pages, //总页数
+										showCtrl: true,
+										displayPage: 6,
+										currentPage: that.c.pageNum,
+										onSelect: function(num) {
+											that.c.pageNum = num
+											that.getData()
+											yo.scrollTo('body')
+										}
+									})
+								}
+							} else {
+								layer.msg(res.msg)
+							}
+						}
+					});
+				},
+				openSalerList: function(id) {
+					salerList(id);
+				}
+			}
+		})
+	</script>
+
+</html>

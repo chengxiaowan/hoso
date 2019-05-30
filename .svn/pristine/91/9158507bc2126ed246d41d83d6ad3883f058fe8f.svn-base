@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="/static/ui/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/static/ui/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/static/ui/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+		<link href="/static/ui/css/animate.css" rel="stylesheet">
+		<link href="/static/ui/css/style.css?v=4.1.0" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ui/js/plugins/webuploader/webuploader.css">
+		<link rel="stylesheet" href="/static/ace/css/datepicker.css" />
+		<link href="/static/ui/css/htz.css" rel="stylesheet">
+		<style type="text/css">
+			body {
+				overflow: hidden;
+			}
+		</style>
+	</head>
+
+	<body class="gray-bg">
+		<div class="appWrapper">
+			<div id="app">
+				<div class=" wrapper border-bottom white-bg page-heading" style="padding-bottom: 13px;">
+					<div class="row">
+						<div class="col-sm-12">
+							<h2>工作台
+						<button title="刷新" onclick="location.reload()" class="btn btn-white pull-right"><i class="fa fa-refresh"></i></button></h2></div>
+					</div>
+				</div>
+				<div class="wrapper wrapper-content">
+					<div class="row">
+						<!--经理-->
+						<div class="col-sm-12 ">
+							<!--销售业绩统计-->
+							<div class="ibox htz-box-1">
+								<div class="htz-title">
+									销售业绩统计
+									<input type="text" style="width: 100px;" readonly="readonly" class="form-control pull-right" v-model="year" id="year" />
+								</div>
+								<div class="ibox-content clearfix">
+									<div class="htz-box col-sm-2" @click="customer_case_view(1,0)" style="cursor: pointer;">
+										<span class="pull-left"><img src="/static/ui/img/10icon/icon1.png"></span>
+										<div class="pull-left">
+											<div>已成交客户数</div>
+											<div class="blue" v-text="SaleYjtj.ycj"></div>
+										</div>
+									</div>
+									<div class="htz-box col-sm-2" @click="customer_case_view(2,0)" style="cursor: pointer;">
+										<span class="pull-left"><img src="/static/ui/img/10icon/icon2.png"></span>
+										<div class="pull-left">
+											<div>订单数量</div>
+											<div class="blue" v-text="SaleYjtj.dd"></div>
+										</div>
+									</div>
+									<div class="htz-box col-sm-2" @click="customer_case_view(2,0)" style="cursor: pointer;">
+										<span class="pull-left"><img src="/static/ui/img/10icon/icon3.png"></span>
+										<div class="pull-left">
+											<div>订单总金额</div>
+											<div class="blue" v-text="'¥'+SaleYjtj.ddzje"></div>
+										</div>
+									</div>
+									<div class="htz-box col-sm-2" @click="customer_case_view(3,0)" style="cursor: pointer;">
+										<span class="pull-left"><img src="/static/ui/img/10icon/icon4.png"></span>
+										<div class="pull-left">
+											<div>已回款金额</div>
+											<div class="blue" v-text="'¥'+SaleYjtj.yhk"></div>
+										</div>
+									</div>
+									<div class="htz-box col-sm-2" style="cursor: pointer;" @click="customer_case_view(3,0)">
+										<span class="pull-left"><img src="/static/ui/img/10icon/icon5.png"></span>
+										<div class="pull-left">
+											<div>到款金额</div>
+											<div class="blue" v-text="'¥'+SaleYjtj.dk"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!--销售简报-->
+							<div class="ibox htz-box-1">
+								<div class="htz-title">
+									销售简报
+									<input type="text" style="width: 100px;" readonly="readonly" class="form-control pull-right" v-model="endyear" id="endyear" />
+									<span class="pull-right">——</span>
+									<input type="text" style="width: 100px;" readonly="readonly" class="form-control pull-right" v-model="startyear" id="startyear" />
+								</div>
+								<div class="ibox-content clearfix">
+									<div class="htz-box col-sm-2" @click="customer_case_view(1,1)" style="cursor: pointer;">
+										<span class="pull-left bg-white"><img src="/static/ui/img/10icon/icon6.png"></span>
+										<div class="pull-left">
+											<div>客户数</div>
+											<div class="blue" v-text="Salejb.ycjkh"></div>
+										</div>
+									</div>
+									<div class="htz-box col-sm-2" @click="customer_case_view(2,1)" style="cursor: pointer;">
+										<span class="pull-left bg-white"><img src="/static/ui/img/10icon/icon7.png"></span>
+										<div class="pull-left">
+											<div>订单金额</div>
+											<div class="blue" v-text="'¥'+Salejb.ddzje"></div>
+										</div>
+									</div>
+									<div class="htz-box col-sm-2" @click="customer_case_view(3,1)" style="cursor: pointer;">
+										<span class="pull-left bg-white"><img src="/static/ui/img/10icon/icon8.png"></span>
+										<div class="pull-left">
+											<div>已回款金额</div>
+											<div class="blue" v-text="'¥'+Salejb.hkje"></div>
+										</div>
+									</div>
+									<div class="htz-box col-sm-2" @click="customer_case_view(3,1)" style="cursor: pointer;">
+										<span class="pull-left bg-white"><img src="/static/ui/img/10icon/icon9.png"></span>
+										<div class="pull-left">
+											<div>到款金额</div>
+											<div class="blue" v-text="'¥'+Salejb.yjje"></div>
+										</div>
+									</div>
+									<div class="htz-box col-sm-2" @click="order_customer_view()" style="cursor: pointer;">
+										<span class="pull-left bg-white"><img src="/static/ui/img/10icon/icon10.png"></span>
+										<div class="pull-left">
+											<div>意向客户数</div>
+											<div class="blue" v-text="Salejb.yxkhs"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!--电销业绩目标完成情况————电销   -->
+							<div class="ibox htz-box-1">
+								<div class="htz-title">
+									电销业绩目标完成情况
+									<input type="text" style="width: 100px;text-align: center;" readonly="readonly" class="form-control pull-right" v-model="dxmonth" id="dxmonth" />
+								</div>
+								<div class="ibox-content ibox-content1" style="overflow: hidden;">
+									<div class="col-sm-8">
+										<div :style="{width:'100%',height:'400px'}" id="dxOnly"></div>
+									</div>
+									<div class="col-sm-2">
+										<div :style="{width:'100%',height:'300px'}" id="pie"></div>
+										<div :style="{width:'100%',height:'60px'}" class="canshu"><span v-text="dx.dhl" style="color: #fdb44d"></span><span>/</span><span v-text="dx.mbdhl"></span></div>
+									</div>
+									<div class="col-sm-2">
+										<div :style="{width:'100%',height:'300px'}" id="pie2"></div>
+										<div :style="{width:'100%',height:'60px'}" class="canshu"><span v-text="dx.yxkhs" style="color: #53c1a6"></span><span>/</span><span v-text="dx.mbyxkhs"></span></div>
+									</div>
+								</div>
+							</div>
+							<!--商务顾问业绩目标完成情况————商务顾问   -->
+							<div class="ibox htz-box-1">
+								<div class="htz-title">
+									商务顾问业绩目标完成情况
+								</div>
+								<div class="ibox-content ibox-content1" style="overflow: hidden;">
+									<div class="col-sm-3">
+										<div :style="{width:'100%',height:'300px'}" id="swgw1"></div>
+										<div :style="{width:'100%',height:'60px'}" class="canshu"><span v-text="swgw.yjdk" style="color: #ea5849"></span><span>/</span><span v-text="swgw.mbyjdk"></span></div>
+									</div>
+									<div class="col-sm-3">
+										<div :style="{width:'100%',height:'300px'}" id="swgw2"></div>
+										<div :style="{width:'100%',height:'60px'}" class="canshu"><span v-text="swgw.htsl" style="color: #fdb44d"></span><span>/</span><span v-text="swgw.mbhtsl"></span></div>
+									</div>
+									<div class="col-sm-3">
+										<div :style="{width:'100%',height:'300px'}" id="swgw3"></div>
+										<div :style="{width:'100%',height:'60px'}" class="canshu"><span v-text="swgw.ddzje" style="color: #ea5849"></span><span>/</span><span v-text="swgw.mbddzje"></span></div>
+									</div>
+									<div class="col-sm-3">
+										<div :style="{width:'100%',height:'300px'}" id="swgw4"></div>
+										<div :style="{width:'100%',height:'60px'}" class="canshu"><span v-text="swgw.ddzje" style="color: #51c3aa"></span><span>/</span><span v-text="swgw.mbddzje"></span></div>
+									</div>
+								</div>
+							</div>
+							<!--图表-->
+							<div class="ibox htz-box-1">
+								<div class="htz-title htz-change pull-right" style="padding: 14px 0 7px;">
+									<span :class="{active:show}" @click="changeActive(1)">按周</span>
+									<span :class="{active:show1}" @click="changeActive(2)">按季度</span>
+									<select v-if="monthShow" style="width: 220px;" class="form-control pull-right" v-model="month">
+										<option v-for="el in sevens" :value="el" v-text="el"></option>
+									</select>
+									<div class="pull-right" v-if="jiduShow">
+										<a @click="htzjd(1)" :class="{active:show2}">一季度</a>
+										<a @click="htzjd(2)" :class="{active:show3}">二季度</a>
+										<a @click="htzjd(3)" :class="{active:show4}">三季度</a>
+										<a @click="htzjd(4)" :class="{active:show5}">四季度</a>
+									</div>
+								</div>
+								<div class="ibox" style="overflow: hidden;">
+									<!--电话量-->
+									<div class="col-sm-6">
+										<div class="ibox-content ibox-content1">
+											<div :style="{width:'100%',height:'400px'}" id="main"></div>
+										</div>
+									</div>
+									<!--意向客户数-->
+									<div class="col-sm-6">
+										<div class="ibox-content ibox-content1">
+											<div :style="{width:'100%',height:'400px'}" id="main1"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="ibox htz-box-1">
+								<div class="ibox" style="overflow: hidden;">
+									<!--拜访量-->
+									<div class="col-sm-6">
+										<div class="ibox-content ibox-content1">
+											<div :style="{width:'100%',height:'400px'}" id="main2"></div>
+										</div>
+									</div>
+									<!--签单量-->
+									<div class="col-sm-6">
+										<div class="ibox-content ibox-content1">
+											<div :style="{width:'100%',height:'400px'}" id="main3"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!--商务顾问销售统计-->
+							<div class="ibox htz-box-1">
+								<div class="htz-title">
+									商务顾问销售统计
+									<input type="text" style="width: 100px;text-align: center;" readonly="readonly" class="form-control pull-right" v-model="year1" id="year1" />
+								</div>
+								<div class="ibox-content ibox-content1" style="overflow: hidden;">
+									<div class="col-sm-12">
+										<div :style="{width:'100%',height:'400px'}" id="main4"></div>
+									</div>
+								</div>
+							</div>
+							<!--商务顾问业绩目标完成情况-->
+							<div class="ibox htz-box-1">
+								<div class="htz-title">
+									商务顾问业绩目标完成情况
+									<select class="form-control pull-right" v-if="qubie1" style="width: 100px;" v-model="YjmbTime">
+										<option selected="selected" value="0">一季度</option>
+										<option value="1">二季度</option>
+										<option value="2">三季度</option>
+										<option value="3">四季度</option>
+									</select>
+									<input type="text" v-show="qubie" readonly="readonly" style="width: 100px;" v-model="yjmbMonth" id="yjmbMonth" class="pull-right form-control"/>
+									<select class="form-control pull-right" style="width: 120px;margin-right: 20px;" v-model="YjmbType">
+										<option selected="selected" value="0">到款金额</option>
+										<option value="1">合同数量</option>
+										<option value="2">委案金额</option>
+										<option value="3">拜访量</option>
+									</select>
+
+								</div>
+								<div class="ibox-content ibox-content1" style="overflow: hidden;">
+									<div class="col-sm-12">
+										<div :style="{width:'100%',height:'400px'}" id="main5"></div>
+									</div>
+								</div>
+							</div>
+							<!--电销业绩目标完成情况-->
+							<div class="ibox htz-box-1">
+								<div class="htz-title">
+									电销业绩目标完成情况
+									<input type="text" style="width: 100px;text-align: center;" readonly="readonly" class="form-control pull-right" v-model="month1" id="month1" />
+								</div>
+								<div class="ibox-content ibox-content1" style="overflow: hidden;">
+									<div class="col-sm-12">
+										<div :style="{width:'100%',height:'400px'}" id="main6"></div>
+									</div>
+								</div>
+							</div>
+							<!--运作简报-->
+							<div class="ibox htz-box-1">
+								<div class="htz-title">
+									运作简报
+									<input type="text" style="width: 100px;text-align: center;" readonly="readonly" class="form-control pull-right" v-model="cainian" id="cainian" />
+								</div>
+								<div class="ibox-content ibox-content1" style="overflow: hidden;">
+									<div class="col-sm-12">
+										<div :style="{width:'100%',height:'400px'}" id="main7"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--经理-->
+						<!--其它-->
+						<div class="col-sm-12">
+							<div class="row">
+								<div class="col-sm-8">
+									<div class="ibox-content">
+										<div class="tabs-container">
+											<ul class="htz-nav">
+												<li class="active">
+													<a data-toggle="tab" href="#tab-1" aria-expanded="true" @click="tab(1)"> 我的任务</a>
+												</li>
+												<li>
+													<a data-toggle="tab" href="#tab-2" aria-expanded="true" @click="tab(2)"> 我的审核</a>
+												</li>
+												<li>
+													<a data-toggle="tab" href="#tab-3" aria-expanded="true" @click="tab(3)"> 我的提醒</a>
+												</li>
+												<li>
+													<a data-toggle="tab" href="#tab-4" aria-expanded="true" @click="tab(4)"> 过期提醒</a>
+												</li>
+											</ul>
+											<div class="tab-content">
+												<div id="tab-1" class="tab-pane active">
+													<div class="panel-body htz-panel-body" style="border:none;padding: 20px 20px 20px 0;">
+														<table class="table table-bordered table-hover">
+															<thead>
+																<tr>
+																	<th width="10%">任务类型</th>
+																	<th width="15%">客户名称</th>
+																	<th width="15%">债务人</th>
+																	<th width="15%">发起人</th>
+																	<th width="15%" >执行人</th>
+																	<th width="15%">创建时间</th>
+																	<th width="15%">操作</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr v-for="(el,index) of task.list">
+																	<td>{{el.type}}</td>
+																	<td v-if="el.customerName">{{el.customerName}}</td>
+																	<td v-else>无</td>
+																	<td v-if="el.debtorName">{{el.debtorName}}</td>
+																	<td v-else>无</td>
+																	<td>{{el.fqrName}}</td>
+																	<td>{{el.zxrName}}</td>
+																	<td>{{el.createTime}}</td>
+																	<td><button class="btn btn-primary btn-sm htz_hide" @click="viewTask(el.id,el.fqrName,el.dfbgId,el.type,el.relateId)" title="查看"><i class="fa fa-search"></i> 查看</button></td>
+																</tr>
+															</tbody>
+														</table>
+														<div class="pagi pull-right">
+														</div>
+													</div>
+												</div>
+												<div id="tab-2" class="tab-pane">
+													<div class="panel-body htz-panel-body" style="border:none;padding: 20px 20px 20px 0;">
+														<table class="table table-bordered table-hover">
+															<thead>
+																<tr>
+																	<th width="10%">审核类型</th>
+																	<th width="20%">客户名称</th>
+																	<th width="20%">债务人(公司)</th>
+																	<th width="20%">提交时间</th>
+																	<th width="10%">申请人</th>
+																	<th width="20%">操作</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr v-for="(el,index) of shenhe.list">
+																	<td>{{el.type}}</td>
+																	<td v-if="el.customerName">{{el.customerName}}</td>
+																	<td v-else>无</td>
+																	<td v-if="el.debtorName">{{el.debtorName}}</td>
+																	<td v-else>无</td>
+																	<td>{{el.createTime}}</td>
+																	<td>{{el.sqname}}</td>
+																	<td><button class="btn btn-primary btn-sm htz_hide" @click="sh(el.type,el.id,el.debtorId)" title="审核"><i class="fa fa-gavel"></i> 审核</button></td>
+																</tr>
+															</tbody>
+														</table>
+														<div class="pagi1 pull-right">
+														</div>
+													</div>
+												</div>
+												<div id="tab-3" class="tab-pane">
+													<div class="panel-body htz-panel-body" style="border:none;padding: 20px 20px 20px 0;">
+														<table class="table table-bordered table-hover">
+															<thead>
+																<tr>
+																	<th width="50%">提醒内容</th>
+																	<th width="25%">提醒时间</th>
+																	<th width="25%">操作</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr v-for="(el,index) of mytx.list">
+																	<td>{{el.remark}}</td>
+																	<td>{{el.time}}</td>
+																	<td><button class="btn btn-primary btn-sm htz_hide" @click="setSuccess(el.id,1)" title="完成"><i class="fa fa-check"></i> 完成</button></td>
+																</tr>
+															</tbody>
+														</table>
+														<div class="pagi2 pull-right">
+														</div>
+													</div>
+												</div>
+												<div id="tab-4" class="tab-pane">
+													<div class="panel-body htz-panel-body" style="border:none;padding: 20px 20px 20px 0;">
+														<table class="table table-bordered table-hover">
+															<thead>
+																<tr>
+																	<th width="50%">提醒内容</th>
+																	<th width="25%">提醒时间</th>
+																	<th width="25%">操作</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr v-for="(el,index) of gqtx.list">
+																	<td>{{el.remark}}</td>
+																	<td>{{el.time}}</td>
+																	<td><button class="btn btn-primary btn-sm htz_hide" @click="setSuccess(el.id,2)" title="完成"><i class="fa fa-check"></i> 完成</button></td>
+																</tr>
+															</tbody>
+														</table>
+														<div class="pagi3 pull-right">
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="ibox ">
+										<div class="ibox-title">
+											<h5>销售助手</h5></div>
+										<div class="ibox-content">
+											<div class="feed-activity-list">
+												<div class="feed-element">
+													<a href="javascript:;" @click="assis_view(0,'3天内即将划入公海的客户')">3天内即将划入公海的客户。</a>
+												</div>
+												<div class="feed-element">
+													<a href="javascript:;" @click="assis_view(1,'7天内有回款的合同')">7天内计划回款的合同。</a>
+												</div>
+												<div class="feed-element">
+													<a href="javascript:;" @click="assis_view(2,'30天内将要到期的合同')">30天内将要到期的合同。</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<script src="/static/ui/js/jquery.min.js"></script>
+		<script src="/static/ui/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/static/ui/js/hplus.js?v=4.1.0"></script>
+		<script src="/static/ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+		<script src="/static/ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+		<script src="/static/ui/js/plugins/layer/layer.min.js"></script>
+		<script src="/static/ui/js/plugins/laydate/laydate.js"></script>
+		<link rel="stylesheet" href="/static/ui/js/plugins/select2-4.0.3/css/select2.min.css">
+		<script src="/static/ui/js/plugins/select2-4.0.3/js/select2.min.js"></script>
+		<script src="/static/ace/js/date-time/bootstrap-datepicker.js"></script>
+		<script src="/static/ui/js/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/static/ui/js/vue.js"></script>
+		<script src="/static/ui/js/require.min.js" data-main="/static/js/include/dev/home"></script>
+	</body>
+	<script>
+	</script>
+
+</html>

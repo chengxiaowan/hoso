@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>活动列表</title>
+		<meta name="keywords" content="寒舍">
+		<meta name="description" content="寒舍">
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+		<link rel="stylesheet" href="../js/plugins/layui/css/layui.css">
+		<link rel="stylesheet" href="../css/animate.min.css">
+		<!--选择框-->
+		<link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+		<link rel="stylesheet" href="../js/plugins/laydate/theme/default/laydate.css">
+		<link rel="stylesheet" href="../css/style.css">
+		<link rel="stylesheet" href="../css/layout.css">
+	</head>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content" id="app">
+			<div class="ibox-content">
+				<div class="row">
+					<div class="col-sm-12">
+						<!-- 检索 start -->
+						<div class="form-inline" id="customerForm">
+							<div class="form-group">
+								<input id="nav-search-input" name="name" placeholder="请输入活动名称" value="" class="form-control" type="text" v-model="keywords">
+							</div>
+							<div class="form-group">
+								<em>类型</em>
+								<select class="form-control" v-model="type1">
+									<option value="">全部</option>
+									<option value="1">节日活动</option>
+									<option value="2">限时购</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<em>开始日期</em>
+								<input type="text" readonly="readonly" id="start" name='start' class="form-control" placeholder="请选择开始日期" v-model="createTimeStart" />
+							</div>
+							<div class="form-group">
+								<em>结束日期</em>
+								<input type="text" readonly="readonly" id="end" name='end' class="form-control" placeholder="请选择结束日期" v-model="createTimeEnd" />
+							</div>
+							<button type="submit" class="btn btn-htz btn-primary" @click="search()">
+								<i class="icon icon_search"></i> 搜索
+                    		</button>
+							<button type="reset" class="btn btn-htz btn-success" @click="add()">
+                        		<i id="nav-search-icon" class="icon icon_plus"></i> 新增
+                    		</button>
+						</div>
+						<!-- 检索 end -->
+					</div>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<table id="simple-table" class="table table-responsive table-bordered table-hover">
+					<thead>
+						<tr>
+							<th width="10%">活动名称</th>
+							<th width="12%">活动类型</th>
+							<th width="12%">活动图片</th>
+							<th width="12%">开始时间</th>
+							<th width="12%">结束时间</th>
+							<th width="12%">创建时间</th>
+							<th width="30%">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<template v-if="list.total != 0">
+							<tr v-for="item in list.list">
+								<td>{{item.title}}</td>
+								<td>{{item.type==1?'节日活动':(item.type==2?'限时购':'拼团')}}</td>
+								<td><img :src="item.imageUrl" style="width: 60px;"></td>
+								<td>{{item.startTime}}</td>
+								<td>{{item.endTime}}</td>
+								<td>{{item.createTime}}</td>
+								<td class="btn-hide">
+									<a class="btn btn-success" title="编辑" @click="edit(item.activityId);">编辑</a>
+									<a v-if="item.type == 1" class="btn btn-success" title="商品管理" @click="manage(item.activityId,item.type,item);">商品管理</a>
+									<a v-if="item.type == 2" class="btn btn-success" title="日期管理" @click="manage(item.activityId,item.type,item);">日期管理</a>
+									<a v-if="item.type == 3" class="btn btn-success" title="商品管理" @click="manage(item.activityId,item.type,item);">商品管理</a>
+									<a class="btn btn-default" title="删除" @click="del(item.activityId)">删除</a>
+								</td>
+							</tr>
+						</template>
+						<tr v-else class="main_info" v-else>
+							<td colspan="7">没有相关数据</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="pull-left form form-inline">
+					<div class="form-group form-group-sm">
+						共 {{list.total}} 条数据,每页显示
+						<select @change="getData(1)" v-model="list.pageSize" class="form-control">
+							<option value="10">10</option>
+							<option value="20">20</option>
+							<option value="30">30</option>
+							<option value="40">40</option>
+							<option value="50">50</option>
+						</select> 条
+					</div>
+				</div>
+				<div class="pagi pull-right"></div>
+			</div>
+
+			<!--新建活动弹层-->
+			<div class="bounced">
+				<div class="ibox-content" id="addPeople">
+					<div class="form form-horizontal">
+						<div class="row_list">
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">活动标题<em class="red">*</em></label>
+									<div class="col-sm-10">
+										<input class="form-control" type="text" placeholder="请输入活动标题" v-model="title">
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">活动类型<em class="red">*</em></label>
+									<div class="col-sm-10">
+										<select class="form-control" v-model="type">
+											<option value="">全部</option>
+											<option value="1">节日活动</option>
+											<option value="2">限时购</option>
+											<option value="3">拼团</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">开始时间</label>
+									<div class="col-sm-10">
+										<input type="text" readonly="readonly" id="start1" name='start1' class="form-control" placeholder="请选择开始日期" v-model="startTime" />
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">结束时间</label>
+									<div class="col-sm-10">
+										<input type="text" readonly="readonly" id="end1" name='end1' class="form-control" placeholder="请选择结束日期" v-model="endTime" />
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">图片 <em class="red">*</em></label>
+									<div class="col-sm-10">
+										<div class="layui-upload" id="btn-uploader">
+											<div class="layui-upload-list">
+												<img class="layui-upload-img" id="demo1" src="" style="width: 20%;">
+												<p id="demoText"></p>
+											</div>
+											<button type="button" class="layui-btn pull-left" id="pickfiles">上传图片</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<!-- 全局js -->
+		<script src="../js/jquery-2.1.1.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/plugins/layer/layer.min.js"></script>
+		<script src="../js/plugins/layui/layui.js"></script>
+		<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+		<script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/module/module_pagination.js"></script>
+		<!-- 自定义js -->
+		<script src="../js/content.min.js?v=1.0.0"></script>
+		<script src="../js/custom/common.js"></script>
+		<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+		<script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
+		<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+		<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+		<script src="../js/qiniuyun/qiniuImg.js"></script>
+		<script src="../js/custom/activityManagement/activitylist.js"></script>
+	</body>
+
+</html>
