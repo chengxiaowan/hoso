@@ -168,8 +168,8 @@ window.app = new Vue({
 			let that = this;
 			let id = '';
 			that.img_name = item.name;
-			id = 'topicId=' + item.specialTopicId;
-			console.log(id)
+			id = 'topicIdsId=' + item.specialTopicId;
+			// console.log(id)
 
 			$.ajax({
 				type: "post",
