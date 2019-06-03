@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑订单</title>
+    <meta name="keywords" content="寒舍">
+    <meta name="description" content="寒舍">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+    <link rel="stylesheet" href="../js/plugins/utf8-jsp/themes/default/css/ueditor.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/htz.css" />
+</head>
+<style>
+    .input-container {
+        height: 34px!important;
+        line-height: 34px!important;
+    }
+    .select2-container{
+        z-index: 99999999999999;
+    }
+    textarea.form-control{
+        height: 158px;
+        resize: none;
+    }
+    .form-label{
+        height: 120px;
+        color: #a4a4a4;
+        font-size: 12px;
+    }
+    .form-label input{
+        width: 100px;
+        border: 0;
+    }
+    body {
+        font-size: 12px;
+    }
+    .form-group{
+        position: relative;
+        margin-bottom: 40px;
+    }
+    .form-group label{
+        width: 100%;
+    }
+    .tips{
+        color: #b8b8b8;
+        font-size: 12px;
+        font-weight: normal;
+    }
+    .dot{
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        -webkit-transform: translateY(-50%);
+        width: 8px;
+        height: 8px;
+        background: #ff8d41;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+    }
+    .up-hot-tag{
+        /*margin-left: 10px;*/
+    }
+    .up-hot-tag a {
+        float: left;
+        margin: 10px 10px 0 0;
+        background: linear-gradient(45deg, transparent 50%, #61C4CF 0%);
+        background-size: 16px 16px;
+        border-top-right-radius: 3px;
+    }
+    .up-hot-tag a i{
+        float: left;
+        line-height: 30px;
+        font-size: 30px;
+        color: #fff;
+        background: #e4ebee;
+    }
+    .up-hot-tag a:hover i{color:#e4ebee}
+    .up-hot-tag a span {
+        float: left;
+        margin-left: -10px;
+        padding-right: 10px;
+        background-color: #e4ebee;
+        line-height: 30px;
+        font-size: 12px;
+        color: #34495e;
+    }
+    .cl:before, .cl:after{content:" ";display: table;}
+    .cl:after { clear: both }
+    .cl { *zoom: 1 }
+    .form-price .form-control,
+    .form-status .form-control{
+        width: 80px;
+    }
+    .form-price label{
+        display: inline-block;
+        width: 14px;
+        text-align: center;
+    }
+    .ibox-content{
+        padding: 15px 0 20px;
+    }
+    .iconfont, [class^="icon-"], [class*=" icon-"] {
+        font-family:"iconfont" !important;
+        font-size:16px;
+        color: #b8c4ce;
+        font-style:normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -webkit-text-stroke-width: 0.2px;
+        -moz-osx-font-smoothing: grayscale;
+        /*  -webkit-font-smoothing: none;
+        -webkit-text-stroke-width: initial;
+        -moz-osx-font-smoothing: initial;*/
+    }
+    .form-select{
+        padding-left: 0;
+    }
+    .form-create{
+        padding: 6px 12px;
+        height: 34px;
+        line-height: 22px;
+        color: #4a4a4a;
+        text-align: center;
+        background: #edf1f3;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+    }
+    .symbol{
+        position: absolute;
+        left: 6px;
+        color: #a4a4a4;
+        font-weight: normal;
+    }
+    .form-control[type='number']{
+        text-indent: 10px;
+    }
+    #tab-2 .btn, #tab-4 .btn{
+        margin-bottom: 0;
+    }
+    .btn-htz.btn-success {
+        background: #50bfa5;
+        outline: #50bfa5;
+    }
+    .btn-htz.btn-success:hover {
+        background: #50bfa5;
+    }
+    .ibox-content-btn .btn-primary{
+        width: 141px;
+        height: 38px;
+        line-height: 26px;
+        color: #4a4a4a;
+        background: #edf1f3;
+        border: 1px solid #edf1f3;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+    }
+    .upload{
+        overflow: hidden;
+    }
+    .upload_img,
+    .upload_cover{
+        position: relative;
+        padding-left: 0;
+    }
+    .upload_img{
+        height: 215px;
+        border: 2px dashed #e2e9f0;
+    }
+    .upload_cover{
+        margin-top: 40px;
+        height: 215px;
+    }
+    .upload_pic{
+        padding-right: 0;
+        height: 470px;
+        border: 2px dashed #e2e9f0;
+    }
+    .upload_info{
+        text-align: center;
+    }
+    .icon_upload{
+        display: inline-block;
+        color: #4a90e2;
+        font-size: 30px;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content" id="app">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="tabs-container">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab" @click="tab(1)" href="#tab-1" aria-expanded="true"> 订单信息</a>
+                    </li>
+                    <li class="">
+                        <a data-toggle="tab" @click="tab(2)" href="#tab-2" aria-expanded="false">商品信息</a>
+                    </li>
+                    <!--<li>
+                        <a data-toggle="tab" href="#tab-3" aria-expanded="false">附件</a>
+                    </li>-->
+                </ul>
+                <div class="tab-content">
+                    <div id="tab-1" class="tab-pane active">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>名称：<div class="tips fr"><em>1</em>/<em>30</em></div></label>
+                                        <div class="form-group">
+                                            <input type="name" placeholder="请输入品牌名称，1~30字" class="form-control">
+                                            <em class="dot"></em>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>负责人：</label>
+                                        <div class="form-select col-sm-10">
+                                            <select class="form-control">
+                                                <option selected="selected">请选择品牌负责人</option>
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                            </select>
+                                            <em class="dot"></em>
+                                        </div>
+                                        <div class="form-group form-create col-sm-2" @click="jumpToHeader();">新建</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>简介：<div class="tips fr"><em>1</em>/<em>1000</em></div></label>
+                                        <textarea type="content" placeholder="请输入简介" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>标签：<div class="tips fr">建议每个标签2-5字</div></label>
+                                        <div class="form-control form-label">
+                                            <input type="text" data-defualt="添加标签">
+                                        </div>
+                                        <div class="up-hot-tag cl">
+                                            <a class="cl" href="javascript:;"><i class="iconfont icon-tag-mini"></i><span>软件界面</span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 品牌介绍 start -->
+                            <div class="description">
+                                <script id="container" name="detailDescribe" type="text/plain">
+                                </script>
+                            </div>
+                            <!-- 品牌介绍 end -->
+                            <!-- 图片上传 start -->
+                            <div class="upload">
+                                <div class="col-sm-4">
+                                    <div class="upload_img upload_logo">
+                                        <div class="upload_info h-v-middle">
+                                            <i class="iconfont icon_upload"></i>
+                                            <label class="clear">上传logo</label>
+                                            <label>格式:jpg,jpeg,png,bmp</label>
+                                            <label>大小:小于10M</label>
+                                            <label>可拖拽上传</label>
+                                        </div>
+                                    </div>
+                                    <div class="upload_img upload_cover">
+                                        <div class="upload_info h-v-middle">
+                                            <i class="iconfont icon_upload"></i>
+                                            <label class="clear">上传封面</label>
+                                            <label>格式:jpg,jpeg,png,bmp</label>
+                                            <label>大小:小于10M</label>
+                                            <label>可拖拽上传</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="upload_pic"></div>
+                                </div>
+                            </div>
+                            <!-- 图片上传 end -->
+                            <div class="ibox-content-btn clear" style="margin: 30px 0 20px;">
+                                <a class="btn btn-htz  btn-primary" title="保存" @click="save();">保存</a>
+                                <!--<a class="btn btn-htz  btn-htz-default" title="取消" onclick="cancle();">取消</a>-->
+                            </div>
+                        </div>
+                    </div>
+                    <!--商品信息-->
+                    <div id="tab-2" class="tab-pane">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <!-- 检索 start -->
+                                    <div class="form-inline" role="form" id="customerForm">
+                                        <div class="form-group">
+                                            <input class="form-control" id="nav-search-input" type="text" placeholder="请输入商品名称" v-model="keywords">
+                                        </div>
+                                        <div class="form-group">
+                                            <em>分类</em>
+                                            <select name="" class="form-control">
+                                                <option value="">全部</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group form-status">
+                                            <em>审核状态</em>
+                                            <select name="" class="form-control">
+                                                <option value="">全部</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group form-status">
+                                            <em>状态</em>
+                                            <select name="" class="form-control">
+                                                <option value="">全部</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group form-price">
+                                            <em>销售价</em>
+                                            <div class="form-group">
+                                                <label class="symbol v-middle">¥</label>
+                                                <input type="number" class="form-control">
+                                            </div>
+                                            <label>-</label>
+                                            <div class="form-group">
+                                                <label class="symbol v-middle">¥</label>
+                                                <input type="number" class="form-control">
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-htz btn-primary" @click="search()">
+                                            <i class="icon icon_search"></i> 搜索
+                                        </button>
+                                        <button type="reset" class="btn btn-htz btn-success" @click="jumpToBrand();">
+                                            <i id="nav-search-icon" class="icon icon_plus"></i> 添加
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ibox-content">
+                                <table id="simple-table" class="table table-responsive table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th width="15%">商品名称</th>
+                                        <th width="8%">分类</th>
+                                        <th width="10%">品牌</th>
+                                        <th width="12%">图片</th>
+                                        <th width="8%">销售价（元）</th>
+                                        <th width="8%">供货价（元）</th>
+                                        <th width="8%">佣金比例（%）</th>
+                                        <th width="8%">审核状态</th>
+                                        <th width="8%">状态</th>
+                                        <th width="20%">操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <template v-if="list.total != 0">
+                                        <tr v-for="item in list.list">
+                                            <!--<td>{{item.name}}</td>-->
+                                            <td>这是一个商品</td>
+                                            <td>沙发</td>
+                                            <td>MRLAZY蓝先生</td>
+                                            <td>图片</td>
+                                            <td>2000.00</td>
+                                            <td>2000.00</td>
+                                            <td>2000.00</td>
+                                            <td>审核通过</td>
+                                            <td>已上架</td>
+                                            <td class="btn-hide">
+                                                <a class="btn btn-success" title="编辑" @click="edit(item.id);">查看</a>
+                                                <a class="btn btn-success" title="编辑" @click="edit(item.id);">二维码</a>
+                                                <a class="btn btn-default" title="删除" @click="del(item.id);">删除</a>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    <tr class="main_info" v-else>
+                                        <td colspan="3">没有相关数据</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="pull-left form form-inline">
+                                    <div class="form-group form-group-sm">
+                                        共 {{list.total}} 条数据,每页显示
+                                        <select @change="getData(1)" v-model="list.pageSize" class="form-control">
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
+                                            <option value="40">40</option>
+                                            <option value="50">50</option>
+                                        </select> 条
+                                    </div>
+                                </div>
+                                <div class="pagi pull-right"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 全局js -->
+<!-- 全局js -->
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/jquery.navScroll.js"></script>
+<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+<script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+<script src="../js/plugins/utf8-jsp/third-party/zeroclipboard/ZeroClipboard.js"></script>
+<script src="../js/plugins/utf8-jsp/ueditor.config.js"></script>
+<script src="../js/plugins/utf8-jsp/uemy.js"></script>
+<script src="../js/plugins/utf8-jsp/lang/zh-cn/zh-cn.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<script src="../js/tagsinput.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
+<script src="../js/custom/element-ui/index.js"></script>
+<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+<script src="../js/qiniuyun/qiniuImg1.js"></script>
+<script src="../js/custom/brands/add.js"></script>
+</body>
+</html>

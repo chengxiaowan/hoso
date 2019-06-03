@@ -7,11 +7,17 @@ var config = {
 window.app = new Vue({
     el: '#app',
     data: {
+        index: 1,
         role: config.role,
         list: [], // 列表
         keywords: '', // 名称
         name: '', // 品牌名称
         postData: {},
+        editor: null,
+        editorInfo: '',
+        imgPath: '',
+        colorPicType: '', //去捏颜色模所属状态
+        image: '',
     },
     created: function() {
         var that = this;
@@ -20,6 +26,16 @@ window.app = new Vue({
     mounted: function() {
         const that = this;
         that.getData();
+
+        this.editor = UE.getEditor('container', {
+            initialFrameHeight: 350,
+            // initialContent: "请填写详细描述",
+        });
+
+        that.editor.addListener("ready", function() {
+            // editor准备好之后才可以使用
+            that.editor.setContent(that.editorInfo);
+        });
     },
     methods: {
         /**
@@ -72,15 +88,15 @@ window.app = new Vue({
                 }
             });
         },
-        // 新增品牌
-        jumpToBrand(){
+        // 新建负责人
+        jumpToHeader(){
             var index = layer
                 .open({
                     type : 2,
-                    title : '新增品牌',
-                    content: 'add.html',
-                    area : ['100%', '100%']
-            });
+                    title : '新建负责人',
+                    content: 'headers.html',
+                    area : ['80%', '80%']
+                });
         },
         // 查看品牌详情
         view(id){
@@ -127,6 +143,11 @@ window.app = new Vue({
                 })
             })
         },
+        // 切换tab
+        tab: function(index_chosen) {
+            const that = this;
+            that.index = index_chosen;
+        }
     }
 })
 

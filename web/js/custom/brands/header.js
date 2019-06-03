@@ -80,7 +80,7 @@ window.app = new Vue({
                     title : '新增品牌',
                     content: 'add.html',
                     area : ['100%', '100%']
-            });
+                });
         },
         // 查看品牌详情
         view(id){
