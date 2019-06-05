@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/htz.css" />
+
+    <link rel="stylesheet" href="../css/upload.css">
 </head>
 <style>
     .input-container {
@@ -54,7 +56,7 @@
     .dot{
         position: absolute;
         top: 50%;
-        right: 10px;
+        right: 35px;        /*修改过，原为10px*/
         transform: translateY(-50%);
         -moz-transform: translateY(-50%);
         -webkit-transform: translateY(-50%);
@@ -137,6 +139,15 @@
         -moz-border-radius: 4px;
         border-radius: 4px;
     }
+
+    .form-create:hover{
+        background:#e6e6e6;
+        color: #333;
+        cursor: pointer;
+        border-color: #adadad;
+    }
+
+
     .symbol{
         position: absolute;
         left: 6px;
@@ -196,6 +207,13 @@
         color: #4a90e2;
         font-size: 30px;
     }
+
+    .imgTitle{
+        max-width: 100%;
+        margin-bottom: 5px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
 </style>
 <body class="gray-bg">
 <div class="wrapper wrapper-content" id="app">
@@ -204,7 +222,7 @@
             <div class="tabs-container">
                 <ul class="nav nav-tabs">
                     <li class="active">
-                        <a data-toggle="tab" @click="tab(1)" href="#tab-1" aria-expanded="true"> 订单信息</a>
+                        <a data-toggle="tab" @click="tab(1)" href="#tab-1" aria-expanded="true"> 基本信息</a>
                     </li>
                     <li class="">
                         <a data-toggle="tab" @click="tab(2)" href="#tab-2" aria-expanded="false">商品信息</a>
@@ -221,7 +239,7 @@
                                     <div class="form-group">
                                         <label>名称：<div class="tips fr"><em>1</em>/<em>30</em></div></label>
                                         <div class="form-group">
-                                            <input type="name" placeholder="请输入品牌名称，1~30字" class="form-control">
+                                            <input type="name" placeholder="请输入品牌名称，1~30字" class="form-control" v-model="name" @keyup.enter="dy">
                                             <em class="dot"></em>
                                         </div>
                                     </div>
@@ -247,60 +265,41 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>简介：<div class="tips fr"><em>1</em>/<em>1000</em></div></label>
-                                        <textarea type="content" placeholder="请输入简介" class="form-control"></textarea>
+                                        <textarea type="content" placeholder="请输入简介" class="form-control" v-model="editorInfo"></textarea>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>标签：<div class="tips fr">建议每个标签2-5字</div></label>
-                                        <div class="form-control form-label">
-                                            <input type="text" data-defualt="添加标签">
-                                        </div>
-                                        <div class="up-hot-tag cl">
-                                            <a class="cl" href="javascript:;"><i class="iconfont icon-tag-mini"></i><span>软件界面</span></a>
-                                        </div>
+                                        <input id="tagsinputval" class="tagsinput" data-role="tagsinput" placeholder="输入后回车" v-model="tag">
+	                                    <button class="btn" onClick="getinput()">获取输入的值</button>
                                     </div>
                                 </div>
                             </div>
-                            <!-- 品牌介绍 start -->
+
+                            <!-- 图片上传 -->
+                            <div id="T_upload" class="col-sm-12"></div>
+                            <!-- 图片上传 -->
+
+
+
+
+                            <!-- 图文描述 start -->
                             <div class="description">
-                                <script id="container" name="detailDescribe" type="text/plain">
+                                <div class="imgTitle">图文描述:</div>
+                                <script id="container" name="detailDescribe" type="text/plain" v-model="">
                                 </script>
                             </div>
-                            <!-- 品牌介绍 end -->
-                            <!-- 图片上传 start -->
-                            <div class="upload">
-                                <div class="col-sm-4">
-                                    <div class="upload_img upload_logo">
-                                        <div class="upload_info h-v-middle">
-                                            <i class="iconfont icon_upload"></i>
-                                            <label class="clear">上传logo</label>
-                                            <label>格式:jpg,jpeg,png,bmp</label>
-                                            <label>大小:小于10M</label>
-                                            <label>可拖拽上传</label>
-                                        </div>
-                                    </div>
-                                    <div class="upload_img upload_cover">
-                                        <div class="upload_info h-v-middle">
-                                            <i class="iconfont icon_upload"></i>
-                                            <label class="clear">上传封面</label>
-                                            <label>格式:jpg,jpeg,png,bmp</label>
-                                            <label>大小:小于10M</label>
-                                            <label>可拖拽上传</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-8">
-                                    <div class="upload_pic"></div>
-                                </div>
-                            </div>
-                            <!-- 图片上传 end -->
+                            <!-- 图文描述 end -->
                             <div class="ibox-content-btn clear" style="margin: 30px 0 20px;">
                                 <a class="btn btn-htz  btn-primary" title="保存" @click="save();">保存</a>
                                 <!--<a class="btn btn-htz  btn-htz-default" title="取消" onclick="cancle();">取消</a>-->
                             </div>
                         </div>
                     </div>
+
+
+
                     <!--商品信息-->
                     <div id="tab-2" class="tab-pane">
                         <div class="panel-body">
@@ -514,6 +513,7 @@
 </div>
 <!-- 全局js -->
 <!-- 全局js -->
+<!-- <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script> -->
 <script src="../js/jquery-2.1.1.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/plugins/layer/layer.min.js"></script>
@@ -529,15 +529,65 @@
 <script src="../js/vue.js"></script>
 <script src="../js/module/module_pagination.js"></script>
 <script src="../js/tagsinput.js"></script>
+
 <!-- 自定义js -->
 <script src="../js/content.min.js?v=1.0.0"></script>
 <script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
 <script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
 <script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
 <script src="../js/custom/element-ui/index.js"></script>
+
 <!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
 <script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
 <script src="../js/qiniuyun/qiniuImg1.js"></script>
 <script src="../js/custom/brands/add.js"></script>
+
+
+<script src="../js/T_upload.js"></script>
+
+<script>
+    var drool='';
+    function getinput(){
+        drool = $('#tagsinputval').val()
+	    alert(drool);
+        console.log(drool)
+        
+    };
+
+    // test图片上传
+    $(function() {
+//			var md = "product";
+//			var pid = "asdasdasdasdasd";
+			$.Tupload.init({
+//				url: "product/uploadImage2?md=" + md + "&pid=" + pid,
+						title	  : "宝贝图片大小不能超过500kb,为使避免图片上传出现问题，请尽量选择完毕图片后再上传",
+				fileNum: 5, // 上传文件数量
+				divId: "T_upload", // div  id
+				accept: "image/jpeg,image/x-png", // 上传文件的类型
+				//fileSize  :51200000,     // 上传文件的大小
+				onSuccess: function(data, i) {
+						/*var temp =eval('(' + data.currentTarget.response + ')')
+	    	if(temp.fileName != undefined){
+	    		$("#img_src"+i).attr('value',temp.fileName);
+	    		$("#img_src"+i).attr('name',"upload_img");
+	    	}*/
+				},
+				onDelete: function(i) {
+					/*var img_val = $("#img_src"+i).attr("value");
+					if(img_val != '' && img_val != undefined){
+						var md = "product";
+						var img= $.page.getImgUrl(img_val);
+						$.ajax({
+							type:"POST",
+							url: "base/delPic" ,
+							data : {img:img,id: pid,md:md},
+							success: function(rel){}
+						});
+					}*/
+				}
+			});
+		})
+
+</script>
 </body>
 </html>

@@ -655,7 +655,6 @@
     *     [13, {which: 188, shiftKey: true}]
     */
   function keyCombinationInList(keyPressEvent, lookupList) {
-  	console.log(111)
       var found = false;
       $.each(lookupList, function (index, keyCombination) {
           if (typeof (keyCombination) === 'number' && keyPressEvent.which === keyCombination) {

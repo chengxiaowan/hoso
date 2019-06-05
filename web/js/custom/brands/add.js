@@ -10,11 +10,13 @@ window.app = new Vue({
         index: 1,
         role: config.role,
         list: [], // 列表
-        keywords: '', // 名称
+        keywords: '', // 搜索关键
         name: '', // 品牌名称
         postData: {},
         editor: null,
-        editorInfo: '',
+        editorInfo: '',  //品牌描述
+        tag:"",         //标签
+        tagInfo:"",    //默认标签
         imgPath: '',
         colorPicType: '', //去捏颜色模所属状态
         image: '',
@@ -150,9 +152,17 @@ window.app = new Vue({
         },
 
         //保存数据
-        Save(){
+        save(){
+            const that = this;
 
+        },
+
+        //dy为测试Vue是否绑定的方法，提交代码时请删除或者注释
+        dy(){
+            const that=this;
+            console.log(that.list);
+            // alert(that.tag)
+            alert($('#tagsinputval').val());
         }
     }
 })
-
