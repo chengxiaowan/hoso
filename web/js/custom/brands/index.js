@@ -47,6 +47,7 @@ window.app = new Vue({
                 },
                 success: function(res) {
                     that.loading('close')
+                    // console.log(res)
                     if(res.error == "00") {
                         that.list = res.result;
                         //分页

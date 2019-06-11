@@ -1,0 +1,26 @@
+.warning {
+    /* width: 963px; */
+    /* height: 130px; */
+    border-radius: 8px;
+    border: 1px dashed rgba(252, 100, 100, 1);
+    border-radius: 5px;
+    margin: 57px auto 0 auto;
+}
+
+.warning>h3 {
+    margin-left: 33px;
+    font-size: 24px;
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    color: rgba(252, 100, 100, 1);
+    line-height: 33px;
+}
+
+.warning>p {
+    margin: 22px 0 33px 33px;
+    font-size: 18px;
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    color: rgba(252, 100, 100, 1);
+    line-height: 25px;
+}

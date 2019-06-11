@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,47 +17,58 @@
     <link rel="stylesheet" href="../css/htz.css" />
 
     <link rel="stylesheet" href="../css/upload.css">
+    <link rel="stylesheet" href="../css/custom/brands/add.css">
 </head>
 <style>
     .input-container {
-        height: 34px!important;
-        line-height: 34px!important;
+        height: 34px !important;
+        line-height: 34px !important;
     }
-    .select2-container{
+
+    .select2-container {
         z-index: 99999999999999;
     }
-    textarea.form-control{
+
+    textarea.form-control {
         height: 158px;
         resize: none;
     }
-    .form-label{
+
+    .form-label {
         height: 120px;
         color: #a4a4a4;
         font-size: 12px;
     }
-    .form-label input{
+
+    .form-label input {
         width: 100px;
         border: 0;
     }
+
     body {
         font-size: 12px;
     }
-    .form-group{
+
+    .form-group {
         position: relative;
         margin-bottom: 40px;
     }
-    .form-group label{
+
+    .form-group label {
         width: 100%;
     }
-    .tips{
+
+    .tips {
         color: #b8b8b8;
         font-size: 12px;
         font-weight: normal;
     }
-    .dot{
+
+    .dot {
         position: absolute;
         top: 50%;
-        right: 35px;        /*修改过，原为10px*/
+        right: 35px;
+        /*修改过，原为10px*/
         transform: translateY(-50%);
         -moz-transform: translateY(-50%);
         -webkit-transform: translateY(-50%);
@@ -67,9 +79,11 @@
         -moz-border-radius: 50%;
         border-radius: 50%;
     }
-    .up-hot-tag{
+
+    .up-hot-tag {
         /*margin-left: 10px;*/
     }
+
     .up-hot-tag a {
         float: left;
         margin: 10px 10px 0 0;
@@ -77,14 +91,19 @@
         background-size: 16px 16px;
         border-top-right-radius: 3px;
     }
-    .up-hot-tag a i{
+
+    .up-hot-tag a i {
         float: left;
         line-height: 30px;
         font-size: 30px;
         color: #fff;
         background: #e4ebee;
     }
-    .up-hot-tag a:hover i{color:#e4ebee}
+
+    .up-hot-tag a:hover i {
+        color: #e4ebee
+    }
+
     .up-hot-tag a span {
         float: left;
         margin-left: -10px;
@@ -94,26 +113,43 @@
         font-size: 12px;
         color: #34495e;
     }
-    .cl:before, .cl:after{content:" ";display: table;}
-    .cl:after { clear: both }
-    .cl { *zoom: 1 }
+
+    .cl:before,
+    .cl:after {
+        content: " ";
+        display: table;
+    }
+
+    .cl:after {
+        clear: both
+    }
+
+    .cl {
+        *zoom: 1
+    }
+
     .form-price .form-control,
-    .form-status .form-control{
+    .form-status .form-control {
         width: 80px;
     }
-    .form-price label{
+
+    .form-price label {
         display: inline-block;
         width: 14px;
         text-align: center;
     }
-    .ibox-content{
+
+    .ibox-content {
         padding: 15px 0 20px;
     }
-    .iconfont, [class^="icon-"], [class*=" icon-"] {
-        font-family:"iconfont" !important;
-        font-size:16px;
+
+    .iconfont,
+    [class^="icon-"],
+    [class*=" icon-"] {
+        font-family: "iconfont" !important;
+        font-size: 16px;
         color: #b8c4ce;
-        font-style:normal;
+        font-style: normal;
         font-weight: normal;
         font-variant: normal;
         text-transform: none;
@@ -125,10 +161,12 @@
         -webkit-text-stroke-width: initial;
         -moz-osx-font-smoothing: initial;*/
     }
-    .form-select{
+
+    .form-select {
         padding-left: 0;
     }
-    .form-create{
+
+    .form-create {
         padding: 6px 12px;
         height: 34px;
         line-height: 22px;
@@ -140,34 +178,40 @@
         border-radius: 4px;
     }
 
-    .form-create:hover{
-        background:#e6e6e6;
+    .form-create:hover {
+        background: #e6e6e6;
         color: #333;
         cursor: pointer;
         border-color: #adadad;
     }
 
 
-    .symbol{
+    .symbol {
         position: absolute;
         left: 6px;
         color: #a4a4a4;
         font-weight: normal;
     }
-    .form-control[type='number']{
+
+    .form-control[type='number'] {
         text-indent: 10px;
     }
-    #tab-2 .btn, #tab-4 .btn{
+
+    #tab-2 .btn,
+    #tab-4 .btn {
         margin-bottom: 0;
     }
+
     .btn-htz.btn-success {
         background: #50bfa5;
         outline: #50bfa5;
     }
+
     .btn-htz.btn-success:hover {
         background: #50bfa5;
     }
-    .ibox-content-btn .btn-primary{
+
+    .ibox-content-btn .btn-primary {
         width: 141px;
         height: 38px;
         line-height: 26px;
@@ -178,416 +222,429 @@
         -moz-border-radius: 4px;
         border-radius: 4px;
     }
-    .upload{
+
+    .upload {
         overflow: hidden;
     }
+
     .upload_img,
-    .upload_cover{
+    .upload_cover {
         position: relative;
         padding-left: 0;
     }
-    .upload_img{
+
+    .upload_img {
         height: 215px;
         border: 2px dashed #e2e9f0;
     }
-    .upload_cover{
+
+    .upload_cover {
         margin-top: 40px;
         height: 215px;
     }
-    .upload_pic{
+
+    .upload_pic {
         padding-right: 0;
         height: 470px;
         border: 2px dashed #e2e9f0;
     }
-    .upload_info{
+
+    .upload_info {
         text-align: center;
     }
-    .icon_upload{
+
+    .icon_upload {
         display: inline-block;
         color: #4a90e2;
         font-size: 30px;
     }
 
-    .imgTitle{
+    .imgTitle {
         max-width: 100%;
         margin-bottom: 5px;
         font-weight: 700;
         margin-bottom: 10px;
     }
+
+    .image-box{
+        width:100px;
+        height: 100px;
+    }
 </style>
+
 <body class="gray-bg">
-<div class="wrapper wrapper-content" id="app">
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="tabs-container">
-                <ul class="nav nav-tabs">
-                    <li class="active">
-                        <a data-toggle="tab" @click="tab(1)" href="#tab-1" aria-expanded="true"> 基本信息</a>
-                    </li>
-                    <li class="">
-                        <a data-toggle="tab" @click="tab(2)" href="#tab-2" aria-expanded="false">商品信息</a>
-                    </li>
-                    <li>
-                        <a data-toggle="tab" @click="tab(3)" href="#tab-3" aria-expanded="false">负责人信息</a>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div id="tab-1" class="tab-pane active">
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label>名称：<div class="tips fr"><em>1</em>/<em>30</em></div></label>
+    <div class="wrapper wrapper-content" id="app">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a data-toggle="tab" @click="tab(1)" href="#tab-1" aria-expanded="true"> 基本信息</a>
+                        </li>
+                        <li class="">
+                            <a data-toggle="tab" @click="tab(2)" href="#tab-2" aria-expanded="false">负责人信息</a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" @click="tab(3)" href="#tab-3" aria-expanded="false">商品信息</a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" @click="tab(4)" href="#tab-4" aria-expanded="false">服务</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane active">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-sm-6">
                                         <div class="form-group">
-                                            <input type="name" placeholder="请输入品牌名称，1~30字" class="form-control" v-model="name" @keyup.enter="dy">
-                                            <em class="dot"></em>
+                                            <label>名称：<div class="tips fr"><em>1</em>/<em>30</em></div></label>
+                                            <div class="form-group">
+                                                <input type="name" placeholder="请输入品牌名称，1~30字" class="form-control"
+                                                    v-model="name" @keyup.enter="dy">
+                                                <em class="dot"></em>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>负责人：</label>
+                                            <div class="form-select col-sm-10">
+                                                <select class="form-control">
+                                                    <option selected="selected">请选择品牌负责人</option>
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                </select>
+                                                <em class="dot"></em>
+                                            </div>
+                                            <div class="form-group form-create col-sm-2" @click="jumpToHeader();">新建
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label>负责人：</label>
-                                        <div class="form-select col-sm-10">
-                                            <select class="form-control">
-                                                <option selected="selected">请选择品牌负责人</option>
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                                <option>4</option>
-                                            </select>
-                                            <em class="dot"></em>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>简介：<div class="tips fr"><em>1</em>/<em>1000</em></div></label>
+                                            <textarea type="content" placeholder="请输入简介" class="form-control"
+                                                v-model="editorInfo"></textarea>
                                         </div>
-                                        <div class="form-group form-create col-sm-2" @click="jumpToHeader();">新建</div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>标签：<div class="tips fr">建议每个标签2-5字</div></label>
+                                            <input id="tagsinputval" class="tagsinput" data-role="tagsinput"
+                                                placeholder="输入后回车" v-model="tag">
+                                            <button class="btn" onClick="getinput()">获取输入的值</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label>简介：<div class="tips fr"><em>1</em>/<em>1000</em></div></label>
-                                        <textarea type="content" placeholder="请输入简介" class="form-control" v-model="editorInfo"></textarea>
+
+                                <!-- 图片上传 -->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h3>图片</h3>
+                                        <p>
+                                            请上传png,jpg,jpeg等规范格式的图片，大小不能超过10MB
+                                            。如发现图片无法删除的情况，请先清除浏览器缓存或者换个浏览器再操作。如发现图片中带有色情、政治等内容，我方将予以删除品牌操作，最终解释权由寒舍信息科技（常州）有限公司所有。
+                                        </p>
+                                        <div>
+                                            <br>
+                                            <br>
+                                            <br>
+                                            <br>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label>标签：<div class="tips fr">建议每个标签2-5字</div></label>
-                                        <input id="tagsinputval" class="tagsinput" data-role="tagsinput" placeholder="输入后回车" v-model="tag">
-	                                    <button class="btn" onClick="getinput()">获取输入的值</button>
-                                    </div>
+                                <!-- 图片上传 end-->
+
+
+
+
+                                <!-- 图文描述 start -->
+                                <div class="description">
+                                    <div class="imgTitle">图文描述:</div>
+                                    <script id="container" name="detailDescribe" type="text/plain" v-model="">
+                                    </script>
                                 </div>
-                            </div>
-
-                            <!-- 图片上传 -->
-                            <div id="T_upload" class="col-sm-12"></div>
-                            <!-- 图片上传 -->
-
-
-
-
-                            <!-- 图文描述 start -->
-                            <div class="description">
-                                <div class="imgTitle">图文描述:</div>
-                                <script id="container" name="detailDescribe" type="text/plain" v-model="">
-                                </script>
-                            </div>
-                            <!-- 图文描述 end -->
-                            <div class="ibox-content-btn clear" style="margin: 30px 0 20px;">
-                                <a class="btn btn-htz  btn-primary" title="保存" @click="save();">保存</a>
-                                <!--<a class="btn btn-htz  btn-htz-default" title="取消" onclick="cancle();">取消</a>-->
+                                <!-- 图文描述 end -->
+                                <div class="ibox-content-btn clear" style="margin: 30px 0 20px;">
+                                    <a class="btn btn-htz  btn-primary" title="保存" @click="save();">保存</a>
+                                    <!--<a class="btn btn-htz  btn-htz-default" title="取消" onclick="cancle();">取消</a>-->
+                                </div>
                             </div>
                         </div>
-                    </div>
 
 
 
-                    <!--商品信息-->
-                    <div id="tab-2" class="tab-pane">
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <!-- 检索 start -->
-                                    <div class="form-inline" role="form" id="customerForm">
-                                        <div class="form-group">
-                                            <input class="form-control" id="nav-search-input" type="text" placeholder="请输入商品名称" v-model="keywords">
-                                        </div>
-                                        <div class="form-group">
-                                            <em>分类</em>
-                                            <select name="" class="form-control">
-                                                <option value="">全部</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group form-status">
-                                            <em>审核状态</em>
-                                            <select name="" class="form-control">
-                                                <option value="">全部</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group form-status">
-                                            <em>状态</em>
-                                            <select name="" class="form-control">
-                                                <option value="">全部</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group form-price">
-                                            <em>销售价</em>
+                        <!--商品信息-->
+                        <div id="tab-3" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <!-- 检索 start -->
+                                        <div class="form-inline" role="form" id="customerForm">
                                             <div class="form-group">
-                                                <label class="symbol v-middle">¥</label>
-                                                <input type="number" class="form-control">
+                                                <input class="form-control" id="nav-search-input" type="text"
+                                                    placeholder="请输入商品名称" v-model="keywords">
                                             </div>
-                                            <label>-</label>
                                             <div class="form-group">
-                                                <label class="symbol v-middle">¥</label>
-                                                <input type="number" class="form-control">
+                                                <em>分类</em>
+                                                <select name="" class="form-control">
+                                                    <option value="">全部</option>
+                                                </select>
                                             </div>
+                                            <div class="form-group form-status">
+                                                <em>审核状态</em>
+                                                <select name="" class="form-control">
+                                                    <option value="">全部</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group form-status">
+                                                <em>状态</em>
+                                                <select name="" class="form-control">
+                                                    <option value="">全部</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group form-price">
+                                                <em>销售价</em>
+                                                <div class="form-group">
+                                                    <label class="symbol v-middle">¥</label>
+                                                    <input type="number" class="form-control">
+                                                </div>
+                                                <label>-</label>
+                                                <div class="form-group">
+                                                    <label class="symbol v-middle">¥</label>
+                                                    <input type="number" class="form-control">
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-htz btn-primary" @click="search()">
+                                                <i class="icon icon_search"></i> 搜索
+                                            </button>
+                                            <button type="reset" class="btn btn-htz btn-success"
+                                                @click="jumpToBrand();">
+                                                <i id="nav-search-icon" class="icon icon_plus"></i> 添加
+                                            </button>
                                         </div>
-                                        <button type="submit" class="btn btn-htz btn-primary" @click="search()">
-                                            <i class="icon icon_search"></i> 搜索
-                                        </button>
-                                        <button type="reset" class="btn btn-htz btn-success" @click="jumpToBrand();">
-                                            <i id="nav-search-icon" class="icon icon_plus"></i> 添加
-                                        </button>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="ibox-content">
-                                <table id="simple-table" class="table table-responsive table-bordered table-hover">
-                                    <thead>
-                                    <tr>
-                                        <th width="15%">商品名称</th>
-                                        <th width="8%">分类</th>
-                                        <th width="10%">品牌</th>
-                                        <th width="12%">图片</th>
-                                        <th width="8%">销售价（元）</th>
-                                        <th width="8%">供货价（元）</th>
-                                        <th width="8%">佣金比例（%）</th>
-                                        <th width="8%">审核状态</th>
-                                        <th width="8%">状态</th>
-                                        <th width="20%">操作</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <template v-if="list.total != 0">
-                                        <tr v-for="item in list.list">
-                                            <!--<td>{{item.name}}</td>-->
-                                            <td>这是一个商品</td>
-                                            <td>沙发</td>
-                                            <td>MRLAZY蓝先生</td>
-                                            <td>图片</td>
-                                            <td>2000.00</td>
-                                            <td>2000.00</td>
-                                            <td>2000.00</td>
-                                            <td>审核通过</td>
-                                            <td>已上架</td>
-                                            <td class="btn-hide">
-                                                <a class="btn btn-success" title="编辑" @click="edit(item.id);">查看</a>
-                                                <a class="btn btn-success" title="编辑" @click="edit(item.id);">二维码</a>
-                                                <a class="btn btn-default" title="删除" @click="del(item.id);">删除</a>
-                                            </td>
-                                        </tr>
-                                    </template>
-                                    <tr class="main_info" v-else>
-                                        <td colspan="3">没有相关数据</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <div class="pull-left form form-inline">
-                                    <div class="form-group form-group-sm">
-                                        共 {{list.total}} 条数据,每页显示
-                                        <select @change="getData(1)" v-model="list.pageSize" class="form-control">
-                                            <option value="10">10</option>
-                                            <option value="20">20</option>
-                                            <option value="30">30</option>
-                                            <option value="40">40</option>
-                                            <option value="50">50</option>
-                                        </select> 条
+                                <div class="ibox-content">
+                                    <table id="simple-table" class="table table-responsive table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th width="15%">商品名称</th>
+                                                <th width="8%">分类</th>
+                                                <th width="10%">品牌</th>
+                                                <th width="12%">图片</th>
+                                                <th width="8%">销售价（元）</th>
+                                                <th width="8%">供货价（元）</th>
+                                                <th width="8%">佣金比例（%）</th>
+                                                <th width="8%">预估收益（元）</th>
+                                                <th width="8%">审核状态</th>
+                                                <th width="20%">操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template v-if="list.total != 0">
+                                                <tr v-for="item in list.list">
+                                                    <!--<td>{{item.name}}</td>-->
+                                                    <td>这是一个商品</td>
+                                                    <td>沙发</td>
+                                                    <td>MRLAZY蓝先生</td>
+                                                    <td><img src="../images/a1.jpg" class="image-box"></td>
+                                                    <td>2000.00</td>
+                                                    <td>2000.00</td>
+                                                    <td>2000.00</td>
+                                                    <td>100.00</td>
+                                                    <td>审核通过</td>
+                                                    <td class="btn-hide">
+                                                        <a class="btn btn-success" title="编辑" href="edit.html">查看</a>
+                                                        <a class="btn btn-success" title="编辑"
+                                                            @click="edit(item.id);">二维码</a>
+                                                        <a class="btn btn-default" title="删除"
+                                                            @click="del(item.id);">删除</a>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                            <tr class="main_info" v-else>
+                                                <td colspan="3">没有相关数据</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="pull-left form form-inline">
+                                        <div class="form-group form-group-sm">
+                                            共 {{list.total}} 条数据,每页显示
+                                            <select @change="getData(1)" v-model="list.pageSize" class="form-control">
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="40">40</option>
+                                                <option value="50">50</option>
+                                            </select> 条
+                                        </div>
                                     </div>
+                                    <div class="pagi pull-right"></div>
                                 </div>
-                                <div class="pagi pull-right"></div>
                             </div>
                         </div>
-                    </div>
 
 
-                     <!--负责人信息-->
-                     <div id="tab-3" class="tab-pane">
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <!-- 检索 start -->
-                                    <div class="form-inline" role="form" id="customerForm">
-                                        <div class="form-group">
-                                            <input class="form-control" id="nav-search-input" type="text" placeholder="请输入商品名称" v-model="keywords">
-                                        </div>
-                                        <div class="form-group">
-                                            <em>分类</em>
-                                            <select name="" class="form-control">
-                                                <option value="">全部</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group form-status">
-                                            <em>审核状态</em>
-                                            <select name="" class="form-control">
-                                                <option value="">全部</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group form-status">
-                                            <em>状态</em>
-                                            <select name="" class="form-control">
-                                                <option value="">全部</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group form-price">
-                                            <em>销售价</em>
-                                            <div class="form-group">
-                                                <label class="symbol v-middle">¥</label>
-                                                <input type="number" class="form-control">
-                                            </div>
-                                            <label>-</label>
-                                            <div class="form-group">
-                                                <label class="symbol v-middle">¥</label>
-                                                <input type="number" class="form-control">
+                        <!--负责人信息-->
+                        <div id="tab-2" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="panel panel-default test">
+                                            <div class="panel-body explanation">
+                                                <h3>说明：</h3>
+                                                <p>1、该页面用来管理品牌下面各门店的负责人(一般情况下为店铺的直接受益人)信息。</p>
+                                                <p>2、门店负责人是该门店的直接受益人，门店里的商品售出后，可享受佣金，并且可以管理其门店里的商品，销售人员，服务等。</p>
+                                                <p>3、一个门店只有一名门店负责人，品牌负责人在给门店负责人创建好账号后，只需要通知对应的人员登录我方后台创建其名下的门店及其他信息即可。
+                                                </p>
                                             </div>
                                         </div>
-                                        <button type="submit" class="btn btn-htz btn-primary" @click="search()">
-                                            <i class="icon icon_search"></i> 搜索
-                                        </button>
-                                        <button type="reset" class="btn btn-htz btn-success" @click="jumpToBrand();">
-                                            <i id="nav-search-icon" class="icon icon_plus"></i> 添加
-                                        </button>
+                                        <!-- 检索 start -->
+                                        <div class="form-inline" role="form" id="customerForm">
+                                            <div class="form-group">
+                                                <input class="form-control" id="nav-search-input" type="text"
+                                                    placeholder="请输入姓名" v-model="keywords">
+                                            </div>
+
+                                            <button type="submit" class="btn btn-htz btn-primary" @click="search()">
+                                                <i class="icon icon_search"></i> 搜索
+                                            </button>
+                                            <button type="reset" class="btn btn-htz btn-success"
+                                                @click="jumpToHeader()">
+                                                <i id="nav-search-icon" class="icon icon_plus"></i> 添加
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="ibox-content">
-                                <table id="simple-table" class="table table-responsive table-bordered table-hover">
-                                    <thead style="background: rgb(255,255,255)">
-                                    <tr>
-                                        <th width="15%">姓名</th>
-                                        <th width="15%">手机号</th>
-                                        <th width="15%">邮箱</th>
-                                        <th width="40%">备注</th>
-                                        <th width="15%">操作</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <template v-if="list.total != 0">
-                                        <tr v-for="item in list.list">
-                                            <!--<td>{{item.name}}</td>-->
-                                            <td>这是一个负责人</td>
-                                            <td>1380000000</td>
-                                            <td>xxxxxx@163.com</td>
-                                            <td>这是一个负责人</td>
-                                            <td class="btn-hide">
-                                                <a class="btn btn-success" title="编辑" @click="edit(item.id);">查看</a>
-                                                <a class="btn btn-default" title="删除" @click="del(item.id);">删除</a>
-                                            </td>
-                                        </tr>
-                                    </template>
-                                    <tr class="main_info" v-else>
-                                        <td colspan="3">没有相关数据</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <div class="pull-left form form-inline">
-                                    <div class="form-group form-group-sm">
-                                        共 {{list.total}} 条数据,每页显示
-                                        <select @change="getData(1)" v-model="list.pageSize" class="form-control">
-                                            <option value="10">10</option>
-                                            <option value="20">20</option>
-                                            <option value="30">30</option>
-                                            <option value="40">40</option>
-                                            <option value="50">50</option>
-                                        </select> 条
+
+                                <!-- 列表 -->
+                                <div class="ibox-content">
+                                    <table id="simple-table" class="table table-responsive table-bordered table-hover">
+                                        <thead style="background: rgb(255,255,255)">
+                                            <tr>
+                                                <th width="15%">姓名</th>
+                                                <th width="15%">手机号</th>
+                                                <th width="15%">邮箱</th>
+                                                <th width="40%">备注</th>
+                                                <th width="15%">操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template v-if="list.total != 0">
+                                                <tr v-for="item in list.list">
+                                                    <!--<td>{{item.name}}</td>-->
+                                                    <td>z这是一个负责人</td>
+                                                    <td>13812345678</td>
+                                                    <td>test@163.com</td>
+                                                    <td>假装自己是描述</td>
+                                                    <td class="btn-hide">
+                                                        <a class="btn btn-success" title="编辑"
+                                                            @click="edit(item.id);">查看</a>
+                                                        <a class="btn btn-default" title="删除"
+                                                            @click="del(item.id);">删除</a>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                            <tr class="main_info" v-else>
+                                                <td colspan="3">没有相关数据</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="pull-left form form-inline">
+                                        <div class="form-group form-group-sm">
+                                            共 {{list.total}} 条数据,每页显示
+                                            <select @change="getData(1)" v-model="list.pageSize" class="form-control">
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="40">40</option>
+                                                <option value="50">50</option>
+                                            </select> 条
+                                        </div>
                                     </div>
+                                    <div class="pagi pull-right"></div>
                                 </div>
-                                <div class="pagi pull-right"></div>
                             </div>
                         </div>
+
+                        <!--负责人信息-->
+                        <div id="tab-4" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body explanation">
+                                                <h3>说明：</h3>
+                                                <p>1、供货价即商家从我方平台购买商品的价格。</p>
+                                                <p>2、佣金比例即商家与我方签订的商品的总佣金比例。</p>
+                                                <p>3、预估收益即通过商家渠道售卖商品后，商家能得到的预计总收益，具体以实际为准。</p>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- 列表 -->
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <!-- wan -->
+                        </div>
                     </div>
-
-
-                    <!-- wan -->
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<!-- 全局js -->
-<!-- 全局js -->
-<!-- <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script> -->
-<script src="../js/jquery-2.1.1.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-<script src="../js/plugins/layer/layer.min.js"></script>
-<script src="../js/jquery.navScroll.js"></script>
-<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
-<script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
-<script src="../js/custom/common.js"></script>
-<script src="../js/plugins/layui/layui.js"></script>
-<script src="../js/plugins/utf8-jsp/third-party/zeroclipboard/ZeroClipboard.js"></script>
-<script src="../js/plugins/utf8-jsp/ueditor.config.js"></script>
-<script src="../js/plugins/utf8-jsp/uemy.js"></script>
-<script src="../js/plugins/utf8-jsp/lang/zh-cn/zh-cn.js"></script>
-<script src="../js/vue.js"></script>
-<script src="../js/module/module_pagination.js"></script>
-<script src="../js/tagsinput.js"></script>
+        <!-- 全局js -->
+        <!-- 全局js -->
+        <!-- <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script> -->
+        <script src="../js/jquery-2.1.1.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script src="../js/plugins/layer/layer.min.js"></script>
+        <script src="../js/jquery.navScroll.js"></script>
+        <script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+        <script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
+        <script src="../js/custom/common.js"></script>
+        <script src="../js/plugins/layui/layui.js"></script>
+        <script src="../js/plugins/utf8-jsp/third-party/zeroclipboard/ZeroClipboard.js"></script>
+        <script src="../js/plugins/utf8-jsp/ueditor.config.js"></script>
+        <script src="../js/plugins/utf8-jsp/uemy.js"></script>
+        <script src="../js/plugins/utf8-jsp/lang/zh-cn/zh-cn.js"></script>
+        <script src="../js/vue.js"></script>
+        <script src="../js/module/module_pagination.js"></script>
+        <script src="../js/tagsinput.js"></script>
 
-<!-- 自定义js -->
-<script src="../js/content.min.js?v=1.0.0"></script>
-<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
-<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
-<script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
-<script src="../js/custom/element-ui/index.js"></script>
+        <!-- 自定义js -->
+        <script src="../js/content.min.js?v=1.0.0"></script>
+        <script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+        <script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+        <script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
+        <script src="../js/custom/element-ui/index.js"></script>
 
-<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
-<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
-<script src="../js/qiniuyun/qiniuImg1.js"></script>
-<script src="../js/custom/brands/add.js"></script>
+        <!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+        <script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+        <script src="../js/qiniuyun/qiniuImg1.js"></script>
+        <script src="../js/custom/brands/add.js"></script>
 
+        <!-- 标签输入控件 -->
+        <script>
+            var drool = '';
 
-<script src="../js/T_upload.js"></script>
+            function getinput() {
+                drool = $('#tagsinputval').val()
+                alert(drool);
+                return drool
 
-<script>
-    var drool='';
-    function getinput(){
-        drool = $('#tagsinputval').val()
-	    alert(drool);
-        console.log(drool)
+            };
+        </script>
+
         
-    };
-
-    // test图片上传
-    $(function() {
-//			var md = "product";
-//			var pid = "asdasdasdasdasd";
-			$.Tupload.init({
-//				url: "product/uploadImage2?md=" + md + "&pid=" + pid,
-						title	  : "宝贝图片大小不能超过500kb,为使避免图片上传出现问题，请尽量选择完毕图片后再上传",
-				fileNum: 5, // 上传文件数量
-				divId: "T_upload", // div  id
-				accept: "image/jpeg,image/x-png", // 上传文件的类型
-				//fileSize  :51200000,     // 上传文件的大小
-				onSuccess: function(data, i) {
-						/*var temp =eval('(' + data.currentTarget.response + ')')
-	    	if(temp.fileName != undefined){
-	    		$("#img_src"+i).attr('value',temp.fileName);
-	    		$("#img_src"+i).attr('name',"upload_img");
-	    	}*/
-				},
-				onDelete: function(i) {
-					/*var img_val = $("#img_src"+i).attr("value");
-					if(img_val != '' && img_val != undefined){
-						var md = "product";
-						var img= $.page.getImgUrl(img_val);
-						$.ajax({
-							type:"POST",
-							url: "base/delPic" ,
-							data : {img:img,id: pid,md:md},
-							success: function(rel){}
-						});
-					}*/
-				}
-			});
-		})
-
-</script>
 </body>
+
 </html>

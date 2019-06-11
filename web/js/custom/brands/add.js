@@ -3,6 +3,9 @@ var config = {
     api_list: api_url+'/brand/dataList', //获取品牌列表
     api_edit: api_url+'/brand/saveOrupdate', //修改品牌
     api_del: api_url+'/brand/saveOrupdate', //删除品牌
+
+    // api_user:api_url+'/user/userList'        接口暂无
+    
 }
 window.app = new Vue({
     el: '#app',
@@ -20,6 +23,7 @@ window.app = new Vue({
         imgPath: '',
         colorPicType: '', //去捏颜色模所属状态
         image: '',
+        userlist:[],    //负责人列表
     },
     created: function() {
         var that = this;
@@ -28,6 +32,8 @@ window.app = new Vue({
     mounted: function() {
         const that = this;
         that.getData();
+        // that.getUser();      没有接口，暂时不请求
+        console.log(that.userlist);
 
         this.editor = UE.getEditor('container', {
             initialFrameHeight: 350,
@@ -90,6 +96,8 @@ window.app = new Vue({
                 }
             });
         },
+
+
         // 新建负责人
         jumpToHeader(){
             var index = layer
@@ -115,7 +123,7 @@ window.app = new Vue({
                 type : 2,
                 title : '编辑品牌',
                 content: 'edit.html?id='+id,
-                area : [ '80%', '80%' ]
+                area : [ '100%', '100%' ]
             });
         },
         // 搜索
@@ -159,10 +167,7 @@ window.app = new Vue({
 
         //dy为测试Vue是否绑定的方法，提交代码时请删除或者注释
         dy(){
-            const that=this;
-            console.log(that.list);
-            // alert(that.tag)
-            alert($('#tagsinputval').val());
+            console.log("粗发了")
         }
     }
 })
