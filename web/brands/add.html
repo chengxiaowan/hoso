@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/htz.css" />
 
-    <link rel="stylesheet" href="../css/upload.css">
+    <link rel="stylesheet" href="../css/h5upload.css">
     <link rel="stylesheet" href="../css/custom/brands/add.css">
 </head>
 <style>
@@ -297,10 +297,9 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label>名称：<div class="tips fr"><em>1</em>/<em>30</em></div></label>
+                                            <label>名称：<div class="tips fr"><em id="count3">0</em>/<em>30</em></div></label>
                                             <div class="form-group">
-                                                <input type="name" placeholder="请输入品牌名称，1~30字" class="form-control"
-                                                    v-model="name" @keyup.enter="dy">
+                                                <input id="boboname" type="text" placeholder="请输入品牌名称，1~30字" class="form-control" v-model="name" maxlength="30">
                                                 <em class="dot"></em>
                                             </div>
                                         </div>
@@ -326,9 +325,8 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label>简介：<div class="tips fr"><em>1</em>/<em>1000</em></div></label>
-                                            <textarea type="content" placeholder="请输入简介" class="form-control"
-                                                v-model="editorInfo"></textarea>
+                                            <label>简介：<div class="tips fr"><em id=count4>0</em>/<em>1000</em></div></label>
+                                            <textarea type="content" placeholder="请输入简介" class="form-control"v-model="editorInfo" maxlength="1000" id="info"></textarea>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
@@ -336,24 +334,21 @@
                                             <label>标签：<div class="tips fr">建议每个标签2-5字</div></label>
                                             <input id="tagsinputval" class="tagsinput" data-role="tagsinput"
                                                 placeholder="输入后回车" v-model="tag">
-                                            <button class="btn" onClick="getinput()">获取输入的值</button>
+                                            <button class="btn" id="getVal">获取输入的值</button>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- 图片上传 -->
-                                <div class="row">
+                                <div class="row" style="margin-bottom: 40px">
                                     <div class="col-sm-12">
                                         <h3>图片</h3>
-                                        <p>
+                                        <p style="margin-top: 10px">
                                             请上传png,jpg,jpeg等规范格式的图片，大小不能超过10MB
                                             。如发现图片无法删除的情况，请先清除浏览器缓存或者换个浏览器再操作。如发现图片中带有色情、政治等内容，我方将予以删除品牌操作，最终解释权由寒舍信息科技（常州）有限公司所有。
                                         </p>
                                         <div>
-                                            <br>
-                                            <br>
-                                            <br>
-                                            <br>
+                                           <div id="inputfiles"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -630,20 +625,9 @@
         <!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
         <script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
         <script src="../js/qiniuyun/qiniuImg1.js"></script>
+
+        <script src="../js/jquery.h5upload.js"></script>
         <script src="../js/custom/brands/add.js"></script>
-
-        <!-- 标签输入控件 -->
-        <script>
-            var drool = '';
-
-            function getinput() {
-                drool = $('#tagsinputval').val()
-                alert(drool);
-                return drool
-
-            };
-        </script>
-
         
 </body>
 

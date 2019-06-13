@@ -1,8 +1,8 @@
 var config = {
     role: localStorage.userRole,
-    api_list: api_url+'/brand/dataList', //获取品牌列表
-    api_edit: api_url+'/brand/saveOrupdate', //修改品牌
-    api_del: api_url+'/brand/saveOrupdate', //删除品牌
+    api_list: api_url+'/shopsBrand/shopsBrandList', //获取品牌列表
+    api_edit: api_url+'/shopsBrand/edit', //修改品牌
+    api_del: api_url+'/shopsBrand/del', //删除品牌
 }
 window.app = new Vue({
     el: '#app',
@@ -115,8 +115,7 @@ window.app = new Vue({
                 title: "提示"
             }, () => {
                 $.get(config.api_del, {
-                    id: id,
-                    delFlag:'1'
+                    shopsBrandId: id,
                 }, function(data) { // 回调函数
                     if(data.error == '00') {
                         layer.close(dialog)
@@ -131,3 +130,5 @@ window.app = new Vue({
     }
 })
 
+
+//end 2019年6月12日17:45:30
