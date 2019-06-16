@@ -1,10 +1,15 @@
 var config = {
     role: localStorage.userRole,
-    api_list: api_url + '/brand/dataList', //获取品牌列表
+    api_list: api_url + '/brand/dataList', //获取品牌列表 此页面用不到记得删除
+    api_save: api_url + '/shopsBrand/add',
     api_edit: api_url + '/brand/saveOrupdate', //修改品牌
-    api_del: api_url + '/brand/saveOrupdate', //删除品牌
+    api_del: api_url + '/shopsBrand/del', //删除品牌
 
-    // api_user:api_url+'/user/userList'        接口暂无
+
+    api_user: api_url + '/user/userList3', //获取负责人列表
+    api_token: api_url + '/qiniu/getUpToken' //获取七牛的token
+
+
 
 }
 window.app = new Vue({
@@ -14,16 +19,26 @@ window.app = new Vue({
         role: config.role,
         list: [], // 列表
         keywords: '', // 搜索关键
-        name: '', // 品牌名称
-        postData: {},
-        editor: null,
-        editorInfo: '', //品牌描述
-        tag: "", //标签
-        tagInfo: "", //默认标签
-        imgPath: '',
         colorPicType: '', //去捏颜色模所属状态
-        image: '',
         userlist: [], //负责人列表
+        newuserlist: [], //新建负责人列表
+
+        //新增品牌表单信息
+        bandname: '', //品牌名称
+        userId: '', //负责人id
+        labels: '11,22,33', //标签
+        summary: '',
+        description: '', //图文描述
+        logoPath: '', //logo地址
+        imagePath: '', //封面地址
+        shopsBrandPicList: {}, //店铺图片列表
+
+        tokenMessage: "",
+        shopsBrandId: '',
+
+
+
+
     },
     created: function () {
         var that = this;
@@ -31,9 +46,9 @@ window.app = new Vue({
     },
     mounted: function () {
         const that = this;
-        that.getData();
-        // that.getUser();      没有接口，暂时不请求
-        // console.log(that.userlist);
+        that.getData(); //获取列表
+        that.getUserlist(); //获取所有负责人
+        that.getToken() //获取七牛云的token
 
         this.editor = UE.getEditor('container', {
             initialFrameHeight: 350,
@@ -97,6 +112,20 @@ window.app = new Vue({
             });
         },
 
+        //品牌基本信息的下拉框负责人列表
+        getUserlist() {
+            var that = this
+            $.ajax({
+                url: config.api_user,
+                async: true,
+                type: 'post',
+                success: res => {
+                    that.newuserlist = res.result;
+                    // console.log(that.newuserlist)
+                }
+            })
+        },
+
 
         // 新建负责人
         jumpToHeader() {
@@ -157,37 +186,122 @@ window.app = new Vue({
         tab: function (index_chosen) {
             const that = this;
             that.index = index_chosen;
+            if (that.shopsBrandId == "") {
+                layer.msg('请先添加商品基本信息', {
+                    time: 1000
+                });
+            }
+
         },
 
         //保存数据
         save() {
+            //整理数据
+            var shopsBrandPicList = [];
             const that = this;
+            that.clearDate($("#info1"), shopsBrandPicList)
+            that.clearDate($("#info2"), shopsBrandPicList)
+            that.clearDate($("#info3"), shopsBrandPicList)
+            that.clearDate($("#info4"), shopsBrandPicList)
+            that.clearDate($("#info5"), shopsBrandPicList)
+            that.clearDate($("#info6"), shopsBrandPicList)
+            console.log(shopsBrandPicList)
+            // console.log(container)
+
+            //提交到服务器
+            // const that = this;
+            // $.ajax({
+            //     url:api.api_save,
+            //     async:true,
+            //     type:'post',
+            //     data:{
+            //         brandName:that.brandname,
+            //         userId:that.userId,
+            //         labels:$('#tagsinputval').val(),        //因为tag内容Vue无法读取，所以使用JQ抓取
+            //         summary:that.summary,
+            //         description:'',
+            //         logoPath:tyat.logoPath,
+            //         imagePath:that.logoPath,
+            //         shopsBrandPicList:[]
+
+
+            //     }
+            // })
+
 
         },
 
         //dy为测试Vue是否绑定的方法，提交代码时请删除或者注释
         dy() {
-            console.log("粗发了")
+            var that = this
+            console.log(that.labels)
+        },
+
+        //获取token并传给七牛云SDK
+        getToken() {
+            $.ajax({
+                url: config.api_token,
+                async: true,
+                data: {},
+                taye: "post",
+                success: res => {
+                    this.tokenMessage = res;
+                    uploaderReady(res)
+                    uploaderReady2(res)
+                    uploaderReady3(res)
+                    uploaderReady4(res)
+                    uploaderReady5(res)
+                    uploaderReady6(res)
+                    uploaderReady7(res)
+                    uploaderReady8(res)
+                }
+            })
+        },
+
+        //本地时间获取
+        gettime() {
+            var d = new Date();
+            var year = d.getFullYear();
+            var month = change(d.getMonth() + 1);
+            var day = change(d.getDate());
+            var hour = change(d.getHours());
+            var minute = change(d.getMinutes());
+            var second = change(d.getSeconds());
+
+            function change(t) {
+                if (t < 10) {
+                    return "0" + t;
+                } else {
+                    return t;
+                }
+            }
+            var time = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
+            return time;
+
+        },
+
+        //数据整理
+        clearDate(img, data) {
+            //img为JQ的元素，data为存放数据的大数组
+            if (img.attr("isUp")) {
+                var drool = {
+                    fileSize: '',
+                    realPath: '',
+                    originalFilename: img.attr("isUp"),
+                    url: img.attr("src"),
+                    uploadTime: this.gettime(),
+                }
+                data.push(drool)
+                console.log(drool)
+            }
+
         }
     }
 })
 
-var drool = document.getElementById("getVal");
 
-drool.onclick = function getinput() {
- 
-    console.log($('#tagsinputval').val())
-
-};
-
+//简介文字计数
 var info = document.getElementById("info")
-// console.log(name)
-// console.log(info)
-info.onkeyup = function(){
+info.onkeyup = function () {
     document.getElementById('count4').innerHTML = info.value.length
 }
-
-// console.log($('#boboname').val())
-
-$("#inputfiles").h5upload();
-
