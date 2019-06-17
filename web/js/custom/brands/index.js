@@ -97,8 +97,8 @@ window.app = new Vue({
             var index = layer.open({
                 type : 2,
                 title : '编辑品牌',
-                content: 'edit.html?id='+id,
-                area : [ '80%', '80%' ]
+                content: 'add1.html?id='+id,
+                area : [ '100%', '100%' ]
             });
         },
         // 搜索

@@ -1,9 +1,11 @@
+var shopsBrandId = parameter().id;
+console.log(shopsBrandId)
+
 var config = {
     role: localStorage.userRole,
-    api_list: api_url + '/brand/dataList', //获取品牌列表 此页面用不到记得删除
-    api_save: api_url + '/shopsBrand/add',
-    api_edit: api_url + '/brand/saveOrupdate', //修改品牌
-    api_del: api_url + '/shopsBrand/del', //删除品牌
+    api_save: api_url + '/shopsBrand/add',       //添加品牌
+    api_edit: api_url + '/brand/saveOrupdate',  //修改品牌
+    api_getinfo:api_url + '/shopsBrand/editInfo',//获取当前品牌信息
 
 
     api_user: api_url + '/user/userList3', //获取负责人列表
@@ -17,13 +19,13 @@ window.app = new Vue({
     data: {
         index: 1,
         role: config.role,
-        list: [], // 品牌信息
+        list: [], // 品牌信息详情储存在这里
         keywords: '', // 搜索关键
         colorPicType: '', //去捏颜色模所属状态
         userlist: [], //负责人列表
         newuserlist: [], //新建负责人列表
 
-        //修改品牌表单信息
+        //新增品牌表单信息
         bandname: '', //品牌名称
         userId: '', //负责人id
         labels: '', //标签
@@ -46,7 +48,7 @@ window.app = new Vue({
     },
     mounted: function () {
         const that = this;
-        // that.getData(); //获取列表
+        that.getinfo(); //获取详情
         that.getUserlist(); //获取所有负责人
         that.getToken() //获取七牛云的token
 
@@ -70,8 +72,7 @@ window.app = new Vue({
             if (s == "close") layer.close(this.loadingSwitch)
             else this.loadingSwitch = layer.load(3);
         },
-       
-        //getdata删除，此界面不需要获取任何服务器信息
+        
         //品牌基本信息的下拉框负责人列表
         getUserlist() {
             var that = this
@@ -80,8 +81,30 @@ window.app = new Vue({
                 async: true,
                 type: 'post',
                 success: res => {
-                    that.newuserlist = res.result;
-                    // console.log(that.newuserlist)
+                    if(res.error == "00"){
+                        that.newuserlist = res.result;
+                    }else{
+                        layer.msg(res.msg)
+                    }
+                }
+            })
+        },
+        //获取信息
+        getinfo(){
+            var that = this;
+            $.ajax({
+                url:config.api_getinfo,
+                type:"post",
+                async:true,
+                data:{
+                    shopsBrandId:shopsBrandId
+                },
+                success:res=>{
+                    if(res.error =="00"){
+                        that.list = res.result;
+                    }else{
+                        layer.msg(res.msg)
+                    }
                 }
             })
         },
@@ -97,20 +120,16 @@ window.app = new Vue({
                     area: ['80%', '80%']
                 });
         },
-        
-        // 切换tab
-        tab: function (index_chosen) {
+       
+        // 搜索
+        search() {
             const that = this;
-            that.index = index_chosen;
-            if (that.shopsBrandId == "") {
-                layer.msg('请先添加商品基本信息', {
-                    time: 1000
-                });
-            }
-
+            var page = 1;
+            var keywords = that.keywords;
+            // that.getData(page, keywords);    先注释，后边商品列表会用
         },
-
-        //保存数据
+        
+        //保存数据  需要修改
         save() {
             //整理数据
             var arr = [];
@@ -154,15 +173,9 @@ window.app = new Vue({
                     },
                     success: res => {
                         console.log(res);
-                        layer.msg("保存成功，三秒后关闭窗口",{
+                        layer.msg("保存成功",{
                             time:3000
                         })
-
-                        setTimeout(function () {
-                            //关闭当前弹窗
-                            var index = parent.layer.getFrameIndex(window.name);
-                            // parent.layer.close(index)
-                        }, 3000)
                     }
                 })
             }
@@ -229,6 +242,7 @@ window.app = new Vue({
             }
 
         },
+        //dy测试Vue双向绑定是否正常
         dy(){
             console.log("labels")
             console.log($('#tagsinputval').val())
