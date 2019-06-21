@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>商品详情</title>
+    <link rel="stylesheet" href="../css/public.css">
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/custom/brands/edit.css">
+</head>
+<body class="gray-bg">
+    <div id="app">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="warning">
+                        <h3>审核失败</h3>
+                        <p>经我方审查，您的店铺信息里带有违法信息，请将这些信息修改后再次提交审核！</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

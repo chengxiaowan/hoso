@@ -1,4 +1,3 @@
-
 var config = {
     role: localStorage.userRole,
     api_save: api_url+'/shopsBrand/addShopsBrandUser', //新建店铺品牌负责人

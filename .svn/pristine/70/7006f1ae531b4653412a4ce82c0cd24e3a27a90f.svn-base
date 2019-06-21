@@ -295,16 +295,16 @@
             <div class="col-sm-12">
                 <div class="tabs-container">
                     <ul class="nav nav-tabs">
-                        <li class="active" @click="activateTab(1)">
+                        <li class="active">
                             <a data-toggle="tab" href="#tab-1" aria-expanded="true"> 基本信息</a>
                         </li>
-                        <li class="" @click="activateTab(2)">
-                            <a data-toggle="tab" href="#tab-2" aria-expanded="false" >负责人信息</a>
+                        <li class="">
+                            <a data-toggle="tab" href="#tab-2" aria-expanded="false">负责人信息</a>
                         </li>
-                        <li @click="activateTab(3)">
+                        <li>
                             <a data-toggle="tab"  href="#tab-3" aria-expanded="false">商品信息</a>
                         </li>
-                        <li @click="activateTab(4)">
+                        <li>
                             <a data-toggle="tab"  href="#tab-4" aria-expanded="false">服务</a>
                         </li>
                     </ul>
@@ -567,7 +567,7 @@
                                                 <i class="icon icon_search"></i> 搜索
                                             </button>
                                             <button type="reset" class="btn btn-htz btn-success"
-                                                @click="addheader()">
+                                                @click="jumpToHeader()">
                                                 <i id="nav-search-icon" class="icon icon_plus"></i> 添加
                                             </button>
                                         </div>
@@ -582,26 +582,23 @@
                                                 <th width="15%">姓名</th>
                                                 <th width="15%">手机号</th>
                                                 <th width="15%">邮箱</th>
-                                                <th width="30%">备注</th>
-                                                <th widyh="10%">状态</th>
+                                                <th width="40%">备注</th>
                                                 <th width="15%">操作</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <template v-if="list.total != 0">
-                                                <tr v-for="item in list.list" :key="item.userId">
+                                                <tr v-for="item in list.list">
                                                     <!--<td>{{item.name}}</td>-->
-                                                    <td>{{item.realName}}</td>
-                                                    <td>{{item.mobilePhone}}</td>
-                                                    <td>{{item.email}}</td>
-                                                    <td>{{item.remark}}</td>
-                                                    <td v-if="item.isQuit==0">在职</td>
-                                                    <td v-if="item.isQuit==1">离职</td>
+                                                    <td>z这是一个负责人</td>
+                                                    <td>13812345678</td>
+                                                    <td>test@163.com</td>
+                                                    <td>假装自己是描述</td>
                                                     <td class="btn-hide">
                                                         <a class="btn btn-success" title="编辑"
-                                                            @click="userInfo(item.shopsBrandShopsOwnerId);">查看</a>
+                                                            @click="edit(item.id);">查看</a>
                                                         <a class="btn btn-default" title="删除"
-                                                            @click="delUser(item.userId);">离职</a>
+                                                            @click="del(item.id);">删除</a>
                                                     </td>
                                                 </tr>
                                             </template>
@@ -613,7 +610,7 @@
                                     <div class="pull-left form form-inline">
                                         <div class="form-group form-group-sm">
                                             共 {{list.total}} 条数据,每页显示
-                                            <select @change="getbranduser(1)" v-model="list.pageSize" class="form-control">
+                                            <select @change="getData(1)" v-model="list.pageSize" class="form-control">
                                                 <option value="10">10</option>
                                                 <option value="20">20</option>
                                                 <option value="30">30</option>

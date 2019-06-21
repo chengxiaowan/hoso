@@ -1,7 +1,9 @@
-
+var shopsBrandId = parameter().id;
+console.log(shopsBrandId)
+console.log("这是header1")
 var config = {
     role: localStorage.userRole,
-    api_save: api_url+'/shopsBrand/addShopsBrandUser', //新建店铺品牌负责人
+    api_save: api_url+'/shopsBrand/addShopsBrandShopsOwner', //新建店铺品牌负责人
 }
 window.app = new Vue({
     el:"#app",
@@ -23,6 +25,7 @@ window.app = new Vue({
                 type:"post",
                 async:true,
                 data:{
+                    shopsBrandId:shopsBrandId,
                     name:that.name,
                     userName:that.username,
                     mobilePhone:that.phone,
@@ -33,6 +36,7 @@ window.app = new Vue({
                     roleId:that.roleId
                 },
                 success:function(res){
+                    console.log(res)
                     console.log(res.msg)
                     var closePage = parent.layer.getFrameIndex(window.name)
                     parent.layer.close(closePage)

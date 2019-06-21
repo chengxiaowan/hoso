@@ -9,9 +9,7 @@ var config = {
 
 
     api_user: api_url + '/user/userList3', //获取负责人列表
-    api_token: api_url + '/qiniu/getUpToken', //获取七牛的token
-    api_userlist: api_url + '/shopsBrand/shopsBrandShopsOwnerList', //获取门店品牌负责人
-    api_delUser: api_url + '/user/changeIsQuit' //离职门店品牌负责人
+    api_token: api_url + '/qiniu/getUpToken' //获取七牛的token
 
 
 
@@ -21,7 +19,7 @@ window.app = new Vue({
     data: {
         index: 1,
         role: config.role,
-        list: [],
+        list: [], // 品牌信息详情储存在这里
         keywords: '', // 搜索关键
         colorPicType: '', //去捏颜色模所属状态
         userlist: [], //负责人列表
@@ -39,7 +37,6 @@ window.app = new Vue({
 
         tokenMessage: "",
         shopsBrandId: '',
-        keywords: ""
 
 
 
@@ -76,28 +73,6 @@ window.app = new Vue({
             else this.loadingSwitch = layer.load(3);
         },
 
-        // 切换tab
-        activateTab: function (index_chosen) {
-            const that = this;
-            that.index = index_chosen;
-            if (this.index == 1) {
-                console.log("ok")
-
-            } else if (this.index == 2) {
-                // that.getColorList();
-                that.getbranduser(); //获取门店品牌负责人信息
-                console.log("2")
-            } else if (this.index == 3) {
-                // that.getModelList();
-                console.log("3")
-
-            } else if (this.index == 4) {
-                // that.getSkuList();
-                console.log("4")
-
-            }
-        },
-
         //品牌基本信息的下拉框负责人列表
         getUserlist() {
             var that = this
@@ -127,66 +102,20 @@ window.app = new Vue({
                 success: res => {
                     if (res.error == "00") {
                         console.log(res)
-                        that.bandname = res.result.brandName //品牌名称
-                        that.userId = res.result.userId //负责人id
-                        that.labels = res.result.labels //标签
+                        that.bandname = res.result.brandName  //品牌名称
+                        that.userId =  res.result.userId//负责人id
+                        that.labels = res.result.labels//标签
                         that.summary = res.result.summary
-                        that.description = res.result.description; //图文描述
+                        that.description = res.result.description;//图文描述
                         that.logoPath = res.result.logoPath
                         that.imagePath = res.result.imagePath
-
+                       
 
                     } else {
                         layer.msg(res.msg)
                     }
                 }
             })
-        },
-
-        //获取品牌门店负责人列表
-        getbranduser(page, keywords) {
-            var that = this
-            $('body,html').scrollTop(0)
-            if (page) this.list.pageNum = page
-            var that = this;
-            that.loading();
-            $.ajax({
-                url: config.api_userlist,
-                async: true,
-                type: 'post',
-                data: {
-                    shopsBrandId: shopsBrandId,
-                    keywords: that.keywords,
-                    pageSize: that.list.pageSize || 10,
-                    pageNo: that.list.pageNum || 1,
-                },
-                success: function (res) {
-                    that.loading('close')
-                    // console.log(res)
-                    if (res.error == "00") {
-                        that.list = res.result;
-                        //分页
-                        if (that.pagi) {
-                            $('.pagi').pagination('updatePages', that.list.pages)
-                            if (page == 1) $('.pagi').pagination('goToPage', that.list.pageNum)
-                        } else {
-                            that.pagi = $('.pagi').pagination({
-                                pages: that.list.pages, //总页数
-                                showCtrl: true,
-                                displayPage: 6,
-                                currentPage: that.list.pageNum,
-                                onSelect: function (num) {
-                                    that.list.pageNum = num
-                                    that.getbranduser()
-                                    yo.scrollTo('body')
-                                }
-                            })
-                        }
-                    } else {
-                        layer.msg(res.msg)
-                    }
-                }
-            });
         },
 
 
@@ -202,17 +131,13 @@ window.app = new Vue({
         },
 
         //新建品牌负责人
-        addheader() {
-            var that = this
+        addheader(){
             var index = layer
                 .open({
                     type: 2,
                     title: '新建负责人',
-                    content: 'headers1.html?id=' + shopsBrandId,
-                    area: ['80%', '80%'],
-                    end: function () {
-                        that.getbranduser();
-                    }
+                    content: 'headers.html' + ,
+                    area: ['80%', '80%']
                 });
         },
 
@@ -222,7 +147,7 @@ window.app = new Vue({
             const that = this;
             var page = 1;
             var keywords = that.keywords;
-            that.getbranduser(page, keywords);
+            // that.getData(page, keywords);    先注释，后边商品列表会用
         },
 
         //保存数据  需要修改
@@ -259,13 +184,13 @@ window.app = new Vue({
                     type: 'post',
                     data: {
                         brandName: document.getElementById("boboname").value, //品牌名称
-                        userId: that.userId, //负责人
-                        labels: document.getElementById("tagsinputval").value, //标签信息
-                        summary: that.summary, //描述
-                        description: that.editor.getContent(), //富文本
-                        logoPath: $('#vivew').attr('src'), //logo地址
-                        imagePath: $('#vivew1').attr('src'), //封面
-                        shopsBrandPicList: JSON.stringify(arr) //图片列表
+                        userId: that.userId,    //负责人
+                        labels: document.getElementById("tagsinputval").value,  //标签信息
+                        summary: that.summary,      //描述
+                        description: that.editor.getContent(),      //富文本
+                        logoPath: $('#vivew').attr('src'),          //logo地址
+                        imagePath: $('#vivew1').attr('src'),        //封面
+                        shopsBrandPicList: JSON.stringify(arr)      //图片列表
                     },
                     success: res => {
                         console.log(res);
@@ -341,43 +266,12 @@ window.app = new Vue({
         //dy测试Vue双向绑定是否正常
         dy() {
             console.log("labels")
-            console.log(this.labels)
-            console.log(document.getElementById("tagsinputval").value, )
+            console.log(this.imagePath)
         },
 
         //删除图片
-        delImg() {
+        delImg(){
 
-        },
-
-        //门店品牌负责人离职
-        delUser(id) {
-            $.ajax({
-                url: config.api_delUser,
-                data: {
-                    userId: id
-                },
-                success: res => {
-                    layer.msg(res.msg)
-                    this.getbranduser();
-
-                }
-            })
-        },
-
-        //查看门店品牌负责人详情
-        userInfo(id) {
-            var that = this
-            var index = layer
-                .open({
-                    type: 2,
-                    title: '新建负责人',
-                    content: 'headers2.html?id=' + id,
-                    area: ['80%', '80%'],
-                    end: function () {
-                        that.getbranduser();
-                    }
-                });
         }
     }
 })
