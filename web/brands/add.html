@@ -274,19 +274,29 @@
 
     #bobodrool{
         padding-top:20px;
-        display: flex;
+        /* display: flex; */
         justify-content: space-around;
     }
 
     #updataImage{
-        width: 100px;
-        height: 100px;
+        width: 140px;
+        height: 140px;
     }
 
     .imginfo{
-        width: 100px;
-        height: 100px;
+        width: 140px;
+        height: 140px;
     }
+
+    .imageup{
+        display: inline-block;
+        margin: 0 20px;
+        cursor: pointer;
+        position: relative;
+
+    }
+
+
     
 </style>
 
@@ -327,7 +337,7 @@
                                             <label>负责人：</label>
                                             <div class="form-select col-sm-10">
                                                 <select class="form-control" v-model="userId">
-                                                    <option selected="selected">请选择品牌负责人</option>
+                                                    <option selected="selected" value="">请选择品牌负责人</option>
                                                     <option v-for="item in newuserlist" :value="item.userId" :key="item.userId">{{item.realName}}</option>
                                                 </select>
                                                 <em class="dot"></em>
@@ -363,16 +373,18 @@
                                         </p>
                                         <div id="bobodrool">
                                             <!-- logo -->
-                                            <div id="updataImage">
-                                                <img id="vivew" src="../images/imgadd_logo.jpg" class="imginfo">
+                                            <div id="updataImage" class="imageup">
+                                                    <p style="width: 100%;height: 18px;text-align: center;position: absolute;top:0;left:0;background-color: rgba(0, 0, 0, 0.8);color:#fff"><i class="text-danger">*</i>LOGO</p>
+                                                <img id="vivew" src="../images/imgadd.png" class="imginfo">
                                             </div>
 
                                             <!-- 封面 -->
-                                            <div id="updataImage1">
-                                                <img id="vivew1" src="../images/imgadd_head.jpg" class="imginfo">
+                                            <div id="updataImage1" class="imageup">
+                                                    <p style="width: 100%;height: 18px;text-align: center;position: absolute;top:0;left:0;background-color: rgba(0, 0, 0, 0.8);color:#fff"><i class="text-danger">*</i>LOGO</p>
+                                                <img id="vivew1" src="../images/imgadd.png" class="imginfo">
                                             </div>
 
-                                            <!-- 商品描述图片-->
+                                            <!-- 商品描述图片  展示不需要
                                             <div id="updataInfo1">
                                                 <img id="info1" src="../images/imgadd.png" class="imginfo">
                                             </div>
@@ -395,7 +407,7 @@
 
                                             <div id="updataInfo6">
                                                 <img id="info6" src="../images/imgadd.png" class="imginfo">
-                                            </div>
+                                            </div> -->
 
 
 
@@ -429,6 +441,14 @@
                             <div class="panel-body">
                                 <div class="row">
                                     <div class="col-sm-12">
+                                            <div class="panel panel-default test">
+                                                    <div class="panel-body explanation">
+                                                        <h3>说明：</h3>
+                                                        <p>1、佣金比例即商家与我方签订的商品总的佣金比例。</p>
+                                                        <p>2、预估收益即通过商家渠道售卖商品后，商家能得到的预计总收益，具体以实际为准。</p>
+                                                        <p>3、二维码可生成带有酒店/民宿品牌信息的小程序码，微信扫码可直接进入商品详情界面。</p>
+                                                    </div>
+                                            </div>
                                         <!-- 检索 start -->
                                         <div class="form-inline" role="form" id="customerForm">
                                             <div class="form-group">

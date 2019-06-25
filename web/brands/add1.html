@@ -274,18 +274,26 @@
 
     #bobodrool {
         padding-top: 20px;
-        display: flex;
+        /* display: flex; */
         justify-content: space-around;
     }
 
     #updataImage {
-        width: 100px;
-        height: 100px;
+        width: 140px;
+        height: 140px;
     }
 
     .imginfo {
-        width: 100px;
-        height: 100px;
+        width: 140px;
+        height: 140px;
+    }
+
+    .imageup{
+        display: inline-block;
+        margin: 0 20px;
+        cursor: pointer;
+        position: relative;
+
     }
 </style>
 
@@ -299,13 +307,13 @@
                             <a data-toggle="tab" href="#tab-1" aria-expanded="true"> 基本信息</a>
                         </li>
                         <li class="" @click="activateTab(2)">
-                            <a data-toggle="tab" href="#tab-2" aria-expanded="false" >负责人信息</a>
+                            <a data-toggle="tab" href="#tab-2" aria-expanded="false">负责人信息</a>
                         </li>
                         <li @click="activateTab(3)">
-                            <a data-toggle="tab"  href="#tab-3" aria-expanded="false">商品信息</a>
+                            <a data-toggle="tab" href="#tab-3" aria-expanded="false">商品信息</a>
                         </li>
                         <li @click="activateTab(4)">
-                            <a data-toggle="tab"  href="#tab-4" aria-expanded="false">服务</a>
+                            <a data-toggle="tab" href="#tab-4" aria-expanded="false">服务</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -320,7 +328,7 @@
                                                 <input id="boboname" type="text" placeholder="请输入品牌名称，1~30字"
                                                     name="boboname" class="form-control" maxlength="30"
                                                     v-model="bandname">
-                                                <em class="dot" @click = "dy()"></em>
+                                                <em class="dot" @click="dy()"></em>
                                             </div>
                                         </div>
                                     </div>
@@ -369,16 +377,18 @@
                                         </p>
                                         <div id="bobodrool">
                                             <!-- logo -->
-                                            <div id="updataImage">
+                                            <div id="updataImage" class="imageup">
+                                                <p style="width: 100%;height: 18px;text-align: center;position: absolute;top:0;left:0;background-color: rgba(0, 0, 0, 0.8);color:#fff"><i class="text-danger">*</i>LOGO</p>
                                                 <img id="vivew" class="imginfo" :src="logoPath">
                                             </div>
 
                                             <!-- 封面 -->
-                                            <div id="updataImage1">
+                                            <div id="updataImage1" class="imageup">
+                                                    <p style="width: 100%;height: 18px;text-align: center;position: absolute;top:0;left:0;background-color: rgba(0, 0, 0, 0.8);color:#fff"><i class="text-danger">*</i>封面</p>
                                                 <img id="vivew1" class="imginfo" :src="imagePath">
                                             </div>
 
-                                            <!-- 商品描述图片-->
+                                            <!-- 商品描述图片 展示不需要
                                             <div id="updataInfo1">
                                                 <img id="info1" src="../images/imgadd.png" class="imginfo">
                                             </div>
@@ -401,7 +411,7 @@
 
                                             <div id="updataInfo6">
                                                 <img id="info6" src="../images/imgadd.png" class="imginfo">
-                                            </div>
+                                            </div> -->
 
 
 
@@ -415,7 +425,7 @@
 
 
                                 <!-- 图文描述 start -->
-                                <div class="description">
+                                <div class="description" >
                                     <div class="imgTitle">图文描述:</div>
                                     <script id="container" name="detailDescribe" type="text/plain"
                                         v-model="description">
@@ -436,6 +446,14 @@
                             <div class="panel-body">
                                 <div class="row">
                                     <div class="col-sm-12">
+                                        <div class="panel panel-default test">
+                                            <div class="panel-body explanation">
+                                                <h3>说明：</h3>
+                                                <p>1、佣金比例即商家与我方签订的商品总的佣金比例。</p>
+                                                <p>2、预估收益即通过商家渠道售卖商品后，商家能得到的预计总收益，具体以实际为准。</p>
+                                                <p>3、二维码可生成带有酒店/民宿品牌信息的小程序码，微信扫码可直接进入商品详情界面。</p>
+                                            </div>
+                                        </div>
                                         <!-- 检索 start -->
                                         <div class="form-inline" role="form" id="customerForm">
                                             <div class="form-group">
@@ -444,39 +462,45 @@
                                             </div>
                                             <div class="form-group">
                                                 <em>分类</em>
-                                                <select name="" class="form-control">
+                                                <select name="" class="form-control" v-model="typeId" @change="dy()">
                                                     <option value="">全部</option>
+                                                    <option v-for="item in type.list" :value="item.typeId" :key="item.typeId">{{item.name}}</option>
                                                 </select>
                                             </div>
                                             <div class="form-group form-status">
                                                 <em>审核状态</em>
-                                                <select name="" class="form-control">
+                                                <select name="" class="form-control" style="width: 114px" v-model="check">
                                                     <option value="">全部</option>
+                                                    <option value="0">待审核</option>
+                                                    <option value="1">审核通过</option>
+                                                    <option value="2">审核失败</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group form-status">
+                                            <!-- 暂时不要 -->
+                                            <!-- <div class="form-group form-status">
                                                 <em>状态</em>
                                                 <select name="" class="form-control">
                                                     <option value="">全部</option>
+                                                    <option value="">已上架</option>
+                                                    <option value="">下架</option>
                                                 </select>
-                                            </div>
+                                            </div> -->
                                             <div class="form-group form-price">
                                                 <em>销售价</em>
                                                 <div class="form-group">
                                                     <label class="symbol v-middle">¥</label>
-                                                    <input type="number" class="form-control">
+                                                    <input type="number" class="form-control" v-model="minPrice">
                                                 </div>
                                                 <label>-</label>
                                                 <div class="form-group">
                                                     <label class="symbol v-middle">¥</label>
-                                                    <input type="number" class="form-control">
+                                                    <input type="number" class="form-control" v-model="maxPrice">
                                                 </div>
                                             </div>
-                                            <button type="submit" class="btn btn-htz btn-primary" @click="search()">
+                                            <button type="submit" class="btn btn-htz btn-primary" @click="search2()">
                                                 <i class="icon icon_search"></i> 搜索
                                             </button>
-                                            <button type="reset" class="btn btn-htz btn-success"
-                                                @click="jumpToBrand();">
+                                            <button type="reset" class="btn btn-htz btn-success" @click="addgoods();">
                                                 <i id="nav-search-icon" class="icon icon_plus"></i> 添加
                                             </button>
                                         </div>
@@ -487,35 +511,36 @@
                                         <thead>
                                             <tr>
                                                 <th width="15%">商品名称</th>
-                                                <th width="8%">分类</th>
+                                                <th width="10%">分类</th>
                                                 <th width="10%">品牌</th>
                                                 <th width="12%">图片</th>
-                                                <th width="8%">销售价（元）</th>
-                                                <th width="8%">供货价（元）</th>
-                                                <th width="8%">佣金比例（%）</th>
-                                                <th width="8%">预估收益（元）</th>
+                                                <th width="10%">销售价（元）</th>
+                                                <!-- <th width="8%">供货价（元）</th> -->
+                                                <th width="10%">佣金比例（%）</th>
+                                                <th width="10%">预估收益（元）</th>
                                                 <th width="8%">审核状态</th>
                                                 <th width="20%">操作</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <template v-if="list.total != 0">
-                                                <tr v-for="item in list.list">
-                                                    <td>这是一个商品</td>
-                                                    <td>沙发</td>
-                                                    <td>MRLAZY蓝先生</td>
-                                                    <td><img src="../images/a1.jpg" class="image-box"></td>
-                                                    <td>2000.00</td>
-                                                    <td>2000.00</td>
-                                                    <td>2000.00</td>
-                                                    <td>100.00</td>
-                                                    <td>审核通过</td>
+                                                <tr v-for="item in list.list" :key="item.goodsId">
+                                                    <td>{{item.name}}</td>
+                                                    <td>{{item.typeName}}</td>
+                                                    <td>{{item.brandName}}</td>
+                                                    <td><img :src="item.image" class="image-box"></td>
+                                                    <td>{{item.price}}</td>
+                                                    <td>5</td>
+                                                    <td>{{(item.price * 0.05).toFixed(2)}}</td>
+                                                    <td v-if="item.auditStatus == 0">待审核</td>
+                                                    <td v-if="item.auditStatus == 1">审核通过</td>
+                                                    <td v-if="item.auditStatus == 2">审核失败</td>
                                                     <td class="btn-hide">
                                                         <a class="btn btn-success" title="编辑" href="edit.html">查看</a>
-                                                        <a class="btn btn-success" title="编辑"
-                                                            @click="edit(item.id);">二维码</a>
+                                                        <a class="btn btn-success" title="编辑" @click="edit(item.id);" v-if="item.auditStatus == 1">二维码</a>
                                                         <a class="btn btn-default" title="删除"
-                                                            @click="del(item.id);">删除</a>
+                                                            v-if="item.auditStatus == 0 || 2"
+                                                            @click="delgoods(item.shopsBrandGoodsId);">删除</a>
                                                     </td>
                                                 </tr>
                                             </template>
@@ -527,7 +552,7 @@
                                     <div class="pull-left form form-inline">
                                         <div class="form-group form-group-sm">
                                             共 {{list.total}} 条数据,每页显示
-                                            <select @change="getData(1)" v-model="list.pageSize" class="form-control">
+                                            <select @change="getgoods(1)" v-model="list.pageSize" class="form-control">
                                                 <option value="10">10</option>
                                                 <option value="20">20</option>
                                                 <option value="30">30</option>
@@ -566,8 +591,7 @@
                                             <button type="submit" class="btn btn-htz btn-primary" @click="search()">
                                                 <i class="icon icon_search"></i> 搜索
                                             </button>
-                                            <button type="reset" class="btn btn-htz btn-success"
-                                                @click="addheader()">
+                                            <button type="reset" class="btn btn-htz btn-success" @click="addheader()">
                                                 <i id="nav-search-icon" class="icon icon_plus"></i> 添加
                                             </button>
                                         </div>
@@ -588,32 +612,31 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <template v-if="list.total != 0">
-                                                <tr v-for="item in list.list" :key="item.userId">
-                                                    <!--<td>{{item.name}}</td>-->
-                                                    <td>{{item.realName}}</td>
-                                                    <td>{{item.mobilePhone}}</td>
-                                                    <td>{{item.email}}</td>
-                                                    <td>{{item.remark}}</td>
-                                                    <td v-if="item.isQuit==0">在职</td>
-                                                    <td v-if="item.isQuit==1">离职</td>
-                                                    <td class="btn-hide">
-                                                        <a class="btn btn-success" title="编辑"
-                                                            @click="userInfo(item.shopsBrandShopsOwnerId);">查看</a>
-                                                        <a class="btn btn-default" title="删除"
-                                                            @click="delUser(item.userId);">离职</a>
-                                                    </td>
-                                                </tr>
-                                            </template>
-                                            <tr class="main_info" v-else>
-                                                <td colspan="3">没有相关数据</td>
+                                            <!-- <template v-if="list.total != 0"> -->
+                                            <tr v-for="item in list.list" :key="item.userId">
+                                                <!--<td>{{item.name}}</td>-->
+                                                <td>{{item.realName}}</td>
+                                                <td>{{item.mobilePhone}}</td>
+                                                <td>{{item.email}}</td>
+                                                <td>{{item.remark}}</td>
+                                                <td v-if="item.isQuit==0">在职</td>
+                                                <td v-if="item.isQuit==1">离职</td>
+                                                <td class="btn-hide">
+                                                    <a class="btn btn-success" title="编辑"@click="userInfo(item.shopsBrandShopsOwnerId);">查看</a>
+                                                    <a class="btn btn-default" title="删除"@click="delUser(item.userId);" v-if="item.isQuit != 1">离职</a>
+                                                </td>
                                             </tr>
+                                            <!-- </template> -->
+                                            <!-- <tr class="main_info" v-else> -->
+                                            <!-- <td colspan="6">没有相关数据</td> -->
+                                            <!-- </tr> -->
                                         </tbody>
                                     </table>
                                     <div class="pull-left form form-inline">
                                         <div class="form-group form-group-sm">
                                             共 {{list.total}} 条数据,每页显示
-                                            <select @change="getbranduser(1)" v-model="list.pageSize" class="form-control">
+                                            <select @change="getbranduser(1)" v-model="list.pageSize"
+                                                class="form-control">
                                                 <option value="10">10</option>
                                                 <option value="20">20</option>
                                                 <option value="30">30</option>
