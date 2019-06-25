@@ -75,12 +75,16 @@ window.app = new Vue({
         },
         // 新增品牌
         jumpToBrand(){
+            var that = this
             var index = layer
                 .open({
                     type : 2,
                     title : '新增品牌',
                     content: 'add.html',
-                    area : ['100%', '100%']
+                    area : ['100%', '100%'],
+                    end:function(){
+                        that.getData()
+                    }
             });
         },
         // 查看品牌详情

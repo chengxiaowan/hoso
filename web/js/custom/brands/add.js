@@ -70,7 +70,7 @@ window.app = new Vue({
             if (s == "close") layer.close(this.loadingSwitch)
             else this.loadingSwitch = layer.load(3);
         },
-       
+
         //getdata删除，此界面不需要获取任何服务器信息
         //品牌基本信息的下拉框负责人列表
         getUserlist() {
@@ -97,7 +97,7 @@ window.app = new Vue({
                     area: ['80%', '80%']
                 });
         },
-        
+
         // 切换tab
         tab: function (index_chosen) {
             const that = this;
@@ -113,59 +113,83 @@ window.app = new Vue({
         //保存数据
         save() {
             //整理数据
-            var arr = [];
+            // var arr = [];
             const that = this;
-            that.clearDate($("#info1"), arr)
-            that.clearDate($("#info2"), arr)
-            that.clearDate($("#info3"), arr)
-            that.clearDate($("#info4"), arr)
-            that.clearDate($("#info5"), arr)
-            that.clearDate($("#info6"), arr)
-            // console.log(shopsBrandPicList)
+            // that.clearDate($("#info1"), arr)
+            // that.clearDate($("#info2"), arr)
+            // that.clearDate($("#info3"), arr)
+            // that.clearDate($("#info4"), arr)
+            // that.clearDate($("#info5"), arr)
+            // that.clearDate($("#info6"), arr)
+            // // console.log(shopsBrandPicList)
 
-            console.log(document.getElementById("boboname").value)
-            console.log(that.userId)
-            console.log(document.getElementById("tagsinputval").value)
-            console.log(that.summary)
-            console.log(that.editor.getContent())
-            console.log($('#vivew').attr('src'))
-            console.log($('#vivew1').attr('src'))
-            console.log(arr)
 
-            
+            //提交到服务器前先验证必填项
+            if ($("#boboname").val() == "") {
+                layer.msg("请输入品牌名称", {
+                    time: 3000
+                })
+            } else if (that.userId == "") {
+                layer.msg("请选择品牌负责人", {
+                    time: 3000
+                })
+            } else if (document.getElementById("tagsinputval").value == "") {
+                layer.msg("请输入品牌标签", {
+                    time: 3000
+                })
+            } else if (that.summary == "") {
+                layer.msg("请输入品牌简介", {
+                    time: 3000
+                })
+            } else if (that.editor.getContent() == "") {
+                layer.msg("请添加品牌图文详情", {
+                    time: 3000
+                })
+            } else if ($('#vivew').attr('src') == "../images/imgadd.png") {
+                layer.msg("请选择品牌lLOGO", {
+                    time: 3000
+                })
+            } else if ($('#vivew1').attr('src') == "../images/imgadd.png") {
+                layer.msg("请选择店铺封面图", {
+                    time: 3000
+                })
+            } else {
 
-            if (arr.length != 0) {
-                //提交到服务器
-                const that = this;
                 $.ajax({
                     url: config.api_save,
-                    traditional:true,
+                    traditional: true,
                     async: true,
                     type: 'post',
                     data: {
                         brandName: document.getElementById("boboname").value,
                         userId: that.userId,
-                        labels: document.getElementById("tagsinputval").value, 
+                        labels: document.getElementById("tagsinputval").value,
                         summary: that.summary,
                         description: that.editor.getContent(),
                         logoPath: $('#vivew').attr('src'),
                         imagePath: $('#vivew1').attr('src'),
-                        shopsBrandPicList:JSON.stringify(arr)
+                        shopsBrandPicList:''
                     },
                     success: res => {
                         console.log(res);
-                        layer.msg("保存成功，三秒后关闭窗口",{
-                            time:3000
-                        })
+                        if (res.error == "00") {
+                            layer.msg("保存成功，三秒后关闭窗口", {
+                                time: 3000
+                            })
 
-                        setTimeout(function () {
-                            //关闭当前弹窗
-                            var index = parent.layer.getFrameIndex(window.name);
-                            // parent.layer.close(index)
-                        }, 3000)
+                            setTimeout(function () {
+                                //关闭当前弹窗
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index)
+                            }, 3000)
+                        }else{
+                            layer.msg(res.error,{time:3000})
+                        }
                     }
                 })
+
             }
+
 
 
         },
@@ -213,23 +237,23 @@ window.app = new Vue({
 
         },
 
-        //数据整理
-        clearDate(img, data) {
-            //img为JQ的元素，data为存放数据的大数组
-            if (img.attr("isUp")) {
-                var drool = {
-                    fileSize:'',
-                    realPath:'',
-                    originalFilename: img.attr("isUp"),
-                    url: img.attr("src"),
-                    uploadTime: this.gettime(),
-                }
-                data.push(drool)
-                // console.log(drool)
-            }
+        // //数据整理
+        // clearDate(img, data) {
+        //     //img为JQ的元素，data为存放数据的大数组
+        //     if (img.attr("isUp")) {
+        //         var drool = {
+        //             fileSize: '',
+        //             realPath: '',
+        //             originalFilename: img.attr("isUp"),
+        //             url: img.attr("src"),
+        //             uploadTime: this.gettime(),
+        //         }
+        //         data.push(drool)
+        //         // console.log(drool)
+        //     }
 
-        },
-        dy(){
+        // },
+        dy() {
             console.log("labels")
             console.log($('#tagsinputval').val())
         }

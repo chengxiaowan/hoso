@@ -28,6 +28,11 @@ var config = {
 	api_img: api_url + '/create_image', //二维码
 	api_ewm: api_url + '/weixin/getwxTwoEconde',
 	api_user: api_url + '/user/userList2', //新增店铺,
+
+	//2019年6月26日09:17:26
+	api_getpro: api_url + "/region/provinceList",	//获取省份
+	api_getcity: api_url + "/region/cityList",	//根据省份获取城市
+	api_getbrands:api_url + '/brand/shopsBrandList2'	//获取品牌列表
 }
 
 window.app = new Vue({
@@ -100,6 +105,13 @@ window.app = new Vue({
 		roleName: window.sessionStorage.getItem("roleName"),
 		userId:'',
 		userList:[],
+
+		prolist:[],		//省份列表
+		province:'',	//选择的省份
+		citylist:[],	//城市列表
+		city:"",		//选择的城市
+		brandslist:[],
+		shopsBrandId:"",
 	},
 	created: function() {
 		var that = this;
@@ -131,7 +143,10 @@ window.app = new Vue({
 		$('.el-input').each(function() {
 			var pla = $(this).attr('placeholder')
 			$(this).find('.el-input__inner').attr('placeholder', pla)
-		})
+		});
+
+		that.getpro()
+		that.getbrands()
 
 	},
 	methods: {
@@ -1029,7 +1044,58 @@ window.app = new Vue({
 				}
 			});
 			uploader.start();
-		}
+		},
+
+		//获取省份
+		getpro(){
+			var that = this;
+			$.ajax({
+				url:config.api_getpro,
+				type:"post",
+				async:true,
+				success:res=>{
+					if(res.error == "00"){
+						that.prolist = res.result
+						// console.log(that.prolist)
+					}else{
+						layer.msg(res.error)
+					}
+				}
+				
+			})
+		},
+		//获取城市
+		getCity(){
+			var that = this;
+			$.ajax({
+				url:config.api_getcity,
+				type:"post",
+				async:true,
+				data:{
+					provinceName:that.province
+				},
+				success:res=>{
+					console.log(res)
+					that.citylist = res.result
+					// console.log(that.citylist)
+				}
+			})
+		},
+
+		//获取品牌列表
+		getbrands(){
+			var that = this
+			$.ajax({
+				url:config.api_getbrands,
+				type:"post",
+				// async:true,
+				success:res=>{
+					that.brandslist = res.result
+					console.log(that.brandslist)
+					console.log(res)
+				}
+			})
+		},
 
 	}
 })
