@@ -5,7 +5,7 @@ var config = {
 	api_getToken: api_url + '/qiniu/getUpToken', //获取七牛云token
 
 	api_getpro: api_url + "/region/provinceList",	//获取省份
-	api_getcity: api_url + "/region/cityList",	//根据省份获取城市
+	api_getcity: api_url + "/region/cityList",	//根据省份获取城市 
 	api_getbrands:api_url + '/shopsBrand/shopsBrandList2'	//获取品牌列表
 }
 

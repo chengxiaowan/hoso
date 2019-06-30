@@ -1,0 +1,108 @@
+var config = {
+    role: localStorage.userRole,
+    api_save: api_url + '/shops/editShopsDistributor', //保存修改店铺品牌负责人信息
+    api_getRole: api_url + '/shops/shopsRoleList', //新建店铺品牌负责人
+    api_getinfo: api_url + "/shops/editShopsDistributorInfo",    //获取店铺职员信息
+    id: parameter().shopsId,
+    shopsDistributorId: parameter().id
+}
+window.app = new Vue({
+    el: "#app",
+    data: {
+        roleId: config.role,
+        name: '',         //姓名
+        phone: '',        //电话
+        email: '',        //邮箱
+        qq: '',
+        remark: '',       //备注
+        shopsRoleId: "",   //店铺角色
+        username: "",
+        password: "",
+
+        rolelist: [],
+        userId:'',
+    },
+    methods: {
+
+        //保存数据
+        Save() {
+            var that = this;
+            $.ajax({
+                url: config.api_save,
+                type: "post",
+                async: true,
+                data: {
+                    shopsDistributorId: config.shopsDistributorId,
+                    shopsRoleId: that.shopsRoleId,
+                    name: that.name,
+                    userName: that.username,    //因为不需要 传空
+                    mobilePhone: that.phone,
+                    password: that.password,    //因为不需要 传空
+                    email: that.email,
+                    QQ: that.qq,
+                    remark: that.remark,
+                    userId: that.userId
+                },
+                success: function (res) {
+                    console.log(res)
+                    var closePage = parent.layer.getFrameIndex(window.name)
+                    parent.layer.close(closePage)
+                }
+            })
+        },
+
+        //获取店铺销售角色
+        getRolelist() {
+            var that = this;
+            $.ajax({
+                url: config.api_getRole,
+                type: "post",
+                async: true,
+                data: {
+                    shopsId: config.id,
+                    pageSize: 50,
+                },
+                success: res => {
+                    if (res.error == "00") {
+                        that.rolelist = res.result.list
+                    } else {
+                        layer.msg('获取角色失败，请联系系统管理员')
+                    }
+                }
+
+            })
+        },
+        //获取负责人详细信息
+        getUserinfo() {
+            var that = this;
+            $.ajax({
+                url: config.api_getinfo,
+                type: "post",
+                async: true,
+                data: {
+                    shopsDistributorId: config.shopsDistributorId
+                },
+                success: res => {
+                    that.name = res.result.realName
+                    that.phone = res.result.mobilePhone
+                    that.email = res.result.email
+                    that.qq = res.result.qq
+                    that.remark = res.result.remark
+                    that.shopsRoleId = res.result.shopsRoleId
+                    that.userId = res.result.userId
+                }
+            })
+        }
+
+    },
+    mounted() {
+        var that = this
+        that.getRolelist()
+        that.getUserinfo()
+        console.log(config.id)
+        console.log(config.shopsDistributorId)
+
+    },
+})
+
+

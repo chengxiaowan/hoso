@@ -223,7 +223,7 @@ window.app = new Vue({
                     pageNo: that.list.pageNum || 1,
                 },
                 success: function (res) {
-                    console.log(res)
+                    // console.log(res)
                     that.loading('close')
                     // console.log(res)
                     if (res.error == "00") {
@@ -553,22 +553,6 @@ window.app = new Vue({
         }
     }
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //简介文字计数
