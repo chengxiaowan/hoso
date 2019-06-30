@@ -1311,9 +1311,67 @@ window.app = new Vue({
 						layer.msg(res.msg)
 					}
 				}
-			})
+			});
 		},
 
+		//添加店铺人员
+		adduser() {
+			var that = this;
+			var index = layer
+				.open({
+					type: 2,
+					title: '新建负责人',
+					content: 'adduser.html?id=' + config.id,
+					area: ['80%', '80%'],
+					end: function () {
+						that.getAlluser();
+					}
+				})
+		},
+
+		//修改某店铺人员的信息
+		changeUser(id) {
+			var that = this;
+			var index = layer
+				.open({
+					type: 2,
+					title: "修改负责人",
+					content: 'adduser1.html?id=' + id + '&shopsId=' + config.id,
+					area: ['80%', '80%'],
+					end: function () {
+						that.getAlluser();
+					}
+
+				})
+		},
+		//员工离职
+		deluser(id) {
+			const that = this;
+			const dialog = layer.confirm("确认该负责人已经离职？", {
+				title: "提示"
+			}, () => {
+				$.ajax({
+					url: config.api_userDel,
+					data: {
+						userId: id
+					},
+					success: res => {
+						layer.msg(res.msg);
+						that.getAlluser()
+					}
+				})
+			})
+		},
+		//按照角色显示人员
+		userRole(id) {
+			var that = this
+			if (id) {
+				that.bobodrool = id
+			} else {
+				that.bobodrool = ''
+			}
+			that.getAlluser()
+		},
 		//编辑角色
 		editRole(id){
 			var that = this;
