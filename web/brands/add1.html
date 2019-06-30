@@ -328,7 +328,7 @@
                                                 <input id="boboname" type="text" placeholder="请输入品牌名称，1~30字"
                                                     name="boboname" class="form-control" maxlength="30"
                                                     v-model="bandname">
-                                                <em class="dot" @click="dy()"></em>
+                                                <em class="dot"></em>
                                             </div>
                                         </div>
                                     </div>
@@ -362,7 +362,6 @@
                                             <label>标签：<div class="tips fr">建议每个标签2-5字</div></label>
                                             <input id="tagsinputval" class="tagsinput" data-role="tagsinput"
                                                 placeholder="输入后回车" v-model="labels">
-                                            <button class="btn" @click="dy()">获取输入的值</button>
                                         </div>
                                     </div>
                                 </div>
@@ -524,7 +523,7 @@
                                         </thead>
                                         <tbody>
                                             <template v-if="list.total != 0">
-                                                <tr v-for="item in list.list" :key="item.goodsId">
+                                                <tr v-for="item in goods.list" :key="item.goodsId">
                                                     <td>{{item.name}}</td>
                                                     <td>{{item.typeName}}</td>
                                                     <td>{{item.brandName}}</td>
@@ -561,7 +560,7 @@
                                             </select> 条
                                         </div>
                                     </div>
-                                    <div class="pagi pull-right"></div>
+                                    <div class="pagi2 pull-right"></div>
                                 </div>
                             </div>
                         </div>
@@ -612,7 +611,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <!-- <template v-if="list.total != 0"> -->
+                                            <template v-if="list.total != 0">
                                             <tr v-for="item in list.list" :key="item.userId">
                                                 <!--<td>{{item.name}}</td>-->
                                                 <td>{{item.realName}}</td>
@@ -622,14 +621,14 @@
                                                 <td v-if="item.isQuit==0">在职</td>
                                                 <td v-if="item.isQuit==1">离职</td>
                                                 <td class="btn-hide">
-                                                    <a class="btn btn-success" title="编辑"@click="userInfo(item.shopsBrandShopsOwnerId);">查看</a>
-                                                    <a class="btn btn-default" title="删除"@click="delUser(item.userId);" v-if="item.isQuit != 1">离职</a>
+                                                    <a class="btn btn-success" title="编辑" @click="userInfo(item.shopsBrandShopsOwnerId);">查看</a>
+                                                    <a class="btn btn-default" title="离职" @click="delUser(item.userId);" v-if="item.isQuit != 1">离职</a>
                                                 </td>
                                             </tr>
-                                            <!-- </template> -->
-                                            <!-- <tr class="main_info" v-else> -->
-                                            <!-- <td colspan="6">没有相关数据</td> -->
-                                            <!-- </tr> -->
+                                            </template>
+                                            <tr class="main_info" v-else>
+                                            <td colspan="6">没有相关数据</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                     <div class="pull-left form form-inline">
@@ -645,7 +644,7 @@
                                             </select> 条
                                         </div>
                                     </div>
-                                    <div class="pagi pull-right"></div>
+                                    <div class="pagi1 pull-right"></div>
                                 </div>
                             </div>
                         </div>

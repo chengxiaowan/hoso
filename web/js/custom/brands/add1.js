@@ -1,5 +1,7 @@
 var shopsBrandId = parameter().id;
+var labels = parameter().labels;
 console.log(shopsBrandId)
+console.log(labels)
 
 var config = {
     role: localStorage.userRole,
@@ -50,6 +52,7 @@ window.app = new Vue({
         minPrice: "", //用户输入的最低价
         maxPrice: "", //用户输入的最高价
         check: "",
+        goods:[]
 
 
 
@@ -74,6 +77,8 @@ window.app = new Vue({
             // editor准备好之后才可以使用
             that.editor.setContent(that.description);
         });
+
+        that.labels = labels
     },
     methods: {
         /**
@@ -140,7 +145,6 @@ window.app = new Vue({
                         console.log(res)
                         that.bandname = res.result.brandName //品牌名称
                         that.userId = res.result.userId //负责人id
-                        $("#tagsinputval").attr("value",res.result.labels.toString())
                         that.summary = res.result.summary
                         that.description = res.result.description; //图文描述
                         that.logoPath = res.result.logoPath
@@ -150,6 +154,7 @@ window.app = new Vue({
                     } else {
                         layer.msg(res.msg)
                     }
+                    console.log(that.labels)
                 }
             })
         },
@@ -177,11 +182,11 @@ window.app = new Vue({
                     if (res.error == "00") {
                         that.list = res.result;
                         //分页
-                        if (that.pagi) {
-                            $('.pagi').pagination('updatePages', that.list.pages)
-                            if (page == 1) $('.pagi').pagination('goToPage', that.list.pageNum)
+                        if (that.pagi1) {
+                            $('.pagi1').pagination('updatePages', that.list.pages)
+                            if (page == 1) $('.pagi1').pagination('goToPage', that.list.pageNum)
                         } else {
-                            that.pagi = $('.pagi').pagination({
+                            that.pagi = $('.pagi1').pagination({
                                 pages: that.list.pages, //总页数
                                 showCtrl: true,
                                 displayPage: 6,
@@ -223,18 +228,18 @@ window.app = new Vue({
                     pageNo: that.list.pageNum || 1,
                 },
                 success: function (res) {
-                    console.log(res)
+                    // console.log(res)
                     that.loading('close')
                     // console.log(res)
                     if (res.error == "00") {
-                        that.list = res.result;
+                        that.goods = res.result;
                         console.log(that.list)
                         //分页
-                        if (that.pagi) {
-                            $('.pagi').pagination('updatePages', that.list.pages)
-                            if (page == 1) $('.pagi').pagination('goToPage', that.list.pageNum)
+                        if (that.pagi2) {
+                            $('.pagi2').pagination('updatePages', that.list.pages)
+                            if (page == 1) $('.pagi2').pagination('goToPage', that.list.pageNum)
                         } else {
-                            that.pagi = $('.pagi').pagination({
+                            that.pagi = $('.pagi2').pagination({
                                 pages: that.list.pages, //总页数
                                 showCtrl: true,
                                 displayPage: 6,
@@ -553,22 +558,6 @@ window.app = new Vue({
         }
     }
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //简介文字计数

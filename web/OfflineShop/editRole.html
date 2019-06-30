@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>编辑角色</title>
+    <link rel="stylesheet" href="../css/bootstrap.css">
+</head>
+
+<body>
+    <div class="ibox-content" id="app">
+        <div class="form form-horizontal">
+            <div class="row_list">
+                <div class="col-sm-12" style="font:800 16px/32px '' ">
+                    请输入角色名称
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <input class="form-control" type="text" placeholder="请输入角色名称" v-model="name">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <div class="col-sm-12" style="text-align: center">
+                           <button class="btn btn-primary" @click=save()>
+                               保存
+                           </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<script src="../js/tagsinput.js"></script>
+<script src="../js/custom/element-ui/index.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
+<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+<script src="../js/qiniuyun/qiniuImg2.js"></script>
+
+<script>
+    var config = {
+        role: localStorage.userRole,
+        shopsRoleId: parameter().shopsRoleId,
+        shopsId: parameter().shopsId,
+        api_saveRole : api_url + '/shops/editShopsRole'
+    }
+
+
+    window.app = new Vue({
+        el: "#app",
+        data: {
+            name: ''
+        },
+        methods: {
+            //提交
+            save(){
+                var that = this
+                $.ajax({
+                    url:config.api_saveRole,
+                    type:"post",
+                    async:true,
+                    data:{
+                        roleName:that.name,
+                        shopsId:config.shopsId,
+                        shopsRoleId:config.shopsRoleId
+                    },
+                    success:res=>{
+                        if(res.error == "00"){
+                            layer.msg("修改成功")
+                            var closePage = parent.layer.getFrameIndex(window.name)
+                            parent.layer.close(closePage)
+                        }
+                    }
+                })
+            }
+        },
+
+    })
+</script>
+
+</html>

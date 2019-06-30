@@ -1,8 +1,8 @@
 var config = {
     role: localStorage.userRole,
-    api_list: api_url+'/shopsBrand/shopsBrandList', //获取品牌列表
-    api_edit: api_url+'/shopsBrand/edit', //修改品牌
-    api_del: api_url+'/shopsBrand/del', //删除品牌
+    api_list: api_url + '/shopsBrand/shopsBrandList', //获取品牌列表
+    api_edit: api_url + '/shopsBrand/edit', //修改品牌
+    api_del: api_url + '/shopsBrand/del', //删除品牌
 }
 window.app = new Vue({
     el: '#app',
@@ -13,11 +13,11 @@ window.app = new Vue({
         name: '', // 品牌名称
         postData: {},
     },
-    created: function() {
+    created: function () {
         var that = this;
         document.getElementById("app").classList.remove("hide");
     },
-    mounted: function() {
+    mounted: function () {
         const that = this;
         that.getData();
     },
@@ -27,13 +27,13 @@ window.app = new Vue({
          *
          * @param {string} s 是否关闭
          */
-        loading: function(s) {
-            if(s == "close") layer.close(this.loadingSwitch)
+        loading: function (s) {
+            if (s == "close") layer.close(this.loadingSwitch)
             else this.loadingSwitch = layer.load(3);
         },
-        getData: function(page,keywords) {
+        getData: function (page, keywords) {
             $('body,html').scrollTop(0)
-            if(page) this.list.pageNum = page
+            if (page) this.list.pageNum = page
             var that = this;
             that.loading();
             $.ajax({
@@ -45,22 +45,22 @@ window.app = new Vue({
                     pageSize: that.list.pageSize || 10,
                     pageNo: that.list.pageNum || 1,
                 },
-                success: function(res) {
+                success: function (res) {
                     that.loading('close')
                     // console.log(res)
-                    if(res.error == "00") {
+                    if (res.error == "00") {
                         that.list = res.result;
                         //分页
-                        if(that.pagi) {
+                        if (that.pagi) {
                             $('.pagi').pagination('updatePages', that.list.pages)
-                            if(page == 1) $('.pagi').pagination('goToPage', that.list.pageNum)
+                            if (page == 1) $('.pagi').pagination('goToPage', that.list.pageNum)
                         } else {
                             that.pagi = $('.pagi').pagination({
                                 pages: that.list.pages, //总页数
                                 showCtrl: true,
                                 displayPage: 6,
                                 currentPage: that.list.pageNum,
-                                onSelect: function(num) {
+                                onSelect: function (num) {
                                     that.list.pageNum = num
                                     that.getData()
                                     yo.scrollTo('body')
@@ -74,43 +74,43 @@ window.app = new Vue({
             });
         },
         // 新增品牌
-        jumpToBrand(){
+        jumpToBrand() {
             var that = this
             var index = layer
                 .open({
-                    type : 2,
-                    title : '新增品牌',
+                    type: 2,
+                    title: '新增品牌',
                     content: 'add.html',
-                    area : ['100%', '100%'],
-                    end:function(){
+                    area: ['100%', '100%'],
+                    end: function () {
                         that.getData()
                     }
-            });
+                });
         },
         // 查看品牌详情
-        view(id){
+        view(id) {
             var index = layer.open({
-                type : 2,
-                title : '查看品牌详情',
-                content: 'detail.html?id='+id,
-                area : [ '80%', '80%' ]
+                type: 2,
+                title: '查看品牌详情',
+                content: 'detail.html?id=' + id,
+                area: ['80%', '80%']
             });
         },
         // 编辑品牌
-        edit(id) {
+        edit(id,labels) {
             var index = layer.open({
-                type : 2,
-                title : '编辑品牌',
-                content: 'add1.html?id='+id,
-                area : [ '100%', '100%' ]
+                type: 2,
+                title: '编辑品牌',
+                content: 'add1.html?id=' + id + '&labels=' + labels,
+                area: ['100%', '100%']
             });
         },
         // 搜索
-        search(){
+        search() {
             const that = this;
             var page = 1;
             var keywords = that.keywords;
-            that.getData(page,keywords);
+            that.getData(page, keywords);
         },
         // 删除品牌
         del(id) {
@@ -120,8 +120,8 @@ window.app = new Vue({
             }, () => {
                 $.get(config.api_del, {
                     shopsBrandId: id,
-                }, function(data) { // 回调函数
-                    if(data.error == '00') {
+                }, function (data) { // 回调函数
+                    if (data.error == '00') {
                         layer.close(dialog)
                         layer.msg("删除成功")
                         that.getData()

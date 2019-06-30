@@ -28,12 +28,25 @@ var config = {
 	api_img: api_url + '/create_image', //二维码
 	api_ewm: api_url + '/weixin/getwxTwoEconde',
 	api_user: api_url + '/user/userList2', //新增店铺,
+	api_delrole: api_url + '/shops/delShopsRole',	//删除角色
 
-	//2019年6月26日09:17:26
+	/*
+	迭代详细：
+			2019年6月26日09:17:26
+			1.人员信息重做，但是不知道调用了哪些方法和接口 故能在源代码的基础上添加，望日后有空优化
+			2.edit增加了三个下拉框选择的字段
+	*/
+
 	api_getpro: api_url + "/region/provinceList",	//获取省份
 	api_getcity: api_url + "/region/cityList",	//根据省份获取城市
-	api_getbrands:api_url + '/brand/shopsBrandList2'	//获取品牌列表
+	api_getbrands: api_url + '/shopsBrand/shopsBrandList2',	//获取自定义品牌列表
+	api_getrole: api_url + '/shops/shopsRoleList',		//获取角色列表
+	api_addrole: api_url + '/shops/addShopsRole',			//添加角色
+	api_getAlluser: api_url + '/shops/shopsDistributorList',		//获取店铺人员列表
+	api_userDel: api_url + '/user/changeIsQuit',		//员工离职
 }
+
+console.log(config.id)
 
 window.app = new Vue({
 	el: '#app',
@@ -84,55 +97,61 @@ window.app = new Vue({
 		},
 		auditStatus: '0',
 		auditList: [{
-				text: '审核通过'
-			},
-			{
-				text: '审核失败'
-			},
-			{
-				text: '待审核'
-			},
+			text: '审核通过'
+		},
+		{
+			text: '审核失败'
+		},
+		{
+			text: '待审核'
+		},
 		],
 		shopShow: false,
 		roomsList: [], //房间列表
 		bg_show1: false,
-		realName:'',
+		realName: '',
 		image_ewm: '',
 		img_name: '',
-		status:'',
-		reason:'',
+		status: '',
+		reason: '',
 		roleType: window.sessionStorage.getItem("roleType"),
 		roleName: window.sessionStorage.getItem("roleName"),
-		userId:'',
-		userList:[],
+		userId: '',
+		userList: [],
 
-		prolist:[],		//省份列表
-		province:'',	//选择的省份
-		citylist:[],	//城市列表
-		city:"",		//选择的城市
-		brandslist:[],
-		shopsBrandId:"",
+		//2019年6月27日 迭代
+		prolist: [],		//省份列表
+		province: '',	//选择的省份
+		citylist: [],	//城市列表
+		city: "",		//选择的城市
+		brandslist: [],
+		shopsBrandId: "",	//选择的品牌
+		userrolelist: [],		//角色列表
+		newrole: "",
+		alluser: '',
+		bobodrool: '',		//角色过滤
 	},
-	created: function() {
+	created: function () {
 		var that = this;
 		document.getElementById("app").classList.remove("hide");
 	},
-	mounted: function() {
+	mounted: function () {
 		const that = this
+		that.getbrands()
 		that.getUser()
-//		layui.use('laydate', function() {
-//			var laydate = layui.laydate;
-//			laydate.render({
-//				elem: '#test9',
-//				type: 'time',
-//				range: true,
-//				format: 'HH:mm', //可任意组合
-//				done: function(value, date) {
-//					that.businessHours = value
-//				}
-//			});
-//		})
-		
+		//		layui.use('laydate', function() {
+		//			var laydate = layui.laydate;
+		//			laydate.render({
+		//				elem: '#test9',
+		//				type: 'time',
+		//				range: true,
+		//				format: 'HH:mm', //可任意组合
+		//				done: function(value, date) {
+		//					that.businessHours = value
+		//				}
+		//			});
+		//		})
+
 		that.tagsinputval = config.labels
 		that.getTokenMessage()
 		that.getSupplierList();
@@ -140,13 +159,14 @@ window.app = new Vue({
 		that.getDetail();
 		that.getBrandList();
 		that.getRole();
-		$('.el-input').each(function() {
+		$('.el-input').each(function () {
 			var pla = $(this).attr('placeholder')
 			$(this).find('.el-input__inner').attr('placeholder', pla)
 		});
 
 		that.getpro()
-		that.getbrands()
+		that.getCity()
+		console.log(config.id)
 
 	},
 	methods: {
@@ -155,16 +175,16 @@ window.app = new Vue({
 		 *
 		 * @param {string} s 是否关闭
 		 */
-		getUser(){
-			let that = this 
+		getUser() {
+			let that = this
 			$.ajax({
-				type:"post",
-				url:config.api_user,
-				async:true,
-				success(res){
-					if(res.error=="00"){
+				type: "post",
+				url: config.api_user,
+				async: true,
+				success(res) {
+					if (res.error == "00") {
 						that.userList = res.result
-					}else{
+					} else {
 						layer.msg(res.msg)
 					}
 				}
@@ -172,11 +192,13 @@ window.app = new Vue({
 		},
 		tab(num) {
 			let that = this
-			if(num == 1) {
+			if (num == 1) {
 
-			} else if(num == 2) {
-				that.getDistributorInfo(1);
-			} else if(num == 3) {
+			} else if (num == 2) {
+				// that.getDistributorInfo(1);
+				that.getRolelist()
+				that.getAlluser()
+			} else if (num == 3) {
 				this.getGoods(1, 1);
 			} else {
 				this.getRoom(1);
@@ -184,20 +206,20 @@ window.app = new Vue({
 		},
 		getItem(index) {
 			this.auditStatus = index;
-			if(index == 0) {
+			if (index == 0) {
 				this.shopShow = false
 				this.getGoods(1, 1); //审核通过
-			} else if(index == 1) {
+			} else if (index == 1) {
 				this.shopShow = false
 				this.getGoods(1, 2); //审核失败
-			} else if(index == 2) {
+			} else if (index == 2) {
 				this.shopShow = true
 				this.getGoods(1, 3); //待审核
-			} 
+			}
 
 		},
-		loading: function(s) {
-			if(s == "close") layer.close(this.loadingSwitch)
+		loading: function (s) {
+			if (s == "close") layer.close(this.loadingSwitch)
 			else this.loadingSwitch = layer.load(3);
 		},
 		getDetail() {
@@ -211,9 +233,9 @@ window.app = new Vue({
 				data: {
 					shopsId: config.id
 				},
-				success: function(res) {
+				success: function (res) {
 					that.loading('close')
-					if(res.error == '00') {
+					if (res.error == '00') {
 						that.shopsName = res.result.shopsName
 						that.shopsType = res.result.shopsType
 						that.phone = res.result.phone
@@ -227,6 +249,9 @@ window.app = new Vue({
 						that.reason = res.result.reason
 						that.realName = res.result.realName
 						that.userId = res.result.userId
+						that.city = res.result.city
+						that.province = res.result.province
+						that.shopsBrandId = res.result.shopsBrandId
 					} else {
 						layer.msg(res.msg)
 					}
@@ -234,8 +259,8 @@ window.app = new Vue({
 			});
 		},
 		//弹窗商品列表
-		getData: function(page) {
-			if(page) this.list.pageNum = page
+		getData: function (page) {
+			if (page) this.list.pageNum = page
 			var that = this;
 			that.loading();
 			$.ajax({
@@ -252,21 +277,21 @@ window.app = new Vue({
 					skipType: 1,
 					shopsId: config.id
 				},
-				success: function(res) {
+				success: function (res) {
 					that.loading('close')
-					if(res.error == "00") {
+					if (res.error == "00") {
 						that.list = res.result;
 						//分页
-						if(that.pagi) {
+						if (that.pagi) {
 							$('.pagi').pagination('updatePages', that.list.pages)
-							if(page == 1) $('.pagi').pagination('goToPage', that.list.pageNum)
+							if (page == 1) $('.pagi').pagination('goToPage', that.list.pageNum)
 						} else {
 							that.pagi = $('.pagi').pagination({
 								pages: that.list.pages, //总页数
 								showCtrl: true,
 								displayPage: 6,
 								currentPage: that.list.pageNum,
-								onSelect: function(num) {
+								onSelect: function (num) {
 									that.list.pageNum = num
 									that.getData()
 								}
@@ -279,8 +304,8 @@ window.app = new Vue({
 			});
 		},
 		//工作人员列表
-		getDistributorInfo: function(page) {
-			if(page) this.peopleList.pageNum = page
+		getDistributorInfo: function (page) {
+			if (page) this.peopleList.pageNum = page
 			var that = this;
 			that.loading();
 			$.ajax({
@@ -294,21 +319,21 @@ window.app = new Vue({
 					pageSize: that.peopleList.pageSize || 5,
 					pageNo: that.peopleList.pageNum || 1,
 				},
-				success: function(res) {
+				success: function (res) {
 					that.loading('close')
-					if(res.error == "00") {
+					if (res.error == "00") {
 						that.peopleList = res.result;
 						//分页
-						if(that.pagi1) {
+						if (that.pagi1) {
 							$('.pagi1').pagination('updatePages', that.peopleList.pages)
-							if(page == 1) $('.pagi1').pagination('goToPage', that.peopleList.pageNum)
+							if (page == 1) $('.pagi1').pagination('goToPage', that.peopleList.pageNum)
 						} else {
 							that.pagi1 = $('.pagi1').pagination({
 								pages: that.peopleList.pages, //总页数
 								showCtrl: true,
 								displayPage: 6,
 								currentPage: that.peopleList.pageNum,
-								onSelect: function(num) {
+								onSelect: function (num) {
 									that.peopleList.pageNum = num
 									that.getDistributorInfo()
 								}
@@ -321,8 +346,8 @@ window.app = new Vue({
 			});
 		},
 		//工作人员列表
-		getRoom: function(page) {
-			if(page) this.roomsList.pageNum = page
+		getRoom: function (page) {
+			if (page) this.roomsList.pageNum = page
 			var that = this;
 			that.loading();
 			$.ajax({
@@ -334,21 +359,21 @@ window.app = new Vue({
 					pageSize: that.roomsList.pageSize || 5,
 					pageNo: that.roomsList.pageNum || 1,
 				},
-				success: function(res) {
+				success: function (res) {
 					that.loading('close')
-					if(res.error == "00") {
+					if (res.error == "00") {
 						that.roomsList = res.result;
 						//分页
-						if(that.pagi3) {
+						if (that.pagi3) {
 							$('.pagi3').pagination('updatePages', that.roomsList.pages)
-							if(page == 1) $('.pagi3').pagination('goToPage', that.roomsList.pageNum)
+							if (page == 1) $('.pagi3').pagination('goToPage', that.roomsList.pageNum)
 						} else {
 							that.pagi3 = $('.pagi3').pagination({
 								pages: that.roomsList.pages, //总页数
 								showCtrl: true,
 								displayPage: 6,
 								currentPage: that.roomsList.pageNum,
-								onSelect: function(num) {
+								onSelect: function (num) {
 									that.roomsList.pageNum = num
 									that.getRoom()
 								}
@@ -411,11 +436,11 @@ window.app = new Vue({
 				btn: "确定",
 				btnAlign: 'c',
 				yes() {
-					if(that.form.userName == '' || that.form.name == '' || that.form.name == '' || that.form.commissionPercent == '' || that.form.password == '' || that.form.password1 == '' || that.form.mobilePhone == '') {
+					if (that.form.userName == '' || that.form.name == '' || that.form.name == '' || that.form.commissionPercent == '' || that.form.password == '' || that.form.password1 == '' || that.form.mobilePhone == '') {
 						layer.msg('请填写全部必填项')
 						return false
 					}
-					if(that.form.password != that.form.password1) {
+					if (that.form.password != that.form.password1) {
 						layer.msg('两次密码保持相等')
 						return false
 					}
@@ -437,7 +462,7 @@ window.app = new Vue({
 
 						},
 						success(res) {
-							if(res.error == '00') {
+							if (res.error == '00') {
 								layer.msg('添加成功')
 								layer.close(index)
 								that.getDistributorInfo()
@@ -462,15 +487,15 @@ window.app = new Vue({
 				btn: "确定",
 				btnAlign: 'c',
 				yes() {
-					if(that.form.userName == '' || that.form.name == '' || that.form.name == '' || that.form.commissionPercent == '' || that.form.password == '' || that.form.password1 == '' || that.form.mobilePhone == '') {
+					if (that.form.userName == '' || that.form.name == '' || that.form.name == '' || that.form.commissionPercent == '' || that.form.password == '' || that.form.password1 == '' || that.form.mobilePhone == '') {
 						layer.msg('请填写全部必填项')
 						return false
 					}
-					if(!that.form.password) {
+					if (!that.form.password) {
 						layer.msg('请输入密码')
 						return false
 					}
-					if(that.form.password != that.form.password1) {
+					if (that.form.password != that.form.password1) {
 						layer.msg('两次密码保持相等')
 						return false
 					}
@@ -493,7 +518,7 @@ window.app = new Vue({
 							roleId: that.form.roleId,
 						},
 						success(res) {
-							if(res.error == '00') {
+							if (res.error == '00') {
 								layer.msg('修改成功')
 								layer.close(index)
 								that.getDistributorInfo()
@@ -513,8 +538,8 @@ window.app = new Vue({
 			}, () => {
 				$.get(config.api_deleteSysUser, {
 					userId: el.userId
-				}, function(data) { // 回调函数
-					if(data.error == '00') {
+				}, function (data) { // 回调函数
+					if (data.error == '00') {
 						layer.close(dialog)
 						layer.msg("离职成功")
 						that.getDistributorInfo();
@@ -538,12 +563,12 @@ window.app = new Vue({
 						shopsId: config.id,
 						goodsId: item.goodsId,
 					},
-					success: function(res) {
-						if(res.error == "00") {
+					success: function (res) {
+						if (res.error == "00") {
 							layer.close(dialog)
 							layer.msg("加入成功")
 							that.getData();
-							if(that.shopShow) {
+							if (that.shopShow) {
 								that.getGoods(1, 3);
 							}
 						} else {
@@ -555,19 +580,19 @@ window.app = new Vue({
 		},
 		edit() {
 			const that = this;
-			if(that.roleName == "系统人员"&&that.userId == "") {
+			if (that.roleName == "系统人员" && that.userId == "") {
 				layer.msg("请选择店铺店主");
 				return;
 			}
-			if(that.shopsName == "") {
+			if (that.shopsName == "") {
 				layer.msg("请填写店铺名称");
 				return;
 			}
-			if(that.shopsType == "") {
+			if (that.shopsType == "") {
 				layer.msg("请选择店铺类型");
 				return;
 			}
-			if(that.phone == "") {
+			if (that.phone == "") {
 				layer.msg("请输入联系电话");
 				return;
 			}
@@ -576,9 +601,9 @@ window.app = new Vue({
 		addGroup() {
 			const that = this;
 			var userId;
-			if(that.userId != ""){
+			if (that.userId != "") {
 				userId = that.userId
-			}else{
+			} else {
 				userId = window.sessionStorage.getItem('userId')
 			}
 			$.ajax({
@@ -596,14 +621,18 @@ window.app = new Vue({
 					shopsPicList: JSON.stringify(that.scenePicList),
 					labels: $('#tagsinputval').val(),
 					shopsType: that.shopsType,
-					userId: userId
+					userId: userId,
+					province: that.province,
+					city: that.city,
+					// address:that.address,
+					shopsBrandId: that.shopsBrandId
 				},
-				success: function(res) {
+				success: function (res) {
 					that.loading('close')
-					if(res.error == "00") {
+					if (res.error == "00") {
 						var index = parent.layer.getFrameIndex(window.name);
 						layer.msg('修改成功！');
-						setTimeout(function() {
+						setTimeout(function () {
 							window.parent.location.reload();
 							parent.layer.close(index);
 						}, 1000);
@@ -615,12 +644,12 @@ window.app = new Vue({
 		},
 		//店铺商品列表
 		getGoods(page, type) {
-			if(page) this.goodList.pageNum = page
+			if (page) this.goodList.pageNum = page
 			var that = this;
 			that.loading();
 			var data = {};
 			var url;
-			if(type == 1 || type == 2) {
+			if (type == 1 || type == 2) {
 				url = config.api_shopsGoodsList
 				data = {
 					shopsId: config.id,
@@ -628,34 +657,34 @@ window.app = new Vue({
 					pageNo: that.goodList.pageNum || 1,
 					auditStatus: type,
 				}
-			} else if(type == 3) {
+			} else if (type == 3) {
 				url = config.api_shopsGoodsList1
 				data = {
 					shopsId: config.id,
 					pageSize: that.goodList.pageSize || 20,
 					pageNo: that.goodList.pageNum || 1,
 				}
-			} 
+			}
 			$.ajax({
 				url: url,
 				async: true,
 				type: 'post',
 				data: data,
-				success: function(res) {
+				success: function (res) {
 					that.loading('close')
-					if(res.error == "00") {
+					if (res.error == "00") {
 						that.goodList = res.result;
 						//分页
-						if(that.pagi2) {
+						if (that.pagi2) {
 							$('.pagi2').pagination('updatePages', that.goodList.pages)
-							if(page == 1) $('.pagi2').pagination('goToPage', that.goodList.pageNum)
+							if (page == 1) $('.pagi2').pagination('goToPage', that.goodList.pageNum)
 						} else {
 							that.pagi2 = $('.pagi2').pagination({
 								pages: that.goodList.pages, //总页数
 								showCtrl: true,
 								displayPage: 6,
 								currentPage: that.goodList.pageNum,
-								onSelect: function(num) {
+								onSelect: function (num) {
 									that.goodList.pageNum = num
 									that.getGoods(num, that.auditStatus + 1)
 								}
@@ -677,9 +706,9 @@ window.app = new Vue({
 				data: {
 					level: 1
 				},
-				success: function(res) {
+				success: function (res) {
 					that.loading('close')
-					if(res.error == "00") {
+					if (res.error == "00") {
 						that.typeList = res.result;
 					} else {
 						layer.msg(res.msg)
@@ -697,11 +726,11 @@ window.app = new Vue({
 				data: {
 					keywords: ''
 				},
-				success: function(res) {
+				success: function (res) {
 					that.loading('close')
-					if(res.error == "00") {
+					if (res.error == "00") {
 						var arr = []
-						for(var i in res.result) {
+						for (var i in res.result) {
 							var obj = {};
 							obj.id = res.result[i].id;
 							obj.text = res.result[i].name;
@@ -724,11 +753,11 @@ window.app = new Vue({
 				data: {
 					keywords: ''
 				},
-				success: function(res) {
+				success: function (res) {
 					that.loading('close')
-					if(res.error == "00") {
+					if (res.error == "00") {
 						var arr = [];
-						for(var i in res.result) {
+						for (var i in res.result) {
 							var obj = {}
 							obj.id = res.result[i].id;
 							obj.text = res.result[i].name;
@@ -743,7 +772,7 @@ window.app = new Vue({
 		},
 		search() {
 			let that = this;
-			that.getDistributorInfo();
+			that.getAlluser();
 		},
 		searchGood() {
 			let that = this;
@@ -755,18 +784,18 @@ window.app = new Vue({
 			var data = {
 
 			};
-			if(auditStatus == 0 || auditStatus == 1) {
+			if (auditStatus == 0 || auditStatus == 1) {
 				url = config.api_del
 				data = {
 					shopsGoodsId: el.shopsGoodsId
 				}
 			} else
-			if(auditStatus == 2) {
-				url = config.api_del1
-				data = {
-					shopsGoodsApplicationId: el.shopsGoodsApplicationId
+				if (auditStatus == 2) {
+					url = config.api_del1
+					data = {
+						shopsGoodsApplicationId: el.shopsGoodsApplicationId
+					}
 				}
-			}
 			const dialog = layer.confirm("确认删除该商品吗?删除后无法恢复！", {
 				title: "提示"
 			}, () => {
@@ -776,15 +805,15 @@ window.app = new Vue({
 					async: true,
 					data: data,
 					success(res) {
-						if(res.error == '00') {
+						if (res.error == '00') {
 							layer.close(dialog)
-							if(auditStatus == 0) {
+							if (auditStatus == 0) {
 								that.getGoods('', 1)
-							} else if(auditStatus == 1) {
+							} else if (auditStatus == 1) {
 								that.getGoods('', 2)
-							} else if(auditStatus == 2) {
+							} else if (auditStatus == 2) {
 								that.getGoods('', 3)
-							} 
+							}
 						} else {
 							layer.msg(res.msg)
 						}
@@ -800,11 +829,11 @@ window.app = new Vue({
 				area: ['100%', '100%']
 			});
 		},
-		editRoom(shopsRoomId,roomLabels) {
+		editRoom(shopsRoomId, roomLabels) {
 			var index = layer.open({
 				type: 2,
 				title: '编辑房间',
-				content: 'editRoom.html?id=' + config.id + '&shopsRoomId=' + shopsRoomId+'&roomLabels='+roomLabels,
+				content: 'editRoom.html?id=' + config.id + '&shopsRoomId=' + shopsRoomId + '&roomLabels=' + roomLabels,
 				area: ['100%', '100%']
 			});
 		},
@@ -820,9 +849,9 @@ window.app = new Vue({
 					data: {
 						shopsRoomId: id
 					},
-					success: function(res) {
+					success: function (res) {
 						that.loading('close')
-						if(res.error == "00") {
+						if (res.error == "00") {
 							layer.close(dialog)
 							layer.msg("删除成功")
 							that.getRoom()
@@ -842,7 +871,7 @@ window.app = new Vue({
 				layer.close(dialog)
 				layer.msg("删除成功")
 				that.scenePicList.splice(index, 1)
-				if(el.attachId) {
+				if (el.attachId) {
 					$.ajax({
 						url: config.api_delShopsPic,
 						async: true,
@@ -850,9 +879,9 @@ window.app = new Vue({
 						data: {
 							attachId: el.attachId
 						},
-						success: function(res) {
+						success: function (res) {
 							that.loading('close')
-							if(res.error == "00") {
+							if (res.error == "00") {
 							} else {
 								layer.msg(res.msg)
 							}
@@ -878,7 +907,7 @@ window.app = new Vue({
 				success(res) {
 					that.bg_show1 = true
 					that.image_ewm = res.result
-					that.$nextTick(function() {
+					that.$nextTick(function () {
 						var top = $(document).scrollTop() + 200
 						$(".ewm").css('top', top + 'px')
 					})
@@ -889,7 +918,7 @@ window.app = new Vue({
 			let that = this
 			let id = ''
 			that.img_name = item.name
-			id = 'goodsId=' + item.goodsId+',shopsId='+that.shopsId  
+			id = 'goodsId=' + item.goodsId + ',shopsId=' + that.shopsId
 			$.ajax({
 				type: "post",
 				url: config.api_ewm,
@@ -901,7 +930,7 @@ window.app = new Vue({
 				success(res) {
 					that.bg_show1 = true
 					that.image_ewm = res.result
-					that.$nextTick(function() {
+					that.$nextTick(function () {
 						var top = $(document).scrollTop() + 200
 						$(".ewm").css('top', top + 'px')
 					})
@@ -918,7 +947,7 @@ window.app = new Vue({
 			var image = new Image();
 			// 解决跨域 Canvas 污染问题
 			image.setAttribute("crossOrigin", "anonymous");
-			image.onload = function() {
+			image.onload = function () {
 				var canvas = document.createElement("canvas");
 				canvas.width = image.width;
 				canvas.height = image.height;
@@ -946,7 +975,7 @@ window.app = new Vue({
 				cache: false,
 				contentType: false, //不可缺
 				processData: false, //不可缺
-				success: function(data) {
+				success: function (data) {
 					var obj = data;
 					that.uploaderReady(obj);
 					uploaderReady2(obj);
@@ -980,15 +1009,15 @@ window.app = new Vue({
 				auto_start: true,
 				unique_names: true, //自动生成文件名,如果值为false则保留原文件名上传
 				init: {
-					'FilesAdded': function(up, files) {
-						plupload.each(files, function(file) {
+					'FilesAdded': function (up, files) {
+						plupload.each(files, function (file) {
 							// 文件添加进队列后，处理相关的事情
 						});
 					},
-					'BeforeUpload': function(up, file) {
+					'BeforeUpload': function (up, file) {
 						// 每个文件上传前，处理相关的事情
 					},
-					'UploadProgress': function(up, file) {
+					'UploadProgress': function (up, file) {
 						//文件上传时，处理相关的事情
 
 						/*可能是文件大小
@@ -999,10 +1028,10 @@ window.app = new Vue({
 						$('#qiniupercent').attr('style', 'width:' + file.percent + '%');
 						//console.log(file.percent + "%");
 					},
-					'UploadComplete': function() {
+					'UploadComplete': function () {
 						//do something
 					},
-					'FileUploaded': function(up, file, info) {
+					'FileUploaded': function (up, file, info) {
 						console.log(info)
 						//每个文件上传成功后,处理相关的事情
 						//其中 info 是文件上传成功后，服务端返回的json，形式如
@@ -1023,10 +1052,10 @@ window.app = new Vue({
 						console.log(that.scenePicList);
 						//do something
 					},
-					'Error': function(up, err, errTip) {
+					'Error': function (up, err, errTip) {
 						alert(errTip);
 					},
-					'Key': function(up, file) {
+					'Key': function (up, file) {
 						//当save_key和unique_names设为false时，该方法将被调用
 						var key = "";
 						//              $.ajax({
@@ -1047,35 +1076,35 @@ window.app = new Vue({
 		},
 
 		//获取省份
-		getpro(){
+		getpro() {
 			var that = this;
 			$.ajax({
-				url:config.api_getpro,
-				type:"post",
-				async:true,
-				success:res=>{
-					if(res.error == "00"){
+				url: config.api_getpro,
+				type: "post",
+				async: true,
+				success: res => {
+					if (res.error == "00") {
 						that.prolist = res.result
 						// console.log(that.prolist)
-					}else{
+					} else {
 						layer.msg(res.error)
 					}
 				}
-				
+
 			})
 		},
 		//获取城市
-		getCity(){
+		getCity() {
 			var that = this;
 			$.ajax({
-				url:config.api_getcity,
-				type:"post",
-				async:true,
-				data:{
-					provinceName:that.province
+				url: config.api_getcity,
+				type: "post",
+				async: true,
+				data: {
+					provinceName: that.province
 				},
-				success:res=>{
-					console.log(res)
+				success: res => {
+					// console.log(res)
 					that.citylist = res.result
 					// console.log(that.citylist)
 				}
@@ -1083,20 +1112,227 @@ window.app = new Vue({
 		},
 
 		//获取品牌列表
-		getbrands(){
+		getbrands(id) {
 			var that = this
 			$.ajax({
-				url:config.api_getbrands,
-				type:"post",
+				url: config.api_getbrands,
+				type: "post",
 				// async:true,
-				success:res=>{
+				success: res => {
 					that.brandslist = res.result
-					console.log(that.brandslist)
-					console.log(res)
+					// console.log(that.brandslist)
+					// console.log(res)
+				}
+			});
+		},
+
+		//人员信息获取店铺角色列表
+		getRolelist() {
+			var that = this;
+			$.ajax({
+				url: config.api_getrole,
+				type: "post",
+				async: true,
+				data: {
+					shopsId: config.id
+				},
+				success: res => {
+					if (res.error == "00") {
+						console.log(res)
+						that.userrolelist = res.result.list;
+						// console.log(that.userrolelist)
+					} else {
+						layer.msg(res.msg)
+					}
 				}
 			})
 		},
 
+		addNewrole() {
+			let that = this
+			var drool = layer.open({
+				type: 1,
+				title: '新增店铺角色',
+				closeBtn: 1,
+				content: $('#addrole'),
+				area: ['70%', '420px'],
+				btn: "确定",
+				btnAlign: 'c',
+				yes() {
+					if (that.newrole == "") {
+						layer.msg("请输入角色名")
+					} else {
+						$.ajax({
+							url: config.api_addrole,
+							type: 'post',
+							async: true,
+							data: {
+								shopsId: config.id,		//店铺ID
+								roleName: that.newrole	//名称
+							},
+							success: res => {
+								if (res.error == "00") {
+									layer.msg("添加角色成功")
+									layer.close(drool)
+								} else {
+									layer.msg(res.msg)
+								}
+							}
+						})
+					}
+				},
+				end: function () {
+					that.getRolelist()
+				}
+			});
+		},
+
+		//获取店铺人员列表
+		getAlluser(page, keywords) {
+			var that = this
+			$('body,html').scrollTop(0)
+			if (page) this.list.pageNum = page
+			var that = this;
+			that.loading();
+			$.ajax({
+				url: config.api_getAlluser,
+				async: true,
+				type: 'post',
+				data: {
+					shopsId: config.id,
+					shopsRoleId: that.bobodrool,
+					keywords: that.keywords1,
+					pageSize: that.list.pageSize || 10,
+					pageNo: that.list.pageNum || 1,
+				},
+				success: function (res) {
+					that.loading('close')
+					// console.log(res)
+					if (res.error == "00") {
+						that.list = res.result;
+						//分页
+						if (that.pagi) {
+							$('.pagi').pagination('updatePages', that.list.pages)
+							if (page == 1) $('.pagi').pagination('goToPage', that.list.pageNum)
+						} else {
+							that.pagi = $('.pagi').pagination({
+								pages: that.list.pages, //总页数
+								showCtrl: true,
+								displayPage: 6,
+								currentPage: that.list.pageNum,
+								onSelect: function (num) {
+									that.list.pageNum = num
+									that.getAlluser()
+									yo.scrollTo('body')
+								}
+							})
+						}
+					} else {
+						layer.msg(res.msg)
+					}
+				}
+			});
+		},
+
+		//添加店铺人员
+		adduser() {
+			var that = this;
+			var index = layer
+				.open({
+					type: 2,
+					title: '新建负责人',
+					content: 'adduser.html?id=' + config.id,
+					area: ['80%', '80%'],
+					end: function () {
+						that.getAlluser();
+					}
+				})
+		},
+
+		//修改某店铺人员的信息
+		changeUser(id) {
+			var that = this;
+			var index = layer
+				.open({
+					type: 2,
+					title: "修改负责人",
+					content: 'adduser1.html?id=' + id + '&shopsId=' + config.id,
+					area: ['80%', '80%'],
+					end: function () {
+						that.getAlluser();
+					}
+
+				})
+		},
+		//员工离职
+		deluser(id) {
+			const that = this;
+			const dialog = layer.confirm("确认该负责人已经离职？", {
+				title: "提示"
+			}, () => {
+				$.ajax({
+					url: config.api_userDel,
+					data: {
+						userId: id
+					},
+					success: res => {
+						layer.msg(res.msg);
+						that.getAlluser()
+					}
+				})
+			})
+		},
+		//按照角色显示人员
+		userRole(id) {
+			var that = this
+			if (id) {
+				that.bobodrool = id
+			} else {
+				that.bobodrool = ''
+			}
+			that.getAlluser()
+
+		},
+		//删除角色
+		delRole(id) {
+			var that = this
+			$.ajax({
+				url: config.api_delrole,
+				type: "post",
+				async: true,
+				data: {
+					shopsRoleId: id
+				},
+				success:res=>{
+					if(res.error == "00"){
+						layer.msg("删除角色成功")
+						that.getRolelist()
+					}else{
+						layer.msg(res.msg)
+					}
+				}
+			})
+		},
+
+		//编辑角色
+		editRole(id){
+			var that = this;
+			var index = layer
+			var that = this;
+			var index = layer
+				.open({
+					type: 2,
+					title: "修改角色",
+					content: 'editRole.html?shopsRoleId=' + id + '&shopsId=' + config.id,
+					area: ['80%', '80%'],
+					end: function () {
+						that.getRolelist();
+					}
+
+				})
+		},
+
+		//获取分类列表
 	}
 })
 
