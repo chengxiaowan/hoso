@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script type="text/javascript" src="js/vue.js" ></script>
+</head>
+
+<body>
+<template>
+    <div>
+        <el-button @click="add">添加</el-button>
+        <el-table :data="data">
+            <el-table-column prop="name" label="名称">
+                <template  slot-scope="scope">
+                    <el-input v-model="data[scope.$index].name"></el-input>
+                </template>
+            </el-table-column>
+            <el-table-column prop="age" label="年龄">
+                <template  slot-scope="scope">
+                    <el-input v-model="data[scope.$index].age"></el-input>
+                </template>
+            </el-table-column>
+            <el-table-column prop="age" label="年龄">
+                <template  slot-scope="scope">
+                    <el-button @click="deleteRow(scope.$index)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+</template>
+<script>
+
+    export  default {
+        data(){
+            return {
+                data:[]
+            }
+        },
+        methods:{
+            add(){
+                this.data.push({});
+            },
+            deleteRow(index){
+                this.data.splice(index,1);
+            }
+
+        }
+    }
+</script>
+</body>
+</html>

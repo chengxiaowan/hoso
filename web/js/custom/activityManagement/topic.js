@@ -2,9 +2,6 @@ var config = {
 	role: localStorage.userRole,
 	api_list: api_url + '/specialTopic/specialTopicList', //获取优惠券列表
 	api_del: api_url + '/specialTopic/del', ///删除优惠券
-
-	//二维码生成
-	api_ewm: api_url + '/weixin/getwxTwoEconde', 
 }
 window.app = new Vue({
 	el: '#app',
@@ -16,10 +13,7 @@ window.app = new Vue({
 		roleType: '', // 类型  
 		postData: {},
 		createTimeStart:'',
-		createTimeEnd:'',
-		bg_show1:false,
-		image_ewm: '',
-
+		createTimeEnd:''
 	},
 	created: function() {
 		var that = this;
@@ -162,65 +156,5 @@ window.app = new Vue({
 				})
 			})
 		},
-		//小程序二维码
-		ewm(item) {
-			// alert("触发了！");
-			let that = this;
-			let id = '';
-			that.img_name = item.name;
-			id = 'topicId=' + item.specialTopicId;
-			console.log(id)
-
-			$.ajax({
-				type: "post",
-				url: config.api_ewm,
-				async: true,
-				data: {
-					page: 'pages/topic/topic',
-					id: id
-				},
-				success(res) {
-					that.bg_show1 = true
-					that.image_ewm = res.result
-					that.$nextTick(function() {
-						var top = $(document).scrollTop() + 200
-						$(".ewm").css('top', top + 'px')
-					})
-				}
-			});
-		},
-		//遮罩层的方法
-		hide1() {
-			let that = this
-			that.bg_show1 = false
-		},
-
-		//下载图片
-		downloadIamge(imgsrc, name) {
-
-			//下载图片地址和图片名 
-			var image = new Image();
-			// 解决跨域 Canvas 污染问题
-			image.setAttribute("crossOrigin", "anonymous");
-			image.onload = function() {
-				var canvas = document.createElement("canvas");
-				canvas.width = image.width;
-				canvas.height = image.height;
-				var context = canvas.getContext("2d");
-				context.drawImage(image, 0, 0, image.width, image.height);
-				var url = canvas.toDataURL("image/png"); //得到图片的base64编码数据     
-				var a = document.createElement("a"); // 生成一个a元素   
-				var event = new MouseEvent("click"); // 创建一个单击事件   
-				a.download = name || "photo"; // 设置图片名称    
-				a.href = url; // 将生成的URL设置为a.href属性    
-				a.dispatchEvent(event); // 触发a的单击事件  
-			};
-			image.src = imgsrc;
-		},
-		//点击图片调用下载方法
-		downs() {
-			let that = this
-			this.downloadIamge(this.image_ewm, that.img_name)
-		}
 	}
 })

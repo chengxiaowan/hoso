@@ -46,7 +46,7 @@ var config = {
 	api_userDel: api_url + '/user/changeIsQuit',		//员工离职
 }
 
-console.log(config.id)
+// console.log(config.id)
 
 window.app = new Vue({
 	el: '#app',
@@ -166,7 +166,7 @@ window.app = new Vue({
 
 		that.getpro()
 		that.getCity()
-		console.log(config.id)
+		// console.log(config.id)
 
 	},
 	methods: {
@@ -304,48 +304,48 @@ window.app = new Vue({
 			});
 		},
 		//工作人员列表
-		getDistributorInfo: function (page) {
-			if (page) this.peopleList.pageNum = page
-			var that = this;
-			that.loading();
-			$.ajax({
-				url: config.api_getDistributorInfo,
-				async: true,
-				type: 'post',
-				data: {
-					shopsId: config.id,
-					keywords: that.keywords1,
-					roleId: that.roleId,
-					pageSize: that.peopleList.pageSize || 5,
-					pageNo: that.peopleList.pageNum || 1,
-				},
-				success: function (res) {
-					that.loading('close')
-					if (res.error == "00") {
-						that.peopleList = res.result;
-						//分页
-						if (that.pagi1) {
-							$('.pagi1').pagination('updatePages', that.peopleList.pages)
-							if (page == 1) $('.pagi1').pagination('goToPage', that.peopleList.pageNum)
-						} else {
-							that.pagi1 = $('.pagi1').pagination({
-								pages: that.peopleList.pages, //总页数
-								showCtrl: true,
-								displayPage: 6,
-								currentPage: that.peopleList.pageNum,
-								onSelect: function (num) {
-									that.peopleList.pageNum = num
-									that.getDistributorInfo()
-								}
-							})
-						}
-					} else {
-						layer.msg(res.msg)
-					}
-				}
-			});
-		},
-		//工作人员列表
+		// getDistributorInfo: function (page) {
+		// 	if (page) this.peopleList.pageNum = page
+		// 	var that = this;
+		// 	that.loading();
+		// 	$.ajax({
+		// 		url: config.api_getDistributorInfo,
+		// 		async: true,
+		// 		type: 'post',
+		// 		data: {
+		// 			shopsId: config.id,
+		// 			keywords: that.keywords1,
+		// 			roleId: that.roleId,
+		// 			pageSize: that.peopleList.pageSize || 5,
+		// 			pageNo: that.peopleList.pageNum || 1,
+		// 		},
+		// 		success: function (res) {
+		// 			that.loading('close')
+		// 			if (res.error == "00") {
+		// 				that.peopleList = res.result;
+		// 				//分页
+		// 				if (that.pagi1) {
+		// 					$('.pagi1').pagination('updatePages', that.peopleList.pages)
+		// 					if (page == 1) $('.pagi1').pagination('goToPage', that.peopleList.pageNum)
+		// 				} else {
+		// 					that.pagi1 = $('.pagi1').pagination({
+		// 						pages: that.peopleList.pages, //总页数
+		// 						showCtrl: true,
+		// 						displayPage: 6,
+		// 						currentPage: that.peopleList.pageNum,
+		// 						onSelect: function (num) {
+		// 							that.peopleList.pageNum = num
+		// 							that.getDistributorInfo()
+		// 						}
+		// 					})
+		// 				}
+		// 			} else {
+		// 				layer.msg(res.msg)
+		// 			}
+		// 		}
+		// 	});
+		// },
+		// 工作人员列表
 		getRoom: function (page) {
 			if (page) this.roomsList.pageNum = page
 			var that = this;
@@ -403,12 +403,10 @@ window.app = new Vue({
 		// 跳转新增商品页面
 		jumpToGoods() {
 			let that = this
-			that.getData()
-			const dialog = layer.open({
-				type: 1,
+			var index = layer.open({
+				type: 2,
 				title: '加入商品',
-				closeBtn: 1,
-				content: $('#attribute'),
+				content: 'addgoods.html?id=' + config.id +'&shopsBrandId=' + that.shopsBrandId,
 				area: ['95%', '85%'],
 			});
 		},
@@ -1257,7 +1255,7 @@ window.app = new Vue({
 					type: 2,
 					title: "修改负责人",
 					content: 'adduser1.html?id=' + id + '&shopsId=' + config.id,
-					area: ['80%', '80%'],
+					area: ['70%', '420px'],
 					end: function () {
 						that.getAlluser();
 					}

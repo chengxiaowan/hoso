@@ -4,13 +4,8 @@ var config = {
     api_save: api_url + '/shopsBrand/add',
     api_edit: api_url + '/brand/saveOrupdate', //修改品牌
     api_del: api_url + '/shopsBrand/del', //删除品牌
-
-
     api_user: api_url + '/user/userList3', //获取负责人列表
     api_token: api_url + '/qiniu/getUpToken' //获取七牛的token
-
-
-
 }
 window.app = new Vue({
     el: '#app',
@@ -29,16 +24,11 @@ window.app = new Vue({
         labels: '', //标签
         summary: '',
         description: '', //图文描述
-        logoPath: '', //logo地址
         imagePath: '', //封面地址
+        logoPath: '', //logo地址
         shopsBrandPicList: [], //店铺图片列表
-
         tokenMessage: "",
         shopsBrandId: '',
-
-
-
-
     },
     created: function () {
         var that = this;
@@ -81,7 +71,7 @@ window.app = new Vue({
                 type: 'post',
                 success: res => {
                     that.newuserlist = res.result;
-                    // console.log(that.newuserlist)
+                    console.log(that.newuserlist)
                 }
             })
         },
@@ -251,7 +241,6 @@ window.app = new Vue({
         //         data.push(drool)
         //         // console.log(drool)
         //     }
-
         // },
         dy() {
             console.log("labels")

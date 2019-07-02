@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加日期</title>
+    <meta name="keywords" content="寒舍">
+    <meta name="description" content="寒舍">
+    <link rel="stylesheet" href="../css/public.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/Kalendae/0.7.1/kalendae.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/htz.css" />
+    <link rel="stylesheet" href="../css/custom/brands/add.css">
+</head>
+<style>
+    .input-container {
+        height: 34px !important;
+        line-height: 34px !important;
+    }
+
+    .select2-container {
+        z-index: 99999999999999;
+    }
+
+    textarea.form-control {
+        height: 100px;
+        resize: none;
+    }
+
+    .form-label {
+        height: 120px;
+        color: #a4a4a4;
+        font-size: 12px;
+    }
+
+    .form-label input {
+        width: 100px;
+        border: 0;
+    }
+
+    body {
+        font-size: 12px;
+    }
+
+    .form-group {
+        position: relative;
+        margin-bottom: 40px;
+    }
+
+    .form-group label {
+        width: 100%;
+    }
+
+    .tips {
+        color: #b8b8b8;
+        font-size: 12px;
+        font-weight: normal;
+    }
+
+    .dot {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        /*修改过，原为10px*/
+        transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        -webkit-transform: translateY(-50%);
+        width: 8px;
+        height: 8px;
+        background: #ff8d41;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+    }
+
+    .up-hot-tag {
+        /*margin-left: 10px;*/
+    }
+
+    .up-hot-tag a {
+        float: left;
+        margin: 10px 10px 0 0;
+        background: linear-gradient(45deg, transparent 50%, #61C4CF 0%);
+        background-size: 16px 16px;
+        border-top-right-radius: 3px;
+    }
+
+    .up-hot-tag a i {
+        float: left;
+        line-height: 30px;
+        font-size: 30px;
+        color: #fff;
+        background: #e4ebee;
+    }
+
+    .up-hot-tag a:hover i {
+        color: #e4ebee
+    }
+
+    .up-hot-tag a span {
+        float: left;
+        margin-left: -10px;
+        padding-right: 10px;
+        background-color: #e4ebee;
+        line-height: 30px;
+        font-size: 12px;
+        color: #34495e;
+    }
+
+    .cl:before,
+    .cl:after {
+        content: " ";
+        display: table;
+    }
+
+    .cl:after {
+        clear: both
+    }
+
+    .cl {
+        *zoom: 1
+    }
+
+    .form-price .form-control,
+    .form-status .form-control {
+        width: 80px;
+    }
+
+    .form-price label {
+        display: inline-block;
+        width: 14px;
+        text-align: center;
+    }
+
+    .ibox-content {
+        padding: 15px 0 20px;
+    }
+
+    .iconfont,
+    [class^="icon-"],
+    [class*=" icon-"] {
+        font-family: "iconfont" !important;
+        font-size: 16px;
+        color: #b8c4ce;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -webkit-text-stroke-width: 0.2px;
+        -moz-osx-font-smoothing: grayscale;
+        /*  -webkit-font-smoothing: none;
+        -webkit-text-stroke-width: initial;
+        -moz-osx-font-smoothing: initial;*/
+    }
+
+    .form-select {
+        padding-left: 0;
+    }
+    .form-control[type='number'] {
+        text-indent: 0px;
+    }
+
+    #tab-2 .btn,
+    #tab-4 .btn {
+        margin-bottom: 0;
+    }
+
+    .el-input__icon{
+        position: absolute;
+        right: 16px;
+    }
+    .form-select .el-select__caret{
+        position: absolute;
+        top: 2px;
+        right: 20px;
+        transform: rotateZ(180deg);
+        color: #c0c4cc;
+        font-size: 14px;
+    }
+    .form-select .dot{
+        right: 10px;
+    }
+    .form-template .dot{
+        right: 16px;
+        top: 36px;
+    }
+    .form-textarea .dot{
+        top: 36px;
+    }
+    .col-sm-6{
+        padding-left: 0;
+    }
+    .start-stop-time{
+        position: relative;
+        width: 550px;
+    }
+    .start-stop-time input{
+        width: 500px;
+    }
+    .start-stop-time i{
+        margin: 5px 0 5px 30px;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        color: #aaa;
+        font-size: 12px;
+        text-align: center;
+        border: 1px solid #aaa;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+    }
+    .kalendae .k-calendar {
+        display: inline-block;
+        zoom:1;
+        *display:inline;
+        /* width改为100% width:155px;*/
+        width: 100%;
+        vertical-align:top;
+    }
+    .kalendae .k-title,
+    .kalendae .k-header,
+    .kalendae .k-days {
+        /* width改为100% */
+        /* width:154px; */
+        width: 100%;
+        display:block;
+        overflow:hidden;
+    }
+    .kalendae .k-header span {
+        text-align:center;
+        font-weight:bold;
+        /* 这里的width要和.kalendae .k-days span 里面的相等 */
+        width:12.8%;
+        padding:1px 0;
+        color:#666;
+    }
+    .kalendae .k-days span {
+        /* 水平居中 */
+        text-align:center;
+        width:12.8%;
+        /* 高度 4.5em效果比较好 height等于line-height就能垂直居中了 */
+        height:4.5em;
+        line-height:4.5em;
+        padding:2px 3px 2px 2px;
+        border:1px solid transparent;
+        border-radius:3px;
+        color:#999;
+    }
+    .kalendae .k-days span {
+        /* 水平居中 */
+        text-align:center;
+        width:12.8%;
+        /* 高度 4.5em效果比较好 height等于line-height就能垂直居中了 */
+        height:4.5em;
+        line-height:4.5em;
+        padding:2px 3px 2px 2px;
+        border:1px solid transparent;
+        border-radius:3px;
+        color:#999;
+    }
+</style>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content" id="app">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group form-date">
+                <label>日期：</label>
+                <div class="form-group">
+                    <input type="text" class="form-control" disabled v-model="date" >
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-10 clearfix">
+            <div class="form-group">
+                <label>起止时间：</label>
+                <div class="form-group">
+                    <input type="text" class="form-control fl" v-model="time">
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-10 clearfix">
+            <div class="col-sm-6 hide" :class="type==2?'show':''">
+                <div class="form-group">
+                    <label>拼团人数：</label>
+                    <div class="form-group">
+                        <input type="number" placeholder="请输入拼团人数" class="form-control" v-model="num">
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 hide" :class="type==2?'show':''">
+                <div class="form-group">
+                    <label>最低拼团人数：</label>
+                    <div class="form-group">
+                        <input type="number" placeholder="请输入最低拼团人数" class="form-control" v-model="minNum">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-10">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>费用(人/元)：</label>
+                    <div class="form-group">
+                        <input type="number" placeholder="请输入费用" class="form-control" v-model="cost">
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>实际收益(人/元)：</label>
+                    <input type="number" placeholder="请输入实际收益" class="form-control" v-model="profit">
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 hide"  :class="type==2?'show':''">
+            <div class="form-group">
+                <label>集合时间地点：</label>
+                <input type="text" placeholder="请输入集合时间地点" class="form-control" v-model="muster">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 全局js -->
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/jquery.navScroll.js"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/tagsinput.js"></script>
+<script src="../js/kalendae.standalone.js"></script>
+<script src="../js/custom/service/dateDetail.js"></script>
+</body>
+</html>

@@ -58,13 +58,12 @@
 					</thead>
 					<tbody>
 						<template v-if="list.total > 0">
-							<tr v-for="item in list.list" :key="item.specialTopicId">
+							<tr v-for="item in list.list">
 								<td>{{item.title}}</td>
 								<td><img style="width: 80%;" :src="item.imageUrl"></td>
 								<td>{{item.createTime}}</td>
 								<td class="btn-hide">
 									<a class="btn btn-success" title="编辑" @click="edit(item.specialTopicId);">编辑</a>
-									<a class="btn btn-success" title="二维码" @click="ewm(item);">二维码</a>
 									<a class="btn btn-default" title="删除" @click="del(item.specialTopicId)">删除</a>
 								</td>
 							</tr>
@@ -87,12 +86,6 @@
 					</div>
 				</div>
 				<div class="pagi pull-right"></div>
-			</div>
-
-			<!-- 二维码展示区 -->
-			<div v-cloak v-if="bg_show1==true" @click="hide1" class="mb-bg"></div>
-			<div v-cloak v-if="bg_show1==true" class="ewm">
-				<a><img :src="image_ewm" @click="downs()"></a>
 			</div>
 
 		</div>

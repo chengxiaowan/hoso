@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../js/plugins/layui/css/layui.css">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/htz.css" />
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/custom/offlineshop/detail.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="ibox-content">
+            <div class="form">
+                <div class="row_list" id="attribute">
+                    <div class="col-sm-12">
+                        <!-- 检索 start -->
+                        <div class="form-inline" id="customerForm">
+                            <div class="form-group">
+                                <input id="nav-search-input" name="name" placeholder="请输入商品名称" class="form-control"
+                                    type="text" v-model="keywords">
+                            </div>
+                            <div class="form-group">
+                                <em>商品分类</em>
+                                <select name="type" class="form-control" style="width: 150px;" data-placeholder="商品分类" v-model="typeId">
+                                    <option value="">请选择商品分类</option>
+                                    <option v-for="item in sort" :value="item.typeId">{{item.name}}</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-htz btn-primary" @click="soso()"><i class="icon icon_search"></i>
+                                搜索</button>
+                        </div>
+                        <!-- 检索 end -->
+                        <div class="ibox-content">
+                            <table id="simple-table" class="table table-responsive table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th width="30%">商品名称</th>
+                                        <th width="10%">分类</th>
+                                        <th width="20%">品牌</th>
+                                        <th width="10%">图片</th>
+                                        <th width="10%">销售价</th>
+                                        <th width="10%">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template v-if="list.total !='0' ">
+                                        <tr v-for="item in list.list" :key="item.goodsId">
+                                            <td>{{item.name}}</td>
+                                            <td>{{item.typeName}}</td>
+                                            <!--<td>{{item.supplierName}}</td>-->
+                                            <td>{{item.brandName}}</td>
+                                            <td><img :src="item.image" width="60" alt=""></td>
+                                            <td>{{item.price}}</td>
+                                            <td>
+                                                <a class="btn btn-success">
+                                                    加入
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    <tr class="main_info" v-else>
+                                        <td colspan="6">没有相关数据</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="pull-left form form-inline">
+                                <div class="form-group form-group-sm">
+                                    共 {{list.total}} 条数据,每页显示
+                                    <select @change="getData(1)" class="form-control">
+                                        <option value="5">5</option>
+                                        <option value="10">10</option>
+                                        <option value="20">20</option>
+                                        <option value="30">30</option>
+                                        <option value="40">40</option>
+                                        <option value="50">50</option>
+                                    </select> 条
+                                </div>
+                            </div>
+                            <div class="pagi pull-right"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<!-- 全局js -->
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<script src="../js/tagsinput.js"></script>
+<script src="../js/custom/element-ui/index.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
+<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+<script src="../js/qiniuyun/qiniuImg2.js"></script>
+<script>
+    var config = {
+        shopsId: parameter().id,
+        shopsBrandId: parameter().shopsBrandId,
+        api_getsort: api_url + '/type/dataList', //获取分类 level1
+        api_getgoods: api_url + '/shopsBrand/shopsBrandGoodsList', //获取店铺对应品牌的商品列表
+    }
+    console.log(config.shopsId)
+    console.log(config.shopsBrandId)
+
+    window.app = new Vue({
+        el: '#app',
+        data: {
+            list: [],
+            sort:[],
+            keywords:'',
+            typeId:''
+        },
+        methods: {
+            /**
+             * 载入中方法
+             *
+             * @param {string} s 是否关闭
+             */
+            loading: function (s) {
+                if (s == "close") layer.close(this.loadingSwitch)
+                else this.loadingSwitch = layer.load(3);
+            },
+            getData: function (page, keywords) {
+                $('body,html').scrollTop(0)
+                if (page) this.list.pageNum = page
+                var that = this;
+                that.loading();
+                $.ajax({
+                    url: config.api_getgoods,
+                    async: true,
+                    type: 'post',
+                    data: {
+                        shopsBrandId:config.shopsBrandId,
+                        keywords: that.keywords,
+                        typeId:that.typeId,
+                        pageSize: that.list.pageSize || 10,
+                        pageNo: that.list.pageNum || 1,
+                    },
+                    success: function (res) {
+                        that.loading('close')
+                        // console.log(res)
+                        if (res.error == "00") {
+                            that.list = res.result;
+                            //分页
+                            if (that.pagi) {
+                                $('.pagi').pagination('updatePages', that.list.pages)
+                                if (page == 1) $('.pagi').pagination('goToPage', that.list
+                                    .pageNum)
+                            } else {
+                                that.pagi = $('.pagi').pagination({
+                                    pages: that.list.pages, //总页数
+                                    showCtrl: true,
+                                    displayPage: 6,
+                                    currentPage: that.list.pageNum,
+                                    onSelect: function (num) {
+                                        that.list.pageNum = num
+                                        that.getData()
+                                        yo.scrollTo('body')
+                                    }
+                                })
+                            }
+                        } else {
+                            layer.msg(res.msg)
+                        }
+                    }
+                });
+            },
+            //获取分类
+            getsort(){
+                var that = this;
+                $.ajax({
+                    url:config.api_getsort,
+                    type:'post',
+                    data:{
+                        level:1,
+                        // pageSize:100,
+                    },
+                    success:res=>{
+                        if(res.error == "00"){
+                            that.sort = res.result.list
+                            console.log(res)
+                        }
+                    }
+                })
+            },
+            //sosuo
+            soso(){
+                var that = this
+                that.getData()
+            }
+        },
+        mounted() {
+            var that = this
+            that.getData()
+            that.getsort()
+        },
+    })
+</script>
+
+</html>
