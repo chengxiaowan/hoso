@@ -60,27 +60,6 @@
 					</li>
 					<li>
 						<a href="#">
-							<i class="icon icon_order"></i>
-							<span class="nav-label">我的审核</span>
-							<span class="fa arrow"></span>
-						</a>
-						<ul class="nav nav-second-level">
-							<li>
-								<a class="J_menuItem" href="audit/shopList.html">店铺审核</a>
-							</li>
-							<li>
-								<a class="J_menuItem" href="audit/goodList.html">商品审核</a>
-							</li>
-							<li>
-								<a class="J_menuItem" href="audit/serve.html">服务审核</a>
-							</li>
-							<li>
-								<a class="J_menuItem" href="distribution/shopList.html">房东审核</a>
-							</li>
-						</ul>
-					</li>
-					<li>
-						<a href="#">
 							<i class="icon icon_provider"></i>
 							<span class="nav-label">供应商管理</span>
 							<span class="fa arrow"></span>

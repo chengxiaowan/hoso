@@ -89,8 +89,8 @@
 							<div class="form-group">
 								<em>品牌</em>
 								<template>
-									<el-select v-model="brandId" clearable filterable placeholder="请选择品牌"  style='width: 140px;'>
-										<el-option v-for="item in shopsList" :key="item.shopsBrandId" :label="item.brandName" :value="item.shopsBrandId">
+									<el-select v-model="shopsId" clearable filterable placeholder="请选择品牌"  style='width: 140px;'>
+										<el-option v-for="item in shopsList" :key="item.shopsId" :label="item.shopsName" :value="item.shopsId">
 										</el-option>
 									</el-select>
 								</template>
@@ -138,7 +138,7 @@
 					<tbody>
 						<template v-if="list.total != 0">
 							<tr  v-for="item in list.list">
-								<td>{{item.hotelBrandName}}</td>
+								<td>{{item.shopsName}}</td>
 								<td>{{item.name}}</td>
 								<td>{{item.typeName}}</td>
 								<td>{{item.brandName}}</td>

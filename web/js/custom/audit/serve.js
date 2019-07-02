@@ -1,8 +1,8 @@
 var config = {
 	role: localStorage.userRole,
-	api_list: api_url + '/shopsBrand/showAShopsBrandGoods', //店铺产品批次列表
-	api_audit: api_url + '/shopsBrand/updateAShopsBrandGoodsById', //审核
-	api_shopbrand: api_url + '/shopsBrand/shopsBrandList2', //店铺列表
+	api_list: api_url + '/shops/auditShopsGoodsApplicationList', //店铺产品批次列表
+	api_audit: api_url + '/shops/auditShopsGoodsApplication', //审核
+	api_shopsList: api_url + '/shops/shopsList', //店铺列表
 }
 window.app = new Vue({
 	el: '#app',
@@ -17,7 +17,7 @@ window.app = new Vue({
 		commissionPercent:'',
 		reason:'',
 		shopsList:[],
-		brandId:'',
+		shopsId:'',
 	},
 	created: function() {
 		var that = this;
@@ -68,8 +68,8 @@ window.app = new Vue({
 				}
 			});
 		});
-		that.getData();
-		that.getShop();
+		// that.getData();
+		// that.getShop();
 	},
 	methods: {
 		/**
@@ -85,7 +85,7 @@ window.app = new Vue({
 			let that = this
 			$.ajax({
 				type:"post",
-				url:config.api_shopbrand,
+				url:config.api_shopsList,
 				async:true,
 				success(res){
 					if(res.error=='00'){
@@ -110,7 +110,7 @@ window.app = new Vue({
 //					createTimeEnd: that.endDate,
 					pageSize: that.list.pageSize || 10,
 					pageNo: that.list.pageNum || 1,
-					shopsBrandId:that.brandId,
+					shopsId:that.shopsId,
 					auditStatus:that.auditStatus
 				},
 				success: function(res) {
@@ -142,13 +142,13 @@ window.app = new Vue({
 		},
 		search() {
 			const that = this;
-			that.getData(1);
+			// that.getData(1);
 		},
 		//审核
 		sh(item){
 			let that = this
 			that.auditStatus1='1'
-			that.commissionPercent='0'
+			that.commissionPercent=''
 			that.reason=''
 			var index = layer.open({
 				type: 1,
@@ -173,7 +173,7 @@ window.app = new Vue({
 						async:true,
 						data:{
 							userId:window.sessionStorage.getItem("userId"),
-							id:item.id,
+							shopsGoodsApplicationId:item.shopsGoodsApplicationId,
 							auditStatus:that.auditStatus1,
 							commissionPercent:that.commissionPercent,
 							reason:that.reason,

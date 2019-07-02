@@ -407,7 +407,7 @@ window.app = new Vue({
 				type: 2,
 				title: '加入商品',
 				content: 'addgoods.html?id=' + config.id +'&shopsBrandId=' + that.shopsBrandId,
-				area: ['100%', '100%'],
+				area: ['95%', '85%'],
 			});
 		},
 		//新增工作人员

@@ -77,6 +77,7 @@
 			left: -4px;
 			top: -4px;
 		}
+	
 	</style>
 
 	<body class="gray-bg">
@@ -87,10 +88,13 @@
 						<!-- 检索 start -->
 						<div class="form-inline" id="customerForm">
 							<div class="form-group">
-								<em>品牌</em>
+								<input id="nav-search-input" placeholder="请输入店铺名称" value="" class="form-control" type="text" v-model="keywords">
+							</div>
+							<div class="form-group">
+								<em>店铺名称</em>
 								<template>
-									<el-select v-model="brandId" clearable filterable placeholder="请选择品牌"  style='width: 140px;'>
-										<el-option v-for="item in shopsList" :key="item.shopsBrandId" :label="item.brandName" :value="item.shopsBrandId">
+									<el-select v-model="shopsId" clearable filterable placeholder="请选择店铺名称"  style='width: 140px;'>
+										<el-option v-for="item in shopsList" :key="item.shopsId" :label="item.shopsName" :value="item.shopsId">
 										</el-option>
 									</el-select>
 								</template>
@@ -124,7 +128,7 @@
 				<table id="simple-table" class="table table-responsive table-bordered table-hover">
 					<thead>
 						<tr>
-							<th width="15%">酒店品牌名称</th>
+							<th width="15%">品牌名称</th>
 							<th width="15%">商品名称</th>
 							<th width="10%">分类</th>
 							<th width="10%">品牌</th>
@@ -138,7 +142,7 @@
 					<tbody>
 						<template v-if="list.total != 0">
 							<tr  v-for="item in list.list">
-								<td>{{item.hotelBrandName}}</td>
+								<td>{{item.shopsName}}</td>
 								<td>{{item.name}}</td>
 								<td>{{item.typeName}}</td>
 								<td>{{item.brandName}}</td>

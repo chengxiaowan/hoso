@@ -31,14 +31,12 @@
                             </div>
                             <div class="form-group">
                                 <em>商品分类</em>
-                                <select name="type" class="form-control" style="width: 150px;" data-placeholder="商品分类"
-                                    v-model="typeId">
+                                <select name="type" class="form-control" style="width: 150px;" data-placeholder="商品分类" v-model="typeId">
                                     <option value="">请选择商品分类</option>
                                     <option v-for="item in sort" :value="item.typeId">{{item.name}}</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-htz btn-primary" @click="soso()"><i
-                                    class="icon icon_search"></i>
+                            <button type="submit" class="btn btn-htz btn-primary" @click="soso()"><i class="icon icon_search"></i>
                                 搜索</button>
                         </div>
                         <!-- 检索 end -->
@@ -64,7 +62,7 @@
                                             <td><img :src="item.image" width="60" alt=""></td>
                                             <td>{{item.price}}</td>
                                             <td>
-                                                <a class="btn btn-success" @click="addgoods()">
+                                                <a class="btn btn-success">
                                                     加入
                                                 </a>
                                             </td>
@@ -78,7 +76,7 @@
                             <div class="pull-left form form-inline">
                                 <div class="form-group form-group-sm">
                                     共 {{list.total}} 条数据,每页显示
-                                    <select @change="getData(1)" class="form-control" v-model="list.pageSize">
+                                    <select @change="getData(1)" class="form-control">
                                         <option value="5">5</option>
                                         <option value="10">10</option>
                                         <option value="20">20</option>
@@ -94,52 +92,7 @@
                 </div>
             </div>
         </div>
-
-        <div class="bounced">
-            <div class="ibox-content" id="addgoods">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="panel panel-default test">
-                            <div class="panel-body explanation">
-                                <h3>说明：</h3>
-                                <br>
-                                <p>1、店铺提成比例即设置店铺针对该商品的佣金比例。</p>
-                                <p>2、店铺角色提成即设置店铺类各个销售角色针对该商品的佣金比例。</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label>店铺提成比例</label>
-                            <input type="text" class="form-control" placeholder="请输入店铺提成比例">
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <label>店铺提成比例</label>
-                        <table class="table table-responsive table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th width="50%">角色</th>
-                                    <th width="50%">提成比例%</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th>老板</th>
-                                    <th><input type="text" class="form-control" placeholder="请输入角色提成"></th>
-                                </tr>
-                                <tr>
-                                    <th>老板</th>
-                                    <th><input type="text" class="form-control" placeholder="请输入角色提成"></th>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-
-        </div>
+    </div>
 </body>
 <!-- 全局js -->
 <script src="../js/jquery-2.1.1.min.js"></script>
@@ -164,7 +117,7 @@
         shopsId: parameter().id,
         shopsBrandId: parameter().shopsBrandId,
         api_getsort: api_url + '/type/dataList', //获取分类 level1
-        api_getgoods: api_url + '/shopsBrand/showAShopsBrandGoods', //获取店铺对应品牌的商品列表
+        api_getgoods: api_url + '/shopsBrand/shopsBrandGoodsList', //获取店铺对应品牌的商品列表
     }
     console.log(config.shopsId)
     console.log(config.shopsBrandId)
@@ -173,9 +126,9 @@
         el: '#app',
         data: {
             list: [],
-            sort: [],
-            keywords: '',
-            typeId: ''
+            sort:[],
+            keywords:'',
+            typeId:''
         },
         methods: {
             /**
@@ -197,16 +150,15 @@
                     async: true,
                     type: 'post',
                     data: {
-                        shopsBrandId: config.shopsBrandId,
+                        shopsBrandId:config.shopsBrandId,
                         keywords: that.keywords,
-                        typeId: that.typeId,
+                        typeId:that.typeId,
                         pageSize: that.list.pageSize || 10,
                         pageNo: that.list.pageNum || 1,
-                        auditStatus: 1,
                     },
                     success: function (res) {
                         that.loading('close')
-                        console.log(res)
+                        // console.log(res)
                         if (res.error == "00") {
                             that.list = res.result;
                             //分页
@@ -234,17 +186,17 @@
                 });
             },
             //获取分类
-            getsort() {
+            getsort(){
                 var that = this;
                 $.ajax({
-                    url: config.api_getsort,
-                    type: 'post',
-                    data: {
-                        level: 1,
+                    url:config.api_getsort,
+                    type:'post',
+                    data:{
+                        level:1,
                         // pageSize:100,
                     },
-                    success: res => {
-                        if (res.error == "00") {
+                    success:res=>{
+                        if(res.error == "00"){
                             that.sort = res.result.list
                             console.log(res)
                         }
@@ -252,22 +204,9 @@
                 })
             },
             //sosuo
-            soso() {
+            soso(){
                 var that = this
                 that.getData()
-            },
-
-            //加入
-            addgoods() {
-                var index = layer.open({
-                    type: 1,
-                    title: "请设置佣金比例",
-                    closeBtn: 1,
-                    content: $('#addgoods'),
-                    area: ['669px', '638px'],
-                    btn: "确定",
-                    btnAlign: 'c',
-                })
             }
         },
         mounted() {

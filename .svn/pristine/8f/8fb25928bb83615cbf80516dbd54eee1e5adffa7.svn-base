@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>添加商品</title>
+    <link rel="stylesheet" href="../css/public.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+    <link rel="stylesheet" href="../js/plugins/utf8-jsp/themes/default/css/ueditor.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/htz.css" />
+    <style>
+        .input-container {
+            height: 34px !important;
+            line-height: 34px !important;
+        }
+
+        .select2-container {
+            z-index: 99999999999999;
+        }
+
+        textarea.form-control {
+            height: 158px;
+            resize: none;
+        }
+
+        .form-label {
+            height: 120px;
+            color: #a4a4a4;
+            font-size: 12px;
+        }
+
+        .form-label input {
+            width: 100px;
+            border: 0;
+        }
+
+        body {
+            font-size: 12px;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .form-group label {
+            width: 100%;
+        }
+
+        .tips {
+            color: #b8b8b8;
+            font-size: 12px;
+            font-weight: normal;
+        }
+
+        .dot {
+            position: absolute;
+            top: 50%;
+            right: 35px;
+            /*修改过，原为10px*/
+            transform: translateY(-50%);
+            -moz-transform: translateY(-50%);
+            -webkit-transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: #ff8d41;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+        }
+
+        .up-hot-tag {
+            /*margin-left: 10px;*/
+        }
+
+        .up-hot-tag a {
+            float: left;
+            margin: 10px 10px 0 0;
+            background: linear-gradient(45deg, transparent 50%, #61C4CF 0%);
+            background-size: 16px 16px;
+            border-top-right-radius: 3px;
+        }
+
+        .up-hot-tag a i {
+            float: left;
+            line-height: 30px;
+            font-size: 30px;
+            color: #fff;
+            background: #e4ebee;
+        }
+
+        .up-hot-tag a:hover i {
+            color: #e4ebee
+        }
+
+        .up-hot-tag a span {
+            float: left;
+            margin-left: -10px;
+            padding-right: 10px;
+            background-color: #e4ebee;
+            line-height: 30px;
+            font-size: 12px;
+            color: #34495e;
+        }
+
+        .cl:before,
+        .cl:after {
+            content: " ";
+            display: table;
+        }
+
+        .cl:after {
+            clear: both
+        }
+
+        .cl {
+            *zoom: 1
+        }
+
+        .form-price .form-control,
+        .form-status .form-control {
+            width: 80px;
+        }
+
+        .form-price label {
+            display: inline-block;
+            width: 14px;
+            text-align: center;
+        }
+
+        .ibox-content {
+            padding: 15px 0 20px;
+        }
+
+        .iconfont,
+        [class^="icon-"],
+        [class*=" icon-"] {
+            font-family: "iconfont" !important;
+            font-size: 16px;
+            color: #b8c4ce;
+            font-style: normal;
+            font-weight: normal;
+            font-variant: normal;
+            text-transform: none;
+            line-height: 1;
+            -webkit-font-smoothing: antialiased;
+            -webkit-text-stroke-width: 0.2px;
+            -moz-osx-font-smoothing: grayscale;
+            /*  -webkit-font-smoothing: none;
+        -webkit-text-stroke-width: initial;
+        -moz-osx-font-smoothing: initial;*/
+        }
+
+        .form-select {
+            padding-left: 0;
+        }
+
+        .form-create {
+            padding: 6px 12px;
+            height: 34px;
+            line-height: 22px;
+            color: #4a4a4a;
+            text-align: center;
+            background: #edf1f3;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+        }
+
+        .form-create:hover {
+            background: #e6e6e6;
+            color: #333;
+            cursor: pointer;
+            border-color: #adadad;
+        }
+
+
+        .symbol {
+            position: absolute;
+            left: 6px;
+            color: #a4a4a4;
+            font-weight: normal;
+        }
+
+        .form-control[type='number'] {
+            text-indent: 10px;
+        }
+
+        #tab-2 .btn,
+        #tab-4 .btn {
+            margin-bottom: 0;
+        }
+
+        .btn-htz.btn-success {
+            background: #50bfa5;
+            outline: #50bfa5;
+        }
+
+        .btn-htz.btn-success:hover {
+            background: #50bfa5;
+        }
+
+        .ibox-content-btn .btn-primary {
+            width: 141px;
+            height: 38px;
+            line-height: 26px;
+            color: #4a4a4a;
+            background: #edf1f3;
+            border: 1px solid #edf1f3;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+        }
+
+        .upload {
+            overflow: hidden;
+        }
+
+        .upload_img,
+        .upload_cover {
+            position: relative;
+            padding-left: 0;
+        }
+
+        .upload_img {
+            height: 215px;
+            border: 2px dashed #e2e9f0;
+        }
+
+        .upload_cover {
+            margin-top: 40px;
+            height: 215px;
+        }
+
+        .upload_pic {
+            padding-right: 0;
+            height: 470px;
+            border: 2px dashed #e2e9f0;
+        }
+
+        .upload_info {
+            text-align: center;
+        }
+
+        .icon_upload {
+            display: inline-block;
+            color: #4a90e2;
+            font-size: 30px;
+        }
+
+        .imgTitle {
+            max-width: 100%;
+            margin-bottom: 5px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .image-box {
+            width: 100px;
+            height: 100px;
+        }
+
+        /*测试代码*/
+
+        #bobodrool {
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        #updataImage {
+            width: 100px;
+            height: 100px;
+        }
+
+        .imginfo {
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="panel-body" id="app">
+        <div class="row">
+            <div class="col-sm-12">
+                    <div class="panel panel-default test">
+                            <div class="panel-body explanation">
+                                <h3>说明：</h3>
+                                <p>1、销售价取自商品的最低销售价。</p>
+                                <p>2、预估佣金比例即商家预计能得到的佣金比例，具体以实际佣金比例为准。</p>
+                                <p>3、预估收益即通过商家渠道售卖商品后，商家能得到的预计收益，具体以实际为准。</p>
+                            </div>
+                        </div>
+                <!-- 检索 start -->
+                <div class="form-inline" role="form" id="customerForm">
+                    <div class="form-group">
+                        <input class="form-control" id="nav-search-input" type="text" placeholder="请输入商品名称"
+                            v-model="keywords">
+                    </div>
+                    <div class="form-group">
+                        <em>分类</em>
+                        <select name="" class="form-control">
+                            <option value="">全部</option>
+                        </select>
+                    </div>
+                    <div class="form-group form-status">
+                        <em>审核状态</em>
+                        <select name="" class="form-control">
+                            <option value="">全部</option>
+                            <option value="0">待审核</option>
+                            <option value="1">审核通过</option>
+                            <option value="2">审核失败</option>
+                        </select>
+                    </div>
+                    <div class="form-group form-status">
+                        <em>状态</em>
+                        <select name="" class="form-control">
+                            <option value="">全部</option>
+                        </select>
+                    </div>
+                    <div class="form-group form-price">
+                        <em>销售价</em>
+                        <div class="form-group">
+                            <label class="symbol v-middle">¥</label>
+                            <input type="number" class="form-control">
+                        </div>
+                        <label>-</label>
+                        <div class="form-group">
+                            <label class="symbol v-middle">¥</label>
+                            <input type="number" class="form-control">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-htz btn-primary" @click="search()">
+                        <i class="icon icon_search"></i> 搜索
+                    </button>
+                    <button type="reset" class="btn btn-htz btn-success" @click="dy()">
+                        <i id="nav-search-icon" class="icon icon_plus"></i> 添加
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <table id="simple-table" class="table table-responsive table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th width="20%">商品名称</th>
+                        <th width="10%">分类</th>
+                        <th width="10%">品牌</th>
+                        <th width="15%">图片</th>
+                        <th width="10%">销售价（元）</th>
+                        <!-- <th width="8%">供货价（元）</th> -->
+                        <th width="10%">佣金比例（%）</th>
+                        <th width="10%">预估收益（元）</th>
+                        <!-- <th width="8%">审核状态</th> -->
+                        <th width="20%">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- <template v-if="list.total != 0"> -->
+                        <tr v-for="item in list.list" :key="item.goodsId">
+                            <td>{{item.name}}</td>
+                            <td>{{item.typeName}}</td>
+                            <td>{{item.brandName}}</td>
+                            <td><img :src="item.image" class="image-box"></td>
+                            <td>{{item.price}}</td>
+                            <!-- <td>{{item.purchasePrice}}</td> -->
+                            <td>5</td>
+                            <td>{{(item.price * 0.05).toFixed(2)}}</td>
+                            <!-- <td v-if="item.isOnsell == 0">已下架</td>
+                            <td v-if="item.isOnsell == 1">部分上架</td>
+                            <td v-if="item.isOnsell == 2">已上架</td> -->
+                            <td class="btn-hide">
+                                <a class="btn btn-success" title="查看">查看</a>
+                                <a class="btn btn-success" title="加入" @click="addgoods(item.goodsId)">加入</a>
+                            </td>
+                        </tr>
+                    <!-- </template> -->
+                    <!-- <tr class="main_info" v-else> -->
+                        <!-- <td colspan="10">没有相关数据</td> -->
+                    <!-- </tr> -->
+                </tbody>
+            </table>
+            <div class="pull-left form form-inline">
+                <div class="form-group form-group-sm">
+                    共 {{list.total}} 条数据,每页显示
+                    <select @change="getgoods(1)" v-model="list.pageSize" class="form-control">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                    </select> 条
+                </div>
+            </div>
+            <div class="pagi pull-right"></div>
+        </div>
+    </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/jquery.navScroll.js"></script>
+<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+<script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+<script src="../js/plugins/utf8-jsp/third-party/zeroclipboard/ZeroClipboard.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<!-- 自定义的JS -->
+<script src="../js/custom/brands/addgoods.js"></script>
+
+
+</html>
