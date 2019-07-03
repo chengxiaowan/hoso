@@ -44,9 +44,6 @@ var config = {
 	api_addrole: api_url + '/shops/addShopsRole',			//添加角色
 	api_getAlluser: api_url + '/shops/shopsDistributorList',		//获取店铺人员列表
 	api_userDel: api_url + '/user/changeIsQuit',		//员工离职
-	api_goodsList: api_url + '/shops/showShopsGoods',	//获取商品列表
-	api_getsort: api_url + '/type/dataList', //获取分类 level1
-	api_delgoods: api_url + '/shops/deleteTable'	//删除商品
 }
 
 // console.log(config.id)
@@ -133,12 +130,6 @@ window.app = new Vue({
 		newrole: "",
 		alluser: '',
 		bobodrool: '',		//角色过滤
-		goods: [],
-		key: '',
-		sort: [],
-		maxp: '',
-		minp: '',
-		typeName: '',
 	},
 	created: function () {
 		var that = this;
@@ -176,7 +167,6 @@ window.app = new Vue({
 		that.getpro()
 		that.getCity()
 		// console.log(config.id)
-		that.getsort()
 
 	},
 	methods: {
@@ -209,7 +199,7 @@ window.app = new Vue({
 				that.getRolelist()
 				that.getAlluser()
 			} else if (num == 3) {
-				that.getshopGoods()
+				this.getGoods(1, 1);
 			} else {
 				this.getRoom(1);
 			}
@@ -416,11 +406,8 @@ window.app = new Vue({
 			var index = layer.open({
 				type: 2,
 				title: '加入商品',
-				content: 'addgoods.html?id=' + config.id + '&shopsBrandId=' + that.shopsBrandId,
+				content: 'addgoods.html?id=' + config.id +'&shopsBrandId=' + that.shopsBrandId,
 				area: ['100%', '100%'],
-				end: function () {
-					that.getshopGoods()
-				}
 			});
 		},
 		//新增工作人员
@@ -1314,11 +1301,11 @@ window.app = new Vue({
 				data: {
 					shopsRoleId: id
 				},
-				success: res => {
-					if (res.error == "00") {
+				success:res=>{
+					if(res.error == "00"){
 						layer.msg("删除角色成功")
 						that.getRolelist()
-					} else {
+					}else{
 						layer.msg(res.msg)
 					}
 				}
@@ -1384,7 +1371,7 @@ window.app = new Vue({
 			that.getAlluser()
 		},
 		//编辑角色
-		editRole(id) {
+		editRole(id){
 			var that = this;
 			var index = layer
 			var that = this;
@@ -1401,97 +1388,7 @@ window.app = new Vue({
 				})
 		},
 
-		//获取商品列表
-		getshopGoods(page, key) {
-			var that = this
-			$('body,html').scrollTop(0)
-			if (page) this.list.pageNum = page
-			var that = this;
-			that.loading();
-			$.ajax({
-				url: config.api_goodsList,
-				async: true,
-				type: 'post',
-				data: {
-					shopsId: config.id,
-					keywords: that.key,
-					typeName: that.typeName,
-					minPrice: that.minp,
-					maxPrice: that.maxp,
-					pageSize: that.list.pageSize || 10,
-					pageNo: that.list.pageNum || 1,
-				},
-				success: function (res) {
-					that.loading('close')
-					// console.log(res)
-					if (res.error == "00") {
-						that.goods = res.result;
-						//分页
-						if (that.pagi) {
-							$('.pagi').pagination('updatePages', that.list.pages)
-							if (page == 1) $('.pagi').pagination('goToPage', that.list.pageNum)
-						} else {
-							that.pagi = $('.pagi').pagination({
-								pages: that.list.pages, //总页数
-								showCtrl: true,
-								displayPage: 6,
-								currentPage: that.list.pageNum,
-								onSelect: function (num) {
-									that.list.pageNum = num
-									that.getAlluser()
-									yo.scrollTo('body')
-								}
-							})
-						}
-					} else {
-						layer.msg(res.msg)
-					}
-				}
-			});
-		},
-		//获取分类
-		getsort() {
-			var that = this;
-			$.ajax({
-				url: config.api_getsort,
-				type: 'post',
-				data: {
-					level: 1,
-					// pageSize:100,
-				},
-				success: res => {
-					if (res.error == "00") {
-						that.sort = res.result.list
-						console.log(res)
-					}
-				}
-			})
-		},
-
-		//删除商品
-		delgoods(id) {
-			var that = this
-			var dialog = layer.confirm("确认删除该商品?", {
-				title: "提示"
-			}, () => {
-				$.ajax({
-					url: config.api_delgoods,
-					type: 'post',
-					async: true,
-					data: {
-						id: id,
-						tableName: "shops_goods"
-					},
-					success: res => {
-						if (res.error == "00") {
-							layer.msg("删除成功")
-							that.getshopGoods()
-						}
-					}
-				})
-
-			})
-		}
+		//获取分类列表
 	}
 })
 

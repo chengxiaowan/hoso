@@ -95,6 +95,10 @@
 			display: flex;
 			justify-content: space-between
 		}
+		.image-box{
+			width: 100px;
+			height: 100px;
+		}
 	</style>
 </head>
 
@@ -118,7 +122,7 @@
 								<a data-toggle="tab" @click="tab(2)" href="#tab-2" aria-expanded="false">人员信息</a>
 							</li>
 							<li v-if="status==1" class="">
-								<a data-toggle="tab" @click="tab(3)" href="#tab-3" aria-expanded="false">产品信息</a>
+								<a data-toggle="tab" @click="tab(3)" href="#tab-3" aria-expanded="false">商品信息</a>
 							</li>
 							<li v-if="status==1" class="">
 								<a data-toggle="tab" @click="tab(4)" href="#tab-4" aria-expanded="false">房间信息</a>
@@ -447,13 +451,13 @@
 										<div class="form-inline" role="form" id="customerForm">
 											<div class="form-group">
 												<input class="form-control" id="nav-search-input" type="text"
-													placeholder="请输入商品名称">
+													placeholder="请输入商品名称" v-model="key">
 											</div>
 											<div class="form-group">
 												<em>分类</em>
-												<select name="" class="form-control">
+												<select name="" class="form-control" v-model="typeName">
 													<option value="">全部</option>
-													<option>item.name</option>
+													<option v-for="item in sort" :value="item.name">{{item.name}}</option>
 												</select>
 											</div>
 											<!-- <div class="form-group form-status">
@@ -478,15 +482,15 @@
 												<em>销售价</em>
 												<div class="form-group">
 													<!-- <label class="symbol v-middle">¥</label> -->
-													<input type="number" class="form-control">
+													<input type="number" class="form-control" v-model="minp" placeholder="请输入最低售价">
 												</div>
 												<label>-</label>
 												<div class="form-group">
 													<!-- <label class="symbol v-middle">¥</label> -->
-													<input type="number" class="form-control">
+													<input type="number" class="form-control" v-model="maxp" placeholder="请输入最高售价">
 												</div>
 											</div>
-											<button type="submit" class="btn btn-htz btn-primary">
+											<button type="submit" class="btn btn-htz btn-primary" @click="getshopGoods()">
 												<i class="icon icon_search"></i> 搜索
 											</button>
 											<button type="reset" class="btn btn-htz btn-success" @click="jumpToGoods()">
@@ -502,43 +506,38 @@
 												<th width="15%">商品名称</th>
 												<th width="10%">分类</th>
 												<th width="10%">品牌</th>
-												<th width="12%">图片</th>
+												<th width="15%">图片</th>
 												<th width="10%">销售价（元）</th>
-												<!-- <th width="8%">供货价（元）</th> -->
 												<th width="10%">佣金比例（%）</th>
 												<th width="10%">预估收益（元）</th>
-												<th width="8%">审核状态</th>
 												<th width="20%">操作</th>
 											</tr>
 										</thead>
 										<tbody>
-											<!-- <template v-if="list.total != 0"> -->
-												<tr>
-													<td>name</td>
-													<td>typeName</td>
-													<td>brandName</td>
-													<td><img src="../images/a1.jpg" class="image-box"></td>
-													<td>1000</td>
-													<td>5</td>
-													<td>50</td>
-													<!-- <td v-if="item.auditStatus == 0">待审核</td>
-													<td v-if="item.auditStatus == 1">审核通过</td> -->
-													<td >审核失败</td>
+											<template v-if="goods.total != 0">
+												<tr v-for="item in goods.list" :key="item.shopsGoodsId">
+													<td>{{item.name}}</td>
+													<td>{{item.typeName}}</td>
+													<td>{{item.brandName}}</td>
+													<td><img :src="item.image" class="image-box"></td>
+													<td>{{item.price}}</td>
+													<td>{{item.commissionPercent}}</td>
+													<td>{{(item.price * (item.commissionPercent/100)).toFixed(2)}}</td>
 													<td class="btn-hide">
-														<a class="btn btn-success" title="编辑">查看</a>
+														<a class="btn btn-success" title="编辑">设置佣金比例</a>
 														<a class="btn btn-success" title="编辑">二维码</a>
-														<a class="btn btn-default" title="删除">删除</a>
+														<a class="btn btn-default" title="删除" @click="delgoods(item.id)">删除</a>
 													</td>
 												</tr>
-											<!-- </template> -->
-											<!-- <tr class="main_info" v-else> -->
-												<!-- <td colspan="10">没有相关数据</td> -->
-											<!-- </tr> -->
+											</template>
+											<tr class="main_info" v-else>
+												<td colspan="8">没有相关数据</td>
+											</tr>
 										</tbody>
 									</table>
 									<div class="pull-left form form-inline">
 										<div class="form-group form-group-sm">
-											共 list.total 条数据,每页显示
+											共 {{goods.total}} 条数据,每页显示
 											<select class="form-control">
 												<option value="10">10</option>
 												<option value="20">20</option>

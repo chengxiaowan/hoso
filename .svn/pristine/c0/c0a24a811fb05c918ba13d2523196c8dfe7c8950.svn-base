@@ -163,9 +163,7 @@
         api_getsort: api_url + '/type/dataList', //获取分类 level1
         api_getgoods: api_url + '/shopsBrand/showAShopsBrandGoods', //获取店铺对应品牌的商品列表
         api_getrole: api_url + '/shops/shopsRoleList',
-        api_set: api_url + '/shops/updateAShopsGoodsById', //设置佣金比例
-        api_addgoods:api_url + '/shops/addShopsGoods'       //加入商品
-        
+        api_set: api_url + '/shops/updateAShopsGoodsById' //设置佣金比例
 
     }
     console.log(config.shopsId)
@@ -295,19 +293,22 @@
                             layer.msg("请输入店铺提成比例")
                         } else {
                             $.ajax({
-                                url:config.api_addgoods,
-                                type:'post',
-                                async:true,
-                                data:{
-                                    goodsId:id,
-                                    shopsId:config.shopsId,
+                                url: config.api_set,
+                                type: 'post',
+                                async: true,
+                                data: {
+                                    shopsId: config.shopsId,
+                                    shopsGoodsId: id,
                                     commissionPercent: that.commissionPercent,
                                     roleList:JSON.stringify(roleList)
                                 },
                                 success:res=>{
+                                    
                                     if(res.error == "00"){
                                         layer.msg("加入商品成功")
                                         layer.close(index)
+                                    }else{
+                                        layer.msg(res.msg)
                                     }
                                 }
                             })
