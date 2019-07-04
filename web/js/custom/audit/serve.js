@@ -1,8 +1,8 @@
 var config = {
 	role: localStorage.userRole,
-	api_audit: api_url + '/shops/auditShopsGoodsApplication', //审核
-	api_shopsList: api_url + '/shops/shopsList', //店铺列表
-	api_getserve: api_url + '/shopsBrand/showAShopsBrandService'
+	api_list: api_url + '/shopsBrand/showAShopsBrandService', 			//待审核店铺服务列表
+	api_audit: api_url + '/shopsBrand/updateAShopsBrandServiceById', 	//审核
+	api_shopbrand: api_url + '/shopsBrand/shopsBrandList2', 			//店铺列表
 }
 window.app = new Vue({
 	el: '#app',
@@ -17,7 +17,7 @@ window.app = new Vue({
 		commissionPercent:'',
 		reason:'',
 		shopsList:[],
-		shopsId:'',
+		brandId:'',
 	},
 	created: function() {
 		var that = this;
@@ -69,7 +69,7 @@ window.app = new Vue({
 			});
 		});
 		that.getData();
-		// that.getShop();
+		that.getShop();
 	},
 	methods: {
 		/**
@@ -85,7 +85,7 @@ window.app = new Vue({
 			let that = this
 			$.ajax({
 				type:"post",
-				url:config.api_shopsList,
+				url:config.api_shopbrand,
 				async:true,
 				success(res){
 					if(res.error=='00'){
@@ -101,17 +101,17 @@ window.app = new Vue({
 			var that = this;
 			that.loading();
 			$.ajax({
-				url: config.api_getserve,
+				url: config.api_list,
 				async: true,
 				type: 'post',
 				data: {
 					keywords: that.keywords,
-//					createTimeStart: that.startDate,
-//					createTimeEnd: that.endDate,
+					createTimeStart: that.startDate,
+					createTimeEnd: that.endDate,
 					pageSize: that.list.pageSize || 10,
 					pageNo: that.list.pageNum || 1,
-					shopsId:that.shopsId,
-					// auditStatus:that.auditStatus
+					shopsBrandId:that.brandId,
+					auditStatus:that.auditStatus
 				},
 				success: function(res) {
 					that.loading('close')
@@ -143,13 +143,13 @@ window.app = new Vue({
 		},
 		search() {
 			const that = this;
-			// that.getData(1);
+			that.getData(1);
 		},
 		//审核
 		sh(item){
 			let that = this
 			that.auditStatus1='1'
-			that.commissionPercent=''
+			that.commissionPercent='0'
 			that.reason=''
 			var index = layer.open({
 				type: 1,
@@ -174,7 +174,7 @@ window.app = new Vue({
 						async:true,
 						data:{
 							userId:window.sessionStorage.getItem("userId"),
-							shopsGoodsApplicationId:item.shopsGoodsApplicationId,
+							id:item.id,
 							auditStatus:that.auditStatus1,
 							commissionPercent:that.commissionPercent,
 							reason:that.reason,

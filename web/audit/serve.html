@@ -77,7 +77,6 @@
 			left: -4px;
 			top: -4px;
 		}
-	
 	</style>
 
 	<body class="gray-bg">
@@ -88,27 +87,32 @@
 						<!-- 检索 start -->
 						<div class="form-inline" id="customerForm">
 							<div class="form-group">
-								<input id="nav-search-input" placeholder="请输入店铺名称" value="" class="form-control" type="text" v-model="keywords">
-							</div>
-							<div class="form-group">
-								<em>店铺名称</em>
+								<em>品牌</em>
 								<template>
-									<el-select v-model="shopsId" clearable filterable placeholder="请选择店铺名称"  style='width: 140px;'>
-										<el-option v-for="item in shopsList" :key="item.shopsId" :label="item.shopsName" :value="item.shopsId">
+									<el-select v-model="brandId" clearable filterable placeholder="请选择品牌"  style='width: 140px;'>
+										<el-option v-for="item in shopsList" :key="item.shopsBrandId" :label="item.brandName" :value="item.shopsBrandId">
 										</el-option>
 									</el-select>
 								</template>
 							</div>
 							<div class="form-group">
 								<em>审核状态</em>
-								<select name="type" class="form-control" style="width: 120px;" v-model="auditStatus">
+								<select name="type" class="form-control" style="width: 120px;" v-model="auditStatus" @change="getData()">
 									<option value="">全部</option>
 									<option value="0">待审核</option>
 									<option value="1">审核通过</option>
 									<option value="2">审核失败</option>
 								</select>
 							</div>
-							<button type="submit" class="btn btn-htz btn-primary">
+							<!--<div class="form-group">
+								<em>开始日期</em>
+								<input type="text" readonly="readonly" id="start" name='start' class="form-control" placeholder="请选择开始日期" v-model="startDate" />
+							</div>
+							<div class="form-group">
+								<em>结束日期</em>
+								<input type="text" readonly="readonly" id="end" name='end' class="form-control" placeholder="请选择结束日期" v-model="endDate" />
+							</div>-->
+							<button type="submit" class="btn btn-htz btn-primary" @click="search()">
                         <i class="icon icon_search"></i> 搜索
                     </button>
 						</div>
@@ -120,38 +124,38 @@
 				<table id="simple-table" class="table table-responsive table-bordered table-hover">
 					<thead>
 						<tr>
-							<th width="15%">酒店品牌名称</th>
-							<th width="15%">服务名称</th>
+							<th width="20%">酒店品牌名称</th>
+							<th width="20%">服务名称名称</th>
 							<th width="10%">服务供应商</th>
-							<th width="15%">服务位置</th>
-							<th width="15%">审核状态</th>
-							<th width="15%">提成比例%</th>
-							<th width="15%">操作</th>
+							<th width="20%">服务位置</th>
+							<th width="10%">审核状态</th>
+							<th width="10%">提成比例%</th>
+							<th width="10%">操作</th>
 						</tr>
 					</thead>
 					<tbody>
 						<template v-if="list.total != 0">
-							<tr v-for="item in list.list">
+							<tr  v-for="item in list.list">
 								<td>{{item.hotelBrandName}}</td>
 								<td>{{item.serviceName}}</td>
 								<td>{{item.photoStudioName}}</td>
-								<td>{{item.city}}</td>
-								<td>{{item.auditStatus}}</td>
+								<td>{{item.province}} {{item.city}}</td>
+								<td :class="{'htz-red':item.auditStatus=='2'}">{{item.auditStatus=='0'?'待审核':(item.auditStatus=='1'?'审核通过':'审核失败')}}</td>
 								<td>{{item.commissionPercent}}</td>
 								<td class="btn-hide">
-									<a class="btn btn-success" title="审核">审核</a>
+									<a class="btn btn-success" title="审核" @click="sh(item);" v-if="item.auditStatus == '0'">审核</a>
 								</td>
 							</tr>
 						</template>
 						<tr class="main_info" v-else>
-							<td colspan="7">没有相关数据</td>
+							<td colspan="9">没有相关数据</td>
 						</tr>
 					</tbody>
 				</table>
 				<div class="pull-left form form-inline">
 					<div class="form-group form-group-sm">
 						共 {{list.total}} 条数据,每页显示
-						<select v-model="list.pageSize" class="form-control">
+						<select @change="getData(1)" v-model="list.pageSize" class="form-control">
 							<option value="10">10</option>
 							<option value="20">20</option>
 							<option value="30">30</option>

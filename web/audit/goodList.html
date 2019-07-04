@@ -97,7 +97,7 @@
 							</div>
 							<div class="form-group">
 								<em>审核状态</em>
-								<select name="type" class="form-control" style="width: 120px;" v-model="auditStatus">
+								<select name="type" class="form-control" style="width: 120px;" v-model="auditStatus" @change="getData()">
 									<option value="">全部</option>
 									<option value="0">待审核</option>
 									<option value="1">审核通过</option>
@@ -147,7 +147,7 @@
 								<td :class="{'htz-red':item.auditStatus=='2'}">{{item.auditStatus=='0'?'待审核':(item.auditStatus=='1'?'审核通过':'审核失败')}}</td>
 								<td>{{item.commissionPercent}}</td>
 								<td class="btn-hide">
-									<a class="btn btn-success" title="审核" @click="sh(item);">审核</a>
+									<a class="btn btn-success" title="审核" @click="sh(item);" v-if="item.auditStatus == '0'">审核</a>
 								</td>
 							</tr>
 						</template>
