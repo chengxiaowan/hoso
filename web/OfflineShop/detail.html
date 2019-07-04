@@ -538,7 +538,7 @@
 									<div class="pull-left form form-inline">
 										<div class="form-group form-group-sm">
 											共 {{goods.total}} 条数据,每页显示
-											<select class="form-control">
+											<select class="form-control" v-model="goods.pageSize" @change="getshopGoods(1)">
 												<option value="10">10</option>
 												<option value="20">20</option>
 												<option value="30">30</option>
@@ -547,7 +547,7 @@
 											</select> 条
 										</div>
 									</div>
-									<div class="pagi pull-right"></div>
+									<div class="pagi5 pull-right"></div>
 								</div>
 							</div>
 						</div>

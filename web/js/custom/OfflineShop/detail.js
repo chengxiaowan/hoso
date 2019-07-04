@@ -1418,28 +1418,26 @@ window.app = new Vue({
 					typeName: that.typeName,
 					minPrice: that.minp,
 					maxPrice: that.maxp,
-					pageSize: that.list.pageSize || 10,
-					pageNo: that.list.pageNum || 1,
+					pageSize: that.goods.pageSize || 10,
+					pageNo: that.goods.pageNum || 1,
 				},
 				success: function (res) {
 					that.loading('close')
-					// console.log(res)
 					if (res.error == "00") {
 						that.goods = res.result;
 						//分页
-						if (that.pagi) {
-							$('.pagi').pagination('updatePages', that.list.pages)
-							if (page == 1) $('.pagi').pagination('goToPage', that.list.pageNum)
+						if (that.pagi5) {
+							$('.pagi5').pagination('updatePages', that.goods.pages)
+							if (page == 1) $('.pagi5').pagination('goToPage', that.goods.pageNum)
 						} else {
-							that.pagi = $('.pagi').pagination({
-								pages: that.list.pages, //总页数
+							that.pagi3 = $('.pagi5').pagination({
+								pages: that.goods.pages, //总页数
 								showCtrl: true,
 								displayPage: 6,
-								currentPage: that.list.pageNum,
+								currentPage: that.goods.pageNum,
 								onSelect: function (num) {
-									that.list.pageNum = num
-									that.getAlluser()
-									yo.scrollTo('body')
+									that.goods.pageNum = num
+									that.getshopGoods()
 								}
 							})
 						}

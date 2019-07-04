@@ -130,27 +130,27 @@
 						</tr>
 					</thead>
 					<tbody>
-						<!-- <template v-if="list.total != 0"> -->
-							<tr>
-								<td>item.shopsName</td>
-								<td>item.name</td>
-								<td>item.typeName</td>
-								<td>item.brandName</td>
-								<td>11111</td>
-								<td>item.commissionPercent</td>
+						<template v-if="list.total != 0">
+							<tr v-for="item in list.list">
+								<td>{{item.hotelBrandName}}</td>
+								<td>{{item.serviceName}}</td>
+								<td>{{item.photoStudioName}}</td>
+								<td>{{item.city}}</td>
+								<td>{{item.auditStatus}}</td>
+								<td>{{item.commissionPercent}}</td>
 								<td class="btn-hide">
 									<a class="btn btn-success" title="审核">审核</a>
 								</td>
 							</tr>
-						<!-- </template> -->
-						<tr class="main_info">
-							<td colspan="9">没有相关数据</td>
+						</template>
+						<tr class="main_info" v-else>
+							<td colspan="7">没有相关数据</td>
 						</tr>
 					</tbody>
 				</table>
 				<div class="pull-left form form-inline">
 					<div class="form-group form-group-sm">
-						共 list.total 条数据,每页显示
+						共 {{list.total}} 条数据,每页显示
 						<select v-model="list.pageSize" class="form-control">
 							<option value="10">10</option>
 							<option value="20">20</option>

@@ -1,8 +1,8 @@
 var config = {
 	role: localStorage.userRole,
-	api_list: api_url + '/shops/auditShopsGoodsApplicationList', //店铺产品批次列表
 	api_audit: api_url + '/shops/auditShopsGoodsApplication', //审核
 	api_shopsList: api_url + '/shops/shopsList', //店铺列表
+	api_getserve: api_url + '/shopsBrand/showAShopsBrandService'
 }
 window.app = new Vue({
 	el: '#app',
@@ -68,7 +68,7 @@ window.app = new Vue({
 				}
 			});
 		});
-		// that.getData();
+		that.getData();
 		// that.getShop();
 	},
 	methods: {
@@ -101,7 +101,7 @@ window.app = new Vue({
 			var that = this;
 			that.loading();
 			$.ajax({
-				url: config.api_list,
+				url: config.api_getserve,
 				async: true,
 				type: 'post',
 				data: {
@@ -111,12 +111,13 @@ window.app = new Vue({
 					pageSize: that.list.pageSize || 10,
 					pageNo: that.list.pageNum || 1,
 					shopsId:that.shopsId,
-					auditStatus:that.auditStatus
+					// auditStatus:that.auditStatus
 				},
 				success: function(res) {
 					that.loading('close')
 					if(res.error == "00") {
 						that.list = res.result;
+						console.log(res)
 						//分页
 						if(that.pagi) {
 							$('.pagi').pagination('updatePages', that.list.pages)
