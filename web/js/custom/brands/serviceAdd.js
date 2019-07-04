@@ -1,8 +1,10 @@
+var shopsBrandId = parameter().id;
+console.log(shopsBrandId)
 var config = {
     role: localStorage.userRole,
-    api_list: api_url+'/service/getPhotoServiceListPage', //获取旅拍列表
+    api_list: api_url+'/shopsBrand/showShopsBrandService', //获取旅拍列表
+    api_join: api_url+'/shopsBrand/addShopsBrandService', // 加入服务
     api_detail: api_url+'/service/getPhotoServiceById', //获取旅拍详情
-    api_del: api_url+'/service/deletePhotoServiceById', //删除旅拍工作室
 }
 window.app = new Vue({
     el: '#app',
@@ -71,16 +73,6 @@ window.app = new Vue({
                 }
             });
         },
-
-        // 跳转
-        jump(){
-            var index = layer.open({
-                type : 2,
-                title : '新增',
-                content: 'add.html',
-                area : [ '100%', '100%' ]
-            });
-        },
         // 查看
         view(id, type) {
             var index = layer.open({
@@ -90,31 +82,31 @@ window.app = new Vue({
                 area : [ '100%', '100%' ]
             });
         },
-        search(){
-            const that = this;
-            var page = 1;
-            var keywords = that.keywords;
-            that.getData(page,keywords);
-        },
-        // 删除旅拍
-        del(id) {
-            const that = this;
-            const dialog = layer.confirm("确认删除该旅拍吗?", {
+        // 加入
+        join(id) {
+           var that = this;
+            const dialog = layer.confirm("确认加入服务吗?", {
                 title: "提示"
             }, () => {
-                $.get(config.api_del, {
-                    id: id,
-                    delFlag:'1'
+                $.get(config.api_join, {
+                    shopsBrandId: shopsBrandId,
+                    serviceId: id,
                 }, function(data) { // 回调函数
                     if(data.error == '00') {
                         layer.close(dialog)
-                        layer.msg("删除成功")
+                        layer.msg("加入成功")
                         that.getData()
                     } else {
                         layer.msg(data.msg)
                     }
                 })
             })
+        },
+        search(){
+            const that = this;
+            var page = 1;
+            var keywords = that.keywords;
+            that.getData(page,keywords);
         },
     }
 })

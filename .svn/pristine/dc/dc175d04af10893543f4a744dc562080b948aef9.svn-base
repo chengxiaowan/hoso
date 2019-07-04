@@ -124,14 +124,12 @@
 				<table id="simple-table" class="table table-responsive table-bordered table-hover">
 					<thead>
 						<tr>
-							<th width="15%">酒店品牌名称</th>
-							<th width="15%">商品名称</th>
-							<th width="10%">分类</th>
-							<th width="10%">品牌</th>
-							<th width="10%">图片</th>
-							<th width="10%">状态</th>
+							<th width="20%">酒店品牌名称</th>
+							<th width="20%">服务名称名称</th>
+							<th width="10%">服务供应商</th>
+							<th width="20%">服务位置</th>
 							<th width="10%">审核状态</th>
-							<th width="10%">提成比例(%)</th>
+							<th width="10%">提成比例%</th>
 							<th width="10%">操作</th>
 						</tr>
 					</thead>
@@ -139,11 +137,9 @@
 						<template v-if="list.total != 0">
 							<tr  v-for="item in list.list">
 								<td>{{item.hotelBrandName}}</td>
-								<td>{{item.name}}</td>
-								<td>{{item.typeName}}</td>
-								<td>{{item.brandName}}</td>
-								<td><img :src="item.image" width="60" alt=""></td>
-								<td>{{item.isOnsell=='0'?'已下架':(item.isOnsell=='1'?'部分上架':'已上架')}}</td>
+								<td>{{item.serviceName}}</td>
+								<td>{{item.photoStudioName}}</td>
+								<td>{{item.province}} {{item.city}}</td>
 								<td :class="{'htz-red':item.auditStatus=='2'}">{{item.auditStatus=='0'?'待审核':(item.auditStatus=='1'?'审核通过':'审核失败')}}</td>
 								<td>{{item.commissionPercent}}</td>
 								<td class="btn-hide">
@@ -224,9 +220,9 @@
 		<script src="../js/module/module_pagination.js"></script>
 		<script src="../js/custom/element-ui/index.js"></script>
 		<!-- 自定义js -->
-		<script src="../js/content.min.js?v=1.0.0"></script> 
+		<script src="../js/content.min.js?v=1.0.0"></script>
 		<script src="../js/custom/common.js"></script>
-		<script src="../js/custom/audit/goodList.js"></script>
+		<script src="../js/custom/audit/serve.js"></script>
 	</body>
 
 </html>

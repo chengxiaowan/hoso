@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>旅拍服务</title>
-    <meta name="keywords" content="寒舍">
-    <meta name="description" content="寒舍">
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
-    <link rel="stylesheet" href="../css/animate.min.css">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/layout.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>加入服务</title>
+<meta name="keywords" content="寒舍">
+<meta name="description" content="寒舍">
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+<link rel="stylesheet" href="../css/animate.min.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/layout.css">
+<style>
+.layui-layer-title{font-weight: normal;}
+</style>
 </head>
 <body class="gray-bg">
 <div class="wrapper wrapper-content" id="app">
@@ -25,9 +28,6 @@
                     <button type="submit" class="btn btn-htz btn-primary" @click="search()">
                         <i class="icon icon_search"></i> 搜索
                     </button>
-                    <button type="reset" class="btn btn-htz btn-success" @click="jump();">
-                        <i id="nav-search-icon" class="icon icon_plus"></i> 新增
-                    </button>
                 </div>
                 <!-- 检索 end -->
             </div>
@@ -38,22 +38,22 @@
             <thead>
             <tr>
                 <th width="20%">名称</th>
-                <th width="20%">服务位置</th>
-                <th width="20%">类型</th>
-                <th width="20%">创建日期</th>
+                <th width="30%">服务位置</th>
+                <th width="15%">类型</th>
+                <th width="15%">创建日期</th>
                 <th width="20%">操作</th>
             </tr>
             </thead>
             <tbody>
             <tr v-if="list.total > 0" v-for="item in list.list">
-                <td>{{item.title}}</td>
+                <td>{{item.serviceName}}</td>
                 <td>{{item.province}}{{item.city}}</td>
                 <td v-if="item.type==1">定制</td>
                 <td v-else>团购</td>
                 <td>{{item.createTime}}</td>
                 <td class="btn-hide">
-                    <a class="btn btn-success" title="查看" @click="view(item.id,item.type);">查看</a>
-                    <a class="btn btn-default" title="删除" @click="del(item.id);">删除</a>
+                    <a class="btn btn-success" title="查看" @click="view(item.serviceId);">查看</a>
+                    <a class="btn btn-success" title="加入" @click="join(item.serviceId);">加入</a>
                 </td>
             </tr>
             <tr class="main_info" v-else>
@@ -86,6 +86,6 @@
 <!-- 自定义js -->
 <script src="../js/content.min.js?v=1.0.0"></script>
 <script src="../js/custom/common.js"></script>
-<script src="../js/custom/service/service.js"></script>
+<script src="../js/custom/brands/serviceAdd.js"></script>
 </body>
 </html>

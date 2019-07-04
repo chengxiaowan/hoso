@@ -1,31 +1,29 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>编辑订单</title>
-    <meta name="keywords" content="寒舍">
-    <meta name="description" content="寒舍">
-    <link rel="stylesheet" href="../css/public.css">
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
-    <link rel="stylesheet" href="../css/animate.min.css">
-    <link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
-    <link rel="stylesheet" href="../js/plugins/utf8-jsp/themes/default/css/ueditor.css">
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/layout.css">
-    <link rel="stylesheet" href="../css/htz.css" />
-    <link rel="stylesheet" href="../css/custom/brands/add.css">
-    <link rel="stylesheet" href="../css/custom/brands/style.css">
-    <style>
-        .failure {
-            color: #d0021b;
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>编辑订单</title>
+<meta name="keywords" content="寒舍">
+<meta name="description" content="寒舍">
+<link rel="stylesheet" href="../css/public.css">
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+<link rel="stylesheet" href="../css/animate.min.css">
+<link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+<link rel="stylesheet" href="../js/plugins/utf8-jsp/themes/default/css/ueditor.css">
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/layout.css">
+<link rel="stylesheet" href="../css/htz.css" />
+<link rel="stylesheet" href="../css/custom/brands/add.css">
+<link rel="stylesheet" href="../css/custom/brands/style.css">
+<style>
+    .failure{
+        color: #d0021b;
+    }
+</style>
 </head>
-
 <body class="gray-bg">
     <div class="wrapper wrapper-content" id="app">
         <div class="row">
@@ -106,17 +104,13 @@
                                         <div id="bobodrool">
                                             <!-- logo -->
                                             <div id="updataImage" class="imageup">
-                                                <p
-                                                    style="width: 100%;height: 18px;text-align: center;position: absolute;top:0;left:0;background-color: rgba(0, 0, 0, 0.8);color:#fff">
-                                                    <i class="text-danger">*</i>LOGO</p>
+                                                <p style="width: 100%;height: 18px;text-align: center;position: absolute;top:0;left:0;background-color: rgba(0, 0, 0, 0.8);color:#fff"><i class="text-danger">*</i>LOGO</p>
                                                 <img id="vivew" class="imginfo" :src="logoPath">
                                             </div>
 
                                             <!-- 封面 -->
                                             <div id="updataImage1" class="imageup">
-                                                <p
-                                                    style="width: 100%;height: 18px;text-align: center;position: absolute;top:0;left:0;background-color: rgba(0, 0, 0, 0.8);color:#fff">
-                                                    <i class="text-danger">*</i>封面</p>
+                                                    <p style="width: 100%;height: 18px;text-align: center;position: absolute;top:0;left:0;background-color: rgba(0, 0, 0, 0.8);color:#fff"><i class="text-danger">*</i>封面</p>
                                                 <img id="vivew1" class="imginfo" :src="imagePath">
                                             </div>
 
@@ -154,8 +148,10 @@
                                 <!-- 图片上传 end-->
 
 
+
+
                                 <!-- 图文描述 start -->
-                                <div class="description">
+                                <div class="description" >
                                     <div class="imgTitle">图文描述:</div>
                                     <script id="container" name="detailDescribe" type="text/plain"
                                         v-model="description">
@@ -191,14 +187,12 @@
                                                 <em>分类</em>
                                                 <select name="" class="form-control" v-model="typeId" @change="dy()">
                                                     <option value="">全部</option>
-                                                    <option v-for="item in type.list" :value="item.typeId"
-                                                        :key="item.typeId">{{item.name}}</option>
+                                                    <option v-for="item in type.list" :value="item.typeId" :key="item.typeId">{{item.name}}</option>
                                                 </select>
                                             </div>
                                             <div class="form-group form-status">
                                                 <em>审核状态</em>
-                                                <select name="" class="form-control" style="width: 114px"
-                                                    v-model="check">
+                                                <select name="" class="form-control" style="width: 114px" v-model="check">
                                                     <option value="">全部</option>
                                                     <option value="0">待审核</option>
                                                     <option value="1">审核通过</option>
@@ -266,8 +260,7 @@
                                                     <td v-if="item.auditStatus == 2">审核失败</td>
                                                     <td class="btn-hide">
                                                         <a class="btn btn-success" title="编辑" href="edit.html">查看</a>
-                                                        <a class="btn btn-success" title="编辑" @click="edit(item.id);"
-                                                            v-if="item.auditStatus == 1">二维码</a>
+                                                        <a class="btn btn-success" title="编辑" @click="edit(item.id);" v-if="item.auditStatus == 1">二维码</a>
                                                         <a class="btn btn-default" title="删除"
                                                             v-if="item.auditStatus == 0 || 2"
                                                             @click="delgoods(item.shopsBrandGoodsId);">删除</a>
@@ -341,25 +334,22 @@
                                         </thead>
                                         <tbody>
                                             <template v-if="list.total != 0">
-                                                <tr v-for="item in list.list" :key="item.userId">
-                                                    <!--<td>{{item.name}}</td>-->
-                                                    <td>{{item.realName}}</td>
-                                                    <td>{{item.mobilePhone}}</td>
-                                                    <td>{{item.email}}</td>
-                                                    <td>{{item.remark}}</td>
-                                                    <td v-if="item.isQuit==0">在职</td>
-                                                    <td v-if="item.isQuit==1">离职</td>
-                                                    <td class="btn-hide">
-                                                        <a class="btn btn-success" title="编辑"
-                                                            @click="userInfo(item.shopsBrandShopsOwnerId);">查看</a>
-                                                        <a class="btn btn-default" title="离职"
-                                                            @click="delUser(item.userId);"
-                                                            v-if="item.isQuit != 1">离职</a>
-                                                    </td>
-                                                </tr>
+                                            <tr v-for="item in list.list" :key="item.userId">
+                                                <!--<td>{{item.name}}</td>-->
+                                                <td>{{item.realName}}</td>
+                                                <td>{{item.mobilePhone}}</td>
+                                                <td>{{item.email}}</td>
+                                                <td>{{item.remark}}</td>
+                                                <td v-if="item.isQuit==0">在职</td>
+                                                <td v-if="item.isQuit==1">离职</td>
+                                                <td class="btn-hide">
+                                                    <a class="btn btn-success" title="编辑" @click="userInfo(item.shopsBrandShopsOwnerId);">查看</a>
+                                                    <a class="btn btn-default" title="离职" @click="delUser(item.userId);" v-if="item.isQuit != 1">离职</a>
+                                                </td>
+                                            </tr>
                                             </template>
                                             <tr class="main_info" v-else>
-                                                <td colspan="6">没有相关数据</td>
+                                            <td colspan="6">没有相关数据</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -396,16 +386,13 @@
                                         <!-- 检索 start -->
                                         <div class="form-inline" role="form">
                                             <div class="form-group">
-                                                <input class="form-control" type="text" placeholder="请输入服务名称"
-                                                    v-model="serviceKeywords">
+                                                <input class="form-control" type="text" placeholder="请输入服务名称" v-model="serviceKeywords">
                                             </div>
                                             <div class="form-group">
                                                 <em>省</em>
                                                 <template>
-                                                    <el-select v-model="provinceId" clearable filterable
-                                                        placeholder="请选择省" @change="selectProvince">
-                                                        <el-option v-for="item in provinceList" :key="item.id"
-                                                            :label="item.text" :value="item.id">
+                                                    <el-select v-model="provinceId" clearable filterable placeholder="请选择省" @change="selectProvince">
+                                                        <el-option v-for="item in provinceList" :key="item.id" :label="item.text" :value="item.id">
                                                         </el-option>
                                                     </el-select>
                                                 </template>
@@ -413,16 +400,13 @@
                                             <div class="form-group">
                                                 <em>市</em>
                                                 <template>
-                                                    <el-select v-model="cityId" clearable filterable placeholder="请选择市"
-                                                        @change="selectCity">
-                                                        <el-option v-for="item in cityList" :key="item.id"
-                                                            :label="item.text" :value="item.id">
+                                                    <el-select v-model="cityId" clearable filterable placeholder="请选择市" @change="selectCity">
+                                                        <el-option v-for="item in cityList" :key="item.id" :label="item.text" :value="item.id">
                                                         </el-option>
                                                     </el-select>
                                                 </template>
                                             </div>
-                                            <button type="submit" class="btn btn-htz btn-primary"
-                                                @click="serviceSearch()">
+                                            <button type="submit" class="btn btn-htz btn-primary" @click="serviceSearch()">
                                                 <i class="icon icon_search"></i> 搜索
                                             </button>
                                             <button type="reset" class="btn btn-htz btn-success" @click="serviceAdd()">
@@ -434,47 +418,42 @@
                                         <div class="ibox-content">
                                             <table class="table table-responsive table-bordered table-hover">
                                                 <thead>
-                                                    <tr>
-                                                        <th width="15%">服务名称</th>
-                                                        <th width="15%">服务提供商</th>
-                                                        <th width="20%">服务位置</th>
-                                                        <th width="7%">价格</th>
-                                                        <th width="10%">佣金比例（%）</th>
-                                                        <th width="10%">预估收益（元）</th>
-                                                        <th width="8%">审核状态</th>
-                                                        <th width="15%">操作</th>
-                                                    </tr>
+                                                <tr>
+                                                    <th width="15%">服务名称</th>
+                                                    <th width="15%">服务提供商</th>
+                                                    <th width="20%">服务位置</th>
+                                                    <th width="7%">价格</th>
+                                                    <th width="10%">佣金比例（%）</th>
+                                                    <th width="10%">预估收益（元）</th>
+                                                    <th width="8%">审核状态</th>
+                                                    <th width="15%">操作</th>
+                                                </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr v-if="brandServiceList.total > 0"
-                                                        v-for="item in brandServiceList.list">
-                                                        <td>{{item.serviceName}}</td>
-                                                        <td>{{item.photoStudioName}}</td>
-                                                        <td>{{item.province}}{{item.city}}</td>
-                                                        <td>{{item.price}}</td>
-                                                        <td>{{item.commissionPercent}}</td>
-                                                        <td>100.00</td>
-                                                        <td v-if="item.auditStatus == 0">待审核</td>
-                                                        <td v-if="item.auditStatus == 1">审核成功</td>
-                                                        <td v-if="item.auditStatus == 2"><em class="failure">审核失败</em>
-                                                        </td>
-                                                        <td class="btn-hide">
-                                                            <a class="btn btn-success" title="查看"
-                                                                @click="view(item.id);">查看</a>
-                                                            <a class="btn btn-default" title="删除"
-                                                                @click="del(item.id);">删除</a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr class="main_info" v-else>
-                                                        <td colspan="10">没有相关数据</td>
-                                                    </tr>
+                                                <tr v-if="brandServiceList.total > 0" v-for="item in brandServiceList.list">
+                                                    <td>{{item.serviceName}}</td>
+                                                    <td>{{item.photoStudioName}}</td>
+                                                    <td>{{item.province}}{{item.city}}</td>
+                                                    <td>{{item.price}}</td>
+                                                    <td>{{item.commissionPercent}}</td>
+                                                    <td>100.00</td>
+                                                    <td v-if="item.auditStatus == 0">待审核</td>
+                                                    <td v-if="item.auditStatus == 1">审核成功</td>
+                                                    <td v-if="item.auditStatus == 2"><em class="failure">审核失败</em></td>
+                                                    <td class="btn-hide">
+                                                        <a class="btn btn-success" title="查看" @click="view(item.id);">查看</a>
+                                                        <a class="btn btn-default" title="删除" @click="del(item.id);">删除</a>
+                                                    </td>
+                                                </tr>
+                                                <tr class="main_info" v-else>
+                                                    <td colspan="10">没有相关数据</td>
+                                                </tr>
                                                 </tbody>
                                             </table>
                                             <div class="pull-left form form-inline">
                                                 <div class="form-group form-group-sm">
                                                     共 {{list.total}} 条数据,每页显示
-                                                    <select @change="getData(1)" v-model="list.pageSize"
-                                                        class="form-control">
+                                                    <select @change="getData(1)" v-model="list.pageSize" class="form-control">
                                                         <option value="10">10</option>
                                                         <option value="20">20</option>
                                                         <option value="30">30</option>
@@ -496,38 +475,33 @@
             </div>
         </div>
     </div>
-    `
-    <!-- 全局js -->
-    <script src="../js/jquery-2.1.1.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
-    <script src="../js/plugins/layer/layer.min.js"></script>
-    <script src="../js/jquery.navScroll.js"></script>
-    <script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
-    <script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
-    <script src="../js/plugins/layui/layui.js"></script>
-    <script src="../js/custom/common.js"></script>
-    <script src="../js/plugins/utf8-jsp/third-party/zeroclipboard/ZeroClipboard.js"></script>
-    <script src="../js/plugins/utf8-jsp/ueditor.config.js"></script>
-    <script src="../js/plugins/utf8-jsp/uemy.js"></script>
-    <script src="../js/plugins/utf8-jsp/lang/zh-cn/zh-cn.js"></script>
-    <script src="../js/vue.js"></script>
-    <script src="../js/module/module_pagination.js"></script>
-    <script src="../js/tagsinput.js"></script>
-    <script src="../js/content.min.js?v=1.0.0"></script>
-    <script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
-    <script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
-    <script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
-    <!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
-    <script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
-    <script src="../js/qiniuyun/qiniuImg-bands.js"></script>
-    <script src="../js/jquery.h5upload.js"></script>
-    <!-- 引入组件库 -->
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <!-- 自定义js -->
-    <script src="../js/custom/common.js"></script>
-    <script src="../js/custom/brands/add1.js"></script>
-
-    
+`<!-- 全局js -->
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/jquery.navScroll.js"></script>
+<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+<script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+<script src="../js/plugins/utf8-jsp/third-party/zeroclipboard/ZeroClipboard.js"></script>
+<script src="../js/plugins/utf8-jsp/ueditor.config.js"></script>
+<script src="../js/plugins/utf8-jsp/uemy.js"></script>
+<script src="../js/plugins/utf8-jsp/lang/zh-cn/zh-cn.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<script src="../js/tagsinput.js"></script>
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
+<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+<script src="../js/qiniuyun/qiniuImg-bands.js"></script>
+<script src="../js/jquery.h5upload.js"></script>
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!-- 自定义js -->
+<script src="../js/custom/common.js"></script>
+<script src="../js/custom/brands/add1.js"></script>`
 </body>
-
 </html>

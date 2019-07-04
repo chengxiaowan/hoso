@@ -224,7 +224,7 @@
 		<script src="../js/module/module_pagination.js"></script>
 		<script src="../js/custom/element-ui/index.js"></script>
 		<!-- 自定义js -->
-		<script src="../js/content.min.js?v=1.0.0"></script> 
+		<script src="../js/content.min.js?v=1.0.0"></script>
 		<script src="../js/custom/common.js"></script>
 		<script src="../js/custom/audit/goodList.js"></script>
 	</body>
