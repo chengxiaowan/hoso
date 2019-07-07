@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>店铺详情</title>
+	<meta name="keywords" content="寒舍">
+	<meta name="description" content="寒舍">
+	<link rel="stylesheet" href="../css/bootstrap.min.css">
+	<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+	<link rel="stylesheet" href="../js/plugins/layui/css/layui.css">
+	<link rel="stylesheet" href="../css/animate.min.css">
+	<link rel="stylesheet" href="../css/style.css">
+	<link rel="stylesheet" href="../css/layout.css">
+	<link rel="stylesheet" href="../css/htz.css" />
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	<link rel="stylesheet" href="../css/custom/offlineshop/detail.css">
+	<style>
+		.ibox-content {
+			border: 0
+		}
+
+		a {
+			color: #449cf6
+		}
+
+		#tab-2 .btn,
+		#tab-4 .btn {
+			margin-bottom: 0
+		}
+
+		.title {
+			margin-bottom: 10px
+		}
+
+		.el-select-dropdown {
+			z-index: 9999999999999 !important
+		}
+
+		.add {
+			margin-left: 10px
+		}
+
+		input::-webkit-input-placeholder,
+		textarea::-webkit-input-placeholder {
+			color: #999
+		}
+
+		input:-moz-placeholder,
+		textarea:-moz-placeholder {
+			color: #999
+		}
+
+		input::-moz-placeholder,
+		textarea::-moz-placeholder {
+			color: #999
+		}
+
+		input:-ms-input-placeholder,
+		textarea:-ms-input-placeholder {
+			color: #999
+		}
+
+		.control-label {
+			padding: 7px 10px;
+			color: #000;
+			font-weight: 400;
+			text-align: left
+		}
+
+		.zt li {
+			width: 80px;
+			float: left;
+			padding: 10px 0 20px 0;
+			cursor: pointer
+		}
+
+		.zt li.active {
+			color: #449cf6
+		}
+
+		.layui-laydate-list.laydate-time-list>li {
+			width: 50% !important
+		}
+
+		.layui-laydate-list.laydate-time-list>li:last-child {
+			display: none !important
+		}
+
+		.ibox-content .col-sm-6:nth-child(even) {
+			margin-left: 0
+		}
+
+		.drool {
+			display: flex;
+			justify-content: space-between
+		}
+
+		.explanation {
+			background: rgba(228, 233, 239, 1) !important;
+			border: none !important
+		}
+
+		.ibox-box {
+			margin-top: 20px;
+			overflow: hidden
+		}
+
+		.table>thead>tr>th {
+			color: #5b5b5b;
+			background: #e4e9ef !important
+		}
+
+		.failure {
+			color: #d0021b
+		}
+
+		.form-control {
+			height: 40px;
+			line-height: 40px
+		}
+	</style>
+</head>
+
+<body class="gray-bg" style="position: relative;">
+	<div class="wrapper wrapper-content " id="app">
+		<div class="row">
+			<div class="col-sm-12" style="margin-bottom: 5px;">
+				<h2 class="m-t-xs">店铺名称: {{shopsName}} <small class="m-l-md">店主 :{{realName}}
+					</small></h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="tabs-container">
+					<ul class="nav nav-tabs">
+						<li v-if="status==1" class="active">
+							<a data-toggle="tab" @click="tab(1)" href="#tab-1" aria-expanded="true"> 基本信息</a>
+						</li>
+						<template v-cloak>
+							<li v-if="status==1" class="">
+								<a data-toggle="tab" @click="tab(2)" href="#tab-2" aria-expanded="false">人员信息</a>
+							</li>
+							<li v-if="status==1" class="">
+								<a data-toggle="tab" @click="tab(3)" href="#tab-3" aria-expanded="false">产品信息</a>
+							</li>
+							<li v-if="status==1" class="">
+								<a data-toggle="tab" @click="tab(5)" href="#tab-5" aria-expanded="false">周边服务</a>
+							</li>
+							<li v-if="status==1" class="">
+								<a data-toggle="tab" @click="tab(4)" href="#tab-4" aria-expanded="false">房间信息</a>
+							</li>
+						</template>
+					</ul>
+					<div class="tab-content">
+						<!-- 基本信息 -->
+						<div id="tab-1" class="tab-pane active">
+							<div class="ibox-content">
+								<div id="contractForm" class="form form-horizontal">
+									<div class="row row_list">
+										<template v-cloak>
+											<div class="col-sm-12 clear" v-if="status==2" style="color: red;">
+												<div class="form-group">
+													<label class="col-sm-1 control-label">失败理由 </label>
+													<div class="col-sm-11" style="line-height: 32px;">
+														{{reason}}
+													</div>
+												</div>
+											</div>
+										</template>
+										<template v-cloak>
+											<div class="col-sm-12 clear">
+												<div v-if="roleName =='系统人员'" class="form-group">
+													<label class="col-sm-1 control-label">店铺店主 <em
+															class="red">*</em></label>
+													<div class="col-sm-11">
+														<template>
+															<el-select v-model="userId" clearable filterable
+																placeholder="请输入店铺店主" style="width: 100%;">
+																<el-option v-for="item in userList" :key="item.userId"
+																	:label="item.realName" :value="item.userId">
+																</el-option>
+															</el-select>
+														</template>
+													</div>
+												</div>
+											</div>
+										</template>
+										<div class="col-sm-6 clear">
+											<div class="form-group">
+												<label class="col-sm-2 control-label">所属品牌 <em
+														class="red">*</em></label>
+												<div class="col-sm-10">
+													<template>
+														<el-select v-model="shopsBrandId" clearable filterable
+															placeholder="请选择品牌" style="width: 100%;">
+															<el-option v-for="item in brandslist"
+																:key="item.shopsBrandId" :label="item.brandName"
+																:value="item.shopsBrandId">
+															</el-option>
+														</el-select>
+													</template>
+												</div>
+											</div>
+										</div>
+
+										<div class="col-sm-6 clear">
+											<div class="form-group">
+												<label class="col-sm-2 control-label">店铺名称 <em
+														class="red">*</em></label>
+												<div class="col-sm-10">
+													<input class="form-control pull-left" type="text"
+														placeholder="请输入店铺名称" v-model="shopsName" />
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-2 control-label">店铺类型 <em
+														class="red">*</em></label>
+												<div class="col-sm-10">
+													<select name="type" class="form-control" style="width: 100%;"
+														v-model="shopsType">
+														<option value="">请选择店铺类型</option>
+														<option value="1">酒店</option>
+														<option value="2">民宿</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-2 control-label">联系电话 <em class="red">*</em>
+												</label>
+												<div class="col-sm-10">
+													<input class="form-control pull-left" type="text"
+														placeholder="请输入联系电话" v-model="phone" />
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-12 clear">
+											<div class="form-group">
+												<label class="col-sm-1 control-label">详细地址</label>
+												<div class="col-sm-3">
+													<template>
+														<el-select v-model="province" clearable filterable
+															placeholder="请选择省份" style="width: 100%;">
+															<el-option v-for="item in prolist" :key="item.provinceId"
+																:label="item.provinceName" :value="item.provinceName">
+															</el-option>
+														</el-select>
+													</template>
+												</div>
+												<div class="col-sm-3">
+													<template>
+														<el-select v-model="city" clearable filterable
+															placeholder="请选择城市" style="width: 100%;"
+															@change="getCity()">
+															<el-option v-for="item in citylist" :key="item.cityId"
+																:label="item.cityName" :value="item.cityName">
+															</el-option>
+														</el-select>
+													</template>
+												</div>
+												<div class="col-sm-5">
+													<input type="text" class="form-control" placeholder="请输入详细地址"
+														v-model="address" />
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-12 clear">
+											<div class="form-group">
+												<label class="col-sm-1 control-label">店铺简介 </label>
+												<div class="col-sm-11">
+													<textarea class="form-control" placeholder="请输入店铺简介"
+														v-model="summary"></textarea>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-12 clear">
+											<div class="form-group">
+												<label class="col-sm-1 control-label">店铺标签 </label>
+												<div class="col-sm-11">
+													<input class="form-control" name="tagsinput" id="tagsinputval"
+														v-model="tagsinputval" class="tagsinput" data-role="tagsinput"
+														value="" type="text" placeholder="输入后回车生成标签" />
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-12 clear">
+											<div class="form-group">
+												<label class="col-sm-1 control-label">店铺Logo</label>
+												<div class="col-sm-11">
+													<div class="layui-upload" id="btn-uploader2">
+														<div class="layui-upload-list pull-left" style="clear: both;">
+															<img style="width: 120px;" class="layui-upload-img"
+																id="demo2" :src="logoPath">
+															<p id="demoText"></p>
+														</div>
+														<button style="margin-top: 15px;" type="button"
+															class="layui-btn pull-left" id="pickfiles2">上传图片</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="ibox-content" style="margin-top: 50px;">
+								<em class="title">店铺图片
+									<div class="layui-upload  pull-right" id="btn-uploader">
+										<div class="layui-upload-list pull-right">
+											<p id="demoText"></p>
+										</div>
+										<button type="button" class="layui-btn pull-left" id="pickfiles">上传图片</button>
+									</div>
+								</em>
+								<table id="simple-table" class="table table-responsive table-bordered table-hover">
+									<thead>
+										<tr>
+											<th width="20%">图片名称</th>
+											<th width="40%">图片</th>
+											<th width="20%">上传时间</th>
+											<th width="20%">操作</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr v-for="(el,index) in scenePicList">
+											<th>{{el.originalFilename}}</th>
+											<td><img :src="el.url" style="width: 40%;"></td>
+											<td>{{el.uploadTime}}</td>
+											<td>
+												<a class="btn btn-default" title="删除" @click="delPic(index,el);">删除</a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="ibox-content">
+								<div class="ibox-content-btn">
+									<a class="btn btn-htz  btn-primary" title="保存" @click="edit();">保存</a>
+									<a class="btn btn-htz  btn-htz-default" title="关闭" onclick="cancle();">关闭</a>
+								</div>
+							</div>
+						</div>
+						<!-- 人员信息 -->
+						<div id="tab-2" class="tab-pane">
+							<div class="ibox-content">
+								<div class="row">
+									<!-- 角色过滤栏  高度为临时-->
+									<div class="col-sm-3" style="border:1px solid rgb(224,224,224);margin-top:15px">
+										<div class="title-box row" style="background: rgb(226,233,240);">
+											<div class="col-sm-8">
+												<span class="man-manage">销售角色</span>
+											</div>
+											<div class="col-sm-4">
+												<button class="layui-btn layui-btn-sm layui-btn-normal"
+													style="margin-top: 5px" @click="addNewrole()">
+													<span class="glyphicon glyphicon-plus"></span> 新建
+												</button>
+											</div>
+										</div>
+										<div class="col-sm-12">
+											<template v-if="userrolelist !=[]">
+												<ul class="roleMenu">
+													<li @click="userRole()">所有角色</li>
+													<li v-for="item in userrolelist" :key="item.shopsRoleId"
+														@click="userRole(item.shopsRoleId)" class="drool">
+														{{ item.roleName }}
+														<template>
+															<el-dropdown>
+																<span class="el-dropdown-link">
+																	<i class="el-icon-more el-icon--right"></i>
+																</span>
+																<el-dropdown-menu slot="dropdown">
+																	<el-dropdown-item
+																		@click.native="editRole(item.shopsRoleId)">编辑
+																	</el-dropdown-item>
+																	<el-dropdown-item
+																		@click.native="delRole(item.shopsRoleId)">删除
+																	</el-dropdown-item>
+																</el-dropdown-menu>
+															</el-dropdown>
+														</template>
+													</li>
+												</ul>
+											</template>
+											<ul class="roleMenu" v-else>
+												<li>没有相关数据</li>
+											</ul>
+										</div>
+									</div>
+
+									<!-- 列表展示区域  高度为临时-->
+									<div class="col-sm-9">
+										<div class="ibox-content">
+											<div class="row" style="margin-bottom:10px">
+												<div class="form-inline col-sm-12" id="customerForm">
+													<div class="form-group">
+														<input placeholder="请输入姓名" class="form-control" type="text"
+															v-model="keywords1">
+													</div>
+													<button type="submit" class="btn btn-htz btn-primary"
+														@click="search()">
+														<i class="icon icon_search"></i> 搜索
+													</button>
+													<button class="btn btn-htz btn-success" @click="adduser()">
+														<i id="nav-search-icon" class="icon icon_plus"></i> 新增
+													</button>
+												</div>
+											</div>
+											<table id="simple-table"
+												class="table table-responsive table-bordered table-hover"
+												style="border:1px solid rgb(224,224,224)">
+												<thead>
+													<tr>
+														<th width="30%">姓名</th>
+														<th width="15%">手机号</th>
+														<th width="20%">邮箱</th>
+														<th width="15%">状态</th>
+														<th width="20%">操作</th>
+													</tr>
+												</thead>
+												<tbody>
+													<template v-if="list.total != 0">
+														<tr v-for="item in list.list" :key="userId">
+															<td>{{ item.realName }}</td>
+															<td>{{ item.mobilePhone }}</td>
+															<td>{{ item.email }}</td>
+															<td v-if="item.isQuit == '0'">在职</td>
+															<td v-if="item.isQuit == '1'">离职</td>
+															<td class="btn-hide">
+																<a class="btn btn-success" title="编辑"
+																	@click="changeUser(item.shopsDistributorId)">查看</a>
+																<a class="btn btn-default" v-if="item.isQuit == '0'"
+																	title="离职" @click="deluser(item.userId);">离职</a>
+															</td>
+														</tr>
+													</template>
+													<tr class="main_info" v-else>
+														<td colspan="5">没有相关数据</td>
+													</tr>
+												</tbody>
+											</table>
+											<div class="pull-left form form-inline">
+												<div class="form-group form-group-sm">
+													共 {{list.total}} 条数据,每页显示
+													<select @change="getAlluser()" v-model="list.pageSize"
+														class="form-control">
+														<option value="10">10</option>
+														<option value="20">20</option>
+														<option value="30">30</option>
+														<option value="40">40</option>
+														<option value="50">50</option>
+													</select> 条
+												</div>
+											</div>
+											<div class="pagi pull-right"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- 产品信息 -->
+						<div id="tab-3" class="tab-pane">
+							<div class="panel-body">
+								<div class="row">
+									<div class="col-sm-12">
+										<!-- 检索 start -->
+										<div class="form-inline" role="form" id="customerForm">
+											<div class="form-group">
+												<input class="form-control" id="nav-search-input" type="text"
+													placeholder="请输入商品名称">
+											</div>
+											<div class="form-group">
+												<em>分类</em>
+												<select name="" class="form-control">
+													<option value="">全部</option>
+													<option>item.name</option>
+												</select>
+											</div>
+											<!-- <div class="form-group form-status">
+												<em>审核状态</em>
+												<select name="" class="form-control" style="width: 114px">
+													<option value="">全部</option>
+													<option value="0">待审核</option>
+													<option value="1">审核通过</option>
+													<option value="2">审核失败</option>
+												</select>
+											</div> -->
+											<!-- 暂时不要 -->
+											<!-- <div class="form-group form-status">
+														<em>状态</em>
+														<select name="" class="form-control">
+															<option value="">全部</option>
+															<option value="">已上架</option>
+															<option value="">下架</option>
+														</select>
+													</div> -->
+											<div class="form-group form-price">
+												<em>销售价</em>
+												<div class="form-group">
+													<!-- <label class="symbol v-middle">¥</label> -->
+													<input type="number" class="form-control">
+												</div>
+												<label>-</label>
+												<div class="form-group">
+													<!-- <label class="symbol v-middle">¥</label> -->
+													<input type="number" class="form-control">
+												</div>
+											</div>
+											<button type="submit" class="btn btn-htz btn-primary">
+												<i class="icon icon_search"></i> 搜索
+											</button>
+											<button type="reset" class="btn btn-htz btn-success" @click="jumpToGoods()">
+												<i id="nav-search-icon" class="icon icon_plus"></i> 添加
+											</button>
+										</div>
+									</div>
+								</div>
+								<div class="ibox-content">
+									<table id="simple-table" class="table table-responsive table-bordered table-hover">
+										<thead>
+											<tr>
+												<th width="15%">商品名称</th>
+												<th width="10%">分类</th>
+												<th width="10%">品牌</th>
+												<th width="15%">图片</th>
+												<th width="10%">销售价（元）</th>
+												<th width="10%">佣金比例（%）</th>
+												<th width="10%">预估收益（元）</th>
+												<th width="20%">操作</th>
+											</tr>
+										</thead>
+										<tbody>
+											<template v-if="goods.total != 0">
+												<tr v-for="item in goods.list" :key="item.shopsGoodsId">
+													<td>{{item.name}}</td>
+													<td>{{item.typeName}}</td>
+													<td>{{item.brandName}}</td>
+													<td><img :src="item.image" class="image-box"></td>
+													<td>{{item.price}}</td>
+													<td>{{item.commissionPercent}}</td>
+													<td>{{(item.price * (item.commissionPercent/100)).toFixed(2)}}</td>
+													<td class="btn-hide">
+														<a class="btn btn-success" title="编辑">设置佣金比例</a>
+														<a class="btn btn-success" title="编辑">二维码</a>
+														<a class="btn btn-default" title="删除"
+															@click="delgoods(item.id)">删除</a>
+													</td>
+												</tr>
+											</template>
+											<tr class="main_info" v-else>
+												<td colspan="8">没有相关数据</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="pull-left form form-inline">
+										<div class="form-group form-group-sm">
+											共 {{goods.total}} 条数据,每页显示
+											<select class="form-control" v-model="goods.pageSize"
+												@change="getshopGoods(1)">
+												<option value="10">10</option>
+												<option value="20">20</option>
+												<option value="30">30</option>
+												<option value="40">40</option>
+												<option value="50">50</option>
+											</select> 条
+										</div>
+									</div>
+									<div class="pagi5 pull-right"></div>
+								</div>
+							</div>
+						</div>
+						<!-- 房间信息 -->
+						<div id="tab-4" class="tab-pane">
+							<div class="ibox-content">
+								<em class="title">
+									<a class="btn btn-htz btn-primary add pull-right" title="新增"
+										@click="addRoom();">新增</a>
+								</em>
+								<table id="simple-table" class="table table-responsive table-bordered table-hover">
+									<thead>
+										<tr>
+											<th width="25%">房间名称</th>
+											<th width="25%">房间标签</th>
+											<!--<th width="10%">创建日期</th>-->
+											<th width="10%">是否公开</th>
+											<th width="20%">操作</th>
+										</tr>
+									</thead>
+									<tbody>
+										<template v-if="roomsList.total!=0">
+											<tr v-for="(el,index) in roomsList.list">
+												<td>
+													{{el.roomName}}
+												</td>
+												<td>{{el.roomLabels||'--'}}</td>
+												<!--<td>{{el.createTime}}</td>-->
+												<td>{{el.isOpen=='1'?'是':'否'}}</td>
+												<td>
+													<a class="btn btn-success" title="打标签"
+														@click="edit(el.shopsRoomId);">打标签</a>
+													<a class="btn btn-success" title="二维码" @click="ewm(el)">二维码</a>
+													<a class="btn btn-success" title="编辑"
+														@click="editRoom(el.shopsRoomId,el.roomLabels);">编辑</a>
+													<a class="btn btn-default" title="删除"
+														@click="delRoom(el.shopsRoomId);">删除</a>
+												</td>
+											</tr>
+										</template>
+										<tr class="main_info" v-else>
+											<td colspan="6">暂无房间</td>
+										</tr>
+									</tbody>
+								</table>
+								<div class="pull-left form form-inline">
+									<div class="form-group form-group-sm">
+										共 {{roomsList.total}} 条数据,每页显示
+										<select @change="getRoom(1)" v-model="roomsList.pageSize" class="form-control">
+											<option value="5">5</option>
+											<option value="10">10</option>
+											<option value="20">20</option>
+											<option value="30">30</option>
+											<option value="40">40</option>
+											<option value="50">50</option>
+										</select> 条
+									</div>
+								</div>
+								<div class="pagi3 pull-right"></div>
+							</div>
+
+						</div>
+						<!-- 服务信息 -->
+						<div id="tab-5" class="tab-pane">
+							<div class="ibox-content">
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="panel panel-default">
+											<div class="panel-body explanation">
+												<h3>说明：</h3>
+												<p>1、供货价即商家从我方平台购买商品的价格。</p>
+												<p>2、佣金比例即商家与我方签订的商品的总佣金比例。</p>
+												<p>3、预估收益即通过商家渠道售卖商品后，商家能得到的预计总收益，具体以实际为准。</p>
+											</div>
+										</div>
+										<!-- 检索 start -->
+										<div class="form-inline" role="form">
+											<div class="form-group">
+												<input class="form-control" type="text" placeholder="请输入服务名称"
+													v-model="serviceKeywords">
+											</div>
+											<div class="form-group">
+												<em>省</em>
+												<template>
+													<el-select v-model="provinceId" clearable filterable
+														placeholder="全部" @change="selectProvince">
+														<el-option v-for="item in provinceList" :key="item.id"
+															:label="item.text" :value="item.id">
+														</el-option>
+													</el-select>
+												</template>
+											</div>
+											<div class="form-group">
+												<em>市</em>
+												<template>
+													<el-select v-model="cityId" clearable filterable placeholder="全部"
+														@change="selectCity">
+														<el-option v-for="item in cityList" :key="item.id"
+															:label="item.text" :value="item.id">
+														</el-option>
+													</el-select>
+												</template>
+											</div>
+											<button type="submit" class="btn btn-htz btn-primary"
+												@click="serviceSearch()">
+												<i class="icon icon_search"></i> 搜索
+											</button>
+											<button class="btn btn-htz btn-success" @click="serviceAdd()">
+												<i class="icon icon_plus"></i> 添加
+											</button>
+										</div>
+										<!-- 检索 end -->
+										<!-- 列表 start -->
+										<div class="ibox-box">
+											<table class="table table-responsive table-bordered table-hover">
+												<thead>
+													<tr>
+														<th width="15%">服务名称</th>
+														<th width="20%">服务提供商</th>
+														<th width="20%">服务位置</th>
+														<th width="10%">价格</th>
+														<th width="10%">佣金比例（%）</th>
+														<th width="10%">预估收益（元）</th>
+														<th width="20%">操作</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr v-if="brandServiceList.total > 0"
+														v-for="item in brandServiceList.list">
+														<td>{{item.serviceName}}</td>
+														<td>{{item.photoStudioName}}</td>
+														<td>{{item.province}}{{item.city}}</td>
+														<td v-if="item.price!=undefined">{{item.price}}</td>
+														<td v-else>-</td>
+														<td>{{item.commissionPercent}}</td>
+														<td v-if="item.price!=undefined">
+															{{item.price*item.commissionPercent/100}}</td>
+														<td v-else>-</td>
+														<td class="btn-hide">
+															<a class="btn btn-success" title="查看"
+																@click="view(item.id);">查看</a>
+															<a class="btn btn-success" title="佣金设置"
+															   @click="setting(item.id);">佣金设置</a>
+															<a class="btn btn-default" title="删除"
+																@click="del(item.id);">删除</a>
+														</td>
+													</tr>
+													<tr class="main_info" v-else>
+														<td colspan="10">没有相关数据</td>
+													</tr>
+												</tbody>
+											</table>
+											<div class="pull-left form form-inline">
+												<div class="form-group form-group-sm">
+													共 {{list.total}} 条数据,每页显示
+													<select @change="getData(1)" v-model="list.pageSize"
+														class="form-control">
+														<option value="10">10</option>
+														<option value="20">20</option>
+														<option value="30">30</option>
+														<option value="40">40</option>
+														<option value="50">50</option>
+													</select> 条
+												</div>
+											</div>
+											<div class="pagi pull-right"></div>
+										</div>
+										<!-- 列表 end-->
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<!--新增一级分类产品-->
+		<div class="bounced">
+			<div class="ibox-content">
+				<div class="form">
+					<div class="row_list" id="attribute">
+						<div class="col-sm-12">
+							<!-- 检索 start -->
+							<div class="form-inline" id="customerForm">
+								<div class="form-group">
+									<input id="nav-search-input" name="name" placeholder="请输入商品名称,编号"
+										class="form-control" type="text" v-model="keywords">
+								</div>
+								<div class="form-group">
+									<em>商品分类</em>
+									<select name="type" class="form-control" style="width: 150px;"
+										data-placeholder="商品分类" v-model="typeId">
+										<option value="">请选择商品分类</option>
+										<option v-for="item in typeList" :value="item.parentId">{{item.parentName}}
+										</option>
+									</select>
+								</div>
+								<!--<div class="form-group">
+										<em>供应商</em>
+										<select class="form-control" style="width: 200px;" data-placeholder="请选择供应商" v-model="supplierId" required="required">
+											<option value="">全部</option>
+											<option v-for="item in supplierList" :value="item.id">{{item.text}}</option>
+										</select>
+									</div>-->
+								<div class="form-group">
+									<em>品牌</em>
+									<select class="form-control" style="width: 150px;" data-placeholder="请选择品牌"
+										v-model="brandId">
+										<option value="">全部</option>
+										<option v-for="item in brandList" :value="item.id">{{item.text}}</option>
+									</select>
+								</div>
+								<button type="submit" class="btn btn-htz btn-primary" @click="searchGood()"><i
+										class="icon icon_search"></i> 搜索</button>
+							</div>
+							<!-- 检索 end -->
+							<div class="ibox-content">
+								<table class="table table-responsive table-bordered table-hover">
+									<thead>
+										<tr>
+											<th width="30%">商品名称</th>
+											<th width="15%">分类</th>
+											<!--<th width="10%">供应商</th>-->
+											<th width="20%">品牌</th>
+											<th width="15%">图片</th>
+											<th width="10%">操作</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr v-if="list.total > 0" v-for="(item,index) in list.list">
+											<td>{{item.name}}</td>
+											<td>{{item.typeName}}</td>
+											<!--<td>{{item.supplierName}}</td>-->
+											<td>{{item.brandName}}</td>
+											<td><img :src="item.image" width="60" alt=""></td>
+											<td>
+												<a class="btn btn-success" @click="join(item)">
+													加入
+												</a>
+											</td>
+										</tr>
+										<tr class="main_info" v-else>
+											<td colspan="5">没有相关数据</td>
+										</tr>
+									</tbody>
+								</table>
+								<div class="pull-left form form-inline">
+									<div class="form-group form-group-sm">
+										共 {{list.total}} 条数据,每页显示
+										<select @change="getData(1)" v-model="list.pageSize" class="form-control">
+											<option value="5">5</option>
+											<option value="10">10</option>
+											<option value="20">20</option>
+											<option value="30">30</option>
+											<option value="40">40</option>
+											<option value="50">50</option>
+										</select> 条
+									</div>
+								</div>
+								<div class="pagi pull-right"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--新增工作人员-->
+		<div class="bounced">
+			<div class="ibox-content" id="addPeople">
+				<div class="form form-horizontal">
+					<div class="row_list">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label class="col-sm-3 control-label">用户名<em class="red">*</em></label>
+								<div class="col-sm-9">
+									<input class="form-control" type="text" placeholder="请输入用户名"
+										v-model="form.userName">
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label class="col-sm-3 control-label">姓名<em class="red">*</em></label>
+								<div class="col-sm-9">
+									<input class="form-control" type="text" placeholder="请输入姓名" v-model="form.name">
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label class="col-sm-3 control-label">手机号码<em class="red">*</em></label>
+								<div class="col-sm-9">
+									<input class="form-control" type="text" placeholder="请输入手机号码"
+										onkeyup="this.value=this.value.replace(/\D/g,'')"
+										onafterpaste="this.value=this.value.replace(/\D/g,'')"
+										v-model="form.mobilePhone">
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label class="col-sm-3 control-label">角色<em class="red">*</em></label>
+								<div class="col-sm-9">
+									<template>
+										<el-select v-model="form.roleId" clearable filterable placeholder="请选择角色"
+											style='width: 100%;'>
+											<el-option v-for="item in roleList" :key="item.roleId"
+												:label="item.roleName" :value="item.roleId">
+											</el-option>
+										</el-select>
+									</template>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label class="col-sm-3 control-label">提成比例<em class="red">*</em></label>
+								<div class="col-sm-9">
+									<input class="form-control" type="text" placeholder="请输入0-100之间数字"
+										onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
+										v-model="form.commissionPercent">
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label class="col-sm-3 control-label">密码<em class="red">*</em></label>
+								<div class="col-sm-9">
+									<input class="form-control" type="text" placeholder="请输入密码"
+										onkeyup="value=value.replace(/[^\w\.\/]/ig,'')" v-model="form.password">
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label class="col-sm-3 control-label">确认密码<em class="red">*</em></label>
+								<div class="col-sm-9">
+									<input class="form-control" type="text" placeholder="请确认密码"
+										onkeyup="value=value.replace(/[^\w\.\/]/ig,'')" v-model="form.password1">
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label class="col-sm-3 control-label">QQ号码</label>
+								<div class="col-sm-9">
+									<input class="form-control" type="text" placeholder="请输入QQ号码"
+										onkeyup="this.value=this.value.replace(/\D/g,'')"
+										onafterpaste="this.value=this.value.replace(/\D/g,'')" v-model="form.QQ">
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label class="col-sm-3 control-label">微信号</label>
+								<div class="col-sm-9">
+									<input class="form-control" type="text" placeholder="请输入微信号"
+										v-model="form.weChatId">
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label class="col-sm-3 control-label">邮箱</label>
+								<div class="col-sm-9">
+									<input class="form-control" type="text" placeholder="请输入邮箱" v-model="form.email">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 新增角色 -->
+		<div class="bounced">
+			<div class="ibox-content" id="addrole">
+				<div class="form form-horizontal">
+					<div class="row_list">
+						<div class="col-sm-12" style="font:800 16px/32px '' ">
+							请输入角色名称
+						</div>
+						<div class="col-sm-12">
+							<div class="form-group">
+								<div class="col-sm-12">
+									<input class="form-control" type="text" placeholder="请输入新增角色名称" v-model="newrole">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--背景-->
+		<div v-cloak v-if="bg_show1==true" @click="hide1" class="mb-bg"></div>
+		<div v-cloak v-if="bg_show1==true" class="ewm">
+			<a><img :src="image_ewm" @click="downs()"></a>
+		</div>
+	</div>
+	<!-- 全局js -->
+	<script src="../js/jquery-2.1.1.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<script src="../js/plugins/layer/layer.min.js"></script>
+	<script src="../js/plugins/layui/layui.js"></script>
+	<script src="../js/vue.js"></script>
+	<script src="../js/module/module_pagination.js"></script>
+	<script src="../js/tagsinput.js"></script>
+	<!-- 引入组件库 -->
+	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+	<script src="../js/content.min.js?v=1.0.0"></script>
+	<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+	<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+	<script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
+	<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+	<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+	<script src="../js/qiniuyun/qiniuImg2.js"></script>
+	<!-- 自定义js -->
+	<script src="../js/custom/common.js"></script>
+	<script src="../js/custom/OfflineShop/detail.js"></script>
+</body>
+
+</html>

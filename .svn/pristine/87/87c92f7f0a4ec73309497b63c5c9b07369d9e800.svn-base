@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>佣金设置</title>
+<meta name="keywords" content="寒舍">
+<meta name="description" content="寒舍">
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+<link rel="stylesheet" href="../js/plugins/layui/css/layui.css">
+<link rel="stylesheet" href="../css/animate.min.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/layout.css">
+<style>
+    .explanation{padding:10px;color:#000;background:#e2e9f0;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}
+    .explanation p{line-height:24px}
+    .form-group{position:relative;margin-bottom:0}
+    .form-title{margin-top:30px;height:30px;line-height:30px;font-size:16px}
+    .form-input{padding:0 5px;width:100%;height:30px;line-height:30px;box-sizing:border-box;border:1px solid #e5e6e7;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px}
+    .form-group .dot{position:absolute;top:50%;right:10px;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;-moz-border-radius:50%;border-radius:50%;background:#ff8d41}
+    .form-table{width:100%;text-align:center;border-top:1px solid #e4e9ef;border-left:1px solid #e4e9ef}
+    .form-table th{height:38px;background:#e3e9ef}
+    .form-table td{height:38px;border-bottom:1px solid #e4e9ef;border-right:1px solid #e4e9ef}
+    .form-table input{padding:0 8px;width:100px;height:28px;line-height:28px;text-align:center;border:1px solid #e4e9ef;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}
+</style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content " id="app">
+    <div class="ibox-content">
+        <div class="row">
+            <div class="explanation">
+                <h3>说明：</h3>
+                <p>1、店铺提成比例即设置店铺针对该商品的佣金比例。</p>
+                <p>2、店铺角色提成即设置店铺类各个销售角色针对该商品的佣金比例。</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <div class="form-title">店铺提成比例</div>
+                <div class="form-group">
+                    <input type="number" class="form-input" min="0" v-model="shopsCommission" autocomplete="off">
+                    <em class="dot"></em>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-title">店铺角色提成</div>
+            <table class="form-table">
+                <thead>
+                 <tr>
+                     <th width="50%">角色</th>
+                     <th width="50%">提成比例（%）</th>
+                 </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item,i) of roleList.list" :key="i">
+                        <td>{{item.roleName}}</td>
+                        <td><input type="number" min="0" v-model="roleList[i]" autocomplete="off"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <div class="ibox-content-btn">
+            <a class="btn btn-htz  btn-primary" title="保存" @click="save();">保存</a>
+        </div>
+    </div>
+</div>
+<!-- 全局js -->
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+<script src="../js/vue.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/custom/OfflineShop/commission.js"></script>
+</body>
+</html>

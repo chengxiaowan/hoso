@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新增旅拍工作室</title>
+    <meta name="keywords" content="寒舍">
+    <meta name="description" content="寒舍">
+    <link rel="stylesheet" href="../css/public.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+    <link rel="stylesheet" href="../js/plugins/utf8-jsp/themes/default/css/ueditor.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/htz.css" />
+    <link rel="stylesheet" href="../css/custom/brands/add.css">
+</head>
+<style>
+    .input-container {
+        height: 34px !important;
+        line-height: 34px !important;
+    }
+
+    .select2-container {
+        z-index: 99999999999999;
+    }
+
+    textarea.form-control {
+        height: 158px;
+        resize: none;
+    }
+
+    .form-label {
+        height: 120px;
+        color: #a4a4a4;
+        font-size: 12px;
+    }
+
+    .form-label input {
+        width: 100px;
+        border: 0;
+    }
+
+    body {
+        font-size: 12px;
+    }
+
+    .form-group {
+        position: relative;
+        margin-bottom: 40px;
+    }
+
+    .form-group label {
+        width: 100%;
+    }
+
+    .tips {
+        color: #b8b8b8;
+        font-size: 12px;
+        font-weight: normal;
+    }
+
+    .dot {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        /*修改过，原为10px*/
+        transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        -webkit-transform: translateY(-50%);
+        width: 8px;
+        height: 8px;
+        background: #ff8d41;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+    }
+
+    .up-hot-tag {
+        /*margin-left: 10px;*/
+    }
+
+    .up-hot-tag a {
+        float: left;
+        margin: 10px 10px 0 0;
+        background: linear-gradient(45deg, transparent 50%, #61C4CF 0%);
+        background-size: 16px 16px;
+        border-top-right-radius: 3px;
+    }
+
+    .up-hot-tag a i {
+        float: left;
+        line-height: 30px;
+        font-size: 30px;
+        color: #fff;
+        background: #e4ebee;
+    }
+
+    .up-hot-tag a:hover i {
+        color: #e4ebee
+    }
+
+    .up-hot-tag a span {
+        float: left;
+        margin-left: -10px;
+        padding-right: 10px;
+        background-color: #e4ebee;
+        line-height: 30px;
+        font-size: 12px;
+        color: #34495e;
+    }
+
+    .cl:before,
+    .cl:after {
+        content: " ";
+        display: table;
+    }
+
+    .cl:after {
+        clear: both
+    }
+
+    .cl {
+        *zoom: 1
+    }
+
+    .form-price .form-control,
+    .form-status .form-control {
+        width: 80px;
+    }
+
+    .form-price label {
+        display: inline-block;
+        width: 14px;
+        text-align: center;
+    }
+
+    .ibox-content {
+        padding: 15px 0 20px;
+    }
+
+    .iconfont,
+    [class^="icon-"],
+    [class*=" icon-"] {
+        font-family: "iconfont" !important;
+        font-size: 16px;
+        color: #b8c4ce;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -webkit-text-stroke-width: 0.2px;
+        -moz-osx-font-smoothing: grayscale;
+        /*  -webkit-font-smoothing: none;
+        -webkit-text-stroke-width: initial;
+        -moz-osx-font-smoothing: initial;*/
+    }
+
+    .form-select {
+        padding-left: 0;
+    }
+
+    .form-create {
+        padding: 6px 12px;
+        height: 34px;
+        line-height: 22px;
+        color: #4a4a4a;
+        text-align: center;
+        background: #edf1f3;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+    }
+
+    .form-create:hover {
+        background: #e6e6e6;
+        color: #333;
+        cursor: pointer;
+        border-color: #adadad;
+    }
+
+
+    .symbol {
+        position: absolute;
+        left: 6px;
+        color: #a4a4a4;
+        font-weight: normal;
+    }
+
+    .form-control[type='number'] {
+        text-indent: 10px;
+    }
+
+    #tab-2 .btn,
+    #tab-4 .btn {
+        margin-bottom: 0;
+    }
+
+    .btn-htz.btn-success {
+        background: #50bfa5;
+        outline: #50bfa5;
+    }
+
+    .btn-htz.btn-success:hover {
+        background: #50bfa5;
+    }
+
+    .ibox-content-btn .btn-primary {
+        width: 141px;
+        height: 38px;
+        line-height: 26px;
+        color: #4a4a4a;
+        background: #edf1f3;
+        border: 1px solid #edf1f3;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+    }
+
+    .upload {
+        overflow: hidden;
+    }
+
+    .upload_img,
+    .upload_cover {
+        position: relative;
+        padding-left: 0;
+    }
+
+    .upload_img {
+        height: 215px;
+        border: 2px dashed #e2e9f0;
+    }
+
+    .upload_cover {
+        margin-top: 40px;
+        height: 215px;
+    }
+
+    .upload_pic {
+        padding-right: 0;
+        height: 470px;
+        border: 2px dashed #e2e9f0;
+    }
+
+    .upload_info {
+        text-align: center;
+    }
+
+    .icon_upload {
+        display: inline-block;
+        color: #4a90e2;
+        font-size: 30px;
+    }
+
+    .imgTitle {
+        max-width: 100%;
+        margin-bottom: 5px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .image-box{
+        width:100px;
+        height: 100px;
+    }
+
+    /*测试代码*/
+
+    #bobodrool{
+        padding-top:20px;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    #updataImage{
+        width: 100px;
+        height: 100px;
+    }
+
+    .imginfo{
+        width: 100px;
+        height: 100px;
+    }
+    .el-input__inner{
+        width: 282px;
+        height: 34px;
+        line-height: 34px;
+    }
+    .el-input__icon{
+        position: absolute;
+        right: 16px;
+    }
+    .form-select .el-select__caret{
+        position: absolute;
+        top: 2px;
+        right: 40px;
+        transform: rotateZ(180deg);
+        color: #c0c4cc;
+        font-size: 14px;
+    }
+    .form-select .dot{
+        right: 28px;
+    }
+    .form-template .dot{
+        right: 16px;
+        top: 36px;
+    }
+    .tips-name{
+        position: absolute;
+        top:0;
+        left:0;
+        width: 100%;
+        height: 18px;
+        color:#fff;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.8);
+    }
+</style>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content" id="app">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-6 hide" :class="isSystem?'show':''">
+                <div class="form-group">
+                    <label>负责人：</label>
+                    <div class="form-select col-sm-10">
+                        <select class="form-control" v-model="headId" @change="selectHead">
+                            <option selected="selected">请选择品牌负责人</option>
+                            <option v-for="item in newuserlist" :value="item.userId" :key="item.userId">{{item.realName}}</option>
+                        </select>
+                        <i class="el-select__caret el-input__icon el-icon-arrow-up"></i>
+                        <em class="dot"></em>
+                    </div>
+                    <div class="form-group form-create col-sm-2" @click="jumpToHeader();">新建</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>名称：<div class="tips fr"><em>{{nameLength}}</em>/<em>30</em></div></label>
+                    <div class="form-group">
+                        <input type="text" placeholder="请输入名称，1~30字" class="form-control" maxlength="30" v-model="name"  @input="inputName">
+                        <em class="dot"></em>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-template form-group">
+                    <label>省：</label>
+                    <template>
+                        <el-select v-model="provinceId" clearable filterable placeholder="请选择省" @change="selectProvince">
+                            <el-option v-for="item in provinceList" :key="item.id" :label="item.text" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </template>
+                    <em class="dot"></em>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-template form-group">
+                    <label>市：</label>
+                    <template>
+                        <el-select v-model="cityId" clearable filterable placeholder="请选择市" @change="selectCity">
+                            <el-option v-for="item in cityList" :key="item.id" :label="item.text" :value="item.id">
+                            </el-option>
+                        </el-select>
+                        <em class="dot"></em>
+                    </template>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>详细地址：</label>
+                    <div class="form-group">
+                        <input type="text" placeholder="请输入详细地址" class="form-control" v-model="address">
+                        <em class="dot"></em>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>联系电话：</label>
+                    <div class="form-group">
+                        <input type="text" placeholder="请输入联系电话" class="form-control" v-model="phone">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 图片上传 -->
+        <div class="row" style="margin-bottom: 40px">
+            <div class="col-sm-12">
+                <p style="margin-top: 10px">1、请上传png,jpg,jpeg等规范格式的图片，大小不能超过5MB。 </p>
+                <p>2、精致封面会吸引更多的人关注哦。</p>
+                <div id="bobodrool">
+                    <!-- 封面 -->
+                    <div id="updataImage1">
+                        <p class="tips-name"><i class="text-danger">*</i>案例</p>
+                        <img id="vivew1" src="../images/imgadd.jpg" class="imginfo">
+                    </div>
+                    <!-- 案例 -->
+                    <div id="updataInfo1">
+                        <p class="tips-name"><i class="text-danger">*</i>封面</p>
+                        <img id="info1" src="../images/imgadd.jpg" class="imginfo">
+                    </div>
+                    <!-- 商品描述图片-->
+                    <div id="updataInfo2">
+                        <img id="info2" src="../images/imgadd.png" class="imginfo">
+                    </div>
+                    <div id="updataInfo3">
+                        <img id="info3" src="../images/imgadd.png" class="imginfo">
+                    </div>
+                    <div id="updataInfo4">
+                        <img id="info4" src="../images/imgadd.png" class="imginfo">
+                    </div>
+                    <div id="updataInfo5">
+                        <img id="info5" src="../images/imgadd.png" class="imginfo">
+                    </div>
+                    <div id="updataInfo6">
+                        <img id="info6" src="../images/imgadd.png" class="imginfo">
+                    </div>
+                    <div id="updataInfo7">
+                        <img id="info7" src="../images/imgadd.png" class="imginfo">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 图片上传 end-->
+
+        <!-- 图文描述 start -->
+        <div class="description">
+            <div class="imgTitle">图文描述:</div>
+            <script id="container" name="detailDescribe" type="text/plain" v-model="description">
+            </script>
+        </div>
+        <!-- 图文描述 end -->
+        <div class="ibox-content-btn clear" style="margin: 30px 0 20px;">
+            <a class="btn btn-htz  btn-primary" title="保存" @click="save()">保存</a>
+            <!--<a class="btn btn-htz  btn-htz-default" title="取消" onclick="cancle();">取消</a>-->
+        </div>
+    </div>
+</div>
+<!-- 全局js -->
+<!-- <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script> -->
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/jquery.navScroll.js"></script>
+<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+<script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+<script src="../js/plugins/utf8-jsp/third-party/zeroclipboard/ZeroClipboard.js"></script>
+<script src="../js/plugins/utf8-jsp/ueditor.config.js"></script>
+<script src="../js/plugins/utf8-jsp/uemy.js"></script>
+<script src="../js/plugins/utf8-jsp/lang/zh-cn/zh-cn.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<script src="../js/tagsinput.js"></script>
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+<script src="../js/qiniuyun/qiniuImg-bands.js"></script>
+<script src="../js/jquery.h5upload.js"></script>
+<script src="../js/custom/studio/add.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>加入服务</title>
+<meta name="keywords" content="寒舍">
+<meta name="description" content="寒舍">
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="../css/animate.min.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/layout.css">
+<style>
+    .layui-layer-title{font-weight: normal;}
+    .form-control{height: 40px;line-height: 40px;}
+</style>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content" id="app">
+    <div class="ibox-content">
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- 检索 start -->
+                <div class="form-inline">
+                    <div class="form-group">
+                        <input class="form-control" type="text" placeholder="请输入名称" v-model="keywords">
+                    </div>
+                    <div class="form-group">
+                        <em>省</em>
+                        <template>
+                            <el-select v-model="provinceId" clearable filterable placeholder="全部" @change="selectProvince">
+                                <el-option v-for="item in provinceList" :key="item.id" :label="item.text" :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </template>
+                    </div>
+                    <div class="form-group">
+                        <em>市</em>
+                        <template>
+                            <el-select v-model="cityId" clearable filterable placeholder="全部" @change="selectCity">
+                                <el-option v-for="item in cityList" :key="item.id" :label="item.text" :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </template>
+                    </div>
+                    <button type="submit" class="btn btn-htz btn-primary" @click="search()">
+                        <i class="icon icon_search"></i> 搜索
+                    </button>
+                </div>
+                <!-- 检索 end -->
+            </div>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <table id="simple-table" class="table table-responsive table-bordered table-hover">
+            <thead>
+            <tr>
+                <th width="20%">服务名称</th>
+                <th width="20%">服务提供商</th>
+                <th width="20%">服务位置</th>
+                <th width="20%">价格</th>
+                <th width="20%">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-if="list.total > 0" v-for="item in list.list">
+                <td>{{item.serviceName}}</td>
+                <td>{{item.photoStudioName}}</td>
+                <td>{{item.province}}{{item.city}}</td>
+                <td>{{item.price}}</td>
+                <td class="btn-hide">
+                    <!--<a class="btn btn-success" title="查看" @click="view(item.serviceId);">查看</a>-->
+                    <a class="btn btn-success" title="加入" @click="join(item.serviceId,item.commissionPercent,item.serviceId);">加入</a>
+                </td>
+            </tr>
+            <tr class="main_info" v-else>
+                <td colspan="7">没有相关数据</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="pull-left form form-inline">
+            <div class="form-group form-group-sm">
+                共 {{list.total}} 条数据,每页显示
+                <select @change="getData(1)" v-model="list.pageSize" class="form-control">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                </select> 条
+            </div>
+        </div>
+        <div class="pagi pull-right"></div>
+    </div>
+</div>
+<!-- 全局js -->
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/custom/OfflineShop/serviceAdd.js"></script>
+</body>
+</html>

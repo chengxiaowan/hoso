@@ -40,11 +40,10 @@ window.app = new Vue({
         that.getUserlist(); //获取所有负责人
         that.getToken() //获取七牛云的token
 
-        this.editor = UE.getEditor('container', {
+        that.editor = UE.getEditor('container', {
             initialFrameHeight: 350,
             // initialContent: "请填写详细描述",
         });
-
         that.editor.addListener("ready", function () {
             // editor准备好之后才可以使用
             that.editor.setContent(that.editorInfo);
@@ -79,12 +78,16 @@ window.app = new Vue({
 
         // 新建负责人
         jumpToHeader() {
+            var that = this
             var index = layer
                 .open({
                     type: 2,
                     title: '新建负责人',
                     content: 'headers.html',
-                    area: ['80%', '80%']
+                    area: ['80%', '80%'],
+                    end: function () {
+                        that.getUserlist();
+                    }
                 });
         },
 
@@ -123,16 +126,8 @@ window.app = new Vue({
                 layer.msg("请选择品牌负责人", {
                     time: 3000
                 })
-            } else if (document.getElementById("tagsinputval").value == "") {
-                layer.msg("请输入品牌标签", {
-                    time: 3000
-                })
             } else if (that.summary == "") {
                 layer.msg("请输入品牌简介", {
-                    time: 3000
-                })
-            } else if (that.editor.getContent() == "") {
-                layer.msg("请添加品牌图文详情", {
                     time: 3000
                 })
             } else if ($('#vivew').attr('src') == "../images/imgadd.png") {
@@ -158,22 +153,19 @@ window.app = new Vue({
                         description: that.editor.getContent(),
                         logoPath: $('#vivew').attr('src'),
                         imagePath: $('#vivew1').attr('src'),
-                        shopsBrandPicList:''
+                        shopsBrandPicList: ''
                     },
                     success: res => {
                         console.log(res);
                         if (res.error == "00") {
-                            layer.msg("保存成功，三秒后关闭窗口", {
-                                time: 3000
+                            layer.msg("保存成功，请继续添加其他信息", {
+                                time: 1000
                             })
-
                             setTimeout(function () {
-                                //关闭当前弹窗
-                                var index = parent.layer.getFrameIndex(window.name);
-                                parent.layer.close(index)
-                            }, 3000)
-                        }else{
-                            layer.msg(res.error,{time:3000})
+                                window.location.href = "add1.html?id=" + res.shopsBrandId + "&labels=" + document.getElementById("tagsinputval").value;
+                            }, 1000)
+                        } else {
+                            layer.msg(res.error, { time: 3000 })
                         }
                     }
                 })

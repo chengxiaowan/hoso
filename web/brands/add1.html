@@ -23,6 +23,13 @@
         .failure {
             color: #d0021b;
         }
+        .drool{
+            right: 10px;
+        }
+
+        .bobo{
+            right: 25px;
+        }
     </style>
 </head>
 
@@ -42,7 +49,7 @@
                             <a data-toggle="tab" href="#tab-3" aria-expanded="false">商品信息</a>
                         </li>
                         <li @click="activateTab(4)">
-                            <a data-toggle="tab" href="#tab-4" aria-expanded="false">服务</a>
+                            <a data-toggle="tab" href="#tab-4" aria-expanded="false">周边服务</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -57,7 +64,7 @@
                                                 <input id="boboname" type="text" placeholder="请输入品牌名称，1~30字"
                                                     name="boboname" class="form-control" maxlength="30"
                                                     v-model="bandname">
-                                                <em class="dot"></em>
+                                                <em class="dot drool"></em>
                                             </div>
                                         </div>
                                     </div>
@@ -70,7 +77,7 @@
                                                     <option v-for="item in newuserlist" :value="item.userId"
                                                         :key="item.userId">{{item.realName}}</option>
                                                 </select>
-                                                <em class="dot"></em>
+                                                <em class="dot bobo"></em>
                                             </div>
                                             <div class="form-group form-create col-sm-2" @click="jumpToHeader();">新建
                                             </div>
@@ -230,7 +237,7 @@
                                                 <i class="icon icon_search"></i> 搜索
                                             </button>
                                             <button type="reset" class="btn btn-htz btn-success" @click="addgoods();">
-                                                <i id="nav-search-icon" class="icon icon_plus"></i> 添加
+                                                <i id="nav-search-icon" class="icon icon_plus"></i> 添加商品
                                             </button>
                                         </div>
                                     </div>
@@ -259,17 +266,19 @@
                                                     <td>{{item.brandName}}</td>
                                                     <td><img :src="item.image" class="image-box"></td>
                                                     <td>{{item.price}}</td>
-                                                    <td>5</td>
-                                                    <td>{{(item.price * 0.05).toFixed(2)}}</td>
+                                                    <td v-if="item.auditStatus !='1'">-</td>
+                                                    <td v-else>{{item.commissionPercent}}</td>
+                                                    <td v-if="item.auditStatus !='1'">-</td>
+                                                    <td v-else>{{(item.price * (item.commissionPercent/100)).toFixed(2)}}</td>
                                                     <td v-if="item.auditStatus == 0">待审核</td>
                                                     <td v-if="item.auditStatus == 1">审核通过</td>
-                                                    <td v-if="item.auditStatus == 2">审核失败</td>
+                                                    <td v-if="item.auditStatus == 2"><p style="color: red">审核失败</p></td>
                                                     <td class="btn-hide">
-                                                        <a class="btn btn-success" title="编辑" href="edit.html">查看</a>
+                                                        <a class="btn btn-success" title="查看详情">查看</a>        <!--暂时去掉详情查看-->
                                                         <a class="btn btn-success" title="编辑" @click="edit(item.id);"
                                                             v-if="item.auditStatus == 1">二维码</a>
                                                         <a class="btn btn-default" title="删除"
-                                                            v-if="item.auditStatus == 0 || 2"
+                                                            v-if="item.auditStatus !='1'"
                                                             @click="delgoods(item.shopsBrandGoodsId);">删除</a>
                                                     </td>
                                                 </tr>
@@ -281,8 +290,8 @@
                                     </table>
                                     <div class="pull-left form form-inline">
                                         <div class="form-group form-group-sm">
-                                            共 {{list.total}} 条数据,每页显示
-                                            <select @change="getgoods(1)" v-model="list.pageSize" class="form-control">
+                                            共 {{goods.total}} 条数据,每页显示
+                                            <select @change="getgoods(1)" v-model="goods.pageSize" class="form-control">
                                                 <option value="10">10</option>
                                                 <option value="20">20</option>
                                                 <option value="30">30</option>
@@ -426,7 +435,7 @@
                                                 <i class="icon icon_search"></i> 搜索
                                             </button>
                                             <button type="reset" class="btn btn-htz btn-success" @click="serviceAdd()">
-                                                <i class="icon icon_plus"></i> 添加
+                                                <i class="icon icon_plus"></i> 添加服务
                                             </button>
                                         </div>
                                         <!-- 检索 end -->
@@ -451,17 +460,24 @@
                                                         <td>{{item.serviceName}}</td>
                                                         <td>{{item.photoStudioName}}</td>
                                                         <td>{{item.province}}{{item.city}}</td>
-                                                        <td>{{item.price}}</td>
-                                                        <td>{{item.commissionPercent}}</td>
-                                                        <td>100.00</td>
+                                                        <td v-if='item.price != undefined'>{{item.price}}</td>
+                                                        <td v-else>-</td>
+                                                        <td v-if="item.auditStatus == 1">{{item.commissionPercent}}</td>
+                                                        <td v-else>-</td>
+                                                        <td v-if='item.auditStatus == 1'>
+                                                            {{item.price*item.commissionPercent}}</td>
+                                                        <td v-else>-</td>
                                                         <td v-if="item.auditStatus == 0">待审核</td>
                                                         <td v-if="item.auditStatus == 1">审核成功</td>
                                                         <td v-if="item.auditStatus == 2"><em class="failure">审核失败</em>
                                                         </td>
                                                         <td class="btn-hide">
+                                                            <!--<a class="btn btn-success" title="查看" @click="view(item.id);">查看</a>-->
                                                             <a class="btn btn-success" title="查看"
-                                                                @click="view(item.id);">查看</a>
+                                                                v-if="item.auditStatus == 1"
+                                                                @click="view(item.id);">二维码</a>
                                                             <a class="btn btn-default" title="删除"
+                                                                v-if="item.auditStatus != 1"
                                                                 @click="del(item.id);">删除</a>
                                                         </td>
                                                     </tr>
@@ -473,8 +489,8 @@
                                             <div class="pull-left form form-inline">
                                                 <div class="form-group form-group-sm">
                                                     共 {{list.total}} 条数据,每页显示
-                                                    <select @change="getData(1)" v-model="list.pageSize"
-                                                        class="form-control">
+                                                    <select @change="showAShopsBrandService(1)"
+                                                        v-model="brandServiceList.pageSize" class="form-control">
                                                         <option value="10">10</option>
                                                         <option value="20">20</option>
                                                         <option value="30">30</option>
@@ -483,7 +499,7 @@
                                                     </select> 条
                                                 </div>
                                             </div>
-                                            <div class="pagi pull-right"></div>
+                                            <div class="pagis pull-right"></div>
                                         </div>
                                         <!-- 列表 end-->
                                     </div>
@@ -496,7 +512,6 @@
             </div>
         </div>
     </div>
-    `
     <!-- 全局js -->
     <script src="../js/jquery-2.1.1.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
@@ -526,8 +541,6 @@
     <!-- 自定义js -->
     <script src="../js/custom/common.js"></script>
     <script src="../js/custom/brands/add1.js"></script>
-
-    
 </body>
 
 </html>
