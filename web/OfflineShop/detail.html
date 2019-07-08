@@ -434,7 +434,7 @@
 															<td v-if="item.isQuit == '1'">离职</td>
 															<td class="btn-hide">
 																<a class="btn btn-success" title="编辑"
-																	@click="changeUser(item.shopsDistributorId)">查看</a>
+																	@click="changeUser(item.shopsDistributorId,item.userId)">查看</a>
 																<a class="btn btn-default" v-if="item.isQuit == '0'"
 																	title="离职" @click="deluser(item.userId);">离职</a>
 															</td>

@@ -94,7 +94,9 @@ window.app = new Vue({
 //校验手机号是否重复
 var phone = document.getElementById("phone")
 phone.onblur = function(){
-    if(!(/^1[3456789]\d{9}$/.test(phone.value))){
+    if(phone.value == ""){
+        layer.msg("请输入手机号码")
+    }else if(!(/^1[3456789]\d{9}$/.test(phone.value))){
         layer.msg("您输入的手机号码格式错误，请核对")
     }else{
         $.ajax({
@@ -102,7 +104,8 @@ phone.onblur = function(){
             type:"post",
             async:true,
             data:{
-                userName:phone.value
+                userName:phone.value,
+                // userId:config.userId
             },
             success:res=>{
                 if(res.error == "01"){
@@ -113,5 +116,6 @@ phone.onblur = function(){
     }
 
 }
+
 
 

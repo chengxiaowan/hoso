@@ -16,8 +16,21 @@
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <link rel="stylesheet" href="../css/custom/offlineshop/detail.css">
     <style>
-        .image-box{
+        .image-box {
             width: 120px;
+        }
+
+        .bobo {
+            padding: 0 8px;
+            width: 115px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            border: 1px solid #e4e9ef;
+            -webkit-border-radius: 2px;
+            -moz-border-radius: 2px;
+            border-radius: 2px;
+            margin: 0 auto;
         }
     </style>
 </head>
@@ -39,7 +52,7 @@
                                 <select name="type" class="form-control" style="width: 150px;" data-placeholder="商品分类"
                                     v-model="typeId">
                                     <option value="">请选择商品分类</option>
-                                    <option v-for="item in sort" :value="item.typeId">{{item.name}}</option>
+                                    <option v-for="item in sort" :value="item.name">{{item.name}}</option>
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-htz btn-primary" @click="soso()"><i
@@ -105,7 +118,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="panel panel-default test">
-                            <div class="panel-body explanation">
+                            <div class="panel-body explanation" style="background: #e2e9f0">
                                 <h3>说明：</h3>
                                 <br>
                                 <p>1、店铺提成比例即设置店铺针对该商品的佣金比例。</p>
@@ -132,7 +145,7 @@
                                 <tr v-for="item in rolelist.list" :key="item.shopsRoleId">
                                     <th>{{item.roleName}}</th>
                                     <th><input type="text" name="ticheng" class="form-control bobo"
-                                            placeholder="请输入角色提成" :drool="item.shopsRoleId"></th>
+                                            placeholder="请输入提成比例" :drool="item.shopsRoleId"></th>
                                 </tr>
                             </tbody>
                         </table>
@@ -207,9 +220,9 @@
                     type: 'post',
                     data: {
                         shopsBrandId: config.shopsBrandId,
-                        shopsId:config.shopsId,
+                        shopsId: config.shopsId,
                         keywords: that.keywords,
-                        typeId: that.typeId,
+                        typeName: that.typeId,
                         pageSize: that.list.pageSize || 10,
                         pageNo: that.list.pageNum || 1,
                         auditStatus: 1,
@@ -270,21 +283,31 @@
             //加入
             addgoods(item) {
                 var that = this
+                
+                //清空上一次输入残留
+                that.commissionPercent = ""
+                var qing = document.getElementsByClassName('bobo')
+                for(var i = 0;i<qing.length;i++){
+                    qing[i].value = ""
+                }
+
+                //打开弹窗
                 var index = layer.open({
                     type: 1,
                     title: "佣金设置",
                     closeBtn: 1,
                     content: $('#addgoods'),
-                    area : [ '40%', '90%' ],
+                    area: ['40%', '90%'],
                     btn: "确定",
                     btnAlign: 'c',
                     yes() {
+
+                        //整理动态输入框数据
                         var roleList = [];
+                        var flag = false;
                         var inputs = document.getElementsByClassName("bobo");
                         for (var i = 0; i < inputs.length; i++) {
-                            if (Number(inputs[i].value) > Number(that.commissionPercent)) {
-                                layer.msg("店铺角色佣金比例不得大于店铺佣金比例")
-                            } else if (inputs[i].value == "") {
+                            if (inputs[i].value == "") {
                                 var list = {
                                     shopsRoleId: inputs[i].getAttribute('drool'),
                                     commissionPercent: "0",
@@ -297,15 +320,27 @@
                                 }
                                 roleList.push(list)
                             }
-                            inputs[i].value = "";
                         }
                         console.log(roleList)
+
+                        //对比输入的数据是否符合要求
+                        for (var j = 0; j < roleList.length; j++) {
+                            if (Number(roleList[j].commissionPercent) > Number(that
+                                .commissionPercent)) {
+                                flag = true;
+                                console.log(flag)
+                                break;
+                            }
+                        }
 
                         if (that.commissionPercent == "") {
                             layer.msg("请输入店铺佣金比例")
                         } else if (Number(that.commissionPercent) > Number(item.commissionPercent)) {
                             layer.msg("店铺佣金比例不得大于品牌佣金比例")
+                        } else if (flag) {
+                            layer.msg("角色佣金比例不得大于店铺佣金比例")
                         } else {
+                            //符合要求发送ajax保存数据
                             $.ajax({
                                 url: config.api_addgoods,
                                 type: 'post',
@@ -318,17 +353,16 @@
                                 },
                                 success: res => {
                                     if (res.error == "00") {
-                                        that.commissionPercent = ""
                                         layer.msg("加入商品成功")
+                                        flag = false;
                                         layer.close(index)
                                     }
                                 }
                             })
-                            // alert('没拦住！！！')
                         }
 
                     },
-                    end:function(){
+                    end: function () {
                         that.getData()
                     }
                 })

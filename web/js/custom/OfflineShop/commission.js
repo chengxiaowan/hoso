@@ -110,10 +110,10 @@ window.app = new Vue({
             if(that.shopsCommission == ''){
                 layer.msg("请输入店铺提成比例")
                 return false;
-            }else if(that.shopsCommission > commission){
+            }else if(Number(that.shopsCommission) > Number(commission)){
                 layer.msg("店铺提成比例不能大于品牌提成比例")
                 return false;
-            }else if(max > that.shopsCommission){
+            }else if(Number(max) > Number(that.shopsCommission)){
                 layer.msg('店铺角色提成不能大于店铺提成比例')
             }else{
                 that.addShopsService(shopsId,serviceId,commission,dataList)

@@ -1278,6 +1278,17 @@ window.app = new Vue({
 					// console.log(res)
 					if (res.error == "00") {
 						that.list = res.result;
+						//排序 本来应该后端排序，但是后端没排 前端临时拍一下
+						var newlist = []
+						for(var i = 0;i<res.result.list.length;i++){
+							if(res.result.list[i].isQuit=="1"){
+								newlist.push(res.result.list[i])
+							}else{
+								newlist.unshift(res.result.list[i])
+							}
+						}
+						console.log(newlist)
+						that.list.list = newlist
 						//分页
 						if (that.pagi) {
 							$('.pagi').pagination('updatePages', that.list.pages)
@@ -1318,13 +1329,14 @@ window.app = new Vue({
 		},
 
 		//修改某店铺人员的信息
-		changeUser(id) {
+		changeUser(id,user) {
 			var that = this;
+			console.log(item)
 			var index = layer
 				.open({
 					type: 2,
-					title: "修改销售人员",
-					content: 'adduser1.html?id=' + id + '&shopsId=' + config.id,
+					title: "详情",
+					content: 'adduser1.html?id=' + id + '&shopsId=' + config.id +'&userid=' + user, 
 					area: ['70%', '420px'],
 					end: function () {
 						that.getAlluser();
@@ -1398,13 +1410,13 @@ window.app = new Vue({
 		},
 
 		//修改某店铺人员的信息
-		changeUser(id) {
+		changeUser(id,user) {
 			var that = this;
 			var index = layer
 				.open({
 					type: 2,
-					title: "修改负责人",
-					content: 'adduser1.html?id=' + id + '&shopsId=' + config.id,
+					title: "详情",
+					content: 'adduser1.html?id=' + id + '&shopsId=' + config.id + '&userId=' + user,
 					area: ['80%', '80%'],
 					end: function () {
 						that.getAlluser();

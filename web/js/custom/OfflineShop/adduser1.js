@@ -4,8 +4,12 @@ var config = {
     api_getRole: api_url + '/shops/shopsRoleList', //新建店铺品牌负责人
     api_getinfo: api_url + "/shops/editShopsDistributorInfo",    //获取店铺职员信息
     id: parameter().shopsId,
-    shopsDistributorId: parameter().id
+    shopsDistributorId: parameter().id,
+    userId:parameter().userId,
+    api_phone: api_url+ '/shops/findByUserName'
 }
+console.log(config)
+console.log(window.location.href)
 window.app = new Vue({
     el: "#app",
     data: {
@@ -108,7 +112,9 @@ window.app = new Vue({
 //校验手机号是否重复
 var phone = document.getElementById("phone")
 phone.onblur = function(){
-    if(!(/^1[3456789]\d{9}$/.test(phone.value))){
+    if(phone.value == ""){
+        layer.msg("请输入手机号码")
+    }else if(!(/^1[3456789]\d{9}$/.test(phone.value))){
         layer.msg("您输入的手机号码格式错误，请核对")
     }else{
         $.ajax({
@@ -116,7 +122,8 @@ phone.onblur = function(){
             type:"post",
             async:true,
             data:{
-                userName:phone.value
+                userName:phone.value,
+                userId:config.userId
             },
             success:res=>{
                 if(res.error == "01"){
