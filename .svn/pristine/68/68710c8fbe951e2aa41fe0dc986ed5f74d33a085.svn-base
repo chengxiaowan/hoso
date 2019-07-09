@@ -142,15 +142,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <template v-if="rolelist.total != '0'">
-                                    <tr v-for="item in rolelist.list" :key="item.shopsRoleId">
-                                        <th>{{item.roleName}}</th>
-                                        <th><input type="text" name="ticheng" class="form-control bobo"
-                                                placeholder="请输入提成比例" :drool="item.shopsRoleId"></th>
-                                    </tr>
-                                </template>
-                                <tr v-else>
-                                    <th colspan="2">暂时没有数据</th>
+                                <tr v-for="item in rolelist.list" :key="item.shopsRoleId">
+                                    <th>{{item.roleName}}</th>
+                                    <th><input type="text" name="ticheng" class="form-control bobo"
+                                            placeholder="请输入提成比例" :drool="item.shopsRoleId"></th>
                                 </tr>
                             </tbody>
                         </table>
@@ -288,11 +283,11 @@
             //加入
             addgoods(item) {
                 var that = this
-
+                
                 //清空上一次输入残留
                 that.commissionPercent = ""
                 var qing = document.getElementsByClassName('bobo')
-                for (var i = 0; i < qing.length; i++) {
+                for(var i = 0;i<qing.length;i++){
                     qing[i].value = ""
                 }
 
@@ -311,91 +306,60 @@
                         var roleList = [];
                         var flag = false;
                         var inputs = document.getElementsByClassName("bobo");
-                        if (inputs.length != 0) {
-                            for (var i = 0; i < inputs.length; i++) {
-                                if (inputs[i].value == "") {
-                                    var list = {
-                                        shopsRoleId: inputs[i].getAttribute('drool'),
-                                        commissionPercent: "0",
-                                    }
-                                    roleList.push(list)
-                                } else {
-                                    var list = {
-                                        shopsRoleId: inputs[i].getAttribute('drool'),
-                                        commissionPercent: inputs[i].value
-                                    }
-                                    roleList.push(list)
+                        for (var i = 0; i < inputs.length; i++) {
+                            if (inputs[i].value == "") {
+                                var list = {
+                                    shopsRoleId: inputs[i].getAttribute('drool'),
+                                    commissionPercent: "0",
                                 }
-                            }
-                            console.log(roleList)
-
-                            //对比输入的数据是否符合要求
-                            for (var j = 0; j < roleList.length; j++) {
-                                if (Number(roleList[j].commissionPercent) > Number(that
-                                        .commissionPercent)) {
-                                    flag = true;
-                                    console.log(flag)
-                                    break;
+                                roleList.push(list)
+                            } else {
+                                var list = {
+                                    shopsRoleId: inputs[i].getAttribute('drool'),
+                                    commissionPercent: inputs[i].value
                                 }
+                                roleList.push(list)
                             }
+                        }
+                        console.log(roleList)
 
-                            if (that.commissionPercent == "") {
-                                layer.msg("请输入店铺佣金比例")
-                            } else if (Number(that.commissionPercent) > Number(item
-                                    .commissionPercent)) {
-                                layer.msg("店铺佣金比例不得大于品牌佣金比例")
-                            } else if (flag) {
-                                layer.msg("角色佣金比例不得大于店铺佣金比例")
-                            } else {
-                                //符合要求发送ajax保存数据
-                                $.ajax({
-                                    url: config.api_addgoods,
-                                    type: 'post',
-                                    async: true,
-                                    data: {
-                                        goodsId: item.goodsId,
-                                        shopsId: config.shopsId,
-                                        commissionPercent: that.commissionPercent,
-                                        roleList: JSON.stringify(roleList)
-                                    },
-                                    success: res => {
-                                        if (res.error == "00") {
-                                            layer.msg("加入商品成功")
-                                            flag = false;
-                                            roleList = [];
-                                            layer.close(index)
-                                        }
-                                    }
-                                })
-                            }
-
-                        } else {
-                            if (that.commissionPercent == "") {
-                                layer.msg("请输入店铺佣金比例")
-                            } else if (Number(that.commissionPercent) > Number(item.commissionPercent)) {
-                                layer.msg("店铺佣金比例不得大于品牌佣金比例")
-                            } else {
-                                $.ajax({
-                                    url: config.api_addgoods,
-                                    type: 'post',
-                                    async: true,
-                                    data: {
-                                        goodsId: item.goodsId,
-                                        shopsId: config.shopsId,
-                                        commissionPercent: that.commissionPercent,
-                                        // roleList: JSON.stringify(roleList)
-                                    },
-                                    success: res => {
-                                        if (res.error == "00") {
-                                            layer.msg("加入商品成功")
-                                            flag = false;
-                                            layer.close(index)
-                                        }
-                                    }
-                                })
+                        //对比输入的数据是否符合要求
+                        for (var j = 0; j < roleList.length; j++) {
+                            if (Number(roleList[j].commissionPercent) > Number(that
+                                .commissionPercent)) {
+                                flag = true;
+                                console.log(flag)
+                                break;
                             }
                         }
 
+                        if (that.commissionPercent == "") {
+                            layer.msg("请输入店铺佣金比例")
+                        } else if (Number(that.commissionPercent) > Number(item.commissionPercent)) {
+                            layer.msg("店铺佣金比例不得大于品牌佣金比例")
+                        } else if (flag) {
+                            layer.msg("角色佣金比例不得大于店铺佣金比例")
+                        } else {
+                            //符合要求发送ajax保存数据
+                            $.ajax({
+                                url: config.api_addgoods,
+                                type: 'post',
+                                async: true,
+                                data: {
+                                    goodsId: item.goodsId,
+                                    shopsId: config.shopsId,
+                                    commissionPercent: that.commissionPercent,
+                                    roleList: JSON.stringify(roleList)
+                                },
+                                success: res => {
+                                    if (res.error == "00") {
+                                        layer.msg("加入商品成功")
+                                        flag = false;
+                                        layer.close(index)
+                                    }
+                                }
+                            })
+                        }
 
                     },
                     end: function () {

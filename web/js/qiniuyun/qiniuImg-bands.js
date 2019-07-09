@@ -241,6 +241,7 @@ function uploaderReady3(token){
                 var sourceLink = domain + res.url;//获取上传文件的链接地址
                 $("#info1").attr('src',sourceLink)
                 $("#info1").attr('isUp',res.url)
+                $("#info1").attr('attachId',"0")
                 // console.log(sourceLink);
                 //do something
             },
@@ -328,6 +329,8 @@ function uploaderReady4(token){
                 var sourceLink = domain + res.url;//获取上传文件的链接地址
                 $("#info2").attr('src',sourceLink)
                 $("#info2").attr('isUp',res.url)
+                $("#info2").attr('attachId',"0")
+
                 // console.log(sourceLink);
                 //do something
             },
@@ -415,6 +418,8 @@ function uploaderReady5(token){
                 var sourceLink = domain + res.url;//获取上传文件的链接地址
                 $("#info3").attr('src',sourceLink)
                 $("#info3").attr('isUp',res.url)        //添加自定义标签判断是否为上传图片
+                $("#info3").attr('attachId',"0")
+
 
                 // console.log(sourceLink);
                 //do something
@@ -503,6 +508,8 @@ function uploaderReady6(token){
                 var sourceLink = domain + res.url;//获取上传文件的链接地址
                 $("#info4").attr('src',sourceLink)
                 $("#info4").attr('isUp',res.url)
+                $("#info4").attr('attachId',"0")
+
 
                 // console.log(sourceLink);
                 //do something
@@ -591,6 +598,8 @@ function uploaderReady7(token){
                 var sourceLink = domain + res.url;//获取上传文件的链接地址
                 $("#info5").attr('src',sourceLink)
                 $("#info5").attr('isUp',res.url)
+                $("#info5").attr('attachId',"0")
+
 
                 // console.log(sourceLink);
                 //do something
@@ -680,6 +689,8 @@ function uploaderReady8(token){
                 var sourceLink = domain + res.url;//获取上传文件的链接地址
                 $("#info6").attr('src',sourceLink)
                 $("#info6").attr('isUp',res.url)
+                $("#info6").attr('attachId',"0")
+
 
                 // console.log(sourceLink);
                 //do something
@@ -766,8 +777,10 @@ function uploaderReady9(token){
                 var res = eval('(' + info + ')');
                 // console.log(res)
                 var sourceLink = domain + res.url;//获取上传文件的链接地址
-                $("#info6").attr('src',sourceLink)
-                $("#info6").attr('isUp',res.url)
+                $("#info7").attr('src',sourceLink)
+                $("#info7").attr('isUp',res.url)
+                $("#info6").attr('attachId',"0")
+
 
                 // console.log(sourceLink);
                 //do something

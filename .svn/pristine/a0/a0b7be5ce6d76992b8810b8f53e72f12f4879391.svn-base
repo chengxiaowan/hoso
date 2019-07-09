@@ -1278,7 +1278,7 @@ window.app = new Vue({
 					// console.log(res)
 					if (res.error == "00") {
 						that.list = res.result;
-						//排序 本来应该后端排序，但是后端没排 前端临时拍一下，后端排序后该代码不影响先有效果
+						//排序 本来应该后端排序，但是后端没排 前端临时拍一下
 						var newlist = []
 						for(var i = 0;i<res.result.list.length;i++){
 							if(res.result.list[i].isQuit=="1"){

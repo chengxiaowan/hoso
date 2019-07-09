@@ -183,18 +183,36 @@ window.app = new Vue({
                         for(var i in res.result.attachInfo){
                             if(i == 0){
                                 $("#info1").attr('src',res.result.attachInfo[i].url);
+                                $("#info1").attr('attachId',res.result.attachInfo[i].attachId);
+                                $("#info1").attr('isUp',res.result.attachInfo[i].originalFilename);
                             }else if(i == 1){
                                 $("#info2").attr('src',res.result.attachInfo[i].url);
+                                $("#info2").attr('attachId',res.result.attachInfo[i].attachId);
+                                $("#info2").attr('isUp',res.result.attachInfo[i].originalFilename);
                             }else if(i == 2){
                                 $("#info3").attr('src',res.result.attachInfo[i].url);
+                                $("#info3").attr('attachId',res.result.attachInfo[i].attachId);
+                                $("#info3").attr('isUp',res.result.attachInfo[i].originalFilename);
                             }else if(i == 3){
                                 $("#info4").attr('src',res.result.attachInfo[i].url);
+                                $("#info4").attr('attachId',res.result.attachInfo[i].attachId);
+                                $("#info4").attr('isUp',res.result.attachInfo[i].originalFilename);
                             }else if(i == 4){
                                 $("#info5").attr('src',res.result.attachInfo[i].url);
+                                $("#info5").attr('attachId',res.result.attachInfo[i].attachId);
+                                $("#info5").attr('isUp',res.result.attachInfo[i].originalFilename);
                             }else if(i == 5){
                                 $("#info6").attr('src',res.result.attachInfo[i].url);
+                                $("#info6").attr('attachId',res.result.attachInfo[i].attachId);
+                                $("#info6").attr('isUp',res.result.attachInfo[i].originalFilename);
+
+
                             }else if(i == 6){
                                 $("#info7").attr('src',res.result.attachInfo[i].url);
+                                $("#info7").attr('attachId',res.result.attachInfo[i].attachId);
+                                $("#info7").attr('isUp',res.result.attachInfo[i].originalFilename);
+
+
                             }
                         }
                     } else {
@@ -347,12 +365,12 @@ window.app = new Vue({
                     },
                     success: res => {
                         layer.msg("保存成功",{time:3000})
-                        setTimeout(function () {
-                            //关闭当前弹窗
-                            var index = parent.layer.getFrameIndex(window.name);
-                            window.parent.location.reload();
-                            parent.layer.close(index)
-                        }, 3000)
+                        // setTimeout(function () {
+                        //     //关闭当前弹窗
+                        //     var index = parent.layer.getFrameIndex(window.name);
+                        //     window.parent.location.reload();
+                        //     parent.layer.close(index)
+                        // }, 3000)
                     }
                 })
             }
@@ -471,6 +489,8 @@ window.app = new Vue({
                     originalFilename: img.attr("isUp"),
                     url: img.attr("src"),
                     uploadTime: this.gettime(),
+                    attachId:img.attr('attachId') || "0"
+
                 }
                 data.push(drool)
                 // console.log(drool)

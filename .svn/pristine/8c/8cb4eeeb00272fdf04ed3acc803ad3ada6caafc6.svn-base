@@ -455,34 +455,33 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <template v-if="brandServiceList.total > 0"> 
-                                                        <tr v-for="item in brandServiceList.list">
-                                                            <td>{{item.serviceName}}</td>
-                                                            <td>{{item.photoStudioName}}</td>
-                                                            <td>{{item.province}}{{item.city}}</td>
-                                                            <td v-if='item.price != undefined'>{{item.price}}</td>
-                                                            <td v-else>-</td>
-                                                            <td v-if="item.auditStatus == 1">{{item.commissionPercent}}</td>
-                                                            <td v-else>-</td>
-                                                            <td v-if='item.auditStatus == 1'>
-                                                                {{(item.price*(item.commissionPercent)/100).toFixed(2)}}</td>
-                                                            <td v-else>-</td>
-                                                            <td v-if="item.auditStatus == 0">待审核</td>
-                                                            <td v-if="item.auditStatus == 1">审核成功</td>
-                                                            <td v-if="item.auditStatus == 2"><em class="failure">审核失败</em>
-                                                            </td>
-                                                            <td class="btn-hide">
-                                                                <!--<a class="btn btn-success" title="查看" @click="view(item.id);">查看</a>-->
-                                                                <a class="btn btn-success" title="查看"
-                                                                    v-if="item.auditStatus == 1"
-                                                                    @click="view(item.id);">二维码</a>
-                                                                <a class="btn btn-default" title="删除"
-                                                                    v-if="item.auditStatus != 1"
-                                                                    @click="del(item.id);">删除</a>
-                                                            </td>
-                                                        </tr>
-                                                    </template>
-                                                    <tr v-else>
+                                                    <tr v-if="brandServiceList.total > 0"
+                                                        v-for="item in brandServiceList.list">
+                                                        <td>{{item.serviceName}}</td>
+                                                        <td>{{item.photoStudioName}}</td>
+                                                        <td>{{item.province}}{{item.city}}</td>
+                                                        <td v-if='item.price != undefined'>{{item.price}}</td>
+                                                        <td v-else>-</td>
+                                                        <td v-if="item.auditStatus == 1">{{item.commissionPercent}}</td>
+                                                        <td v-else>-</td>
+                                                        <td v-if='item.auditStatus == 1'>
+                                                            {{item.price*item.commissionPercent}}</td>
+                                                        <td v-else>-</td>
+                                                        <td v-if="item.auditStatus == 0">待审核</td>
+                                                        <td v-if="item.auditStatus == 1">审核成功</td>
+                                                        <td v-if="item.auditStatus == 2"><em class="failure">审核失败</em>
+                                                        </td>
+                                                        <td class="btn-hide">
+                                                            <!--<a class="btn btn-success" title="查看" @click="view(item.id);">查看</a>-->
+                                                            <a class="btn btn-success" title="查看"
+                                                                v-if="item.auditStatus == 1"
+                                                                @click="view(item.id);">二维码</a>
+                                                            <a class="btn btn-default" title="删除"
+                                                                v-if="item.auditStatus != 1"
+                                                                @click="del(item.id);">删除</a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="main_info" v-else>
                                                         <td colspan="10">没有相关数据</td>
                                                     </tr>
                                                 </tbody>

@@ -672,6 +672,7 @@ window.app = new Vue({
                     keywords: keywords,
                     province: province,
                     city: city,
+                    shopsBrandId:shopsBrandId,
                     pageSize: that.brandServiceList.pageSize || 10,
                     pageNo: that.brandServiceList.pageNum || 1,
                 },

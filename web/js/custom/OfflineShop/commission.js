@@ -1,12 +1,12 @@
-var serviceId = parameter().id,shopsId = parameter().ids,commission = parameter().commission,roleList = [];
+var serviceId = parameter().id, shopsId = parameter().ids, commission = parameter().commission, roleList = [];
 console.log(shopsId)
 console.log(commission)
 var config = {
     role: localStorage.userRole,
-    api_list: api_url+'/shops/showShopsService', // 获取旅拍服务列表
+    api_list: api_url + '/shops/showShopsService', // 获取旅拍服务列表
     api_role: api_url + '/shops/shopsRoleList',  // 获取角色列表
-    api_join: api_url+'/shops/addShopsService', // 加入服务
-    api_detail: api_url+'/service/getPhotoServiceById', //获取旅拍详情
+    api_join: api_url + '/shops/addShopsService', // 加入服务
+    api_detail: api_url + '/service/getPhotoServiceById', //获取旅拍详情
 }
 window.app = new Vue({
     el: '#app',
@@ -17,11 +17,11 @@ window.app = new Vue({
         list: [],
 
     },
-    created: function() {
+    created: function () {
         const that = this;
         document.getElementById("app").classList.remove("hide");
     },
-    mounted: function() {
+    mounted: function () {
         const that = this;
         // that.getData();
         that.getRole();
@@ -32,13 +32,13 @@ window.app = new Vue({
          *
          * @param {string} s 是否关闭
          */
-        loading: function(s) {
-            if(s == "close") layer.close(this.loadingSwitch)
+        loading: function (s) {
+            if (s == "close") layer.close(this.loadingSwitch)
             else this.loadingSwitch = layer.load(3);
         },
-        getData: function(page,keywords) {
+        getData: function (page, keywords) {
             $('body,html').scrollTop(0);
-            if(page) this.list.pageNum = page
+            if (page) this.list.pageNum = page
             var that = this;
             that.loading();
             $.ajax({
@@ -48,13 +48,13 @@ window.app = new Vue({
                 data: {
                     keywords: that.keywords,
                 },
-                success: function(res) {
+                success: function (res) {
                     that.loading('close')
-                    if(res.error == "00") {
+                    if (res.error == "00") {
                         that.list = res.result;
                         for (var i in that.list.list) {
                             console.log(that.list.list[i].price)
-                            if(that.list.list[i].price!=undefined){
+                            if (that.list.list[i].price != undefined) {
                                 that.list.list[i].price = that.list.list[i].price.toFixed(2)
                             }
                             // that.list.list[i].createTime = formatDate(that.list.list[i].createTime).substring(0,10)
@@ -66,7 +66,7 @@ window.app = new Vue({
             });
         },
         // 获取角色列表
-        getRole: function() {
+        getRole: function () {
             $('body,html').scrollTop(0);
             var that = this;
             $.ajax({
@@ -75,13 +75,12 @@ window.app = new Vue({
                 type: 'post',
                 data: {
                     shopsId: shopsId,
-                    shopsId: 51,
                 },
-                success: function(res) {
+                success: function (res) {
                     that.loading('close')
-                    if(res.error == "00") {
+                    if (res.error == "00") {
                         that.list = res.result;
-                        sessionStorage.setItem('roleList',res.result.list);
+                        sessionStorage.setItem('roleList', res.result.list);
                         that.roleList = res.result;
                     } else {
                         layer.msg(res.msg)
@@ -90,37 +89,71 @@ window.app = new Vue({
             });
         },
         // 保存
-        save(){
+        save() {
             const that = this;
             var dataList = [];
-            for(var i in that.list.list) {
+            for (var i in that.list.list) {
                 var obj = {};
                 obj.shopsRoleId = that.list.list[i].shopsRoleId;
-                if(that.roleList[i] == undefined){
+                if (that.roleList[i] == undefined) {
                     that.roleList[i] = 0;
                 }
                 obj.commissionPercent = that.roleList[i];
                 dataList.push(obj)
             }
-            var max = dataList[0].commissionPercent;
-            for(var i = 1; i < dataList.length; i++) {
-                var cur = dataList[i].commissionPercent;
-                cur > max ? max = cur : null
-            }
-            if(that.shopsCommission == ''){
-                layer.msg("请输入店铺提成比例")
-                return false;
-            }else if(Number(that.shopsCommission) > Number(commission)){
-                layer.msg("店铺提成比例不能大于品牌提成比例")
-                return false;
-            }else if(Number(max) > Number(that.shopsCommission)){
-                layer.msg('店铺角色提成不能大于店铺提成比例')
-            }else{
-                that.addShopsService(shopsId,serviceId,commission,dataList)
+            if (dataList.length == 0) {
+                if (that.shopsCommission == '') {
+                    layer.msg("请输入店铺提成比例")
+                    return false;
+                } else if (Number(that.shopsCommission) > Number(commission)) {
+                    layer.msg("店铺提成比例不能大于品牌提成比例")
+                    return false;
+                } else {
+                    $.ajax({
+                        url: config.api_join,
+                        async: true,
+                        type: 'post',
+                        data: {
+                            shopsId: shopsId,
+                            serviceId: serviceId,
+                            commissionPercent: that.shopsCommission,
+                        },
+                        success: function (res) {
+                            that.loading('close')
+                            if (res.error == "00") {
+                                var index = parent.layer.getFrameIndex(window.name);
+                                layer.msg('加入服务成功！');
+                                setTimeout(function () {
+                                    window.parent.location.reload();
+                                    parent.layer.close(index);
+                                }, 1000);
+                            } else {
+                                layer.msg(res.msg)
+                            }
+                        }
+                    })
+                }
+            } else {
+                var max = dataList[0].commissionPercent;
+                for (var i = 1; i < dataList.length; i++) {
+                    var cur = dataList[i].commissionPercent;
+                    cur > max ? max = cur : null
+                }
+                if (that.shopsCommission == '') {
+                    layer.msg("请输入店铺提成比例")
+                    return false;
+                } else if (Number(that.shopsCommission) > Number(commission)) {
+                    layer.msg("店铺提成比例不能大于品牌提成比例")
+                    return false;
+                } else if (Number(max) > Number(that.shopsCommission)) {
+                    layer.msg('店铺角色提成不能大于店铺提成比例')
+                } else {
+                    that.addShopsService(shopsId, serviceId, commission, dataList)
+                }
             }
         },
         // 加入设置佣金
-        addShopsService(shopsId,serviceId,commission,dataList){
+        addShopsService(shopsId, serviceId, commission, dataList) {
             const that = this;
             $.ajax({
                 url: config.api_join,
@@ -132,12 +165,12 @@ window.app = new Vue({
                     commissionPercent: commission,
                     roleList: JSON.stringify(dataList),
                 },
-                success: function(res) {
+                success: function (res) {
                     that.loading('close')
-                    if(res.error == "00") {
+                    if (res.error == "00") {
                         var index = parent.layer.getFrameIndex(window.name);
                         layer.msg('加入服务成功！');
-                        setTimeout(function() {
+                        setTimeout(function () {
                             window.parent.location.reload();
                             parent.layer.close(index);
                         }, 1000);

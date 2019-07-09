@@ -47,7 +47,7 @@ window.app = new Vue({
         },
         // 键入费用哪个
         fillCost(){
-            this.profit = this.cost*0.8;
+            this.profit = Math.ceil(this.cost*0.8) + ".00";
         },
         //保存数据
         save() {
