@@ -23,12 +23,11 @@
         .failure {
             color: #d0021b;
         }
-
-        .drool {
+        .drool{
             right: 10px;
         }
 
-        .bobo {
+        .bobo{
             right: 25px;
         }
     </style>
@@ -72,18 +71,16 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>负责人：</label>
-                                            <template>
-                                                <el-select v-model="userId" filterable placeholder="请选择负责人"
-                                                    class="col-sm-10">
-                                                    <el-option v-for="item in newuserlist" :key="item.userId"
-                                                        :label="item.realName" :value="item.userId">
-                                                    </el-option>
-                                                </el-select>
-                                                <em class="drool"></em>
-                                            </template>
+                                            <div class="form-select col-sm-10">
+                                                <select class="form-control" v-model="userId">
+                                                    <option value="" selected="selected">请选择品牌负责人</option>
+                                                    <option v-for="item in newuserlist" :value="item.userId"
+                                                        :key="item.userId">{{item.realName}}</option>
+                                                </select>
+                                                <em class="dot bobo"></em>
+                                            </div>
                                             <div class="form-group form-create col-sm-2" @click="jumpToHeader();">新建
                                             </div>
-                                            <em class="dot" style="top:40px;right:180px"></em>
                                         </div>
                                     </div>
                                 </div>
@@ -110,9 +107,8 @@
                                     <div class="col-sm-12">
                                         <h3>图片</h3>
                                         <p style="margin-top: 10px">
-                                            1、请上传png,jpg,jpeg等规范格式的图片，大小不能超过5MB 。<br />
-                                            2、精美的logo和封面能吸引更多的关注哦，请参考<i style="color:#4A90E2">图片示例</i>。<br />
-                                            3、如发现图片无法删除的情况，请先清除浏览器缓存或者换个浏览器再操作。
+                                            请上传png,jpg,jpeg等规范格式的图片，大小不能超过10MB
+                                            。如发现图片无法删除的情况，请先清除浏览器缓存或者换个浏览器再操作。如发现图片中带有色情、政治等内容，我方将予以删除品牌操作，最终解释权由寒舍信息科技（常州）有限公司所有。
                                         </p>
                                         <div id="bobodrool">
                                             <!-- logo -->
@@ -273,16 +269,12 @@
                                                     <td v-if="item.auditStatus !='1'">-</td>
                                                     <td v-else>{{item.commissionPercent}}</td>
                                                     <td v-if="item.auditStatus !='1'">-</td>
-                                                    <td v-else>
-                                                        {{(item.price * (item.commissionPercent/100)).toFixed(2)}}</td>
+                                                    <td v-else>{{(item.price * (item.commissionPercent/100)).toFixed(2)}}</td>
                                                     <td v-if="item.auditStatus == 0">待审核</td>
                                                     <td v-if="item.auditStatus == 1">审核通过</td>
-                                                    <td v-if="item.auditStatus == 2">
-                                                        <p style="color: red">审核失败</p>
-                                                    </td>
+                                                    <td v-if="item.auditStatus == 2"><p style="color: red">审核失败</p></td>
                                                     <td class="btn-hide">
-                                                        <a class="btn btn-success" title="查看详情">查看</a>
-                                                        <!--暂时去掉详情查看-->
+                                                        <a class="btn btn-success" title="查看详情">查看</a>        <!--暂时去掉详情查看-->
                                                         <a class="btn btn-success" title="编辑" @click="edit(item.id);"
                                                             v-if="item.auditStatus == 1">二维码</a>
                                                         <a class="btn btn-default" title="删除"
@@ -463,24 +455,21 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <template v-if="brandServiceList.total > 0">
+                                                    <template v-if="brandServiceList.total > 0"> 
                                                         <tr v-for="item in brandServiceList.list">
                                                             <td>{{item.serviceName}}</td>
                                                             <td>{{item.photoStudioName}}</td>
                                                             <td>{{item.province}}{{item.city}}</td>
                                                             <td v-if='item.price != undefined'>{{item.price}}</td>
                                                             <td v-else>-</td>
-                                                            <td v-if="item.auditStatus == 1">{{item.commissionPercent}}
-                                                            </td>
+                                                            <td v-if="item.auditStatus == 1">{{item.commissionPercent}}</td>
                                                             <td v-else>-</td>
                                                             <td v-if='item.auditStatus == 1'>
-                                                                {{(item.price*(item.commissionPercent)/100).toFixed(2)}}
-                                                            </td>
+                                                                {{(item.price*(item.commissionPercent)/100).toFixed(2)}}</td>
                                                             <td v-else>-</td>
                                                             <td v-if="item.auditStatus == 0">待审核</td>
                                                             <td v-if="item.auditStatus == 1">审核成功</td>
-                                                            <td v-if="item.auditStatus == 2"><em
-                                                                    class="failure">审核失败</em>
+                                                            <td v-if="item.auditStatus == 2"><em class="failure">审核失败</em>
                                                             </td>
                                                             <td class="btn-hide">
                                                                 <!--<a class="btn btn-success" title="查看" @click="view(item.id);">查看</a>-->

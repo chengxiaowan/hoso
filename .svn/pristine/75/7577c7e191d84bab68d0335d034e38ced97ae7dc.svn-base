@@ -335,9 +335,9 @@
 							<li>
 								<a class="J_menuItem" href="activityManagement/hotWishList.html">热门许愿</a>
 							</li>
-							<!-- <li>
-								<a class="J_menuItem" href="wxapp/index.html">小程序首页</a>   未完成
-							</li> -->
+							<li>
+								<a class="J_menuItem" href="wxapp/index.html">小程序首页</a>
+							</li>
 						</ul>
 					</li>
 					<li>

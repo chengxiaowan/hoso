@@ -196,6 +196,7 @@ window.app = new Vue({
 	mounted: function () {
 		const that = this
 		that.getbrands()
+		that.getUser()
 		//		layui.use('laydate', function() {
 		//			var laydate = layui.laydate;
 		//			laydate.render({
@@ -225,7 +226,6 @@ window.app = new Vue({
 		that.getCity()
 		// console.log(config.id)
 		that.getsort()
-		that.getUser()
 
 	},
 	methods: {
@@ -241,7 +241,8 @@ window.app = new Vue({
 				url: config.api_user,
 				async: true,
 				data:{
-					shopsBrandId:config.ids
+					roleType: 2,
+					roleId: 1,
 				},
 				success(res) {
 					if (res.error == "00") {
@@ -656,6 +657,10 @@ window.app = new Vue({
 			}
 			if (that.shopsType == "") {
 				layer.msg("请选择店铺类型");
+				return;
+			}
+			if (that.phone == "") {
+				layer.msg("请输入联系电话");
 				return;
 			}
 			that.addGroup();
@@ -1701,25 +1706,6 @@ window.app = new Vue({
 				})
 
 			})
-		},
-		userchange(){
-			var that = this;
-			that.userId = ""
-			$.ajax({
-				type: "post",
-				url: config.api_user,
-				async: true,
-				data:{
-					shopsBrandId:that.shopsBrandId,
-				},
-				success(res) {
-					if (res.error == "00") {
-						that.userList = res.result
-					} else {
-						layer.msg(res.msg)
-					}
-				}
-			});
 		}
 	}
 })
