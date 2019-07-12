@@ -1,5 +1,4 @@
-var id = parameter().id,
-    type = parameter().type;
+var id = parameter().id, type =  parameter().type;
 console.log(id)
 console.log(type)
 var config = {
@@ -21,11 +20,11 @@ window.app = new Vue({
         list: [], // 旅拍日期信息
         keywords: '', // 搜索关键
         name: '', //名称
-        nameLength: 0, // 名称长度
-        style: '', // 方式
+        nameLength:0, // 名称长度
+        style: '',// 方式
         studio: '', // 工作室
         studioList: [], // 工作室列表
-        styleLength: 0, // 进行长度
+        styleLength: 0,// 进行长度
         provinceList: [], //省份列表
         provinceId: '', // 省份Id
         province: '', // 省份
@@ -50,7 +49,7 @@ window.app = new Vue({
             let that = this
             that.cityList = ''
             that.cityId = ''
-            if (val != '') {
+            if(val != '') {
                 $.ajax({
                     url: config.api_city,
                     async: true,
@@ -58,12 +57,12 @@ window.app = new Vue({
                     data: {
                         parentId: val,
                     },
-                    success: function (res) {
+                    success: function(res) {
                         that.loading('close')
-                        if (res.error == "00") {
+                        if(res.error == "00") {
                             var arr = [];
                             var res_result = res.result;
-                            for (var i in res_result) {
+                            for(var i in res_result) {
                                 var obj = {};
                                 obj.id = res_result[i].cityId;
                                 obj.text = res_result[i].cityName;
@@ -83,15 +82,15 @@ window.app = new Vue({
     },
     mounted: function () {
         const that = this;
-        layui.use('laydate', function () {
+        layui.use('laydate', function(){
             var laydate = layui.laydate;
-            var endTime = laydate.render({
-                elem: '#end', //选择器结束时间
-                format: 'yyyy-MM-dd', //可任意组合
-                min: "1970-1-1", //设置min默认最小值
-                done: function (value, date) {
+            var endTime= laydate.render({
+                elem: '#end',//选择器结束时间
+                format: 'yyyy-MM-dd',//可任意组合
+                min:"1970-1-1",//设置min默认最小值
+                done: function(value,date){
                     that.endTime = value;
-                    if (value !== '') {
+                    if(value !== '') {
                         startTime.config.max.year = date.year;
                         startTime.config.max.month = date.month - 1;
                         startTime.config.max.date = date.date;
@@ -103,13 +102,13 @@ window.app = new Vue({
                 }
             });
             //日期范围
-            var startTime = laydate.render({
+            var startTime=laydate.render({
                 elem: '#start',
-                format: 'yyyy-MM-dd', //可任意组合
-                max: "2099-12-31", //设置一个默认最大值
-                done: function (value, date) {
+                format: 'yyyy-MM-dd',//可任意组合
+                max:"2099-12-31",//设置一个默认最大值
+                done: function(value, date){
                     that.startTime = value;
-                    if (value !== '') {
+                    if(value !== '') {
                         endTime.config.min.year = date.year;
                         endTime.config.min.month = date.month - 1;
                         endTime.config.min.date = date.date;
@@ -152,7 +151,7 @@ window.app = new Vue({
             })
         },
         // 获取旅拍详情
-        getDetail: function () {
+        getDetail: function(){
             const that = this;
             $.ajax({
                 url: config.api_detail,
@@ -161,8 +160,8 @@ window.app = new Vue({
                 data: {
                     id: id
                 },
-                success: function (res) {
-                    if (res.error == "00") {
+                success: function(res) {
+                    if(res.error == "00") {
                         that.name = res.result.title;
                         that.style = res.result.content;
                         that.type = res.result.type;
@@ -174,44 +173,44 @@ window.app = new Vue({
                         that.studio = res.result.photoStudioId;
                         that.profit = res.result.achieve;
                         console.log(res)
-                        for (var i in that.provinceList) {
-                            if (that.provinceList[i].text == that.province) {
+                        for(var i in that.provinceList){
+                            if(that.provinceList[i].text == that.province){
                                 that.provinceId = that.provinceList[i].id;
                             }
                         }
-                        that.getCity(that.provinceId, that.city)
-                        $("#vivew1").attr('src', res.result.pic);
-                        for (var i in res.result.attachInfo) {
-                            if (i == 0) {
-                                $("#info1").attr('src', res.result.attachInfo[i].url);
-                                $("#info1").attr('attachId', res.result.attachInfo[i].attachId);
-                                $("#info1").attr('isUp', res.result.attachInfo[i].originalFilename);
-                            } else if (i == 1) {
-                                $("#info2").attr('src', res.result.attachInfo[i].url);
-                                $("#info2").attr('attachId', res.result.attachInfo[i].attachId);
-                                $("#info2").attr('isUp', res.result.attachInfo[i].originalFilename);
-                            } else if (i == 2) {
-                                $("#info3").attr('src', res.result.attachInfo[i].url);
-                                $("#info3").attr('attachId', res.result.attachInfo[i].attachId);
-                                $("#info3").attr('isUp', res.result.attachInfo[i].originalFilename);
-                            } else if (i == 3) {
-                                $("#info4").attr('src', res.result.attachInfo[i].url);
-                                $("#info4").attr('attachId', res.result.attachInfo[i].attachId);
-                                $("#info4").attr('isUp', res.result.attachInfo[i].originalFilename);
-                            } else if (i == 4) {
-                                $("#info5").attr('src', res.result.attachInfo[i].url);
-                                $("#info5").attr('attachId', res.result.attachInfo[i].attachId);
-                                $("#info5").attr('isUp', res.result.attachInfo[i].originalFilename);
-                            } else if (i == 5) {
-                                $("#info6").attr('src', res.result.attachInfo[i].url);
-                                $("#info6").attr('attachId', res.result.attachInfo[i].attachId);
-                                $("#info6").attr('isUp', res.result.attachInfo[i].originalFilename);
+                        that.getCity(that.provinceId,that.city)
+                        $("#vivew1").attr('src',res.result.pic);
+                        for(var i in res.result.attachInfo){
+                            if(i == 0){
+                                $("#info1").attr('src',res.result.attachInfo[i].url);
+                                $("#info1").attr('attachId',res.result.attachInfo[i].attachId);
+                                $("#info1").attr('isUp',res.result.attachInfo[i].originalFilename);
+                            }else if(i == 1){
+                                $("#info2").attr('src',res.result.attachInfo[i].url);
+                                $("#info2").attr('attachId',res.result.attachInfo[i].attachId);
+                                $("#info2").attr('isUp',res.result.attachInfo[i].originalFilename);
+                            }else if(i == 2){
+                                $("#info3").attr('src',res.result.attachInfo[i].url);
+                                $("#info3").attr('attachId',res.result.attachInfo[i].attachId);
+                                $("#info3").attr('isUp',res.result.attachInfo[i].originalFilename);
+                            }else if(i == 3){
+                                $("#info4").attr('src',res.result.attachInfo[i].url);
+                                $("#info4").attr('attachId',res.result.attachInfo[i].attachId);
+                                $("#info4").attr('isUp',res.result.attachInfo[i].originalFilename);
+                            }else if(i == 4){
+                                $("#info5").attr('src',res.result.attachInfo[i].url);
+                                $("#info5").attr('attachId',res.result.attachInfo[i].attachId);
+                                $("#info5").attr('isUp',res.result.attachInfo[i].originalFilename);
+                            }else if(i == 5){
+                                $("#info6").attr('src',res.result.attachInfo[i].url);
+                                $("#info6").attr('attachId',res.result.attachInfo[i].attachId);
+                                $("#info6").attr('isUp',res.result.attachInfo[i].originalFilename);
 
 
-                            } else if (i == 6) {
-                                $("#info7").attr('src', res.result.attachInfo[i].url);
-                                $("#info7").attr('attachId', res.result.attachInfo[i].attachId);
-                                $("#info7").attr('isUp', res.result.attachInfo[i].originalFilename);
+                            }else if(i == 6){
+                                $("#info7").attr('src',res.result.attachInfo[i].url);
+                                $("#info7").attr('attachId',res.result.attachInfo[i].attachId);
+                                $("#info7").attr('isUp',res.result.attachInfo[i].originalFilename);
 
 
                             }
@@ -229,11 +228,9 @@ window.app = new Vue({
             that.id = id;
             that.type = type;
             that.index = index_chosen;
-            if (index_chosen == 2 && that.id == null) {
-                layer.msg('请先添加旅拍基本信息', {
-                    time: 1000
-                });
-            } else if (index_chosen == 2 && that.id != null) {
+            if (index_chosen ==2 && that.id == null) {
+                layer.msg('请先添加旅拍基本信息', {time: 1000});
+            }else if(index_chosen ==2 && that.id != null){
                 that.getPhotoServiceTimeListPage(that.id); // 获取旅拍时间列表
             }
         },
@@ -247,13 +244,13 @@ window.app = new Vue({
                 data: {
                     keywords: ''
                 },
-                success: function (res) {
+                success: function(res) {
                     that.loading('close')
-                    if (res.error == "00") {
+                    if(res.error == "00") {
                         var arr = [];
                         var res_result = res.result;
                         console.log(res_result)
-                        for (var i in res_result) {
+                        for(var i in res_result) {
                             var obj = {};
                             obj.id = res_result[i].provinceId;
                             obj.text = res_result[i].provinceName;
@@ -267,54 +264,53 @@ window.app = new Vue({
             });
         },
         // 选择省份
-        selectProvince(Pid) {
-            let obj = {},
-                that = this;
+        selectProvince(Pid){
+            let obj={},that = this;
             console.log(Pid)
-            obj = that.provinceList.find((item) => {
-                return item.id === Pid
+            obj = that.provinceList.find((item)=>{
+                return item.id ===Pid
             })
-            if (obj == undefined) {
+            if(obj==undefined){
                 that.province = ''
                 that.city = ''
-            } else {
+            }else{
                 that.province = obj.text
             }
         },
         // 获取城市列表
-        getCity(Pid, city) {
+        getCity(Pid,city){
             const that = this;
             $.ajax({
                 url: config.api_city,
-                traditional: true,
+                traditional:true,
                 async: true,
                 type: 'post',
                 data: {
-                    provinceId: Pid,
+                    provinceId : Pid,
                 },
                 success: res => {
-                    if (res.error == '00') {
-                        for (var i in res.result) {
-                            if (res.result[i].cityName == city) {
+                    if(res.error == '00'){
+                        for(var i in res.result){
+                            if(res.result[i].cityName ==  city){
                                 that.cityId = res.result[i].cityId;
                             }
                         }
-                    } else {
+                    }else{
                         layer.msg(res.msg);
                     }
                 }
             })
         },
         // 获取城市
-        selectCity(Cid) {
-            let obj = {},
+        selectCity(Cid){
+            let obj={},
                 that = this;
-            obj = this.cityList.find((item) => {
-                return item.id === Cid
+            obj = this.cityList.find((item)=>{
+                return item.id ===Cid
             })
-            if (obj == undefined) {
+            if(obj==undefined){
                 that.city = ''
-            } else {
+            }else{
                 that.city = obj.text
             }
         },
@@ -332,45 +328,43 @@ window.app = new Vue({
             that.clearDate($("#info6"), arr)
             that.clearDate($("#info7"), arr)
             console.log(arr)
-            if (that.name == '') {
+            if (that.name =='') {
                 layer.msg('请输入名称');
-            } else if (that.style == '') {
+            }else if(that.style ==''){
                 layer.msg('请输入进行方式');
-            } else if (that.studio == '') {
+            }else if(that.studio ==''){
                 layer.msg('请选择工作室');
-            } else if (that.provinceId == '') {
+            }else if(that.provinceId ==''){
                 layer.msg('请选择省');
-            } else if (that.cityId == '') {
+            }else if(that.cityId ==''){
                 layer.msg('请选择市');
-            } else if (that.type == '') {
+            }else if(that.type ==''){
                 layer.msg('请选择类型');
-            } else if (that.imagePath == '../images/imgadd_head.jpg') {
+            }else if(that.imagePath =='../images/imgadd_head.jpg'){
                 layer.msg('请上传封面');
-            } else {
+            }else{
                 $.ajax({
                     url: config.api_save,
-                    traditional: true,
+                    traditional:true,
                     async: true,
                     type: 'post',
                     data: {
                         id: id,
-                        title: that.name,
+                        title : that.name,
                         type: that.type,
                         studio: that.studio,
-                        province: that.province,
+                        province : that.province,
                         city: that.city,
                         describes: that.summary,
                         remark: that.remark,
                         content: that.style,
-                        achieve: that.profit,
+                        achieve : that.profit,
                         photoStudioId: that.studio,
                         pic: $('#vivew1').attr('src'),
-                        picList: JSON.stringify(arr)
+                        picList:JSON.stringify(arr)
                     },
                     success: res => {
-                        layer.msg("保存成功", {
-                            time: 3000
-                        })
+                        layer.msg("保存成功",{time:3000})
                         // setTimeout(function () {
                         //     //关闭当前弹窗
                         //     var index = parent.layer.getFrameIndex(window.name);
@@ -382,25 +376,21 @@ window.app = new Vue({
             }
         },
         // 跳转新增
-        jump() {
-            var that = this
+        jump(){
             var index = layer.open({
-                type: 2,
-                title: '新增',
-                content: 'dateAdd.html?type=' + type + "&id=" + id,
-                area: ['100%', '100%'],
-                end: function () {
-                    that.getPhotoServiceTimeListPage(that.id);
-                }
+                type : 2,
+                title : '新增',
+                content: 'dateAdd.html',
+                area : [ '100%', '100%' ]
             });
         },
         // 查看详情
-        view(id) {
+        view(id){
             var index = layer.open({
-                type: 2,
-                title: '查看详情',
-                content: 'dateDetail.html?id=' + id,
-                area: ['60%', '80%']
+                type : 2,
+                title : '查看详情',
+                content: 'dateDetail.html?id='+ id,
+                area : ['60%', '80%']
             });
         },
         // 删除旅拍日期
@@ -411,9 +401,9 @@ window.app = new Vue({
             }, () => {
                 $.get(config.api_del, {
                     id: id,
-                    delFlag: '1'
-                }, function (data) { // 回调函数
-                    if (data.error == '00') {
+                    delFlag:'1'
+                }, function(data) { // 回调函数
+                    if(data.error == '00') {
                         layer.close(dialog)
                         layer.msg("删除成功")
                         that.getPhotoServiceTimeListPage();
@@ -454,7 +444,6 @@ window.app = new Vue({
             var hour = change(d.getHours());
             var minute = change(d.getMinutes());
             var second = change(d.getSeconds());
-
             function change(t) {
                 if (t < 10) {
                     return "0" + t;
@@ -466,27 +455,27 @@ window.app = new Vue({
             return time;
         },
         // 键入名称
-        inputName: function () {
+        inputName: function(){
             var txtVal = this.name.length;
             this.nameLength = 30 - txtVal;
         },
         // 键入进行方式
-        inputStyle: function () {
+        inputStyle: function(){
             var txtVal = this.style.length;
             this.styleLength = 300 - txtVal;
         },
         // 键入摄影成果
-        inputProfit: function () {
+        inputProfit: function(){
             var txtVal = this.profit.length;
             this.profitLength = 300 - txtVal;
         },
         // 键入简介
-        inputSummary: function () {
+        inputSummary: function(){
             var txtVal = this.summary.length;
             this.summaryLength = 1000 - txtVal;
         },
         // 键入备注
-        inputRemark: function () {
+        inputRemark: function(){
             var txtVal = this.remark.length;
             this.remarkLength = 300 - txtVal;
         },
@@ -495,12 +484,12 @@ window.app = new Vue({
             //img为JQ的元素，data为存放数据的大数组
             if (img.attr("isUp")) {
                 var drool = {
-                    fileSize: '',
-                    realPath: '',
+                    fileSize:'',
+                    realPath:'',
                     originalFilename: img.attr("isUp"),
                     url: img.attr("src"),
                     uploadTime: this.gettime(),
-                    attachId: img.attr('attachId') || "0"
+                    attachId:img.attr('attachId') || "0"
 
                 }
                 data.push(drool)
@@ -508,14 +497,13 @@ window.app = new Vue({
             }
         },
         // 获取旅拍日期
-        getPhotoServiceTimeListPage(page, startDate, endDate) {
+        getPhotoServiceTimeListPage(page, startDate, endDate){
             var that = this;
             $('body,html').scrollTop(0)
-            if (page) this.list.pageNum = page;
+            if(page) this.list.pageNum = page;
             // that.loading();
             $.ajax({
                 url: config.api_timeList,
-                type: 'post',
                 async: true,
                 data: {
                     timeStart: startDate,
@@ -524,41 +512,41 @@ window.app = new Vue({
                 },
                 taye: "post",
                 success: res => {
-                    if (res.error == '00') {
+                    if(res.error =='00'){
                         that.list = res.result;
                         for (var i in that.list.list) {
-                            that.list.list[i].time = formatDate(that.list.list[i].time).substring(0, 10)
+                            that.list.list[i].time = formatDate(that.list.list[i].time).substring(0,10)
                         }
                         //分页
-                        if (that.pagi) {
+                        if(that.pagi) {
                             $('.pagi').pagination('updatePages', that.list.pages)
-                            if (page == 1) $('.pagi').pagination('goToPage', that.list.pageNum)
+                            if(page == 1) $('.pagi').pagination('goToPage', that.list.pageNum)
                         } else {
                             that.pagi = $('.pagi').pagination({
                                 pages: that.list.pages, //总页数
                                 showCtrl: true,
                                 displayPage: 6,
                                 currentPage: that.list.pageNum,
-                                onSelect: function (num) {
+                                onSelect: function(num) {
                                     that.list.pageNum = num
                                     that.getPhotoServiceTimeListPage()
                                     yo.scrollTo('body')
                                 }
                             })
                         }
-                    } else {
+                    }else{
                         layer.msg(res.msg)
                     }
                 }
             })
         },
         // 搜索
-        search() {
+        search(){
             var that = this;
             var page = 1;
             var startTime = that.startTime;
             var endTime = that.endTime;
-            that.getPhotoServiceTimeListPage(page, startTime, endTime);
+            that.getPhotoServiceTimeListPage(page,startTime,endTime);
         },
     }
 })

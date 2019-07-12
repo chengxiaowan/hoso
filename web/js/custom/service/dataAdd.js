@@ -1,3 +1,7 @@
+var type = parameter().type;
+var photoServiceId = parameter().id;
+
+
 new Kalendae(document.getElementById("date"), {
     months:1,
     mode:'multiple',
@@ -23,7 +27,7 @@ window.app = new Vue({
         profit: '', //实际收益
         muster: '', // 集合时间地点
         // type: 1,
-        type: sessionStorage.getItem('type'),
+        type: type,
     },
     created: function () {
         var that = this;
@@ -113,7 +117,7 @@ window.app = new Vue({
                 async: true,
                 type: 'post',
                 data: {
-                    photoServiceId: sessionStorage.getItem('id'),
+                    photoServiceId: photoServiceId,
                     type: type,
                     dateList: JSON.stringify(dateList)
                 },
