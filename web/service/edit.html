@@ -393,8 +393,8 @@
                                             <div class="form-template form-group">
                                                 <label>&nbsp;</label>
                                                 <template>
-                                                    <el-select v-model="cityId" clearable filterable placeholder="请选择市" @change="selectCity">
-                                                        <el-option v-for="item in cityList" :key="item.id" :label="item.text" :value="item.id">
+                                                    <el-select v-model="city" clearable filterable placeholder="请选择市" @change="selectCity">
+                                                        <el-option v-for="item in cityList" :key="item.id" :label="item.text" :value="item.text">
                                                         </el-option>
                                                     </el-select>
                                                     <em class="dot"></em>

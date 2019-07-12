@@ -172,7 +172,7 @@ window.app = new Vue({
                         that.summary = res.result.describes;
                         that.studio = res.result.photoStudioId;
                         that.profit = res.result.achieve;
-                        console.log(that.studio)
+                        console.log(res)
                         for(var i in that.provinceList){
                             if(that.provinceList[i].text == that.province){
                                 that.provinceId = that.provinceList[i].id;
