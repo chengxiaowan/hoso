@@ -184,12 +184,8 @@ window.app = new Vue({
                         that.userId = res.result.userId //负责人id
                         that.summary = res.result.summary
                         that.description = res.result.description; //图文描述
+                        that.logoPath = res.result.logoPath
                         that.imagePath = res.result.imagePath
-                        if(res.result.logoPath == ""){
-                            that.logoPath = "../images/imgadd.png"
-                        }else{
-                            that.logoPath = res.result.logoPath
-                        }
                     } else {
                         layer.msg(res.msg)
                     }
@@ -378,18 +374,14 @@ window.app = new Vue({
                     time: 3000
                 })
             } else if ($('#vivew').attr('src') == "../images/imgadd.png") {
-                layer.msg("请选择品牌lLOGO", {
-                    time: 3000
-                })
+                drool = ""
+            } else if ($('#vivew').attr('src') == "../images/imgadd.png") {
+                drool = $('#vivew').attr('src')
             } else if ($('#vivew1').attr('src') == "../images/imgadd.png") {
                 layer.msg("请选择店铺封面图", {
                     time: 3000
                 })
             } else {
-
-                if ($('#vivew').attr('src') != "../images/imgadd.png") {
-                    drool = $('#vivew').attr('src')
-                }
 
                 $.ajax({
                     url: config.api_edit,
@@ -420,25 +412,25 @@ window.app = new Vue({
         },
 
         //获取token并传给七牛云SDK
-        getToken() {
-            $.ajax({
-                url: config.api_token,
-                async: true,
-                data: {},
-                taye: "post",
-                success: res => {
-                    this.tokenMessage = res;
-                    uploaderReady(res)
-                    uploaderReady2(res)
-                    uploaderReady3(res)
-                    uploaderReady4(res)
-                    uploaderReady5(res)
-                    uploaderReady6(res)
-                    uploaderReady7(res)
-                    uploaderReady8(res)
-                }
-            })
-        },
+        // getToken() {
+        //     $.ajax({
+        //         url: config.api_token,
+        //         async: true,
+        //         data: {},
+        //         taye: "post",
+        //         success: res => {
+        //             this.tokenMessage = res;
+        //             uploaderReady(res)
+        //             uploaderReady2(res)
+        //             uploaderReady3(res)
+        //             uploaderReady4(res)
+        //             uploaderReady5(res)
+        //             uploaderReady6(res)
+        //             uploaderReady7(res)
+        //             uploaderReady8(res)
+        //         }
+        //     })
+        // },
 
         //本地时间获取
         gettime() {

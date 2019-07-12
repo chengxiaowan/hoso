@@ -131,14 +131,15 @@ window.app = new Vue({
                 layer.msg("请输入品牌简介", {
                     time: 3000
                 })
+            } else if ($('#vivew').attr('src') == "../images/imgadd.png") {
+                drool = ''
+            } else if ($('#vivew').attr('src') != "../images/imgadd.png") {
+                drool = ('#vivew').attr('src')
             } else if ($('#vivew1').attr('src') == "../images/imgadd.png") {
                 layer.msg("请选择店铺封面图", {
                     time: 3000
                 })
             } else {
-                if ($('#vivew').attr('src') != "../images/imgadd.png") {
-                    drool = $('#vivew').attr('src')
-                }
 
                 $.ajax({
                     url: config.api_save,
