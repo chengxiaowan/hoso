@@ -940,6 +940,8 @@ window.app = new Vue({
 								isShow: that.isShow,
 								styleLabels: $('#tagsinputval').val(),
 								otherLabels: $('#tagsinputval1').val(),
+								stockNum:999,
+								stockType: "1"
 							},
 							success: function(res) {
 								if(res.error == "00") {
@@ -992,6 +994,7 @@ window.app = new Vue({
 						that.typeLabelId_1 = that.list.typeLabelId;
 						$('#tagsinputval2').val(that.list.styleLabels)
 						$('#tagsinputval3').val(that.list.otherLabels)
+						
 					} else {
 						layer.msg(res.msg)
 					}
@@ -1058,6 +1061,8 @@ window.app = new Vue({
 							styleLabels: $('#tagsinputval2').val(),
 							otherLabels: $('#tagsinputval3').val(),
 							isShow: that.isShow,
+							stockNum:999,
+							stockType:1
 						},
 						success: function(res) {
 							if(res.error == "00") {

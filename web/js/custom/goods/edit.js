@@ -899,6 +899,8 @@ window.app = new Vue({
 							isShow: that.isShow,
 							styleLabels: $('#tagsinputval').val(),
 							otherLabels: $('#tagsinputval1').val(),
+							stockNum:999,
+							stockType: "1"
 						},
 						success: function(res) {
 							if(res.error == "00") {
