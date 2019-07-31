@@ -161,7 +161,7 @@ window.app = new Vue({
 			let that = this
 			let id = ''
 			that.img_name = item.shopsName
-			id = 'shopsId=' + item.shopsId 
+			id = 'relateId=' + item.shopsId + ',type=1'
 			$.ajax({
 				type: "post",
 				url: config.api_ewm,

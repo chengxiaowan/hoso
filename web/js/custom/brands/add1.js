@@ -66,6 +66,7 @@ window.app = new Vue({
         bg_show1: false,
         image_ewm: '',
         img_name: '',
+        brandId:"",
     },
     watch: {
         provinceId(val, oldVal) {
@@ -758,7 +759,7 @@ window.app = new Vue({
                 let that = this
                 let id = ''
                 that.img_name = item.name
-                id = 'brandGoodsId=' + item.goodsId
+                id = 'goodsId=' + item.goodsId + ',relateId=' + shopsBrandId + ',type=0'
                 $.ajax({
                     type: "post",
                     url: config.api_ewm,
@@ -780,7 +781,7 @@ window.app = new Vue({
                 let that = this
                 let id = ''
                 that.img_name = item.serviceName
-                id = 'brandServiceId=' + item.serviceId
+                id = 'serviceId=' + item.serviceId + ",relateId=" + shopsBrandId + ",type=0"
                 $.ajax({
                     type: "post",
                     url: config.api_ewm,

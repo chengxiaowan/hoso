@@ -1740,8 +1740,8 @@ window.app = new Vue({
 			if (type == 1) {
 				let that = this
 				let id = ''
-				that.img_name = item.brandName
-				id = 'shopsGoodsId=' + item.id
+				that.img_name = item.name
+				id = 'goodsId=' + item.goodsId + ",relateId=" + config.id + ",type=1"
 				$.ajax({
 					type: "post",
 					url: config.api_ewm,
@@ -1763,7 +1763,7 @@ window.app = new Vue({
 				let that = this
 				let id = ''
 				that.img_name = item.brandName
-				id = 'shopsServiceId=' + item.id
+				id = 'serviceId=' + item.serviceId + ",relateId=" + config.id + ",type=1"
 				$.ajax({
 					type: "post",
 					url: config.api_ewm,
@@ -1785,7 +1785,7 @@ window.app = new Vue({
 				let that = this
 				let id = ''
 				that.img_name = item.roomName
-				id = 'shopsRoomId=' + item.shopsRoomId
+				id = 'roomId=' + item.shopsRoomId + ",relateId=" + config.id + ",type=1"
 				$.ajax({
 					type: "post",
 					url: config.api_ewm,
