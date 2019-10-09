@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>寒舍</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<link rel="shortcut icon" href="/static/web/css/favicon.ico">
+<link rel="stylesheet" href="/static/web/css/bootstrap.min.css" >
+<link rel="stylesheet" href="/static/web/css/font-awesome.min.css" >
+<link rel="stylesheet" href="/static/web/css/animate.min.css">
+<link rel="stylesheet" href="/static/web/css/style.css">
+<link rel="stylesheet" href="/static/web/css/layout.css">
+<style>
+.gray-bg{ background: url("/static/web/images/login-bg.jpg") no-repeat center;}
+.btn-primary {
+    color: #fff;
+    background-color: #ff6a72;
+    border-color: #ff6a72;
+    outline: 0;
+    padding: 6px 12px;
+}
+.btn-primary:focus {
+    color: #fff;
+    background-color: #ff6a72;
+    border-color: #ff6a72;
+    outline: 0;
+}
+.btn-primary:hover {
+    color: #fff;
+    background-color: #ff6a72;
+    border-color: #ff6a72;
+    outline: 0;
+}
+</style>
+<script>
+    if(window.top !== window.self){
+        window.top.location = window.location;
+    }
+</script>
+</head>
+<body class="gray-bg">
+<div class="top-content">
+    <div class="inner-bg">
+        <div class="container">
+            <div class="row">
+                <div class="form-box" style="max-width:420px;margin-left:auto;margin-right:auto">
+                    <div class="form-top text-center">
+                        <img src="/static/web/images/logo.png" />
+                    </div>
+                    <div class="form-bottom">
+                        <div class="form-group">
+                            <label class="sr-only" for="form-username">账号</label> <input type="text" name="form-username" placeholder="账号" class="form-username form-control" id="loginname">
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only" for="form-password">密码</label> <input type="password" name="form-password" placeholder="密码" class="form-password form-control" id="password">
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="" id="saveid" onchange="saveCookie()">记住用户名密码</label>
+                            </div>
+                        </div>
+                        <button type="submit" onclick="severCheck();" id="loginBtn" class="btn btn-primary btn-block">登录</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 全局js -->
+<script src="/static/web/js/jquery-2.1.1.min.js"></script>
+<script src="/static/web/js/bootstrap.min.js"></script>
+<script src="/static/web/js/plugins/layer/layer.min.js"></script>
+<script src="/static/web/js/jquery.cookie.js"></script>
+<script src="/static/web/js/custom/common.js"></script>
+<script src="/static/web/js/custom/login.js"></script>
+</body>
+</html>

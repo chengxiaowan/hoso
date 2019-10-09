@@ -167,7 +167,7 @@ window.app = new Vue({
 				url: config.api_ewm,
 				async: true,
 				data: {
-					page: 'pages/shopDetail/shopDetail',
+					page: 'pages/store_detail/store_detail',
 					id: id
 				},
 				success(res) {
