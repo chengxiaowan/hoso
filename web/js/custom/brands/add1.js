@@ -1,5 +1,6 @@
 var shopsBrandId = parameter().id;
 var labels = parameter().labels;
+console.log(parameter())
 console.log(shopsBrandId)
 console.log(labels)
 
@@ -19,8 +20,9 @@ var config = {
     api_city: api_url + '/region/cityList', //获取城市
     api_brandList: api_url + '/shopsBrand/showAShopsBrandService', //获取品牌服务列表
     api_del: api_url + '/shopsBrand/deleteAShopsBrandServiceById', // 删除品牌服务
-    api_ewm: api_url + '/weixin/getwxTwoEconde' //小程序码
+    api_ewm: api_url + '/weixin/getwxTwoEconde', //小程序码
 
+   
 }
 window.app = new Vue({
     el: '#app',
@@ -67,6 +69,11 @@ window.app = new Vue({
         image_ewm: '',
         img_name: '',
         brandId:"",
+
+
+        // 房券
+        houseKeywords:'',//房券搜索
+        houseList:[],    //房券列表数据
     },
     watch: {
         provinceId(val, oldVal) {
@@ -223,7 +230,7 @@ window.app = new Vue({
                 },
                 success: function (res) {
                     that.loading('close')
-                    // console.log(res)
+                    console.log(res)
                     if (res.error == "00") {
                         that.list = res.result;
                         //分页
@@ -830,6 +837,7 @@ window.app = new Vue({
             let that = this
             this.downloadIamge(this.image_ewm, that.img_name)
         },
+
     }
 })
 

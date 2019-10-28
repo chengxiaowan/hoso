@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>新增会员包</title>
+    <link rel="stylesheet" href="../css/public.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .package-title {
+            line-height: 44px;
+            /* width: 100%; */
+            margin: 29px 12px;
+            background: #F5F5F5;
+            text-indent: 18px;
+            font-size: 12px;
+            font-family: PingFangSC-Regular, PingFangSC;
+            font-weight: 400;
+            color: rgba(74, 74, 74, 1);
+        }
+
+        .name {
+            margin-left: 50px;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFangSC;
+            font-weight: 400;
+            color: #666666;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .drool {
+            display: inline-block;
+        }
+
+        em {
+            color: #F64D62;
+        }
+
+        .box2 {
+            margin-left: 50px;
+            width: 785px;
+            display: flex;
+            flex-wrap: wrap;
+            /* justify-content: space-between; */
+        }
+
+        .xian {
+            width: 100%;
+            margin: 20px 0;
+            height: 1px;
+            background: #E4E9EF;
+        }
+
+        .Vip {
+            font-size: 12px;
+            font-family: PingFangSC-Regular, PingFangSC;
+            font-weight: 400;
+            color: rgba(195, 160, 113, 1);
+            text-align: center;
+            margin-right: 24px;
+            margin-bottom: 10px;
+        }
+
+        .form-control {
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFangSC;
+            font-weight: 400;
+            color: #333;
+            outline: none;
+        }
+
+        #updataImage {
+            width: 140px;
+            height: 140px;
+        }
+
+        .imginfo {
+            width: 140px;
+            height: 140px;
+        }
+
+        .imageup {
+            display: inline-block;
+            margin: 0 20px;
+            cursor: pointer;
+            position: relative;
+
+        }
+
+        .teshu {
+            margin-left: 50px;
+            overflow: hidden;
+        }
+
+        .remake {
+            float: left;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFangSC;
+            font-weight: 400;
+            color: #666666;
+        }
+
+        .remake-input {
+            float: left;
+            margin-left: 20px;
+        }
+
+        html body {
+            padding-bottom: 300px;
+        }
+
+        .soso {
+            overflow: hidden;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .soso-input {
+            width: 267px;
+            float: left;
+        }
+
+        .soso-btn {
+            float: left;
+            margin-left: 15px;
+        }
+
+        .zu {
+            width: 785px;
+            height: 35px;
+            background: #E4E9EF;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(102, 102, 102, 1);
+            line-height: 35px;
+            text-indent: 13px;
+            margin-bottom: 6px;
+        }
+
+        .bobodrool {
+            float: right;
+            margin-right: 15px;
+            color: #4A90E2;
+            cursor: pointer;
+        }
+
+        .zu-add {
+            width: 60px;
+            height: 30px;
+            border: 1px solid #E4E9EF;
+            font-size: 12px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(102, 102, 102, 1);
+            line-height: 30px;
+            text-align: center;
+            float: left;
+            margin-right: 10px;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        .max-box {
+            overflow: hidden;
+        }
+
+        .list-vip {
+            padding: 15px;
+        }
+
+        .el-pagination {
+            float: right;
+        }
+
+        .vips {
+            float: left;
+            margin-right: 15px;
+        }
+
+        .adds {
+            float: left;
+        }
+
+        .Vip>div {
+            text-align: center;
+        }
+
+        .edit {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #E4E9EF;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .edit>span {
+            font-size: 16px;
+            line-height: 30px;
+            ;
+        }
+
+        .edits {
+            margin-left: 8px;
+            color: #40A8DF;
+        }
+
+        .dels {
+            margin-right: 8px;
+            color: #DB4B3A;
+        }
+
+        .edit-vip {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #E4E9EF;
+            z-index: 2;
+        }
+
+        .edit-vip>div {
+            width: 100%;
+            height: 50%;
+            font-size: 18px;
+            line-height: 35px;
+            text-align: center;
+        }
+
+        .wei {
+            float: left;
+            line-height: 35px;
+            margin-left: 5px;
+
+        }
+
+        .drool-t {
+            float: left;
+            line-height: 35px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="package-title">
+            请完善以下信息。
+
+        </div>
+        <div class="name">
+            <em>*</em>&nbsp;&nbsp;会员包名称：
+            <div class="drool" style="width: 625px;margin-left: 10px;">
+                <input type="text" class="form-control" v-model="name" placeholder="请输入会员包名称，1-30字" maxlength="30">
+            </div>
+        </div>
+        <div class="name">
+            <em>*</em>&nbsp;&nbsp;是否包含分项：
+            <div class="drool" style="margin-left: 20px;">
+                <el-radio v-model="type" label="1">是</el-radio>
+                <el-radio v-model="type" label="0">否</el-radio>
+            </div>
+        </div>
+        <div class="box2" v-if="type==1">
+            <div class="max-box">
+                <div class="zu">
+                    分项
+                    <span class="bobodrool" @click="addZu">新增</span>
+                </div>
+                <div class="zu-add" v-for="item in package" @mouseenter="show(item.name)" @mouseleave="show(-1)">
+                    {{item.name}}
+                    <div class="edit" v-if="isShow == item.name">
+                        <span class="el-icon-edit-outline edits" @click="alert(1)"></span>
+                        <span class="el-icon-delete dels" @click="delZu(item.name)"></span>
+                    </div>
+                </div>
+                <div style="clear: both;"></div>
+                <el-collapse>
+                    <el-collapse-item v-for="item in package" :title="item.name" :key="item.index">
+                        <!-- 权益 -->
+                        <div class="Vip vips" v-for="vip in item.memRights" style="position: relative;"
+                            @mouseenter="isShows = vip.memRightsId" @mouseleave="isShows = '-1'">
+                            <img :src="vip.pic" alt="" style="width: 44px;height: 44px;">
+                            <div>{{vip.name}}</div>
+                            <div class="edit-vip" v-if="isShows == vip.memRightsId">
+                                <div @click="vipInfo(vip)">
+                                    <i class="el-icon-tickets" style="color: #51AEE1;"></i>
+                                </div>
+                                <div @click="delVip(vip,1)">
+                                    <i class="el-icon-delete" style="color:#D82C16;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 权益end -->
+                        <!-- add权益 -->
+                        <div class="add" @click="open2(item)">
+                            <div class="el-icon-circle-plus-outline" style="font-size: 44px;color: #1798DC;"></div>
+                        </div>
+                        <!-- add权益end -->
+                    </el-collapse-item>
+                </el-collapse>
+            </div>
+
+        </div>
+        <div class="box2" v-if="type==0">
+            <div class="xian"></div>
+            <div class="Vip" v-for="item in package2" style="position: relative;"
+                @mouseenter="isShows = item.memRightsId" @mouseleave="isShows = '-1'">
+                <img :src="item.pic" alt="" style="width: 44px;height: 44px;">
+                <div>{{item.name}}</div>
+                <div class="edit-vip" v-if="isShows == item.memRightsId">
+                    <div @click="vipInfo(item)">
+                        <i class="el-icon-tickets" style="color: #51AEE1;"></i>
+                    </div>
+                    <div @click="delVip(item,2)">
+                        <i class="el-icon-delete" style="color:#D82C16;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="add adds" @click="open()">
+                <div class="el-icon-circle-plus-outline" style="font-size: 44px;color: #1798DC;"></div>
+            </div>
+            <div class="xian"></div>
+        </div>
+        <div class="name">
+            <em>*</em>&nbsp;&nbsp;上/下架状态：
+            <div class="drool" style="margin-left: 20px;">
+                <el-radio v-model="isOnsell" label="1">上架</el-radio>
+                <el-radio v-model="isOnsell" label="0">下架</el-radio>
+            </div>
+        </div>
+        <div class="name">
+            <em>*</em>&nbsp;&nbsp;封面：
+            <div class="drool" id="drool" style="margin-left: 20px;">
+                <div id="updataImage" class="imageup">
+                    <img id="vivew" src="../images/imgadd.png" class="imginfo">
+                </div>
+            </div>
+            <em>*</em>&nbsp;&nbsp;顶部图片：
+            <div class="drool" id="drool2" style="margin-left: 20px;">
+                <div id="updataImage2" class="imageup">
+                    <img id="vivew2" src="../images/imgadd.png" class="imginfo">
+                </div>
+            </div>
+        </div>
+        <div class="name">
+            <em>*</em>&nbsp;&nbsp;支付类型：
+            <div class="drool" style="margin-left: 20px;">
+                <el-checkbox v-model="onece" disabled v-if="M == true || Y == true || d == true">单次购买</el-checkbox>
+                <el-checkbox v-model="onece" v-else>单次购买</el-checkbox>
+                <template v-if="onece == false">
+                    <el-checkbox v-model="M">包月</el-checkbox>
+                    <el-checkbox v-model="d">包季</el-checkbox>
+                    <el-checkbox v-model="Y">包年</el-checkbox>
+                </template>
+                <template v-else>
+                    <el-checkbox v-model="M" disabled>包月</el-checkbox>
+                    <el-checkbox v-model="d" disabled>包季</el-checkbox>
+                    <el-checkbox v-model="Y" disabled>包年</el-checkbox>
+                </template>
+            </div>
+        </div>
+        <template v-if="onece == true">
+            <div class="name">
+                <em>*</em>&nbsp;&nbsp;&nbsp;价格(元)：
+                <div class="drool" style="width: 144px;margin-left: 20px;">
+                    <input type="number" class="form-control" v-model="price" placeholder="请输入价格" v-model="price">
+                </div>
+            </div>
+            <div class="name">
+                    <em>*</em>&nbsp;&nbsp;&nbsp;首充价格：
+                    <div class="drool" style="width: 144px;margin-left: 20px;">
+                        <input type="number" class="form-control" placeholder="请输入价格" v-model="firstPrice">
+                    </div>
+                </div>
+            <div class="name">
+                <em>*</em>&nbsp;&nbsp;&nbsp;到期时间：
+                <div class="drool" style="width: 144px;margin-left: 20px;">
+                    <el-date-picker v-model="date" type="date" placeholder="选择日期">
+                    </el-date-picker>
+                </div>
+            </div>
+            <div class="teshu">
+                <div class="remake">
+                    <em>*</em>
+                    &nbsp;&nbsp;权益备注：
+                </div>
+                <div class="remake-input">
+                    <textarea style="width: 625px;height: 100px;" placeholder="请输入权益备注" v-model="remake"
+                        class="form-control"></textarea>
+                </div>
+            </div>
+        </template>
+        <template v-if="Y == true || M == true || d == true">
+            <div class="name">
+                <span class="drool-t">
+                    <em>*</em>&nbsp;&nbsp;&nbsp;价格(元)：
+                </span>
+                <div class="drool" style="width: 85px;margin-left: 20px;" v-if="Y == true">
+                    <input type="number" class="form-control" v-model="price1" style="width: 60px; float: left;">
+                    <span class="wei">/年</span>
+                </div>
+                <div class="drool" style="width: 85px;margin-left: 20px;" v-if="d == true">
+                    <input type="number" class="form-control" v-model="price3" style="width: 60px; float: left">
+                    <span class="wei">/季</span>
+                </div>
+                <div class="drool" style="width: 85px;margin-left: 20px;" v-if="M == true">
+                    <input type="number" class="form-control" v-model="price2" style="width: 60px; float: left">
+                    <span class="wei">/月</span>
+                </div>
+            </div>
+            <div class="name">
+                    <span class="drool-t">
+                        <em>*</em>&nbsp;&nbsp;&nbsp;首充价格：
+                    </span>
+                    <div class="drool" style="width: 85px;margin-left: 20px;" v-if="Y == true">
+                        <input type="number" class="form-control" v-model="yfirstPrice" style="width: 60px; float: left;">
+                        <span class="wei">/年</span>
+                    </div>
+                    <div class="drool" style="width: 85px;margin-left: 20px;" v-if="d == true">
+                        <input type="number" class="form-control" v-model="qfirstPrice" style="width: 60px; float: left">
+                        <span class="wei">/季</span>
+                    </div>
+                    <div class="drool" style="width: 85px;margin-left: 20px;" v-if="M == true">
+                        <input type="number" class="form-control" v-model="mfirstPrice" style="width: 60px; float: left">
+                        <span class="wei">/月</span>
+                    </div>
+                </div>
+            <div class="teshu">
+                <div class="remake">
+                    <em>*</em>
+                    &nbsp;&nbsp;权益备注：
+                </div>
+                <div class="remake-input">
+                    <textarea style="width: 625px;height: 100px;" placeholder="请输入权益备注" v-model="remake"
+                        class="form-control"></textarea>
+                </div>
+            </div>
+        </template>
+        <div style="margin-left: 309px;margin-top: 30px;">
+            <el-button type="primary" @click="save()">保存</el-button>
+        </div>
+
+        <!-- 模态框1 -->
+        <div id="add-zu" style="display: none;">
+            <div class="name">
+                <div class="name" style="margin-left: 38px;">
+                    <em>*</em>&nbsp;&nbsp;名称：
+                    <div class="drool" style="width: 200px;margin-left: 10px;">
+                        <input type="text" class="form-control" placeholder="请输入会员包名称，130字" maxlength="30" v-model="zu">
+                    </div>
+                </div>
+            </div>
+            <!-- <div style="margin: 0 auto;text-align: center;">
+                <button type="submit" class="btn btn-htz btn-primary" @click="addzu()">新增</button>
+            </div> -->
+        </div>
+        <!-- 模态框2 -->
+        <div id="list-vip" style="display: none;">
+            <div class="ibox-content">
+                <div class="soso">
+                    <div class="soso-input">
+                        <input type="text" class="form-control" placeholder="请输入权益名称">
+                    </div>
+                    <button type="submit" class="btn btn-htz btn-primary" style="margin-left: 15px;">
+                        <i class="icon icon_search"></i> 搜索
+                    </button>
+                </div>
+                <table id="simple-table" class="table table-responsive table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th width="60%">权益名称</th>
+                            <th width="10%">图片</th>
+                            <th width="20%">用途</th>
+                            <th width="10%">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in list.list">
+                            <td>{{item.name}}</td>
+                            <td>
+                                <img :src="item.pic" alt="" style="width: 35px;height: 35px;">
+                            </td>
+                            <td>{{item.type}}</td>
+                            <td class="btn-hide">
+                                <a href="#" class="btn btn-success" @click="add(item)">加入</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <el-pagination layout="prev, pager, next" :page-size="5" :total="list.total" @current-change="page">
+                </el-pagination>
+            </div>
+        </div>
+
+        <!-- 模态框3 -->
+        <div id="list-vip2" style="display: none;">
+            <div class="ibox-content">
+                <div class="soso">
+                    <div class="soso-input">
+                        <input type="text" class="form-control" placeholder="请输入权益名称">
+                    </div>
+                    <button type="submit" class="btn btn-htz btn-primary" style="margin-left: 15px;">
+                        <i class="icon icon_search"></i> 搜索
+                    </button>
+                </div>
+                <table id="simple-table" class="table table-responsive table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th width="60%">权益名称</th>
+                            <th width="10%">图片</th>
+                            <th width="20%">用途</th>
+                            <th width="10%">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in list.list">
+                            <td>{{item.name}}</td>
+                            <td>
+                                <img :src="item.pic" alt="" style="width: 35px;height: 35px;">
+                            </td>
+                            <td>{{item.type}}</td>
+                            <td class="btn-hide">
+                                <a href="#" class="btn btn-success" @click="adds(item)">加入</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <el-pagination layout="prev, pager, next" :page-size="5" :total="list.total" @current-change="page">
+                </el-pagination>
+            </div>
+        </div>
+        <!-- 模态框4  权益详情 -->
+        <div id="list-vip3" style="display: none;">
+            <div class="ibox-content">
+                
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.19.0/axios.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+
+<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+<script src="../js/qiniuyun/qiniu-package.js"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/custom/package/add.js"></script>
+
+</html>

@@ -1,0 +1,310 @@
+let config = {
+    api_token: api_url + '/qiniu/getUpToken', //获取七牛的token
+    api_list: api_url + "/memRights/list", //获取待添加服务
+    api_save: api_url + '/memPackage/add',
+    api_info: api_url + '/memPackage/detail'    //获取详情信息
+}
+
+let id = parameter().id
+
+window.app = new Vue({
+    el: "#app",
+    data: {
+        flage: 0, //标志
+        name: "", //权益包名称
+        type: "1", //是否包含组头  
+        package: [], //权益包内容
+        package2: [], //权益包内容
+        isOnsell: "1", //上下架状态    
+        onece: false, //是否一次性购买
+        Y: false, //是否包年
+        M: false, //是否包月
+        d: false, //是否包季
+        price: "", //一次性购买价格
+        price1: "", //包年购买价格
+        price2: "", //包月购买价格
+        price3: "", //包季购买价格
+        remake: "", //描述
+        keywords: "", //关键字
+        list: [], //未添加的权益列表
+        zu: "", //新增组头名称
+        date: "",
+        firstPrice:"",//首冲价格
+        mfirstPrice:"",//包月首冲
+        qfirstPrice:"",//包季首冲
+        yfirstPrice:"",//包年首冲
+    },
+    methods: {
+        //获取token
+        getToken() {
+            $.ajax({
+                url: config.api_token,
+                async: true,
+                data: {},
+                taye: "post",
+                success: res => {
+                    this.tokenMessage = res;
+                    uploaderReady(res)
+                    uploaderReady2(res)
+                }
+            })
+        },
+        //获取待添加权益
+        getdata(page) {
+            const that = this
+            $('body,html').scrollTop(0)
+            $.ajax({
+                url: config.api_list,
+                async: true,
+                type: "POST",
+                data: {
+                    keywords: this.keywords,
+                    pageSize: this.list.pageSize || 10,
+                    pageNo: page,
+                    pageSize: 5
+                },
+                success: res => {
+                    if (res.error == "00") {
+                        this.list = res.result
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                }
+
+            })
+        },
+        //打开添加分组（组头）模态框
+        addZu() {
+            let index = layer.open({
+                type: 1,
+                title: "新增分组",
+                content: $("#add-zu"),
+                area: ["487px", "296px"]
+
+            })
+        },
+        //添加分组（组头）
+        addzu() {
+            let drool = {
+                name: this.zu,
+                memRights: []
+            };
+            if (this.zu == "") {
+                layer.msg("请输入组头名称")
+                return
+            }
+            this.package.push(drool)
+
+        },
+        //打开权益列表
+        open() {
+            let index = layer.open({
+                type: 1,
+                content: $("#list-vip"),
+                title: "添加权益",
+                area: ["990px", "496px"]
+
+
+            })
+        },
+
+        open2(item) {
+            let index = layer.open({
+                type: 1,
+                content: $("#list-vip2"),
+                title: "添加权益",
+                area: ["990px", "496px"]
+            })
+            sessionStorage.setItem("packagename", item.name)
+        },
+        //简单的分页
+        page(e) {
+            this.getdata(e)
+        },
+        //a没有分组的添加
+        add(item) {
+            let drool = {}
+            drool.name = item.name;
+            drool.memRightsId = item.id
+            drool.pic = item.pic
+            this.package2.push(drool);
+            this.list.list.splice(item.index, 1)
+            console.log(this.package2)
+        },
+        adds(item) {
+            for (let i = 0; i < this.package.length; i++) {
+                if (this.package[i].name == sessionStorage.getItem("packagename")) {
+                    let drool = {
+                        name: item.name,
+                        memRightsId: item.id,
+                        pic: item.pic
+                    }
+                    this.package[i].memRights.push(drool)
+                }
+            }
+        },
+        save() {
+            const that = this
+            //价格模式整理
+            let priceUsed = [];
+            if (that.onece) { //单次
+                priceUsed.push(0)
+            }
+            if (that.Y) {
+                priceUsed.push(1) //年
+            }
+            if (that.M) {
+                priceUsed.push(2) //月
+            }
+            if (that.d) { //季度
+                priceUsed.push(3)
+            }
+
+            //必须填写项判断
+            if (that.name == "") {
+                layer.msg("请输入会员包名称")
+                return
+            }
+
+            // if (that.package.length == 0 || that.package2.length == 0) {
+            //     layer.msg("请添加权益到会员包")
+            //     return
+            // }
+
+            // if (that.package[0].memRights.length == 0) {
+            //     layer.msg("请添加权益到会员包")
+            //     return
+            // }
+
+            if ($("#vivew").attr("src") == '../images/imgadd.png') {
+                layer.msg("请上传封面图片")
+                return
+            }
+
+            if ($("#vivew2").attr("src") == '../images/imgadd.png') {
+                layer.msg("请上传顶部图片")
+                return
+            }
+
+            if(this.Y == true)
+
+            if (that.onece == true && that.price == "") {
+                layer.msg("请输入单次购买价格")
+                return
+
+            }
+
+            if (that.Y == true && that.price1 == "") {
+                layer.msg("请输入包年购买价格")
+                return
+
+            }
+
+            if (that.M == true && that.price1 == "") {
+                layer.msg("请输入包月购买价格")
+                return
+
+            }
+
+            if (that.d == true && that.price3 == "") {
+                layer.msg("请输入包季购买价格")
+                return
+
+            }
+
+
+
+
+
+
+
+            //带组头的
+            if (this.type == "1") {
+                let parmars = {
+                    name: that.name,
+                    pic: $("#vivew").attr("src"),
+                    isOnsell: that.isOnsell,
+                    remark: that.remake,
+                    type: that.type,
+                    topPic: $("#vivew2").attr("src"),
+                    priceUsed: priceUsed.join(","),
+                    monthPrice: that.price2 || 0,
+                    quarterPrice: that.price3 || 0,
+                    yearPrice: that.price3 || 0,
+                    price: that.price || 0,
+                    dataList: JSON.stringify(that.package),
+                    date: Date.parse(that.date) || "",
+                   
+                }
+                // axios.post(config.api_save,parmars).then(res=>{
+                //     console.log(res)
+                // })
+
+                $.ajax({
+                    type: "post",
+                    url: config.api_save,
+                    async: true,
+                    data: parmars,
+                    success: res => {
+                        console.log(res)
+                    }
+                })
+
+                console.log(parmars)
+            }
+
+            if (this.type == "0") {
+                let parmars = {
+                    name: that.name,
+                    pic: $("#vivew").attr("src"),
+                    isOnsell: that.isOnsell,
+                    remark: that.remake,
+                    type: that.type,
+                    topPic: $("#vivew2").attr("src"),
+                    priceUsed: priceUsed.join(","),
+                    monthPrice: that.price2 || 0,
+                    quarterPrice: that.price3 || 0,
+                    yearPrice: that.price3 || 0,
+                    price: that.price || 0,
+                    dataList: JSON.stringify(that.package2),
+                    date: Date.parse(that.date) || ""
+
+                }
+
+                $.ajax({
+                    url: config.api_save,
+                    type: "post",
+                    async: true,
+                    data: parmars,
+                    success: res => {
+                        console.log(res)
+                    }
+                })
+            }
+        },
+
+        //获取信息
+        getinfo(){
+            const that = this
+            $.ajax({
+                url:config.api_info,
+                type:"POST",
+                async:true,
+                data:{
+                    memPackageId:id
+                },
+                success:res=>{
+                    console.log(res)
+                    let drool = res.result
+                    that.name = drool.name
+                }
+            })
+        }
+    },
+    mounted() {
+        console.log("Vue挂载成功")
+        this.getToken()
+        this.getdata(1)
+        this.getinfo()
+    },
+})

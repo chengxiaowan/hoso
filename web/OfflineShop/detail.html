@@ -20,7 +20,8 @@
 	<!-- <link rel="stylesheet" href="../css/custom/brands/style.css"> -->
 	<style>
 		.ibox-content {
-			border: 0
+			border: 0;
+			padding: 15px 0px 20px 0px
 		}
 
 		a {
@@ -152,6 +153,9 @@
 							</li>
 							<li v-if="status==1" class="">
 								<a data-toggle="tab" @click="tab(4)" href="#tab-4" aria-expanded="false">店内房间</a>
+							</li>
+							<li @click="tab(6)">
+								<a data-toggle="tab" href="#tab-6" aria-expanded="false">房券</a>
 							</li>
 						</template>
 					</ul>
@@ -733,6 +737,88 @@
 								</div>
 							</div>
 						</div>
+						<!-- 房券 -->
+                        <div id="tab-6" class="tab-pane">
+								<div class="panel-body">
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="panel panel-default">
+												<div class="panel-body explanation">
+													<h3>说明：</h3>
+													<p>1、预订方式即用户在我方平台预订房间的方式，购买房券即购买一张房券，然后用户自己与酒店负责人联系；第三方平台即跳转到第三方平台做预订房间操作。</p>
+													<p>2、房券的过期日期即房券能使用的最晚日期期限。</p>
+												</div>
+											</div>
+											<!-- 检索 start -->
+											<div class="form-inline" role="form">
+												<div class="form-group">
+													<input class="form-control" type="text" placeholder="请输入房券名称"
+														v-model="houseKeywords">
+												</div>
+												
+												
+												<button type="submit" class="btn btn-htz btn-primary"
+													@click="searchHouse()">
+													<i class="icon icon_search"></i> 搜索
+												</button>
+												<button type="reset" style="background:#50BFA5" class="btn btn-htz btn-success" @click="addHouse()">
+													<i class="icon icon_plus"></i> 添加
+												</button>
+											</div>
+											<!-- 检索 end -->
+											<!-- 列表 start -->
+											<div class="ibox-content">
+												<table class="table table-responsive table-bordered table-hover">
+													<thead>
+														<tr>
+															<th width="35%">名称</th>
+															<th width="15%">预订方式</th>
+															<th width="10%">价格</th>
+															<th width="20%">过期日期</th>
+															<th width="20%">操作</th>
+														</tr>
+													</thead>
+													<tbody>
+														<template v-if="houseList.total != 0">
+															<tr v-for="item in houseList.list" :key="item.userId">
+																<td>{{item.name}}</td>
+																<td>{{item.type==0?'购买房券':'第三方平台'}}</td>
+																<td>{{item.price}}元</td>
+																<td>{{item.time}}</td>
+																<td class="btn-hide">
+																	<!--<a class="btn btn-success" title="查看" @click="view(item.id);">查看</a>-->
+																	<a class="btn btn-success" title="编辑"
+																		@click="editorHouseCoupon(item.id)">编辑</a>
+																	<a class="btn btn-default" title="删除"
+																		@click="delHouseCoupon(item.id);">删除</a>
+																</td>
+															</tr>
+														</template>
+														<tr v-else>
+															<td colspan="10">没有相关数据</td>
+														</tr>
+													</tbody>
+												</table>
+												<div class="pull-left form form-inline">
+													<div class="form-group form-group-sm">
+														共 {{houseList.total}} 条数据,每页显示
+														<select @change="getHouseCoupon(1)" v-model="houseList.pageSize"
+															class="form-control">
+															<option value="10">10</option>
+															<option value="20">20</option>
+															<option value="30">30</option>
+															<option value="40">40</option>
+															<option value="50">50</option>
+														</select> 条
+													</div>
+												</div>
+												<div class="pagi3 pull-right"></div>
+											</div>
+											<!-- 列表 end-->
+										</div>
+									</div>
+								</div>
+							</div>
 					</div>
 
 				</div>

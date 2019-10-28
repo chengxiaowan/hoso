@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .table {
+            margin-top: 24px;
+        }
+
+        .title-room {
+            width: 100%;
+            /* margin: 0 28px; */
+            background: #E4E9EF;
+            height: 98px;
+            margin-bottom: 28px;
+        }
+
+        .title-room>h3 {
+            padding-top: 16px;
+            font-size: 20px;
+            color: #4a4a4a;
+            margin-left: 15px;
+            margin-bottom: 15px;
+        }
+
+        .title-room>p {
+            margin-left: 25px;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFangSC;
+            font-weight: 400;
+            color: rgba(74, 74, 74, 1);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="wrapper wrapper-content  animated fadeInRight">
+        <div class="ibox-content">
+            <div class="title-room">
+                <h3>说明</h3>
+                <p>1、如果不绑定房券则能预订/购买所有的房券，如果绑定了房券则只能预订/购买对应的房券。</p>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <!-- 检索 start -->
+                    <div class="form-inline" role="form" id="customerForm">
+                        <div class="form-group">
+                            <input class="form-control" id="nav-search-input" type="text" placeholder="请输入房券名称"
+                                v-model="keywords">
+                        </div>
+                        <div class="form-group">
+                            <em>酒店：</em>
+                            <select v-model="type" class="form-control">
+                                <option value="">全部</option>
+                                <option value="0">房券</option>
+                                <option value="1">第三方服务</option>
+                                <option value="2">其他</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-htz btn-primary">
+                            <i class="icon icon_search"></i> 搜索
+                        </button>
+                        <button type="reset" class="btn btn-htz btn-success" @click="goAdd()">
+                            <i id="nav-search-icon" class="icon icon_plus"></i> 添加房券
+                        </button>
+                    </div>
+                    <!-- 检索 end -->
+                </div>
+                <div class="col-sm-12">
+                    <table id="simple-table" class="table table-responsive table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th width="30%">房券名称</th>
+                                <th width="25%">所在酒店</th>
+                                <th width="10%">预定方式</th>
+                                <th width="10%">价格</th>
+                                <th width="15%">过期时间</th>
+                                <th width="10%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>测试</td>
+                                <td><img src="http://placehold.it/35x35/" alt=""></td>
+                                <td>第三方服务</td>
+                                <td>--</td>
+                                <td>2019年10月10日16:51:37</td>
+                                <td class="btn-hide">
+                                    <a href="#" class="btn btn-success">删除</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/custom/VIP/addroom.js"></script>
+
+<!-- ui库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+
+
+</html>

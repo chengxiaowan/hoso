@@ -1,0 +1,27 @@
+//接口交互
+let config = {
+    role: localStorage.userRole,
+    //接口地址写在下面 使用api_url变量拼接
+}
+
+window.app = new Vue({
+    el:"#app",
+    data:{
+        info:"这里是会员包管理",
+        keywords:"",
+        type:"",
+    },
+    methods: {
+        goAdd(){
+            let index = layer.open({
+                type:2,
+                title:"新增会员包",
+                content:"add.html",
+                area:["100%","100%"]
+            })
+        }
+    },
+    mounted() {
+        console.log("Vue is Ok")
+    },
+})

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .table {
+            margin-top: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="wrapper wrapper-content  animated fadeInRight">
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-sm-12">
+                    <!-- 检索 start -->
+                    <div class="form-inline" role="form" id="customerForm">
+                        <div class="form-group">
+                            <input class="form-control" id="nav-search-input" type="text" placeholder="请输入权益名称"
+                                v-model="keywords">
+                        </div>
+                        <div class="form-group">
+                            <em>用途：</em>
+                            <select v-model="type" class="form-control">
+                                <option value="">全部</option>
+                                <option value="0">房券</option>
+                                <option value="1">第三方服务</option>
+                                <option value="2">其他</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-htz btn-primary" @click="soso()">
+                            <i class="icon icon_search"></i> 搜索
+                        </button>
+                        <button type="reset" class="btn btn-htz btn-success" @click="add()">
+                            <i id="nav-search-icon" class="icon icon_plus"></i> 新增
+                        </button>
+                    </div>
+                    <!-- 检索 end -->
+                </div>
+                <div class="col-sm-12">
+                    <table id="simple-table" class="table table-responsive table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th width="30%">名称</th>
+                                <th width="15%">图片</th>
+                                <th width="10%">用途</th>
+                                <th width="10%">上下架状态</th>
+                                <th width="15%">创建时间</th>
+                                <th width="20%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template v-if="list.list != []">
+                                <tr v-for="item in list.list">
+                                    <td>{{item.name}}</td>
+                                    <td><img :src="item.pic" alt="" style="width: 35px;height: 35px;"></td>
+                                    <td v-if="item.type=='0'">房券</td>
+                                    <td v-if="item.type=='1'">第三方服务</td>
+                                    <td v-if="item.type=='2'">其他</td>
+                                    <td v-if="item.isOnsell=='0'">下架</td>
+                                    <td v-if="item.isOnsell=='1'">上架</td>
+                                    <td>2019年10月10日16:51:37</td>
+                                    <td class="btn-hide">
+                                        <a href="#" class="btn btn-success" @click="edit(item)">编辑</a>
+                                        <a href="#" class="btn btn-success" @click="goRoom()"
+                                            v-if="item.type=='0'">绑定房券</a>
+                                        <a href="#" class="btn btn-success">上架</a>
+                                        <a href="#" class="btn btn-success">删除</a>
+                                    </td>
+                                </tr>
+                            </template>
+                            <tr v-else>
+                                <td colspan="6">
+                                    暂时没有数据
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="pull-left form form-inline">
+                        <div class="form-group form-group-sm">
+                            共 {{list.total}} 条数据,每页显示
+                            <select @change="getdata(1)" v-model="list.pageSize" class="form-control">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="40">40</option>
+                                <option value="50">50</option>
+                            </select> 条
+                        </div>
+                    </div>
+                    <div class="pagi pull-right"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/custom/VIP/index.js"></script>
+
+<!-- ui库 -->
+
+
+
+</html>

@@ -1,0 +1,180 @@
+let config = {
+    api_token: api_url + '/qiniu/getUpToken', //获取七牛的token
+    api_list: api_url + "/memRights/list" //获取待添加服务
+
+}
+
+window.app = new Vue({
+    el: "#app",
+    data: {
+        flage: 0, //标志
+        name: "", //权益包名称
+        type: "1", //是否包含组头  
+        package: [], //权益包内容
+        package2: [], //权益包内容
+        isOnsell: "1", //上下架状态    
+        onece: false, //是否一次性购买
+        Y: false, //是否包年
+        M: false, //是否包月
+        d: false, //是否包季
+        price: "", //一次性购买价格
+        price1: "", //包年购买价格
+        price2: "", //包月购买价格
+        price3: "", //包季购买价格
+        remake: "", //描述
+        keywords: "", //关键字
+        list: [], //未添加的权益列表
+        zu: "", //新增组头名称
+        date: ""
+    },
+    methods: {
+        //获取token
+        getToken() {
+            $.ajax({
+                url: config.api_token,
+                async: true,
+                data: {},
+                taye: "post",
+                success: res => {
+                    this.tokenMessage = res;
+                    uploaderReady(res)
+                    uploaderReady2(res)
+                }
+            })
+        },
+        //获取待添加权益
+        getdata(page) {
+            const that = this
+            $('body,html').scrollTop(0)
+            $.ajax({
+                url: config.api_list,
+                async: true,
+                type: "POST",
+                data: {
+                    keywords: this.keywords,
+                    pageSize: this.list.pageSize || 10,
+                    pageNo: page,
+                    pageSize: 5
+                },
+                success: res => {
+                    if (res.error == "00") {
+                        this.list = res.result
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                }
+
+            })
+        },
+        //打开添加分组（组头）模态框
+        addZu() {
+            let index = layer.open({
+                type: 1,
+                title: "新增分组",
+                content: $("#add-zu"),
+                area: ["487px", "296px"]
+
+            })
+        },
+        //添加分组（组头）
+        addzu() {
+            let drool = {
+                name: this.zu,
+                memRights: []
+            };
+            if (this.zu == "") {
+                layer.msg("请输入组头名称")
+                return
+            }
+            this.package.push(drool)
+
+        },
+        //打开权益列表
+        open() {
+            let index = layer.open({
+                type: 1,
+                content: $("#list-vip"),
+                title: "添加权益",
+                area: ["990px", "496px"]
+
+
+            })
+        },
+
+        open2(item) {
+            let index = layer.open({
+                type: 1,
+                content: $("#list-vip2"),
+                title: "添加权益",
+                area: ["990px", "496px"]
+            })
+            sessionStorage.setItem("packagename", item.name)
+        },
+        //简单的分页
+        page(e) {
+            this.getdata(e)
+        },
+        //a没有分组的添加
+        add(item) {
+            this.package2.push(item);
+            this.list.list.splice(item.index, 1)
+            console.log(this.package2)
+        },
+        adds(item) {
+            for (let i = 0; i < this.package.length; i++) {
+                if (this.package[i].name == sessionStorage.getItem("packagename")) {
+                    this.package[i].memRights.push(item)
+                }
+            }
+            console.log(this.package)
+            console.log(sessionStorage.getItem("packagename"))
+            console.log(item)
+        },
+        save() {
+            const that = this
+            //价格模式整理
+            let priceUsed = [];
+            if (that.onece) { //单次
+                priceUsed.push(0)
+            }
+            if (that.Y) {
+                priceUsed.push(1) //年
+            }
+            if (that.M) {
+                priceUsed.push(2) //月
+            }
+            if (that.d) { //季度
+                priceUsed.push(3)
+            }
+            //带组头的
+            if (this.type == "1") {
+                let parmars = {
+                    name: that.name,
+                    pic: $("#viwe").attr("src"),
+                    isOnsell: that.isOnsell,
+                    remark: that.remake,
+                    type: that.type,
+                    topPic: $("view2").attr("src"),
+                    priceUsed: priceUsed.join(","),
+                    monthPrice: that.price2,
+                    quarterPrice: that.price3,
+                    yearPrice: that.price3,
+                    price: that.price,
+                    dataList:JSON.stringify(that.package2)
+
+                }
+
+                console.log(parmars)
+            }
+
+            if (this.type == "2") {
+
+            }
+        }
+    },
+    mounted() {
+        console.log("Vue挂载成功")
+        this.getToken()
+        this.getdata(1)
+    },
+})

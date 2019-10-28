@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新增店铺房券编辑</title>
+    <meta name="keywords" content="寒舍">
+    <meta name="description" content="寒舍">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../js/plugins/layui/css/layui.css">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <style>
+        .form-group {
+            position: relative;
+            margin-bottom: 30px;
+            overflow: hidden;
+            display: flex;
+            
+        }
+        
+        .form-group label {
+            width: 100px;
+            margin-right: 30px;
+            text-align: right;
+            line-height: 3;
+        }
+
+        .tips {
+            color: #b8b8b8;
+            font-size: 12px;
+            font-weight: normal;
+        }
+
+        .dot {
+            position: absolute;
+            top: 70%;
+            right: 10px;
+            transform: translateY(-50%);
+            -moz-transform: translateY(-50%);
+            -webkit-transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: #ff8d41;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+        }
+
+        .btn-primary {
+            margin: 0 auto;
+            display: inline-block;
+            width: 124px;
+            height: 45px;
+            line-height: 33px;
+        }
+
+        #drool{
+            text-align: center;
+        }
+
+
+        .form-control{
+            height: 40px;
+        }
+        .row button.sky-btn{
+            margin-left: auto;
+        }
+        .el-input__prefix{
+            display: none !important
+        }
+        .red{
+            color: red
+        }
+        .el-input--prefix .el-input__inner{
+            padding-left: 12px !important
+        }
+    </style>
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content  animated fadeInRight" id="app">
+        <div class="ibox-content">
+            <div class="row" v-cloak>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label><em class="red">*</em>名称：</label>
+                        <input type="text" placeholder="请输入房券名称，1~30个字" class="form-control" v-model="name" id="name" maxlength="30" />
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label><em class="red">*</em>预定方式：</label>
+                        <div style="width:100%">
+                            <el-select v-model="valueWay" @change="waySelect" placeholder="请选择">
+                                <el-option
+                                  v-for="item in options"
+                                  :key="item.value"
+                                  :label="item.label"
+                                  :value="item.value">
+                                </el-option>
+                              </el-select>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>使用次数：</label>
+                        <input type="number" class="form-control" @input="oninputPoint" v-model="countUsed" placeholder="请输入使用次数">
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>价格(元)：</label>
+                        <input type="number" @input="oninput" placeholder="请输入价格，如不输入则默认免费" class="form-control" v-model="price">
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>过期日期：</label>
+                        <input style="width:100%" type="text" readonly="readonly" id="start" style="width: 120px;" class="form-control" placeholder="请选择开始日期" />
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>说明：</label>
+                        <textarea name="desc" placeholder="请输入房券说明" class="form-control" v-model="houseTips"></textarea>
+                    </div>
+                </div>
+                <div class="form-group clear" id="drool">
+                    <button type="submit" class="btn btn-htz btn-primary sky-btn" @click="Save()" id="save">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="../js/jquery-2.1.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/plugins/layer/layer.min.js"></script>
+	<script src="../js/plugins/layui/layui.js"></script>
+    <script src="../js/vue.js"></script>
+    <script src="../js/module/module_pagination.js"></script>
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="../js/custom/common.js"></script>
+    <script src="../js/custom/OfflineShop/editorHouseCoupon.js"></script>
+
+
+    <!-- 测试代码 -->
+    <script>
+        //点击保存后关闭当前的iframe弹窗
+        // var bobodrool = parent.layer.getFrameIndex(window.name);
+        // console.log(bobodrool)
+        // document.getElementById("save").onclick = function () {
+        //     parent.layer.close(bobodrool)
+        // }
+
+
+    </script>
+
+</body>
+
+</html>

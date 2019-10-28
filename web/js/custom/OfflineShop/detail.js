@@ -1,3 +1,5 @@
+// var shopsId = parameter().id;
+// console.log(shopsId)
 var config = {
 	role: localStorage.userRole,
 	id: parameter().id,
@@ -59,9 +61,10 @@ var config = {
 			添加了小程序码
 	
 	*/
-	api_ewm: api_url + '/weixin/getwxTwoEconde' //小程序码
+	api_ewm: api_url + '/weixin/getwxTwoEconde', //小程序码
 
-
+	api_houseList: api_url + '/roomTicket/list', //房券列表
+    api_delHouseList: api_url + '/shops/deleteTable', //房券列表删除
 
 }
 
@@ -168,6 +171,11 @@ window.app = new Vue({
 		bg_show1: false,
 		image_ewm: '',
 		img_name: '',
+
+
+		// 房券
+        houseKeywords:'',//房券搜索
+        houseList:[],    //房券列表数据
 	},
 	watch: {
 		provinceId(val, oldVal) {
@@ -280,7 +288,9 @@ window.app = new Vue({
 			} else if (num == 5) {
 				that.getProvince();
 				that.showAShopsBrandService();
-			}
+			}else if (num == 6) {
+                that.getHouseCoupon(1,that.houseKeywords) //获取房券列表数据
+            }
 		},
 		getItem(index) {
 			this.auditStatus = index;
@@ -1834,6 +1844,127 @@ window.app = new Vue({
 			let that = this
 			this.downloadIamge(this.image_ewm, that.img_name)
 		},
+
+
+
+		//房券 新增addHouseCoupon
+        addHouse() {
+            var that = this
+            var index = layer.open({
+                    type: 2,
+                    title: '新增房券',
+                    content: 'addHouseCoupon.html?id=' + config.id,
+                    area: ['700px', '90%'],
+                    end: function () {
+                        that.getHouseCoupon()
+                    }
+                });
+        },
+        // 房券搜索
+        searchHouse(){
+            this.getHouseCoupon(1, this.houseKeywords)
+        },
+        // 时间戳转年月日
+       gettime(timestamp) {
+            var d = new Date(timestamp)
+            var year = d.getFullYear();
+            var month = change(d.getMonth() + 1);
+            var day = change(d.getDate());
+            function change(t) {
+                if (t < 10) {
+                    return "0" + t;
+                } else {
+                    return t;
+                }
+            }
+            var time = year + '-' + month + '-' + day;
+            return time;
+        },
+        //获取房券列表数据
+        getHouseCoupon(page,houseKeywords){
+            var that = this
+            $('body,html').scrollTop(0)
+            if (page) this.houseList.pageNum = page
+            var that = this;
+            that.loading();
+            $.ajax({
+                url: config.api_houseList,
+                async: true,
+                type: 'post',
+                data: {
+                    shopsId: config.id,
+                    keywords: houseKeywords,
+                    pageSize: that.houseList.pageSize || 10,
+                    pageNo: that.houseList.pageNum || 1,
+                },
+                success: function (res) {
+                    that.loading('close')
+                    console.log(res)
+                    if (res.error == "00") {
+                        
+                        const testList = res.result
+                        for(let i = 0;i<testList.list.length;i++){
+                            testList.list[i].time=that.gettime(testList.list[i].time)
+                        }
+                        that.houseList = testList;
+                        //分页
+                        if (that.pagi3) {
+                            $('.pagi3').pagination('updatePages', that.houseList.pages)
+                            if (page3 == 1) $('.pagi3').pagination('goToPage', that.houseList.pageNum)
+                        } else {
+                            that.pagi = $('.pagi3').pagination({
+                                pages: that.houseList.pages, //总页数
+                                showCtrl: true,
+                                displayPage: 6,
+                                currentPage: that.houseList.pageNum,
+                                onSelect: function (num) {
+                                    that.houseList.pageNum = num
+                                    that.getHouseCoupon()
+                                   
+                                }
+                            })
+                        }
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                }
+            });
+        },
+        //房券 编辑 editorHouseCoupon
+        editorHouseCoupon(id) {
+            var that = this
+            var index = layer.open({
+                    type: 2,
+                    title: '编辑房券',
+                    content: 'editorHouseCoupon.html?id=' + id,
+                    area: ['700px', '90%'],
+                    end: function () {
+                        that.getHouseCoupon()
+                    }
+                });
+        },
+        // 房券 删除
+        delHouseCoupon(id) {
+            console.log(id,typeof(id))
+            const that = this;
+            const dialog = layer.confirm("确认删除该数据吗?", {
+                title: "提示"
+            }, () => {
+                $.get(config.api_delHouseList, {
+                    id: id,
+                    tableName: 'room_ticket'
+                }, function (data) { // 回调函数
+                    console.log(data)
+                    if (data.error == '00') {
+                        layer.close(dialog)
+                        layer.msg("删除成功")
+                        that.getHouseCoupon()
+                    } else {
+                        layer.msg(data.msg)
+                    }
+                })
+            })
+        },
 	}
 })
 

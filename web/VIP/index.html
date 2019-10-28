@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .table {
+            margin-top: 24px;
+        }
+
+        .title-index {
+            width: 100%;
+            /* margin: 0 28px; */
+            background: #E4E9EF;
+            height: 98px;
+            margin-bottom: 28px;
+            border-radius: 4px;
+        }
+
+        .title-index>h3 {
+            padding-top: 16px;
+            font-size: 20px;
+            color: #4a4a4a;
+            margin-left: 15px;
+            margin-bottom: 15px;
+        }
+
+        .title-index>p {
+            margin-left: 25px;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFangSC;
+            font-weight: 400;
+            color: rgba(74, 74, 74, 1);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="wrapper wrapper-content  animated fadeInRight">
+        <div class="ibox-content">
+            <div class="title-index">
+                <h3>说明</h3>
+                <p>1、类型是住宿的权益用于小程序端订房，如果不绑定房券则能订所有的房，如果绑定了房券则只能定绑定的房间。</p>
+                <p>2、类型为住宿的权益没有价格，具体到绑定的房券里的价格。</p>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <!-- 检索 start -->
+                    <div class="form-inline" role="form" id="customerForm">
+                        <div class="form-group">
+                            <input class="form-control" id="nav-search-input" type="text" placeholder="请输入权益名称"
+                                v-model="keywords">
+                        </div>
+                        <div class="form-group">
+                            <em>类型：</em>
+                            <select v-model="type" class="form-control">
+                                <option value="">全部</option>
+                                <option value="住宿">住宿</option>
+                                <option value="旅游出行">旅游出行</option>
+                                <option value="视频音乐">视频音乐</option>
+                                <option value="品牌零售">品牌零售</option>
+                                <option value="知识阅读">知识阅读</option>
+                                <option value="消费生活">消费生活</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <em>上/下架状态：</em>
+                            <select v-model="isOnsell" class="form-control">
+                                <option value="">全部</option>
+                                <option value="0">下架</option>
+                                <option value="1">上架</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-htz btn-primary" @click="soso()">
+                            <i class="icon icon_search"></i> 搜索
+                        </button>
+                        <button type="reset" class="btn btn-htz btn-success" @click="add()">
+                            <i id="nav-search-icon" class="icon icon_plus"></i> 新增
+                        </button>
+                    </div>
+                    <!-- 检索 end -->
+                </div>
+                <div class="col-sm-12">
+                    <table id="simple-table" class="table table-responsive table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th width="20%">名称</th>
+                                <th width="10%">图片</th>
+                                <th width="15%">价格</th>
+                                <th width="10%">类型</th>
+                                <th width="10%">上下架状态</th>
+                                <th width="15%">创建时间</th>
+                                <th width="20%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template v-if="list.list != []">
+                                <tr v-for="item in list.list">
+                                    <td>{{item.name}}</td>
+                                    <td><img :src="item.pic" alt="" style="width: 35px;height: 35px;"></td>
+                                    <td>{{item.price == "00" ? "--" : item.price}}</td>
+                                    <td>{{item.type}}</td>
+                                    <td v-if="item.isOnsell=='0'">下架</td>
+                                    <td v-if="item.isOnsell=='1'">上架</td>
+                                    <td>2019年10月10日16:51:37</td>
+                                    <td class="btn-hide">
+                                        <a href="#" class="btn btn-success" @click="edit(item)">编辑</a>
+                                        <a href="#" class="btn btn-success" @click="goRoom()"
+                                            v-if="item.type=='住宿'">绑定房券</a>
+                                        <a href="#" class="btn btn-success">上架</a>
+                                        <a href="#" class="btn btn-success" @click="del(item)">删除</a>
+                                    </td>
+                                </tr>
+                            </template>
+                            <tr v-else>
+                                <td colspan="6">
+                                    暂时没有数据
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="pull-left form form-inline">
+                        <div class="form-group form-group-sm">
+                            共 {{list.total}} 条数据,每页显示
+                            <select @change="getdata(1)" v-model="list.pageSize" class="form-control">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="40">40</option>
+                                <option value="50">50</option>
+                            </select> 条
+                        </div>
+                    </div>
+                    <div class="pagi pull-right"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/custom/VIP/index.js"></script>
+
+<!-- ui库 -->
+
+
+
+</html>
