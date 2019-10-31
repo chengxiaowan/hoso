@@ -1,27 +1,20 @@
 let config = {
-    api_list: api_url + '/memRights/getRoomTicketList'
+    //Url封装
+    api_list: api_url + '/memRights/roomTicketList',
+    api_add: api_url + '/memRights/bindRoomTickets'
 }
 
 let mrId = parameter().mrId
-
 console.log(mrId)
 
 window.app = new Vue({
     el: "#app",
     data: {
+        list: [],
         keywords: "",
-        type: "",
-        list:[],
+        type: ""
     },
     methods: {
-        goAdd() {
-            let inedx = layer.open({
-                type: 2,
-                title: "添加房券",
-                content: "addquan.html?mrId=" + mrId,
-                area: ["100%", "100%"]
-            })
-        },
         getdata(page) {
             // console.log("drool")
             const that = this
@@ -79,12 +72,31 @@ window.app = new Vue({
             second = second < 10 ? ('0' + second) : second;
             return y + '-' + m + '-' + d + ' ' + '　' + h + ':' + minute + ':' + second;
         },
-        del(item) {
+        add(item) {
             const that = this;
-            const dialog = layer.confirm("确认删除该房券?", {
+            const dialog = layer.confirm("确认绑定该房券?", {
                 title: "提示"
             }, () => {
-               alert(item)
+                let parmars = {
+                    mrId: mrId,
+                    rtId: item.id
+                }
+                $.ajax({
+                    url: config.api_add,
+                    type: "POST",
+                    async: true,
+                    data: parmars,
+                    success: res => {
+                        if (res.error == "00") {
+                            layer.msg("绑定房券成功！")
+                            layer.close(dialog)
+                        } else {
+                            layer.msg(res.msg)
+                            layer.close(dialog)
+
+                        }
+                    }
+                })
             })
         }
     },

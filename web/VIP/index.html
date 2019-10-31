@@ -21,9 +21,10 @@
             width: 100%;
             /* margin: 0 28px; */
             background: #E4E9EF;
-            height: 98px;
+            /* height: 98px; */
             margin-bottom: 28px;
             border-radius: 4px;
+            padding-bottom: 25px;
         }
 
         .title-index>h3 {
@@ -114,7 +115,7 @@
                                     <td>2019年10月10日16:51:37</td>
                                     <td class="btn-hide">
                                         <a href="#" class="btn btn-success" @click="edit(item)">编辑</a>
-                                        <a href="#" class="btn btn-success" @click="goRoom()"
+                                        <a href="#" class="btn btn-success" @click="goRoom(item)"
                                             v-if="item.type=='住宿'">绑定房券</a>
                                         <a href="#" class="btn btn-success">上架</a>
                                         <a href="#" class="btn btn-success" @click="del(item)">删除</a>

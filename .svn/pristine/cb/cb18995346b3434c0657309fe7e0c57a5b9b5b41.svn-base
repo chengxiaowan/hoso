@@ -103,13 +103,11 @@
         .remake {
             /* float: left; */
             margin-left: 50px;
-
             font-size: 14px;
             font-family: PingFangSC-Regular, PingFangSC;
             font-weight: 400;
             color: #666666;
             margin-bottom: 20px;
-
         }
 
         .remake-input {
@@ -313,7 +311,7 @@
                 <div class="zu-add" v-for="item in package" @mouseenter="show(item.name)" @mouseleave="show(-1)">
                     {{item.name}}
                     <div class="edit" v-if="isShow == item.name">
-                        <span class="el-icon-edit-outline edits" @click="edit(item)"></span>
+                        <span class="el-icon-edit-outline edits" @click="alert(1)"></span>
                         <span class="el-icon-delete dels" @click="delZu(item.name)"></span>
                     </div>
                 </div>
@@ -463,7 +461,7 @@
         </template>
         <div>
             <div class="remake">
-                <em>&nbsp;&nbsp;</em>
+                <em> </em>
                 &nbsp;&nbsp;权益备注：
             </div>
         </div>
@@ -489,7 +487,7 @@
                 <div class="name" style="margin-left: 38px;">
                     <em>*</em>&nbsp;&nbsp;名称：
                     <div class="drool" style="width: 200px;margin-left: 10px;">
-                        <input type="text" class="form-control" placeholder="请输入分项名称" maxlength="30" v-model="zu">
+                        <input type="text" class="form-control" placeholder="输入分项名称" maxlength="30" v-model="zu">
                     </div>
                 </div>
             </div>
@@ -518,7 +516,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in list.list">
+                        <tr v-for="item in list.list" :key="item.id">
                             <td>{{item.name}}</td>
                             <td>
                                 <img :src="item.pic" alt="" style="width: 35px;height: 35px;">
@@ -556,7 +554,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in list.list">
+                        <tr v-for="item in list.list" :key="item.id">
                             <td>{{item.name}}</td>
                             <td>
                                 <img :src="item.pic" alt="" style="width: 35px;height: 35px;">
@@ -609,24 +607,9 @@
                 </div>
             </div>
         </div>
-
-        <!-- 模态框4  edit组头-->
-        <div id="edit-zu" style="display: none;">
-            <div class="name">
-                <div class="name" style="margin-left: 38px;">
-                    <em>*</em>&nbsp;&nbsp;名称：
-                    <div class="drool" style="width: 200px;margin-left: 10px;">
-                        <input type="text" class="form-control" placeholder="输入分项名称" maxlength="30" v-model="zu">
-                    </div>
-                </div>
-            </div>
-            <!-- <div style="margin: 0 auto;text-align: center;">
-                <button type="submit" class="btn btn-htz btn-primary" @click="addzu()">新增</button>
-            </div> -->
-        </div>
     </div>
 </body>
-<script src="../js/jquery-2.js"></script>
+<script src="../js/jquery-2.1.1.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/plugins/layer/layer.min.js"></script>
 <script src="../js/jquery.navScroll.js"></script>
@@ -652,6 +635,6 @@
 <!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
 <!-- <script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script> -->
 <script src="../js/qiniuyun/qiniu-package.js"></script>
-<script src="../js/custom/package/edit.js"></script>
+<script src="../js/custom/package/add.js"></script>
 
 </html>
