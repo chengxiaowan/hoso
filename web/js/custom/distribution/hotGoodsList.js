@@ -18,10 +18,17 @@ var config = {
 	api_editCustomCommissionInfo: api_url + '/distribution/editCustomCommissionInfo', //修改 --- 获取自定义佣金详情
 	api_editCustomCommission: api_url + '/distribution/editCustomCommission', //修改自定义佣金
 	api_delCustomCommission: api_url + '/distribution/delCustomCommission', //删除自定义佣金
+
+	api_c:api_url + "/distribution/editCommission"
 }
 
+//迭代详情
+//2019年11月1日11:06:29
+//排除角色 直接商品绑定佣金比例
+//
+
 Vue.directive('select2', {
-	inserted: function(el, binding, vnode) {
+	inserted: function (el, binding, vnode) {
 		let options = binding.value || {};
 		$(el).select2(options).on("select2:select", (e) => {
 			el.dispatchEvent(new Event('change', {
@@ -29,9 +36,9 @@ Vue.directive('select2', {
 			})); //说好的双向绑定，竟然不安套路
 		});
 	},
-	update: function(el, binding, vnode) {
-		for(var i = 0; i < vnode.data.directives.length; i++) {
-			if(vnode.data.directives[i].name == "model") {
+	update: function (el, binding, vnode) {
+		for (var i = 0; i < vnode.data.directives.length; i++) {
+			if (vnode.data.directives[i].name == "model") {
 				$(el).val(vnode.data.directives[i].value);
 			}
 		}
@@ -39,7 +46,7 @@ Vue.directive('select2', {
 	}
 });
 Vue.directive('select22', {
-	inserted: function(el, binding, vnode) {
+	inserted: function (el, binding, vnode) {
 		let options = binding.value || {};
 		$(el).select2(options).on("select2:select", (e) => {
 			el.dispatchEvent(new Event('change', {
@@ -47,9 +54,9 @@ Vue.directive('select22', {
 			})); //说好的双向绑定，竟然不安套路
 		});
 	},
-	update: function(el, binding, vnode) {
-		for(var i = 0; i < vnode.data.directives.length; i++) {
-			if(vnode.data.directives[i].name == "model") {
+	update: function (el, binding, vnode) {
+		for (var i = 0; i < vnode.data.directives.length; i++) {
+			if (vnode.data.directives[i].name == "model") {
 				$(el).val(vnode.data.directives[i].value);
 			}
 		}
@@ -92,11 +99,11 @@ var vueApp = new Vue({
 		saleTime1: '', //销售时限(小时)
 		customList: '' //自定义角色列表
 	},
-	created: function() {
+	created: function () {
 		var that = this;
 		document.getElementById("app").classList.remove("hide");
 	},
-	mounted: function() {
+	mounted: function () {
 		const that = this;
 		that.getData();
 		that.getData1();
@@ -111,14 +118,14 @@ var vueApp = new Vue({
 		 *
 		 * @param {string} s 是否关闭
 		 */
-		loading: function(s) {
-			if(s == "close") layer.close(this.loadingSwitch)
+		loading: function (s) {
+			if (s == "close") layer.close(this.loadingSwitch)
 			else this.loadingSwitch = layer.load(3);
 		},
 		//爆款商品列表
-		getData: function(page, keywords) {
+		getData: function (page, keywords) {
 			$('body,html').scrollTop(0)
-			if(page) this.list.pageNum = page
+			if (page) this.list.pageNum = page
 			var that = this;
 			that.loading();
 			$.ajax({
@@ -133,21 +140,21 @@ var vueApp = new Vue({
 					pageSize: that.list.pageSize || 10,
 					pageNo: that.list.pageNum || 1,
 				},
-				success: function(res) {
+				success: function (res) {
 					that.loading('close')
-					if(res.error == "00") {
+					if (res.error == "00") {
 						that.list = res.result;
 						//分页
-						if(that.pagi) {
+						if (that.pagi) {
 							$('.pagi').pagination('updatePages', that.list.pages)
-							if(page == 1) $('.pagi').pagination('goToPage', that.list.pageNum)
+							if (page == 1) $('.pagi').pagination('goToPage', that.list.pageNum)
 						} else {
 							that.pagi = $('.pagi').pagination({
 								pages: that.list.pages, //总页数
 								showCtrl: true,
 								displayPage: 6,
 								currentPage: that.list.pageNum,
-								onSelect: function(num) {
+								onSelect: function (num) {
 									that.list.pageNum = num
 									that.getData()
 								}
@@ -160,8 +167,8 @@ var vueApp = new Vue({
 			});
 		},
 		//获取大列表
-		getData1: function(page, keywords) {
-			if(page) this.list1.pageNum = page
+		getData1: function (page, keywords) {
+			if (page) this.list1.pageNum = page
 			var that = this;
 			that.loading();
 			$.ajax({
@@ -176,22 +183,22 @@ var vueApp = new Vue({
 					pageSize: that.list1.pageSize || 5,
 					pageNo: that.list1.pageNum || 1,
 				},
-				success: function(res) {
+				success: function (res) {
 					that.loading('close')
-					if(res.error == "00") {
+					if (res.error == "00") {
 						that.list1 = res.result;
 						//分页
-						if(that.pagi1) {
+						if (that.pagi1) {
 							$('.pagi1').pagination('updatePages', that.list1.pages)
-							if(page == 1) $('.pagi1').pagination('goToPage', that.list1.pageNum)
+							if (page == 1) $('.pagi1').pagination('goToPage', that.list1.pageNum)
 						} else {
 							that.pagi1 = $('.pagi1').pagination({
 								pages: that.list1.pages, //总页数
 								showCtrl: true,
 								displayPage: 6,
 								currentPage: that.list1.pageNum,
-								onSelect: function(num) {
-									that.now=-1
+								onSelect: function (num) {
+									that.now = -1
 									that.list1.pageNum = num
 									that.getData1()
 								}
@@ -214,7 +221,7 @@ var vueApp = new Vue({
 					burstingGoodsId: that.burstingGoodsId
 				},
 				success(res) {
-					if(res.error == '00') {
+					if (res.error == '00') {
 						that.roleCommissionList = res.result
 					} else {
 						layer.msg(res.msg)
@@ -223,8 +230,8 @@ var vueApp = new Vue({
 			});
 		},
 		//自定义佣金列表
-		getData2: function(page, keywords) {
-			if(page) this.list2.pageNum = page
+		getData2: function (page, keywords) {
+			if (page) this.list2.pageNum = page
 			var that = this;
 			that.loading();
 			$.ajax({
@@ -237,21 +244,21 @@ var vueApp = new Vue({
 					pageSize: that.list1.pageSize || 5,
 					pageNo: that.list1.pageNum || 1,
 				},
-				success: function(res) {
+				success: function (res) {
 					that.loading('close')
-					if(res.error == "00") {
+					if (res.error == "00") {
 						that.list2 = res.result;
 						//分页
-						if(that.pagi2) {
+						if (that.pagi2) {
 							$('.pagi2').pagination('updatePages', that.list2.pages)
-							if(page == 1) $('.pagi2').pagination('goToPage', that.list2.pageNum)
+							if (page == 1) $('.pagi2').pagination('goToPage', that.list2.pageNum)
 						} else {
 							that.pagi2 = $('.pagi2').pagination({
 								pages: that.list2.pages, //总页数
 								showCtrl: true,
 								displayPage: 6,
 								currentPage: that.list2.pageNum,
-								onSelect: function(num) {
+								onSelect: function (num) {
 									that.list2.pageNum = num
 									that.getData2()
 								}
@@ -273,9 +280,9 @@ var vueApp = new Vue({
 				data: {
 					level: 1
 				},
-				success: function(res) {
+				success: function (res) {
 					that.loading('close')
-					if(res.error == "00") {
+					if (res.error == "00") {
 						that.typeList = res.result;
 						that.typeList1 = res.result;
 					} else {
@@ -294,11 +301,11 @@ var vueApp = new Vue({
 				data: {
 					keywords: ''
 				},
-				success: function(res) {
+				success: function (res) {
 					that.loading('close')
-					if(res.error == "00") {
+					if (res.error == "00") {
 						var arr = []
-						for(var i in res.result) {
+						for (var i in res.result) {
 							var obj = {};
 							obj.id = res.result[i].id;
 							obj.text = res.result[i].name;
@@ -322,11 +329,11 @@ var vueApp = new Vue({
 				data: {
 					keywords: ''
 				},
-				success: function(res) {
+				success: function (res) {
 					that.loading('close')
-					if(res.error == "00") {
+					if (res.error == "00") {
 						var arr = [];
-						for(var i in res.result) {
+						for (var i in res.result) {
 							var obj = {}
 							obj.id = res.result[i].id;
 							obj.text = res.result[i].name;
@@ -350,11 +357,11 @@ var vueApp = new Vue({
 				data: {
 					keywords: ''
 				},
-				success: function(res) {
+				success: function (res) {
 					that.loading('close')
-					if(res.error == "00") {
+					if (res.error == "00") {
 						var arr = [];
-						for(var i in res.result) {
+						for (var i in res.result) {
 							var obj = {}
 							obj.id = res.result[i].distributorId;
 							obj.text = res.result[i].distributorName;
@@ -394,7 +401,7 @@ var vueApp = new Vue({
 				btn: "确定",
 				btnAlign: 'c',
 				yes() {
-					if(that.goodsId == '') {
+					if (that.goodsId == '') {
 						layer.msg('请加入商品')
 						return
 					} else {
@@ -405,9 +412,9 @@ var vueApp = new Vue({
 							data: {
 								goodsId: that.goodsId,
 							},
-							success: function(res) {
+							success: function (res) {
 								that.loading('close')
-								if(res.error == '00') {
+								if (res.error == '00') {
 									layer.close(dialog)
 									that.getData()
 								} else {
@@ -442,8 +449,8 @@ var vueApp = new Vue({
 			}, () => {
 				$.get(config.api_del, {
 					burstingGoodsId: id,
-				}, function(data) { // 回调函数
-					if(data.error == '00') {
+				}, function (data) { // 回调函数
+					if (data.error == '00') {
 						layer.close(dialog)
 						layer.msg("删除成功")
 						that.getData()
@@ -483,7 +490,7 @@ var vueApp = new Vue({
 				btn: "确定",
 				btnAlign: 'c',
 				yes() {
-					if(that.roleType == '' || that.commissionPercent == '' || that.saleTime == '') {
+					if (that.roleType == '' || that.commissionPercent == '' || that.saleTime == '') {
 						layer.msg('请填写全部信息')
 						return false;
 					}
@@ -498,7 +505,7 @@ var vueApp = new Vue({
 							saleTime: that.saleTime
 						},
 						success(res) {
-							if(res.error == '00') {
+							if (res.error == '00') {
 								layer.close(dialog)
 								that.CommissionList()
 							} else {
@@ -509,6 +516,41 @@ var vueApp = new Vue({
 				}
 			});
 		},
+		open(item) {
+			const that = this;
+			// console.log(item)
+			that.commissionPercent = ""
+			let drool = layer.open({
+				type: 1,
+				title:"设置佣金比例",
+				content:$("#drool"),
+				btn:"保存",
+				btnAlign: 'c',
+				area:["500px",'300px'],
+				yes(){
+					let param = {
+						commissionPercent:that.commissionPercent,
+						burstingGoodsId:item.burstingGoodsId
+					}
+
+					$.ajax({
+						url:config.api_c,
+						type:"GET",
+						async:true,
+						data:param,
+						success:res=>{
+							if(res.error == "00"){
+								layer.msg("设置佣金比例成功")
+								that.getData()
+								layer.close(drool)
+							}else{
+								layer.msg(res.msg)
+							}
+						}
+					})
+				}
+			})
+		},
 		delRole(id) {
 			const that = this;
 			const dialog = layer.confirm("确认删除角色佣金?", {
@@ -516,8 +558,8 @@ var vueApp = new Vue({
 			}, () => {
 				$.get(config.api_delRoleCommission, {
 					roleCommissionId: id,
-				}, function(data) { // 回调函数
-					if(data.error == '00') {
+				}, function (data) { // 回调函数
+					if (data.error == '00') {
 						layer.close(dialog)
 						layer.msg("删除成功")
 						that.CommissionList()
@@ -537,7 +579,7 @@ var vueApp = new Vue({
 					roleCommissionId: id
 				},
 				success(res) {
-					if(res.error == '00') {
+					if (res.error == '00') {
 						that.roleType = res.result.roleType
 						that.commissionPercent = res.result.commissionPercent
 						that.saleTime = res.result.saleTime
@@ -553,7 +595,7 @@ var vueApp = new Vue({
 				btn: "确定",
 				btnAlign: 'c',
 				yes() {
-					if(that.roleType == '' || that.commissionPercent == '' || that.saleTime == '') {
+					if (that.roleType == '' || that.commissionPercent == '' || that.saleTime == '') {
 						layer.msg('请填写全部信息')
 						return false;
 					}
@@ -569,7 +611,7 @@ var vueApp = new Vue({
 							saleTime: that.saleTime
 						},
 						success(res) {
-							if(res.error == '00') {
+							if (res.error == '00') {
 								layer.close(dialog)
 								that.CommissionList()
 							} else {
@@ -613,7 +655,7 @@ var vueApp = new Vue({
 				btn: "确定",
 				btnAlign: 'c',
 				yes() {
-					if(that.distributorId == '' || that.commissionPercent1 == '' || that.saleTime1 == '') {
+					if (that.distributorId == '' || that.commissionPercent1 == '' || that.saleTime1 == '') {
 						layer.msg('请填写全部信息')
 						return false;
 					}
@@ -628,7 +670,7 @@ var vueApp = new Vue({
 							saleTime: that.saleTime1
 						},
 						success(res) {
-							if(res.error == '00') {
+							if (res.error == '00') {
 								layer.close(dialog)
 								that.getData2()
 							} else {
@@ -649,7 +691,7 @@ var vueApp = new Vue({
 					customCommissionId: id
 				},
 				success(res) {
-					if(res.error == '00') {
+					if (res.error == '00') {
 						that.distributorId = res.result.distributorId
 						that.commissionPercent1 = res.result.commissionPercent
 						that.saleTime1 = res.result.saleTime
@@ -665,7 +707,7 @@ var vueApp = new Vue({
 				btn: "确定",
 				btnAlign: 'c',
 				yes() {
-					if(that.distributorId == '' || that.commissionPercent1 == '' || that.saleTime1 == '') {
+					if (that.distributorId == '' || that.commissionPercent1 == '' || that.saleTime1 == '') {
 						layer.msg('请填写全部信息')
 						return false;
 					}
@@ -681,7 +723,7 @@ var vueApp = new Vue({
 							saleTime: that.saleTime1
 						},
 						success(res) {
-							if(res.error == '00') {
+							if (res.error == '00') {
 								layer.close(dialog)
 								that.getData2()
 							} else {
@@ -699,8 +741,8 @@ var vueApp = new Vue({
 			}, () => {
 				$.get(config.api_delCustomCommission, {
 					customCommissionId: id,
-				}, function(data) { // 回调函数
-					if(data.error == '00') {
+				}, function (data) { // 回调函数
+					if (data.error == '00') {
 						layer.close(dialog)
 						layer.msg("删除成功")
 						that.getData2()
@@ -711,5 +753,6 @@ var vueApp = new Vue({
 			})
 		},
 
-	}
+	},
+
 })
