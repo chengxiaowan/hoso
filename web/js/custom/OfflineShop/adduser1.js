@@ -94,7 +94,7 @@ window.app = new Vue({
                     that.email = res.result.email
                     that.qq = res.result.qq
                     that.remark = res.result.remark
-                    that.shopsRoleId = Number(res.result.shopsRoleId)
+                    that.shopsRoleId = res.result.shopsRoleId
                     that.userId = res.result.userId
                     that.isSaler = Number(res.result.isSaler)
                 }

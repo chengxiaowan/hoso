@@ -89,6 +89,7 @@ window.app = new Vue({
                     success: res => {
                         if (res.error == "00") {
                             layer.msg("绑定房券成功！")
+                            that.getdata(1)
                             layer.close(dialog)
                         } else {
                             layer.msg(res.msg)

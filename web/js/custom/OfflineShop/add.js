@@ -41,6 +41,7 @@ window.app = new Vue({
 		city: "",		//选择的城市
 		brandslist: [],
 		shopsBrandId: "",
+		drool:"",
 	},
 	created: function () {
 		var that = this;
@@ -125,6 +126,7 @@ window.app = new Vue({
 			if (that.shopsBrandId == "") {
 				layer.msg("请选择所属品牌")
 			} else {
+				let info = $("#city").val().split("-")
 				$.ajax({
 					url: config.api_add,
 					async: true,
@@ -139,8 +141,9 @@ window.app = new Vue({
 						labels: $('#tagsinputval').val(),
 						shopsType: that.shopsType,
 						userId: userId,
-						province: that.province,
-						city: that.city,
+						province: info[0],
+						city: info[1],
+						area:info[2],
 						address: that.address,
 						shopsBrandId: that.shopsBrandId
 
@@ -332,30 +335,30 @@ window.app = new Vue({
 			})
 		},
 		//获取用户
-		getUser(){
+		getUser() {
 			var that = this;
 			$.ajax({
-				url:config.api_user,
-				type:"post",
-				async:true,
-				data:{
-					shopsBrandId:that.shopsBrandId
+				url: config.api_user,
+				type: "post",
+				async: true,
+				data: {
+					shopsBrandId: that.shopsBrandId
 				},
-				success:res=>{
-					if(res.error == "00"){
+				success: res => {
+					if (res.error == "00") {
 						that.userList = res.result
-					}else{
+					} else {
 						layer.msg(res.msg)
 					}
 				}
 			})
 		},
-		userchange(){
+		userchange() {
 			var that = this;
 			that.userId = ""
 			that.getUser()
 		}
-		
+
 
 	}
 })

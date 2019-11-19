@@ -70,6 +70,84 @@
 		.ibox-content .col-sm-6:nth-child(even) {
 			margin-left: 0px;
 		}
+
+		._citys {
+			width: 450px;
+			display: inline-block;
+			border: 2px solid #eee;
+			padding: 5px;
+			position: relative;
+			background: #fff;
+		}
+
+		._citys span {
+			color: #56b4f8;
+			height: 15px;
+			width: 15px;
+			line-height: 15px;
+			text-align: center;
+			border-radius: 3px;
+			position: absolute;
+			right: 10px;
+			top: 10px;
+			border: 1px solid #56b4f8;
+			cursor: pointer;
+		}
+
+		._citys0 {
+			width: 100%;
+			height: 34px;
+			display: inline-block;
+			border-bottom: 2px solid #56b4f8;
+			padding: 0;
+			margin: 0;
+		}
+
+		._citys0 li {
+			display: inline-block;
+			line-height: 34px;
+			font-size: 15px;
+			color: #888;
+			width: 80px;
+			text-align: center;
+			cursor: pointer;
+		}
+
+		.citySel {
+			background-color: #56b4f8;
+			color: #fff !important;
+		}
+
+		._citys1 {
+			width: 100%;
+			display: inline-block;
+			padding: 10px 0;
+		}
+
+		._citys1 a {
+			width: 83px;
+			height: 35px;
+			display: inline-block;
+			background-color: #f5f5f5;
+			color: #666;
+			margin-left: 6px;
+			margin-top: 3px;
+			line-height: 35px;
+			text-align: center;
+			cursor: pointer;
+			font-size: 13px;
+			overflow: hidden;
+		}
+
+		._citys1 a:hover {
+			color: #fff;
+			background-color: #56b4f8;
+		}
+
+		.AreaS {
+			background-color: #56b4f8 !important;
+			color: #fff !important;
+		}
 	</style>
 </head>
 
@@ -141,23 +219,8 @@
 						<div class="col-sm-12 clear">
 							<div class="form-group">
 								<label class="col-sm-1 control-label">详细地址</label>
-								<div class="col-sm-3">
-									<template>
-										<el-select v-model="province" filterable placeholder="请选择" @change="getCity()">
-											<el-option v-for="item in prolist" :key="item.provinceId"
-												:label="item.provinceName" :value="item.provinceName">
-											</el-option>
-										</el-select>
-									</template>
-								</div>
-								<div class="col-sm-3">
-									<template>
-										<el-select v-model="city" filterable placeholder="请选择">
-											<el-option v-for="item in citylist" :key="item.cityId"
-												:label="item.cityName" :value="item.cityName">
-											</el-option>
-										</el-select>
-									</template>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="city" autocomplete="off"/>
 								</div>
 								<div class="col-sm-5">
 									<input type="text" class="form-control" placeholder="请输入详细地址" v-model="address" />
@@ -248,6 +311,8 @@
 	<script src="../js/module/module_pagination.js"></script>
 	<script src="../js/tagsinput.js"></script>
 	<script src="../js/custom/element-ui/index.js"></script>
+
+	
 	<!-- 自定义js -->
 	<script src="../js/content.min.js?v=1.0.0"></script>
 	<script src="../js/custom/common.js"></script>
@@ -258,6 +323,18 @@
 	<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
 	<script src="../js/qiniuyun/qiniuImg2.js"></script>
 	<script src="../js/custom/OfflineShop/add.js"></script>
+
+	<!-- 引入省市地三联插件和数据 -->
+	<script src="../js/citys/cityJson.js"></script>
+	<script src="../js/citys/citySet.js"></script>
+	<script src="../js/citys/Popt.js"></script>
+	<script>
+		$("#city").click(function (e) {
+			SelCity(this, e);
+			console.log("inout", $(this).val(), new Date())
+			console.log($("#city").val().split("-"))
+		});
+	</script>
 
 </body>
 

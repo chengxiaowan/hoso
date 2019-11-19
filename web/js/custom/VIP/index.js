@@ -17,11 +17,15 @@ window.app = new Vue({
     },
     methods: {
         goRoom(item) {
+            const that = this
             let index = layer.open({
                 type: 2,
                 title: "绑定房券",
                 content: "add-rom.html?mrId=" + item.id,
-                area: ["100%", "100%"]
+                area: ["100%", "100%"],
+                end:()=>{
+                    that.getdata(1)
+                }
             })
             console.log(item)
         },
@@ -84,7 +88,7 @@ window.app = new Vue({
         soso() {
             this.list.pageSize = 10
             this.list.pageNum = 1
-            this.getdata()
+            this.getdata(1)
         },
         edit(item) {
             const that = this
@@ -95,7 +99,7 @@ window.app = new Vue({
                 content: `edit.html?id=${item.id}`,
                 area: ["100%", "100%"],
                 end: () => {
-                    that.getdata()
+                    that.getdata(1)
                 }
             })
         },

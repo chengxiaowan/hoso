@@ -15,11 +15,15 @@ window.app = new Vue({
     },
     methods: {
         goAdd() {
+            const that = this
             let inedx = layer.open({
                 type: 2,
                 title: "添加房券",
                 content: "addquan.html?mrId=" + mrId,
-                area: ["100%", "100%"]
+                area: ["100%", "100%"],
+                end:()=>{
+                    that.getdata()
+                }
             })
         },
         getdata(page) {
