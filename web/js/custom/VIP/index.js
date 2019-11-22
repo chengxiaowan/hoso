@@ -17,15 +17,11 @@ window.app = new Vue({
     },
     methods: {
         goRoom(item) {
-            const that = this
             let index = layer.open({
                 type: 2,
                 title: "绑定房券",
                 content: "add-rom.html?mrId=" + item.id,
-                area: ["100%", "100%"],
-                end:()=>{
-                    that.getdata(1)
-                }
+                area: ["100%", "100%"]
             })
             console.log(item)
         },
@@ -48,6 +44,7 @@ window.app = new Vue({
                 success: res => {
                     if (res.error == "00") {
                         this.list = res.result
+                        console.log(res)
                         //分页
                         if (this.pagi) {
                             $('.pagi').pagination('updatePages', this.list.pages)
@@ -77,7 +74,7 @@ window.app = new Vue({
             let index = layer.open({
                 type: 2,
                 title: "新增权益",
-                content: "add.html",
+                content: "../VIPS/add.html",
                 area: ["100%", "100%"],
                 end: () => {
                     that.getdata()
@@ -88,7 +85,7 @@ window.app = new Vue({
         soso() {
             this.list.pageSize = 10
             this.list.pageNum = 1
-            this.getdata(1)
+            this.getdata()
         },
         edit(item) {
             const that = this
@@ -96,10 +93,10 @@ window.app = new Vue({
             let index = layer.open({
                 type: 2,
                 title: "编辑权益",
-                content: `edit.html?id=${item.id}`,
+                content: `../VIPS/edit.html?id=${item.id}&type=${item.type}`,
                 area: ["100%", "100%"],
                 end: () => {
-                    that.getdata(1)
+                    that.getdata()
                 }
             })
         },

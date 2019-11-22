@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>权益新增</title>
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../js/plugins/layui/css/layui.css">
+
+    <style>
+        ::-webkit-input-placeholder {
+            color: #BCBCBC
+        }
+
+        .type-title {
+            width: 57px;
+            height: 20px;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(51, 51, 51, 1);
+        }
+
+        .type-sele {
+            width: 90px;
+            height: 40px;
+            background: rgba(123, 163, 255, 0.1);
+            border-radius: 4px;
+            border: 1px solid rgba(124, 163, 255, 0.1);
+            margin-left: 10px;
+            margin-right: 15px;
+            text-align: center;
+            line-height: 40px;
+        }
+
+        .type-main {
+            display: flex;
+            margin-top: 30px;
+        }
+
+        .type-box {
+            margin-bottom: 30px;
+        }
+
+
+        .main-info {
+            display: flex;
+            margin-bottom: 30px;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(51, 51, 51, 1);
+
+        }
+
+        .form-title {
+            width: 130px;
+            text-align: right;
+            color: #666;
+            line-height: 34px;
+        }
+
+        .form-input {
+            width: 560px;
+            /* background: #07cbc9; */
+            margin-left: 20px;
+        }
+
+        .xing {
+            color: #F98997;
+        }
+
+        .data-box {
+            width: 560px;
+            height: 141px;
+            border: 1px solid rgba(229, 229, 229, 1);
+        }
+
+        .click-box {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #E5E5E5;
+            margin-top: 9px;
+            margin-right: 12px;
+            line-height: 0;
+            vertical-align: top;
+        }
+
+        .date-sele {
+            display: flex;
+            line-height: 34px;
+            margin-left: 12px;
+            margin-top: 9px;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(51, 51, 51, 1);
+        }
+
+        .te-input {
+            width: 40px;
+            margin: 0 5px;
+        }
+
+        .goods {
+            width: 117px;
+            height: 47px;
+            background: rgba(85, 218, 172, 0.1);
+            border: 1px solid rgba(85, 218, 172, 0.2);
+            margin-left: 14px;
+            text-align: center;
+            line-height: 47px;
+            font-size: 12px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(102, 102, 102, 1);
+            position: relative;
+
+
+        }
+
+        .del {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            position: absolute;
+            background: #BFBFBF;
+            top: -10px;
+            right: -10px;
+            display: none;
+        }
+
+        .goods:hover .del {
+            display: block;
+        }
+
+        .m-drool {
+            display: inline-block;
+            width: 87px;
+            margin: 0 5px;
+        }
+
+        .goodsadd {
+            width: 117px;
+            height: 47px;
+            border: 1px solid rgba(159, 159, 159, 0.2);
+            margin-left: 14px;
+            text-align: center;
+            line-height: 47px;
+            font-size: 12px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(186, 186, 186, 1);
+        }
+
+        /* 模态框 */
+        .goodsadd-box {
+            width: 100%;
+            /* display: flex; */
+            /* justify-content: space-around; */
+            overflow: hidden;
+        }
+
+        .shops-box {
+            width: 170px;
+            height: 500px;
+            /*暂定*/
+            /* background: chartreuse; */
+            float: left;
+            border: 1px solid rgba(239, 239, 239, 1);
+        }
+
+        .goodsInfo-box {
+            width: 800px;
+            /* height: 500px; */
+            /* background: cyan; */
+            float: right;
+
+        }
+
+        .shops-name {
+            width: 100%;
+            height: 40px;
+            background: url('../images/bg-s.png');
+            border: 1px solid rgba(239, 239, 239, 1);
+            text-align: center;
+            line-height: 40px;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(51, 51, 51, 1);
+        }
+
+        #updataImage {
+            width: 100px;
+            height: 100px;
+        }
+
+        .imginfo {
+            width: 100px;
+            height: 100px;
+        }
+
+        .imageup {
+            display: inline-block;
+            margin: 0 20px;
+            cursor: pointer;
+            position: relative;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="ibox-content">
+            <!-- 栅格布局 -->
+            <div class="row">
+                <!-- 分类主体 -->
+                <div class="col-sm-12 type-box">
+                    <div class="type-title">权益类型</div>
+                    <div class="type-main">
+                        <div class="type-sele">
+                            卡券
+                        </div>
+                        <div class="type-sele" style="background:rgba(255,84,99,0.1);">
+                            直充
+                        </div>
+                        <div class="type-sele" style="background: #E9F7F7;">
+                            商品
+                        </div>
+                        <div class="type-sele" style="background: #E9F7F7;">
+                            房券
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 box-main">
+                    <div class="type-title" style="margin-bottom: 30px;">基本信息</div>
+                    <div class="main-info">
+                        <div class="form-title"><span class="xing">*</span> 卡券名称：</div>
+                        <div class="form-input">
+                            <input type="text" class="form-control" placeholder="请输入权益名称，1-30个字" v-model="name">
+                        </div>
+                    </div>
+                    <div class="main-info">
+                        <div class="form-title">卡券说明：</div>
+                        <div class="form-input">
+                            <input type="text" class="form-control" placeholder="请输入卡券的简短介绍/说明" v-model="remake">
+
+                        </div>
+                    </div>
+
+                    <div class="main-info">
+                        <div class="form-title"><span class="xing">*</span> 类型：</div>
+                        <div class="form-input">
+                            <select class="form-control" style="width: 146px;" v-model="type">
+                                <option value="1">普通券</option>
+                                <option value="2">打折券</option>
+                                <option value="3">抵用券</option>
+                                <option value="4">满减券</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="main-info" v-if="type == 1">
+                        <div class="form-title"><span class="xing">*</span> 价格（元）：</div>
+                        <div class="form-input">
+                            <input type="text" class="form-control" placeholder="请输入价格，不填则默认免费" v-model="price"
+                                onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" />
+
+                        </div>
+                    </div>
+
+                    <div class="main-info" v-if="type == 2">
+                        <div class="form-title"><span class="xing">*</span> 折扣比例（%）：</div>
+                        <div class="form-input">
+                            <input type="text" class="form-control" placeholder="请输入打折比例" v-model="count"
+                                onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" />
+                        </div>
+                    </div>
+
+                    <div class="main-info" v-if="type == 3">
+                        <div class="form-title"><span class="xing">*</span> 抵用金额（元）：</div>
+                        <div class="form-input">
+                            <input type="text" class="form-control" placeholder="请输入抵用金额" v-model="sum"
+                                onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" />
+                        </div>
+                    </div>
+
+                    <div class="main-info" v-if="type == 4">
+                        <div class="form-title"><span class="xing">*</span> 抵用金额（元）：</div>
+                        <div class="form-input">
+                            当满足 <div class="m-drool"><input type="text" class="form-control" v-model="pay"
+                                    onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" /></div>，减<div
+                                class="m-drool"><input type="text" class="form-control" v-model="dpay"
+                                    onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" /></div>元
+                        </div>
+                    </div>
+
+                    <div class="main-info">
+                        <div class="form-title"><span class="xing">*</span> 数量：</div>
+                        <div class="form-input">
+                            <input type="text" class="form-control" placeholder="请输入可领取数量" v-model="num"
+                                onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" />
+
+                        </div>
+                    </div>
+
+                    <div class="main-info">
+                        <div class="form-title"><span class="xing">*</span> 到期时间：</div>
+                        <div class="form-input">
+                            <div class="data-box">
+                                <div class="date-sele">
+                                    <div class="click-box" @click="sele(1)">
+                                        <img src="../images/true.png" alt="" style="width: 100%;height: 100%;"
+                                            v-if="data_type == '1'">
+                                    </div>
+                                    卡券领取后
+                                    <div class="te-input"><input type="text" class="form-control" v-model="day"
+                                            onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" /></div>
+                                    天到期
+                                </div>
+                                <div class="date-sele">
+                                    <div class="click-box" @click="sele(2)">
+                                        <img src="../images/true.png" alt="" style="width: 100%;height: 100%;"
+                                            v-if="data_type == '2'">
+
+                                    </div>
+                                    卡券将于
+                                    <div class="te-input" style="width: 104px;">
+                                        <input type="text" class="form-control" id="test1" v-model="date">
+                                    </div>
+                                    到期
+                                </div>
+                                <div class="date-sele">
+                                    <div class="click-box" @click="sele(3)">
+                                        <img src="../images/true.png" alt="" style="width: 100%;height: 100%;"
+                                            v-if="data_type == '3'">
+
+                                    </div>
+                                    永不过期
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="main-info">
+                        <div class="form-title"><span class="xing">*</span> 领取方式：</div>
+                        <div class="form-input">
+                            <select name="" id="" class="form-control" style="width: 146px;" v-model="isReceive">
+                                <option value="0">手动领取</option>
+                                <option value="1">自动领取</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="main-info">
+                        <div class="form-title"><span class="xing">*</span> 上/下架状态：</div>
+                        <div class="form-input" style="line-height: 43px;">
+                            <div class="date-sele" style="float: left;margin-top: 0;margin-left: 0;">
+                                <div class="click-box" @click="sell(1)">
+                                    <img src="../images/true.png" alt="" style="width: 100%;height: 100%;"
+                                        v-if="isOnsell == '1'">
+                                </div>
+                                上架
+                            </div>
+                            <div class="date-sele" style="float: left;margin-top: 0;">
+                                <div class="click-box" @click="sell(0)">
+                                    <img src="../images/true.png" alt="" style="width: 100%;height: 100%;"
+                                        v-if="isOnsell == '0'">
+                                </div>
+                                下架
+                            </div>
+                        </div>
+                    </div>
+                    <div class="main-info">
+                        <div class="form-title"><span class="xing">*</span> 卡券主图：</div>
+                        <div class="form-input" id="drool">
+                            <div id="updataImage" class="imageup">
+                                <img id="vivew" src="../images/imgadd.png" class="imginfo">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 type-box">
+                <div class="type-title">商品信息</div>
+                <div class="type-main">
+                    <div class="goods" v-for="item in goods">
+                        {{item.name}}
+                        <div class="del" @click="del(item)">
+                            <img src="../images/close.png" alt=""
+                                style="width: 15px; display: block;margin-left: 3px;margin-top: 3px;">
+                        </div>
+                    </div>
+                    <div class="goodsadd" @click="add()">
+                        <img src="../images/add.png" alt="" style="width: 12px; height: 12px;">
+                        点击添加商品
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12" style="text-align: center;">
+                <button class="btn btn-htz btn-primary" @click="save()">保 存</button>
+
+            </div>
+        </div>
+        <!-- 绑定券码 -->
+        <el-dialog :visible.sync="dialogVisible" width="1031px" title="">
+            <div class="goodsadd-box">
+                <div class="shops-box">
+                    <div class="shops-name" v-for="item in shop_list">{{item.name}}</div>
+                </div>
+                <div class="goodsInfo-box">
+                    <table id="simple-table" class="table table-responsive table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th width="20%">产品名称</th>
+                                <th width="20%">产品编号</th>
+                                <th width="20%">产品价格（元）</th>
+                                <th width="20%">产品面值（元）</th>
+                                <th width="20%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template>
+                                <tr v-for="item in goodsList.list" :key="item.goods_no">
+                                    <td>{{item.name}}</td>
+                                    <td>{{item.goods_no}}</td>
+                                    <td>{{item.price}}</td>
+                                    <td>{{item.official_price}}</td>
+                                    <td class="btn-hide">
+                                        <a href="#" class="btn btn-success" @click="addgoods(item)">加入</a>
+                                    </td>
+                                </tr>
+                            </template>
+                            <tr v-else>
+                                <td colspan="6">
+                                    暂时没有数据
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="float: right;">
+                        <el-pagination background layout="prev, pager, next" :total="goodsList.total"
+                            @current-change="pages">
+                        </el-pagination>
+                    </div>
+                </div>
+            </div>
+        </el-dialog>
+    </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+
+
+<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+<script src="../js/qiniuyun/qiniuVip.js"></script>
+
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/custom/VIPS/edit.js"></script>
+
+</html>
