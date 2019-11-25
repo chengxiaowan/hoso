@@ -73,11 +73,12 @@
                             <em>类型：</em>
                             <select v-model="type" class="form-control" style="width:100px;">
                                 <option value="">全部</option>
-                                <option value="0">房券</option>
-                                <option value="1">普通券</option>
-                                <option value="2">打折券</option>
-                                <option value="3">抵用券</option>
-                                <option value="4">满减券</option>
+                                <option value="住宿">住宿</option>
+                                <option value="旅游出行">旅游出行</option>
+                                <option value="视频音乐">视频音乐</option>
+                                <option value="品牌零售">品牌零售</option>
+                                <option value="知识阅读">知识阅读</option>
+                                <option value="消费生活">消费生活</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -126,8 +127,7 @@
                                         <a href="#" class="btn btn-success" @click="edit(item)">编辑</a>
                                         <!-- <a href="#" class="btn btn-success" @click="goRoom(item)"
                                             v-if="item.type=='住宿'">绑定房券</a> -->
-                                        <a href="#" class="btn btn-success" v-if="item.isOnsell=='0'" @click="changesell(item)">上架</a>
-                                        <a href="#" class="btn btn-success" v-if="item.isOnsell=='1'" @click="changesell(item)">下架</a>
+                                        <a href="#" class="btn btn-success">上架</a>
                                         <a href="#" class="btn btn-success" @click="del(item)" style="color: #D0021B;">删除</a>
                                     </td>
                                 </tr>

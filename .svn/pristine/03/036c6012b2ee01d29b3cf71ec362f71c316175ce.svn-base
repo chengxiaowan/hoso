@@ -126,8 +126,7 @@
                                         <a href="#" class="btn btn-success" @click="edit(item)">编辑</a>
                                         <!-- <a href="#" class="btn btn-success" @click="goRoom(item)"
                                             v-if="item.type=='住宿'">绑定房券</a> -->
-                                        <a href="#" class="btn btn-success" v-if="item.isOnsell=='0'" @click="changesell(item)">上架</a>
-                                        <a href="#" class="btn btn-success" v-if="item.isOnsell=='1'" @click="changesell(item)">下架</a>
+                                        <a href="#" class="btn btn-success">上架</a>
                                         <a href="#" class="btn btn-success" @click="del(item)" style="color: #D0021B;">删除</a>
                                     </td>
                                 </tr>

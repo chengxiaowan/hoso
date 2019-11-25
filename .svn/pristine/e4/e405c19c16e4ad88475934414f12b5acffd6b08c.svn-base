@@ -71,7 +71,6 @@
             width: 560px;
             /* background: #07cbc9; */
             margin-left: 20px;
-            position: relative;
         }
 
         .xing {
@@ -199,8 +198,6 @@
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
             color: rgba(51, 51, 51, 1);
-            background: url('../images/bg-s.png');
-
         }
 
         #updataImage {
@@ -220,15 +217,6 @@
             position: relative;
 
         }
-
-        .xiajian{
-            width: 12px;
-            height: 12px;
-            position: absolute;
-            left: 120px;
-            top: 12px;
-
-        }
     </style>
 </head>
 
@@ -241,41 +229,21 @@
                 <div class="col-sm-12 type-box">
                     <div class="type-title">权益类型</div>
                     <div class="type-main">
-                        <div class="type-sele" style="background: url('../images/1.png');" v-if="pageType == '1'">
-                            <!-- 卡券已激活 -->
+                        <div class="type-sele" style="background: url('../images/1.png');">
+                            <!-- 卡券 -->
                         </div>
-                        <div class="type-sele" style="background: url('../images/1.1.png');" v-if="pageType != '1'" @click="pageType = 1">
-                            <!-- 卡券未激活-->
+                        <div class="type-sele" style="background:url('../images/2.1.png')">
+                            <!-- 直充 -->
                         </div>
-                        
-                        <div class="type-sele" style="background:url('../images/2.1.png')" v-if="pageType != '2'"  @click="pageType = 2">
-                            <!-- 直充未激活 -->
+                        <div class="type-sele" style="background: url('../images/3.1.png')">
+                            <!-- 商品 -->
                         </div>
-
-                        <div class="type-sele" style="background:url('../images/2.png')" v-if="pageType == '2'">
-                            <!-- 直充已激活 -->
-                        </div>
-
-                        <div class="type-sele" style="background: url('../images/3.1.png')" v-if="pageType != '3'"  @click="pageType = 3">
-                            <!-- 商品未激活 -->
-                        </div>
-
-                        <div class="type-sele" style="background: url('../images/3.png')" v-if="pageType == '3'">
-                            <!-- 商品已激活 -->
-                        </div>
-
-                        <div class="type-sele" style="background: url('../images/4.1.png');" v-if="pageType != '4'"  @click="pageType = 4">
-                            <!-- 房券未激活 -->
-                        </div>
-
-                        <div class="type-sele" style="background: url('../images/4.png');" v-if="pageType == '4'">
-                            <!-- 房券已激活 -->
+                        <div class="type-sele" style="background: url('../images/4.1.png');">
+                            <!-- 房券 -->
                         </div>
                     </div>
                 </div>
-
-                <!-- 卡券的格子 有两个 条件渲染 -->
-                <div class="col-sm-12 box-main" v-if="pageType == '1'">
+                <div class="col-sm-12 box-main">
                     <div class="type-title" style="margin-bottom: 30px;">基本信息</div>
                     <div class="main-info">
                         <div class="form-title"><span class="xing">*</span> 卡券名称：</div>
@@ -294,13 +262,12 @@
                     <div class="main-info">
                         <div class="form-title"><span class="xing">*</span> 类型：</div>
                         <div class="form-input">
-                            <select class="form-control" style="width: 146px;padding-left: 46px;" v-model="type">
+                            <select class="form-control" style="width: 146px;" v-model="type">
                                 <option value="1">普通券</option>
                                 <option value="2">打折券</option>
                                 <option value="3">抵用券</option>
                                 <option value="4">满减券</option>
                             </select>
-                           <img src="../images/xiajian.png" class="xiajian" />
                         </div>
                     </div>
 
@@ -322,14 +289,14 @@
                     <div class="main-info" v-if="type == 3">
                         <div class="form-title"><span class="xing">*</span> 抵用金额（元）：</div>
                         <div class="form-input">
-                            <input type="text" class="form-control" placeholder="请输入抵用金额" v-model="sum"  onkeyup="value=value.replace(/[^\d]/g,'')">
+                            <input type="text" class="form-control" placeholder="请输入抵用金额" v-model="sum" ="value=value.replace(/[^\d]/g,'')">
                         </div>
                     </div>
 
                     <div class="main-info" v-if="type == 4">
                         <div class="form-title"><span class="xing">*</span> 抵用金额（元）：</div>
                         <div class="form-input">
-                            当满足 <div class="m-drool"><input type="text" class="form-control" v-model="pay" onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" /></div>元时，减<div
+                            当满足 <div class="m-drool"><input type="text" class="form-control" v-model="pay" onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" /></div>，减<div
                                 class="m-drool"><input type="text" class="form-control" v-model="dpay" onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" /></div>元
                         </div>
                     </div>
@@ -418,7 +385,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12 type-box" v-if="pageType == '1'">
+            <div class="col-sm-12 type-box">
                 <div class="type-title">商品信息</div>
                 <div class="type-main">
                     <div class="goods" v-for="item in goods" :key="item.goods_no">
@@ -433,13 +400,10 @@
                     </div>
                 </div>
             </div>
-
-            
-            <div class="col-sm-12" style="text-align: center;" v-if="pageType == '1'">
+            <div class="col-sm-12" style="text-align: center;">
                 <button class="btn btn-htz btn-primary" @click="save()">保 存</button>
-            </div>
 
-            <!-- 卡券盒子结束  这个是pagetype为1的盒子 v-if="pageType == '1'" -->
+            </div>
         </div>
         <!-- 绑定券码 -->
         <el-dialog :visible.sync="dialogVisible" width="1031px" title="">
@@ -466,7 +430,7 @@
                                     <td>{{item.price}}</td>
                                     <td>{{item.official_price}}</td>
                                     <td class="btn-hide">
-                                        <a class="btn btn-success" @click="addgoods(item)">加入</a>
+                                        <a href="#" class="btn btn-success" @click="addgoods(item)">加入</a>
                                     </td>
                                 </tr>
                             </template>
@@ -499,24 +463,14 @@
 <!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
 <script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
 <script src="../js/qiniuyun/qiniuVip.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+
 
 <!-- 自定义js -->
 <script src="../js/content.min.js?v=1.0.0"></script>
 <script src="../js/custom/common.js"></script>
-<script src="../js/custom/VIPS/add.js"></script>
+<script src="../js/custom/VIPS/edit.js"></script>
 
 
-<script src="../js/plugins/layui/layui.js"></script>
-<script>
-    layui.use('laydate', function () {
-        var laydate = layui.laydate;
-
-        //执行一个laydate实例
-        laydate.render({
-            elem: '#test1', //指定元素
-            min:"0",
-        });
-    });
-</script>
 
 </html>

@@ -3,9 +3,7 @@ let config = {
     role: localStorage.userRole,
     //接口地址写在下面 使用api_url变量拼接
     api_list: api_url + "/memRights/list",
-    api_del: api_url + '/shops/deleteTable',
-    api_save: api_url + '/memRights/update',        //上下架
-
+    api_del: api_url + '/shops/deleteTable'
 }
 
 window.app = new Vue({
@@ -128,71 +126,7 @@ window.app = new Vue({
                         }
                     }
                 })
-            }).catch(() => { });
-        },
-
-        //上下架
-        changesell(item) {
-            console.log(item)
-            const that = this
-            if (item.isOnsell == "1") {
-                that.$confirm('您确认下架该权益么？', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    $.ajax({
-                        url: config.api_save,
-                        type: "POST",
-                        data: {
-                            id: item.id,
-                            isOnsell: "0",
-                            // type: "100",
-
-                        },
-                        success: res => {
-                            if (res.error == "00") {
-                                that.$message({
-                                    type: 'success',
-                                    message: '操作成功'
-                                });
-                                that.getdata(1)
-                            } else {
-                                that.$message.error(res.msg)
-                            }
-                        }
-                    })
-                }).catch(() => {
-                    that.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
-            }
-
-            if (item.isOnsell == "0") {
-                $.ajax({
-                    url: config.api_save,
-                    type: "POST",
-                    data: {
-                        id: item.id,
-                        isOnsell: "1",
-                        // type: "100",
-                    },
-                    success: res => {
-                        if (res.error == "00") {
-                            that.$message({
-                                type: 'success',
-                                message: '操作成功'
-                            });
-                            that.getdata(1)
-
-                        } else {
-                            that.$message.error(res.msg)
-                        }
-                    }
-                })
-            }
+            }).catch(() => {});
         }
     },
     mounted() {

@@ -8,6 +8,7 @@ var config = {
 window.app = new Vue({
     el: "#app",
     data: {
+        pageType:"1",
         info: "OK",
         type: "1",           //卡券类型 ex：普通券 折扣券 满减券 抵用券等
         data_type: "",       //到期时间的类型 
@@ -64,6 +65,67 @@ window.app = new Vue({
 
         //保存数据
         save() {
+            //开始判断数据是否录入
+            if(this.name == ""){
+                layer.msg("请输入权益名称")
+                return
+            }
+
+            if(this.price == "" && this.type == "1"){
+                layer.msg("请输入价格")
+                return
+            }
+
+            if(this.count == "" && this.type == "2"){
+                layer.msg("请输入折扣比例")
+                return
+            }
+
+            if(this.type == "3" && this.sum == ""){
+                layer.msg("请输入抵用金额")
+                return
+            }
+
+            if(this.type == "4" && this.pay == ""){
+                layer.msg("请输入满足金额")
+                return
+            }
+
+            if(this.type == "4" && this.pay == ""){
+                layer.msg("请输入优惠金额")
+                return
+            }
+
+            if(this.num == ""){
+                layer.msg("请输入优惠券数量")
+                return
+            }
+
+            if(this.data_type == ""){
+                layer.msg("请选择到期时间")
+                return
+            }
+
+            if(this.data_type == "1" && this.day == ""){
+                layer.msg("请输入到期天数")
+                return
+
+            }
+
+            if(this.data_type == "2" && $("#test1").val() == ""){
+                layer.msg("请选择到期日期")
+                return
+            }
+
+            if($("#vivew").attr("src") == "../images/imgadd.png"){
+                layer.msg("请上传权益图片")
+                return
+            }
+
+
+
+
+
             //整理数据
             const that = this;
             let parmas = {

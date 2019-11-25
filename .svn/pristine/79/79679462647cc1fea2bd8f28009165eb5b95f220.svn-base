@@ -1,22 +1,13 @@
 var config = {
-    api_save: api_url + '/memRights/update',
+    api_save: api_url + '/memRights/add',
     api_shop: api_url + '/memRights/getFacilitatorList',
     api_goods: api_url + "/memRights/getGoodsByFacilitatorName",
-    api_token: api_url + '/qiniu/getUpToken',
-    api_info: api_url + '/memRights/detail'
+    api_token: api_url + '/qiniu/getUpToken'
 }
-
-let id = parameter().id
-let type = parameter().type
-
-console.log(id)
-console.log(type)
-
 
 window.app = new Vue({
     el: "#app",
     data: {
-        pageType: "1",
         info: "OK",
         type: "1",           //卡券类型 ex：普通券 折扣券 满减券 抵用券等
         data_type: "",       //到期时间的类型 
@@ -73,72 +64,6 @@ window.app = new Vue({
 
         //保存数据
         save() {
-            //开始判断数据是否录入
-            if (this.name == "") {
-                layer.msg("请输入权益名称")
-                return
-            }
-
-            if (this.price == "" && this.type == "1") {
-                layer.msg("请输入价格")
-                return
-            }
-
-            if (this.count == "" && this.type == "2") {
-                layer.msg("请输入折扣比例")
-                return
-            }
-
-            if (this.type == "3" && this.sum == "") {
-                layer.msg("请输入抵用金额")
-                return
-            }
-
-            if (this.type == "4" && this.pay == "") {
-                layer.msg("请输入满足金额")
-                return
-            }
-
-            if (this.type == "4" && this.pay == "") {
-                layer.msg("请输入优惠金额")
-                return
-            }
-
-            if (this.num == "") {
-                layer.msg("请输入优惠券数量")
-                return
-            }
-
-            if (this.data_type == "") {
-                layer.msg("请选择到期时间")
-            }
-
-            if (this.data_type == "1" && this.day == "") {
-                layer.msg("请输入到期天数")
-            }
-
-            if (this.data_type == "2" && $("#test1").val() == "") {
-                layer.msg("请选择到期日期")
-                return
-            }
-
-            if ($("#vivew").attr("src") == "../images/imgadd.png") {
-                layer.msg("请上传权益图片")
-                return
-            }
-
-
-
-
-
-
-
-
-
-
-
-
-
             //整理数据
             const that = this;
             let parmas = {
@@ -149,7 +74,6 @@ window.app = new Vue({
                 remark: that.remake,
                 countUsed: that.num,
                 isReceive: that.isReceive,
-                id: id
             }
 
             if (that.data_type == 1) {
@@ -191,14 +115,14 @@ window.app = new Vue({
                 rtIds.push(i.goods_no)
             })
             parmas.rtIds = rtIds.join(",")
-            // console.log(parmas)
+            console.log(parmas)
             $.ajax({
                 url: config.api_save,
                 type: "POST",
                 data: parmas,
                 success: res => {
                     if (res.error == "00") {
-                        layer.msg("修改成功")
+                        layer.msg("保存成功")
                         setTimeout(() => {
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                             parent.layer.close(index); //再执行关闭
@@ -276,64 +200,6 @@ window.app = new Vue({
             })
         },
 
-        //获取信息
-        getinfo() {
-            const that = this
-            $.ajax({
-                url: config.api_info,
-                type: "GET",
-                data: {
-                    id: id,
-                    type: type,
-                },
-                success: res => {
-                    if (res.error == "00") {
-                        that.name = res.result.name
-                        that.remake = res.result.remark
-                        that.type = type
-                        that.isOnsell = res.result.isOnsell
-                        that.isReceive = res.result.isReceive
-                        that.price = res.result.price
-                        that.goods = res.result.cqGoodsList
-                        that.num = res.result.countUsed
-
-                        //type2渲染不上去
-                        that.count = res.result.discount
-                        // $("#count").val(res.result.discount)
-
-                        that.sum = res.result.price
-                        that.pay = res.result.fullPrice
-                        that.dpay = res.result.reducePrice
-
-
-                        //为了处理这个没有辨识的时间字段花了一个钟头，真的是烦躁
-                        let drool = res.result.time.split("-")
-                        if (drool.length >= 3) {
-                            that.data_type = "2"
-                            // $("#test1").val(res.result.time)
-                            that.date = res.result.time
-                            // window.laydate.render({
-                            //     elem: '#test1',
-                            //     value: res.result.time //必须遵循format参数设定的格式
-                            // });
-                        } else if (drool[0] == "永不过期") {
-                            that.data_type = "3"
-
-                        } else if (drool.length <= 3) {
-                            that.data_type = "1"
-                            that.day = res.result.time
-                        }
-
-                        $("#vivew").attr("src", res.result.pic)
-
-
-
-
-                    }
-                }
-            })
-        },
-        //删除
         del(item) {
             const that = this
             that.$confirm(`确认从权益移除${item.name}么？`, '提示', {
@@ -356,19 +222,7 @@ window.app = new Vue({
         }
     },
     mounted() {
-        const that = this
         console.log("Vue初始化成功")
         this.getToken()
-        this.getinfo()
-        layui.use('laydate', function () {
-            var laydate = layui.laydate;
-
-            //执行一个laydate实例
-            laydate.render({
-                elem: '#test1', //指定元素
-                value: that.date,
-                min: "0"
-            });
-        });
     },
 })

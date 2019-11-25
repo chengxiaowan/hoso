@@ -33,7 +33,7 @@
             height: 40px;
             background: rgba(123, 163, 255, 0.1);
             border-radius: 4px;
-            border: 1px solid rgba(124, 163, 255, 0.1);
+            /* border: 1px solid rgba(124, 163, 255, 0.1); */
             margin-left: 10px;
             margin-right: 15px;
             text-align: center;
@@ -71,6 +71,8 @@
             width: 560px;
             /* background: #07cbc9; */
             margin-left: 20px;
+            position: relative;
+
         }
 
         .xing {
@@ -105,12 +107,13 @@
         }
 
         .te-input {
-            width: 40px;
+            width: 50px;
             margin: 0 5px;
         }
 
         .goods {
-            width: 117px;
+            /* width: 117px; */
+            padding: 0 12px;
             height: 47px;
             background: rgba(85, 218, 172, 0.1);
             border: 1px solid rgba(85, 218, 172, 0.2);
@@ -122,7 +125,6 @@
             font-weight: 400;
             color: rgba(102, 102, 102, 1);
             position: relative;
-
 
         }
 
@@ -150,7 +152,7 @@
         .goodsadd {
             width: 117px;
             height: 47px;
-            border: 1px solid rgba(159, 159, 159, 0.2);
+            /* border: 1px solid rgba(159, 159, 159, 0.2); */
             margin-left: 14px;
             text-align: center;
             line-height: 47px;
@@ -158,6 +160,8 @@
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
             color: rgba(186, 186, 186, 1);
+            background: url('../images/addgoods.png');
+            cursor: pointer;
         }
 
         /* 模态框 */
@@ -188,7 +192,7 @@
         .shops-name {
             width: 100%;
             height: 40px;
-            background: url('../images/bg-s.png');
+            background: rgba(255, 255, 255, 1);
             border: 1px solid rgba(239, 239, 239, 1);
             text-align: center;
             line-height: 40px;
@@ -196,6 +200,7 @@
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
             color: rgba(51, 51, 51, 1);
+            background: url('../images/bg-s.png');
         }
 
         #updataImage {
@@ -215,6 +220,15 @@
             position: relative;
 
         }
+
+        .xiajian {
+            width: 12px;
+            height: 12px;
+            position: absolute;
+            left: 120px;
+            top: 12px;
+
+        }
     </style>
 </head>
 
@@ -227,21 +241,45 @@
                 <div class="col-sm-12 type-box">
                     <div class="type-title">权益类型</div>
                     <div class="type-main">
-                        <div class="type-sele">
-                            卡券
+                        <div class="type-sele" style="background: url('../images/1.png');" v-if="pageType == '1'">
+                            <!-- 卡券已激活 -->
                         </div>
-                        <div class="type-sele" style="background:rgba(255,84,99,0.1);">
-                            直充
+                        <div class="type-sele" style="background: url('../images/1.1.png');" v-if="pageType != '1'"
+                            @click="pageType = 1">
+                            <!-- 卡券未激活-->
                         </div>
-                        <div class="type-sele" style="background: #E9F7F7;">
-                            商品
+
+                        <div class="type-sele" style="background:url('../images/2.1.png')" v-if="pageType != '2'"
+                            @click="pageType = 2">
+                            <!-- 直充未激活 -->
                         </div>
-                        <div class="type-sele" style="background: #E9F7F7;">
-                            房券
+
+                        <div class="type-sele" style="background:url('../images/2.png')" v-if="pageType == '2'">
+                            <!-- 直充已激活 -->
+                        </div>
+
+                        <div class="type-sele" style="background: url('../images/3.1.png')" v-if="pageType != '3'"
+                            @click="pageType = 3">
+                            <!-- 商品未激活 -->
+                        </div>
+
+                        <div class="type-sele" style="background: url('../images/3.png')" v-if="pageType == '3'">
+                            <!-- 商品已激活 -->
+                        </div>
+
+                        <div class="type-sele" style="background: url('../images/4.1.png');" v-if="pageType != '4'"
+                            @click="pageType = 4">
+                            <!-- 房券未激活 -->
+                        </div>
+
+                        <div class="type-sele" style="background: url('../images/4.png');" v-if="pageType == '4'">
+                            <!-- 房券已激活 -->
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-12 box-main">
+
+                <!-- 卡券盒子 主题 商品 保存按钮 -->
+                <div class="col-sm-12 box-main" v-if="pageType == '1'">
                     <div class="type-title" style="margin-bottom: 30px;">基本信息</div>
                     <div class="main-info">
                         <div class="form-title"><span class="xing">*</span> 卡券名称：</div>
@@ -260,12 +298,14 @@
                     <div class="main-info">
                         <div class="form-title"><span class="xing">*</span> 类型：</div>
                         <div class="form-input">
-                            <select class="form-control" style="width: 146px;" v-model="type">
+                            <select class="form-control" style="width: 146px;padding-left: 46px;" v-model="type">
                                 <option value="1">普通券</option>
                                 <option value="2">打折券</option>
                                 <option value="3">抵用券</option>
                                 <option value="4">满减券</option>
                             </select>
+                            <img src="../images/xiajian.png" class="xiajian" />
+
                         </div>
                     </div>
 
@@ -281,7 +321,7 @@
                     <div class="main-info" v-if="type == 2">
                         <div class="form-title"><span class="xing">*</span> 折扣比例（%）：</div>
                         <div class="form-input">
-                            <input type="text" class="form-control" placeholder="请输入打折比例" v-model="count"
+                            <input type="text" class="form-control" placeholder="请输入打折比例" v-model="count" id="count"
                                 onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" />
                         </div>
                     </div>
@@ -290,7 +330,7 @@
                         <div class="form-title"><span class="xing">*</span> 抵用金额（元）：</div>
                         <div class="form-input">
                             <input type="text" class="form-control" placeholder="请输入抵用金额" v-model="sum"
-                                onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" />
+                                onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');">
                         </div>
                     </div>
 
@@ -298,7 +338,7 @@
                         <div class="form-title"><span class="xing">*</span> 抵用金额（元）：</div>
                         <div class="form-input">
                             当满足 <div class="m-drool"><input type="text" class="form-control" v-model="pay"
-                                    onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" /></div>，减<div
+                                    onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" /></div>元时，减<div
                                 class="m-drool"><input type="text" class="form-control" v-model="dpay"
                                     onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" /></div>元
                         </div>
@@ -335,7 +375,8 @@
                                     </div>
                                     卡券将于
                                     <div class="te-input" style="width: 104px;">
-                                        <input type="text" class="form-control" id="test1" v-model="date">
+                                        <input type="text" class="form-control" id="test1" autocomplete="off"
+                                            v-model="date">
                                     </div>
                                     到期
                                 </div>
@@ -390,10 +431,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12 type-box">
+            <div class="col-sm-12 type-box" v-if="pageType == '1'">
                 <div class="type-title">商品信息</div>
                 <div class="type-main">
-                    <div class="goods" v-for="item in goods">
+                    <div class="goods" v-for="item in goods" :key="item.goods_no">
                         {{item.name}}
                         <div class="del" @click="del(item)">
                             <img src="../images/close.png" alt=""
@@ -401,15 +442,17 @@
                         </div>
                     </div>
                     <div class="goodsadd" @click="add()">
-                        <img src="../images/add.png" alt="" style="width: 12px; height: 12px;">
-                        点击添加商品
+                        <!-- <img src="../images/add.png" alt="" style="width: 12px; height: 12px;"> -->
+                        <!-- 点击添加商品 -->
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12" style="text-align: center;">
+            <div class="col-sm-12" style="text-align: center;" v-if="pageType == '1'">
                 <button class="btn btn-htz btn-primary" @click="save()">保 存</button>
 
             </div>
+
+            <!-- 卡券盒子结束 -->
         </div>
         <!-- 绑定券码 -->
         <el-dialog :visible.sync="dialogVisible" width="1031px" title="">
@@ -436,7 +479,7 @@
                                     <td>{{item.price}}</td>
                                     <td>{{item.official_price}}</td>
                                     <td class="btn-hide">
-                                        <a href="#" class="btn btn-success" @click="addgoods(item)">加入</a>
+                                        <a class="btn btn-success" @click="addgoods(item)">加入</a>
                                     </td>
                                 </tr>
                             </template>
@@ -465,16 +508,18 @@
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
 <script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
-<script src="../js/plugins/layui/layui.js"></script>
-
 
 <!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
 <script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
 <script src="../js/qiniuyun/qiniuVip.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+
 
 <!-- 自定义js -->
 <script src="../js/content.min.js?v=1.0.0"></script>
 <script src="../js/custom/common.js"></script>
 <script src="../js/custom/VIPS/edit.js"></script>
+
+
 
 </html>
