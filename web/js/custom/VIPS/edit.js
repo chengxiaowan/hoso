@@ -3,7 +3,9 @@ var config = {
     api_shop: api_url + '/memRights/getFacilitatorList',
     api_goods: api_url + "/memRights/getGoodsByFacilitatorName",
     api_token: api_url + '/qiniu/getUpToken',
-    api_info: api_url + '/memRights/detail'
+    api_info: api_url + '/memRights/detail',
+    api_hotel: api_url + '/shops/dataList'
+
 }
 
 let id = parameter().id
@@ -40,7 +42,14 @@ window.app = new Vue({
         goods: [],              //加入的商品
         goodsno: "",             //加入的商品序列号
         tokenMessage: "",        //token
-
+        //添加新字段
+        com: "1",                 //模板
+        //需求变更 添加字段模板
+        shopType: "1",
+        hotel: {},
+        shopsList: [],           //排除的店铺
+        keywords:"",
+        pageNo2 :"1",
 
     },
     methods: {
@@ -126,19 +135,6 @@ window.app = new Vue({
                 layer.msg("请上传权益图片")
                 return
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
             //整理数据
             const that = this;
             let parmas = {
@@ -149,7 +145,9 @@ window.app = new Vue({
                 remark: that.remake,
                 countUsed: that.num,
                 isReceive: that.isReceive,
-                id: id
+                id: id,
+                model:that.com
+
             }
 
             if (that.data_type == 1) {
@@ -186,12 +184,39 @@ window.app = new Vue({
             }
 
             //整理商品列表
-            let rtIds = []
+            let goodBox = [0];
+            let roomBox = [1];
             that.goods.forEach(i => {
-                rtIds.push(i.goods_no)
+                console.log(i)
+                if (i.type == undefined || i.type == "0") {
+                    if (i.relateId) {
+                        goodBox.push(i.relateId)
+                    }
+
+                    if (i.goods_no) {
+                        goodBox.push(i.goods_no)
+                    }
+                }
+
+                if (i.type == "1") {
+                    if (i.relateId) {
+                        roomBox.push(i.relateId)
+                    }
+
+                    if (i.room_no) {
+                        roomBox.push(i.room_no)
+                    }
+                }
             })
-            parmas.rtIds = rtIds.join(",")
-            // console.log(parmas)
+            let drool = []
+            drool.push(goodBox.join(","))
+            drool.push(roomBox.join(","))
+            parmas.goods = JSON.stringify(drool);
+            // console.log(goodBox)
+            // console.log(roomBox)
+            console.log(drool)
+
+            console.log(parmas)
             $.ajax({
                 url: config.api_save,
                 type: "POST",
@@ -325,6 +350,7 @@ window.app = new Vue({
                         }
 
                         $("#vivew").attr("src", res.result.pic)
+                        that.com = res.result.model
 
 
 
@@ -353,7 +379,57 @@ window.app = new Vue({
                 }
             }).catch(() => {
             });
-        }
+        },
+        teb(index) {
+            this.shopType = index;
+            if (index == '1') {
+                this.getGoods()
+            }
+
+            if (index == '2') {
+                this.getHotel()
+            }
+        },
+
+        getHotel() {
+            const that = this
+            $.ajax({
+                url: config.api_hotel,
+                type: "POST",
+                data: {
+                    pageNo: that.pageNo2,
+                    keywords: that.keywords,
+                    goodsNos: that.shopsList.join(",") || ""
+
+                },
+                success: res => {
+                    if (res.error == "00") {
+                        that.hotel = res.result
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                }
+            })
+        },
+        addShops(item) {
+            console.log(item)
+            let room = {}
+            room.name = item.shopsName
+            room.room_no = Number(item.shopsId)
+            room.type = 1
+            this.goods.push(room)
+            this.shopsList.push(item.shopsId)
+            console.log(this.goods)
+            this.getHotel()
+
+        },
+
+        //分页
+        pages2(e) {
+            console.log(e)
+            this.pageNo2= e;
+            this.getHotel()
+        },
     },
     mounted() {
         const that = this

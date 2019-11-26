@@ -127,7 +127,7 @@
 
         }
 
-        .del{
+        .del {
             width: 20px;
             height: 20px;
             border-radius: 50%;
@@ -138,7 +138,7 @@
             display: none;
         }
 
-        .goods:hover .del{
+        .goods:hover .del {
             display: block;
         }
 
@@ -199,8 +199,6 @@
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
             color: rgba(51, 51, 51, 1);
-            background: url('../images/bg-s.png');
-
         }
 
         #updataImage {
@@ -221,13 +219,22 @@
 
         }
 
-        .xiajian{
+        .xiajian {
             width: 12px;
             height: 12px;
             position: absolute;
             left: 120px;
             top: 12px;
 
+        }
+
+        .soso{
+            display: flex;
+        }
+
+        .soso-input{
+            width: 267px;
+            margin-right: 18px;
         }
     </style>
 </head>
@@ -244,11 +251,13 @@
                         <div class="type-sele" style="background: url('../images/1.png');" v-if="pageType == '1'">
                             <!-- 卡券已激活 -->
                         </div>
-                        <div class="type-sele" style="background: url('../images/1.1.png');" v-if="pageType != '1'" @click="pageType = 1">
+                        <div class="type-sele" style="background: url('../images/1.1.png');" v-if="pageType != '1'"
+                            @click="pageType = 1">
                             <!-- 卡券未激活-->
                         </div>
-                        
-                        <div class="type-sele" style="background:url('../images/2.1.png')" v-if="pageType != '2'"  @click="pageType = 2">
+
+                        <div class="type-sele" style="background:url('../images/2.1.png')" v-if="pageType != '2'"
+                            @click="pageType = 2">
                             <!-- 直充未激活 -->
                         </div>
 
@@ -256,7 +265,8 @@
                             <!-- 直充已激活 -->
                         </div>
 
-                        <div class="type-sele" style="background: url('../images/3.1.png')" v-if="pageType != '3'"  @click="pageType = 3">
+                        <div class="type-sele" style="background: url('../images/3.1.png')" v-if="pageType != '3'"
+                            @click="pageType = 3">
                             <!-- 商品未激活 -->
                         </div>
 
@@ -264,7 +274,8 @@
                             <!-- 商品已激活 -->
                         </div>
 
-                        <div class="type-sele" style="background: url('../images/4.1.png');" v-if="pageType != '4'"  @click="pageType = 4">
+                        <div class="type-sele" style="background: url('../images/4.1.png');" v-if="pageType != '4'"
+                            @click="pageType = 4">
                             <!-- 房券未激活 -->
                         </div>
 
@@ -300,14 +311,15 @@
                                 <option value="3">抵用券</option>
                                 <option value="4">满减券</option>
                             </select>
-                           <img src="../images/xiajian.png" class="xiajian" />
+                            <img src="../images/xiajian.png" class="xiajian" />
                         </div>
                     </div>
 
                     <div class="main-info" v-if="type == 1">
                         <div class="form-title"><span class="xing">*</span> 价格（元）：</div>
                         <div class="form-input">
-                            <input type="text" class="form-control" placeholder="请输入价格，不填则默认免费" v-model="price" onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" />
+                            <input type="text" class="form-control" placeholder="请输入价格，不填则默认免费" v-model="price"
+                                onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" />
 
                         </div>
                     </div>
@@ -315,29 +327,48 @@
                     <div class="main-info" v-if="type == 2">
                         <div class="form-title"><span class="xing">*</span> 折扣比例（%）：</div>
                         <div class="form-input">
-                            <input type="text" class="form-control" placeholder="请输入打折比例" v-model="count" id="count" onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" />
+                            <input type="text" class="form-control" placeholder="请输入打折比例" v-model="count" id="count"
+                                onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" />
                         </div>
                     </div>
 
                     <div class="main-info" v-if="type == 3">
                         <div class="form-title"><span class="xing">*</span> 抵用金额（元）：</div>
                         <div class="form-input">
-                            <input type="text" class="form-control" placeholder="请输入抵用金额" v-model="sum"  onkeyup="value=value.replace(/[^\d]/g,'')">
+                            <input type="text" class="form-control" placeholder="请输入抵用金额" v-model="sum"
+                                onkeyup="value=value.replace(/[^\d]/g,'')">
                         </div>
                     </div>
 
                     <div class="main-info" v-if="type == 4">
                         <div class="form-title"><span class="xing">*</span> 抵用金额（元）：</div>
                         <div class="form-input">
-                            当满足 <div class="m-drool"><input type="text" class="form-control" v-model="pay" onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" /></div>元时，减<div
-                                class="m-drool"><input type="text" class="form-control" v-model="dpay" onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" /></div>元
+                            当满足 <div class="m-drool"><input type="text" class="form-control" v-model="pay"
+                                    onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" /></div>元时，减<div
+                                class="m-drool"><input type="text" class="form-control" v-model="dpay"
+                                    onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" /></div>元
+                        </div>
+                    </div>
+
+                    <div class="main-info">
+                        <div class="form-title"><span class="xing">*</span> 模板：</div>
+                        <div class="form-input">
+                            <select class="form-control" style="width: 184px;padding-left: 40px;" v-model="com">
+                                <option value="1">通用模板</option>
+                                <option value="2">酒店会员模板</option>
+                                <option value="3">多商品单选模板</option>
+                                <option value="4">多商品多选模板</option>
+                                <option value="5">酒店会员卡模板</option>
+                            </select>
+                            <img src="../images/xiajian.png" class="xiajian" style="left:160px;" />
                         </div>
                     </div>
 
                     <div class="main-info">
                         <div class="form-title"><span class="xing">*</span> 数量：</div>
                         <div class="form-input">
-                            <input type="text" class="form-control" placeholder="请输入可领取数量" v-model="num" onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" />
+                            <input type="text" class="form-control" placeholder="请输入可领取数量" v-model="num"
+                                onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" />
 
                         </div>
                     </div>
@@ -352,7 +383,8 @@
                                             v-if="data_type == '1'">
                                     </div>
                                     卡券领取后
-                                    <div class="te-input"><input type="text" class="form-control" v-model="day" onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" /></div>
+                                    <div class="te-input"><input type="text" class="form-control" v-model="day"
+                                            onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" /></div>
                                     天到期
                                 </div>
                                 <div class="date-sele">
@@ -424,7 +456,8 @@
                     <div class="goods" v-for="item in goods" :key="item.goods_no">
                         {{item.name}}
                         <div class="del" @click="del(item)">
-                            <img src="../images/close.png" alt="" style="width: 15px; display: block;margin-left: 3px;margin-top: 3px;">
+                            <img src="../images/close.png" alt=""
+                                style="width: 15px; display: block;margin-left: 3px;margin-top: 3px;">
                         </div>
                     </div>
                     <div class="goodsadd" @click="add()">
@@ -434,7 +467,7 @@
                 </div>
             </div>
 
-            
+
             <div class="col-sm-12" style="text-align: center;" v-if="pageType == '1'">
                 <button class="btn btn-htz btn-primary" @click="save()">保 存</button>
             </div>
@@ -445,9 +478,14 @@
         <el-dialog :visible.sync="dialogVisible" width="1031px" title="">
             <div class="goodsadd-box">
                 <div class="shops-box">
-                    <div class="shops-name" v-for="item in shop_list">{{item.name}}</div>
+                    <div class="shops-name" style="background: url('../images/bg-s.png');" v-if="shopType == '1'">橙券
+                    </div>
+                    <div class="shops-name" v-if="shopType != '1'" @click="teb(1)">橙券</div>
+                    <div class="shops-name" style="background: url('../images/bg-s.png');" v-if="shopType == '2'">第三方酒店
+                    </div>
+                    <div class="shops-name" v-if="shopType != '2'" @click="teb(2)">第三方酒店</div>
                 </div>
-                <div class="goodsInfo-box">
+                <div class="goodsInfo-box" v-if="shopType == '1'">
                     <table id="simple-table" class="table table-responsive table-bordered table-hover">
                         <thead>
                             <tr>
@@ -483,6 +521,40 @@
                         </el-pagination>
                     </div>
                 </div>
+                <div class="goodsInfo-box" v-if="shopType == '2'">
+                    <div class="soso" style="margin-bottom: 12px;">
+                        <div class="soso-input">
+                            <input type="text" class="form-control" placeholder="请输入酒店名称" v-model="keywords">
+                        </div>
+                        <button class="btn btn-htz btn-primary" @click="getHotel()">搜 索</button>
+                    </div>
+                    <table class="table table-responsive table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th width="40%">酒店名称</th>
+                                <th width="10%">类型</th>
+                                <th width="40%">酒店地址</th>
+                                <th width="10%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in hotel.list">
+                                <td>{{item.shopsName}}</td>
+                                <td v-if="item.shopsType == '1'">酒店</td>
+                                <td v-if="item.shopsType == '2'">民宿</td>
+                                <td>{{item.province}} {{item.city}} {{item.area}} {{item.address}}</td>
+                                <td class="btn-hide">
+                                    <a class="btn btn-success" @click="addShops(item)">加入</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="float: right;">
+                        <el-pagination background layout="prev, pager, next" :total="hotel.total"
+                            @current-change="pages2" :current-page.sync="pageNo2">
+                        </el-pagination>
+                    </div>
+                </div>
             </div>
         </el-dialog>
     </div>
@@ -514,7 +586,7 @@
         //执行一个laydate实例
         laydate.render({
             elem: '#test1', //指定元素
-            min:"0",
+            min: "0",
         });
     });
 </script>

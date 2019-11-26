@@ -2,7 +2,8 @@ var config = {
     api_save: api_url + '/memRights/add',
     api_shop: api_url + '/memRights/getFacilitatorList',
     api_goods: api_url + "/memRights/getGoodsByFacilitatorName",
-    api_token: api_url + '/qiniu/getUpToken'
+    api_token: api_url + '/qiniu/getUpToken',
+    api_hotel: api_url + '/shops/dataList'
 }
 
 window.app = new Vue({
@@ -29,9 +30,17 @@ window.app = new Vue({
         shop_list: {},        //供应商列表
         goodsList: {},         //商品列表
         page: "1",            //页码
-        goods: [],              //加入的商品
+        goods: [],              //加入的商品和大列表
         goodsno: "",             //加入的商品序列号
         tokenMessage: "",        //token
+        //需求变更 添加字段模板
+        com:"1",
+        shopType:"1",
+        hotel:{},
+        shopsList:[],           //排除的店铺
+        keywords:"",
+        pageNo2:"1"
+
 
 
     },
@@ -136,6 +145,7 @@ window.app = new Vue({
                 remark: that.remake,
                 countUsed: that.num,
                 isReceive: that.isReceive,
+                model:that.com
             }
 
             if (that.data_type == 1) {
@@ -172,11 +182,27 @@ window.app = new Vue({
             }
 
             //整理商品列表
-            let rtIds = []
+            let goodsbox = [0]
+            let roomList = [1]
+
             that.goods.forEach(i => {
-                rtIds.push(i.goods_no)
+                if(i.goods_no){
+                    goodsbox.push(i.goods_no)
+                }
+                if(i.room_no){
+                    roomList.push(i.room_no)
+                }
             })
-            parmas.rtIds = rtIds.join(",")
+
+            let drool = []
+            drool.push(goodsbox.join(","))
+            drool.push(roomList.join(","))
+            // console.log(c)
+            // console.log(goodsbox)
+            // console.log(roomList)
+
+
+            parmas.goods = JSON.stringify(drool);
             console.log(parmas)
             $.ajax({
                 url: config.api_save,
@@ -236,8 +262,16 @@ window.app = new Vue({
             this.getGoods()
         },
 
+        //分页
+        pages2(e) {
+            console.log(e)
+            this.hotel.pageNum = e;
+            this.getHotel()
+        },
+
         //本地添加
         addgoods(item) {
+            console.log(item)
             this.goods.push(item);
             let rtIds = []
             this.goods.forEach(i => {
@@ -281,6 +315,49 @@ window.app = new Vue({
                 }
             }).catch(() => {
             });
+        },
+        teb(index){
+            this.shopType = index;
+            if(index == '1'){
+                this.getGoods()
+            }
+
+            if(index == '2'){
+                this.getHotel()
+            }
+        },
+
+        getHotel(){
+            const that = this
+            $.ajax({
+                url:config.api_hotel,
+                type:"POST",
+                data:{
+                    pageNo: that.hotel.pageNum,
+                    keywords:that.keywords,
+                    goodsNos:that.shopsList.join(",") || ""
+
+                },
+                success:res=>{
+                   if(res.error == "00"){
+                       that.hotel = res.result
+                   }else{
+                       layer.msg(res.msg)
+                   }
+                }
+            })
+        },
+        addShops(item){
+            console.log(item)
+            let room = {}
+            room.name = item.shopsName
+            room.room_no = Number(item.shopsId)
+            room.type = 2
+            this.goods.push(room)
+            this.shopsList.push(item.shopsId)
+            console.log(this.goods)
+            this.getHotel()
+            
         }
     },
     mounted() {
