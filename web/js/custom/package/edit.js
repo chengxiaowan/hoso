@@ -66,6 +66,8 @@ window.app = new Vue({
                     this.tokenMessage = res;
                     uploaderReady(res)
                     uploaderReady2(res)
+                    uploadInit(res)
+
                 }
             })
         },
@@ -295,7 +297,7 @@ window.app = new Vue({
                     name: that.name,
                     pic: $("#vivew").attr("src"),
                     isOnsell: that.isOnsell,
-                    remark: that.editor.getContent(),
+                    remark: window.editor.txt.html(),
                     type: that.type,
                     topPic: $("#vivew2").attr("src"),
                     priceUsed: priceUsed.join(","),
@@ -304,8 +306,6 @@ window.app = new Vue({
                     yearPrice: that.price1 || 0,
                     price: that.price || 0,
                     dataList: JSON.stringify(that.package),
-                    // date: Date.parse(that.date) || "",
-                    // time: that.date,
                     firstPrice: that.firstPrice || 0,
                     mfirstPrice: that.mfirstPrice || 0,
                     qfirstPrice: that.qfirstPrice || 0,
@@ -314,7 +314,7 @@ window.app = new Vue({
 
                 }
                 // console.log(parmars)
-                if (this.once) {
+                if (this.onece) {
                     parmars.time = this.date
                 }
 
@@ -342,7 +342,7 @@ window.app = new Vue({
                     name: that.name,
                     pic: $("#vivew").attr("src"),
                     isOnsell: that.isOnsell,
-                    remark: that.editor.getContent(),
+                    remark: window.editor.txt.html(),
                     type: that.type,
                     topPic: $("#vivew2").attr("src"),
                     priceUsed: priceUsed.join(","),
@@ -359,7 +359,7 @@ window.app = new Vue({
 
                 }
 
-                if (this.once) {
+                if (this.onece) {
                     parmars.time = this.date
                 }
 
@@ -537,33 +537,16 @@ window.app = new Vue({
                                 that.qfirstPrice = res.result.qfirstPrice
                             }
                         });
-                        that.date = that.formatDateTime(res.result.time)
-                        // that.date = res.result.time 
-                        console.log(that.data)
-                        that.description = res.result.remark
-                        // that.editor.setContent(res.result.remark)
+                        that.date = res.result.time
+                        // that.description = res.result.remark
+                        window.editor.txt.html(res.result.remark)
+
 
                     } else {
                         layer.msg(res.msg)
                     }
                 }
             })
-        },
-        //格式化日期
-        formatDateTime(inputTime) {
-            var date = new Date(inputTime);
-            var y = date.getFullYear();
-            var m = date.getMonth() + 1;
-            m = m < 10 ? ('0' + m) : m;
-            var d = date.getDate();
-            d = d < 10 ? ('0' + d) : d;
-            var h = date.getHours();
-            h = h < 10 ? ('0' + h) : h;
-            var minute = date.getMinutes();
-            var second = date.getSeconds();
-            minute = minute < 10 ? ('0' + minute) : minute;
-            second = second < 10 ? ('0' + second) : second;
-            return y + '-' + m + '-' + d
         },
         edit(item) {
             const that = this
@@ -613,19 +596,10 @@ window.app = new Vue({
         that.getToken()
         // that.getdata(1)
         that.getinfos()
-
-
-        that.editor = UE.getEditor('container', {
-            initialFrameHeight: 350,
-            // initialContent: "请填写详细描述",
-        });
-        that.editor.addListener("ready", function () {
-            // editor准备好之后才可以使用
-            that.editor.setContent(that.description);
-        });
-        // this.editor.UE.ready(function() {
-        //     ue.setContent(this.editorInfo);
-        // });
+        var E = window.wangEditor
+        window.editor = new E('#demo')
+        window.editor.customConfig.qiniu = true
+        window.editor.create()
 
         console.log(this)
 

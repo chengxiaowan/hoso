@@ -234,6 +234,12 @@ window.app = new Vue({
                                 that.provinceId = that.provinceList[i].id;
                             }
                         }
+                        let drool =[];
+                        drool.push(res.result.province)
+                        drool.push(res.result.city)
+                        drool.push(res.result.area)
+                        $("#city").val(drool.join('-'))
+                        console.log(drool)
                         that.getCity(that.provinceId,that.city)
                         $("#vivew1").attr('src',res.result.pic);
                         var attachInfo = res.result.attachInfo;
@@ -287,16 +293,15 @@ window.app = new Vue({
             that.clearDate($("#info5"), arr)
             that.clearDate($("#info6"), arr)
             // console.log(shopsBrandPicList)
-            console.log(arr)
+            // console.log(arr)
             that.imagePath = $('#vivew1').attr('src');
-            console.log(that.imagePath)
+            let info = $("#city").val().split("-")
+            // console.log(that.imagePath)
             if(that.role == '系统人员' && that.headerId =='') {
                 layer.msg('请选择负责人')
             }else if(that.name == ''){
                 layer.msg('请输入名称')
-            }else if( that.provinceId == ''){
-                layer.msg('请选择省份')
-            }else if( that.cityId == ''){
+            }else if( $("#city").val() == ''){
                 layer.msg('请选择城市')
             }else if( that.address == ''){
                 layer.msg('请输入详细地址')
@@ -314,8 +319,9 @@ window.app = new Vue({
                         id: id,
                         userId: that.userId,
                         name: that.name,
-                        province: that.province,
-                        city: that.city,
+                        province: info[0],
+                        city:info[1],
+                        area:info[2],
                         address: that.address,
                         link: that.phone,
                         pic: $('#vivew1').attr('src'),

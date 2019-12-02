@@ -198,17 +198,18 @@ window.app = new Vue({
             that.clearDate($("#info6"), arr)
             that.clearDate($("#info7"), arr)
             // console.log(shopsBrandPicList)
-            console.log(arr)
+            // console.log(arr)
             that.imagePath = $('#vivew1').attr('src');
-            console.log(that.imagePath)
+            // console.log(that.imagePath)
+
+            //获取省市地选择器
+            let info = $("#city").val().split("-")
             if (that.role == '系统人员' && that.headId == '') {
                 layer.msg('请选择负责人')
             } else if (that.name == '') {
                 layer.msg('请输入名称')
-            } else if (that.provinceId == '') {
-                layer.msg('请选择省份')
-            } else if (that.cityId == '') {
-                layer.msg('请选择城市')
+            } else if ($("#city").val() == '') {
+                layer.msg('请选择地区')
             } else if (that.address == '') {
                 layer.msg('请输入详细地址')
             } else if (that.imagePath == '') {
@@ -224,8 +225,9 @@ window.app = new Vue({
                     data: {
                         userId: that.userId,
                         name: that.name,
-                        province: that.province,
-                        city: that.city,
+                        province: info[0],
+                        city: info[1],
+                        area: info[2],
                         address: that.address,
                         link: that.phone,
                         pic: $('#vivew1').attr('src'),

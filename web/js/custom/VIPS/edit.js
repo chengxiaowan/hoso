@@ -48,8 +48,9 @@ window.app = new Vue({
         shopType: "1",
         hotel: {},
         shopsList: [],           //排除的店铺
-        keywords:"",
-        pageNo2 :"1",
+        keywords: "",
+        pageNo2: "1",
+        keywordss:""
 
     },
     methods: {
@@ -146,7 +147,7 @@ window.app = new Vue({
                 countUsed: that.num,
                 isReceive: that.isReceive,
                 id: id,
-                model:that.com
+                model: that.com
 
             }
 
@@ -209,13 +210,15 @@ window.app = new Vue({
                 }
             })
             let drool = []
-            drool.push(goodBox.join(","))
-            drool.push(roomBox.join(","))
-            parmas.goods = JSON.stringify(drool);
-            // console.log(goodBox)
-            // console.log(roomBox)
-            console.log(drool)
+            if (goodBox.length != 1) {
+                drool.push(goodBox.join(","))
+            }
+            if (roomBox.length != 1) {
 
+                drool.push(roomBox.join(","))
+            }
+            parmas.goods = JSON.stringify(drool);
+            console.log(drool)
             console.log(parmas)
             $.ajax({
                 url: config.api_save,
@@ -257,7 +260,8 @@ window.app = new Vue({
                 data: {
                     name: "橙券",
                     pageNo: that.pageNo,
-                    goodsNos: that.goodsno
+                    goodsNos: that.goodsno,
+                    keywords:that.keywordss,
 
                 },
                 success: res => {
@@ -297,6 +301,8 @@ window.app = new Vue({
                 success: res => {
                     that.tokenMessage = res;
                     uploaderReady(res)
+                    uploadInit(res)
+
                 }
             })
         },
@@ -314,7 +320,7 @@ window.app = new Vue({
                 success: res => {
                     if (res.error == "00") {
                         that.name = res.result.name
-                        that.remake = res.result.remark
+                        // that.remake = res.result.remark
                         that.type = type
                         that.isOnsell = res.result.isOnsell
                         that.isReceive = res.result.isReceive
@@ -351,6 +357,7 @@ window.app = new Vue({
 
                         $("#vivew").attr("src", res.result.pic)
                         that.com = res.result.model
+                        window.editor.txt.html(res.result.remark)
 
 
 
@@ -427,7 +434,7 @@ window.app = new Vue({
         //分页
         pages2(e) {
             console.log(e)
-            this.pageNo2= e;
+            this.pageNo2 = e;
             this.getHotel()
         },
     },
@@ -446,5 +453,11 @@ window.app = new Vue({
                 min: "0"
             });
         });
+        var E = window.wangEditor
+        window.editor = new E('#demo')
+        window.editor.customConfig.qiniu = true
+        window.editor.create()
+        // console.log(window)
+        this.getToken()
     },
 })

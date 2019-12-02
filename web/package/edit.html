@@ -280,6 +280,20 @@
             margin-left: 10px;
             color: #333;
         }
+
+        
+        .el-picker-panel {
+            z-index: 99999!important;
+
+        }
+        .el-date-picker {
+            z-index: 99999!important;
+
+        }
+        .el-popper{
+            z-index: 99999!important;
+
+        }
     </style>
 </head>
 
@@ -420,7 +434,7 @@
                 <em>*</em>&nbsp;&nbsp;&nbsp;到期时间：
                 <div class="drool" style="width: 144px;margin-left: 20px;">
                     <el-date-picker v-model="date" type="date" placeholder="选择日期" format="yyyy 年 MM 月 dd 日"
-                        value-format="yyyy-MM-dd">
+                        value-format="yyyy-MM-dd" @change="console.log(date)">
                     </el-date-picker>
                 </div>
             </div>
@@ -474,8 +488,7 @@
             </div> -->
             <!-- 图文描述 start -->
             <div class="description">
-                <script id="container" name="detailDescribe" type="text/plain" v-model="description">
-                </script>
+                <div id="demo" style="width: 808px;"></div>
             </div>
             <!-- 图文描述 end -->
         </div>
@@ -634,10 +647,6 @@
 <script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
 <script src="../js/custom/common.js"></script>
 <script src="../js/plugins/layui/layui.js"></script>
-<script src="../js/plugins/utf8-jsp/third-party/zeroclipboard/ZeroClipboard.js"></script>
-<script src="../js/plugins/utf8-jsp/ueditor.config.js"></script>
-<script src="../js/plugins/utf8-jsp/uemy.js"></script>
-<script src="../js/plugins/utf8-jsp/lang/zh-cn/zh-cn.js"></script>
 <script src="../js/vue.js"></script>
 <script src="../js/module/module_pagination.js"></script>
 <script src="../js/tagsinput.js"></script>
@@ -645,13 +654,14 @@
 <script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
 <script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
 <script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
+<script src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
+
 <!-- 引入组件库 -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
 <script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
-<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
-<!-- <script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script> -->
 <script src="../js/qiniuyun/qiniu-package.js"></script>
+<script src="../js/qiniuyun/qiniu_editor.js"></script>
 <script src="../js/custom/package/edit.js"></script>
 
 </html>

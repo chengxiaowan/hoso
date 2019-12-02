@@ -78,7 +78,7 @@
 								<td>{{item.shopsType=='1'?'酒店':'民宿'}}</td>
 								<!--<td>{{item.labels}}</td>-->
 								<!--<td>{{item.businessHours}}</td>-->
-								<td>{{item.address}}</td>
+								<td>{{item.province}}  {{item.city}}{{item.area}}  {{item.address}}</td>
 								<td :class="{'htz-red':item.status=='2'}">{{item.status=='0'?'待审核':(item.status=='1'?'审核通过':'审核失败')}}</td>
 								<!--<td>{{item.createTime}}</td>-->
 								<td class="btn-hide">

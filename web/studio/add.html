@@ -321,6 +321,84 @@
         text-align: center;
         background: rgba(0, 0, 0, 0.8);
     }
+
+    ._citys {
+			width: 450px;
+			display: inline-block;
+			border: 2px solid #eee;
+			padding: 5px;
+			position: relative;
+			background: #fff;
+		}
+
+		._citys span {
+			color: #56b4f8;
+			height: 15px;
+			width: 15px;
+			line-height: 15px;
+			text-align: center;
+			border-radius: 3px;
+			position: absolute;
+			right: 10px;
+			top: 10px;
+			border: 1px solid #56b4f8;
+			cursor: pointer;
+		}
+
+		._citys0 {
+			width: 100%;
+			height: 34px;
+			display: inline-block;
+			border-bottom: 2px solid #56b4f8;
+			padding: 0;
+			margin: 0;
+		}
+
+		._citys0 li {
+			display: inline-block;
+			line-height: 34px;
+			font-size: 15px;
+			color: #888;
+			width: 80px;
+			text-align: center;
+			cursor: pointer;
+		}
+
+		.citySel {
+			background-color: #56b4f8;
+			color: #fff !important;
+		}
+
+		._citys1 {
+			width: 100%;
+			display: inline-block;
+			padding: 10px 0;
+		}
+
+		._citys1 a {
+			width: 83px;
+			height: 35px;
+			display: inline-block;
+			background-color: #f5f5f5;
+			color: #666;
+			margin-left: 6px;
+			margin-top: 3px;
+			line-height: 35px;
+			text-align: center;
+			cursor: pointer;
+			font-size: 13px;
+			overflow: hidden;
+		}
+
+		._citys1 a:hover {
+			color: #fff;
+			background-color: #56b4f8;
+		}
+
+		.AreaS {
+			background-color: #56b4f8 !important;
+			color: #fff !important;
+		}
 </style>
 
 <body class="gray-bg">
@@ -352,28 +430,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-6">
                 <div class="form-template form-group">
-                    <label>省：</label>
-                    <template>
-                        <el-select v-model="provinceId" clearable filterable placeholder="请选择省" @change="selectProvince">
-                            <el-option v-for="item in provinceList" :key="item.id" :label="item.text" :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </template>
-                    <em class="dot"></em>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="form-template form-group">
-                    <label>市：</label>
-                    <template>
-                        <el-select v-model="cityId" clearable filterable placeholder="请选择市" @change="selectCity">
-                            <el-option v-for="item in cityList" :key="item.id" :label="item.text" :value="item.id">
-                            </el-option>
-                        </el-select>
-                        <em class="dot"></em>
-                    </template>
+                    <label>地区：</label>
+                    <input type="text" class="form-control" id="city" autocomplete="off"/>
                 </div>
             </div>
         </div>
@@ -476,6 +536,18 @@
 <script src="../js/qiniuyun/qiniuImg-bands.js"></script>
 <script src="../js/jquery.h5upload.js"></script>
 <script src="../js/custom/studio/add.js"></script>
+
+<!-- 引入省市地三联插件和数据 -->
+<script src="../js/citys/cityJson.js"></script>
+<script src="../js/citys/citySet.js"></script>
+<script src="../js/citys/Popt.js"></script>
+<script>
+    $("#city").click(function (e) {
+        SelCity(this, e);
+        console.log("inout", $(this).val(), new Date())
+        console.log($("#city").val().split("-"))
+    });
+</script>
 </body>
 
 </html>

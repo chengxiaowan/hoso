@@ -228,14 +228,27 @@
 
         }
 
-        .soso{
+        .soso {
             display: flex;
         }
 
-        .soso-input{
+        .soso-input {
             width: 267px;
             margin-right: 18px;
         }
+
+        .el-dialog {
+            z-index: 99999 !important;
+        }
+
+        .el-dialog__wrapper {
+            z-index: 99999 !important;
+        }
+
+        .el-message-box__wrapper{
+            z-index: 99999!important;
+        }
+
     </style>
 </head>
 
@@ -294,18 +307,12 @@
                             <input type="text" class="form-control" placeholder="请输入权益名称，1-30个字" v-model="name">
                         </div>
                     </div>
-                    <div class="main-info">
-                        <div class="form-title">卡券说明：</div>
-                        <div class="form-input">
-                            <input type="text" class="form-control" placeholder="请输入卡券的简短介绍/说明" v-model="remake">
-
-                        </div>
-                    </div>
 
                     <div class="main-info">
                         <div class="form-title"><span class="xing">*</span> 类型：</div>
                         <div class="form-input">
-                            <select class="form-control" style="width: 146px;padding-left: 46px;" v-model="type">
+                            <select class="form-control" style="width: 146px;padding-left: 46px; z-index: 999;"
+                                v-model="type">
                                 <option value="1">普通券</option>
                                 <option value="2">打折券</option>
                                 <option value="3">抵用券</option>
@@ -325,10 +332,13 @@
                     </div>
 
                     <div class="main-info" v-if="type == 2">
-                        <div class="form-title"><span class="xing">*</span> 折扣比例（%）：</div>
+                        <div class="form-title"><span class="xing">*</span> 打折力度：</div>
                         <div class="form-input">
-                            <input type="text" class="form-control" placeholder="请输入打折比例" v-model="count" id="count"
-                                onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" />
+                            <div style="width: 146px;">
+                                <input type="text" class="form-control" placeholder="请输入打折比例" v-model="count" id="count"
+                                    onkeyup="this.value= this.value.match(/\d+(\.\d{0,2})?/) ? this.value.match(/\d+(\.\d{0,1})?/)[0] : ''" />
+                            </div>
+                            <span style="position: absolute;left: 156px;top:8px;"> 折</span>
                         </div>
                     </div>
 
@@ -353,12 +363,12 @@
                     <div class="main-info">
                         <div class="form-title"><span class="xing">*</span> 模板：</div>
                         <div class="form-input">
-                            <select class="form-control" style="width: 184px;padding-left: 40px;" v-model="com">
+                            <select class="form-control" style="width: 184px;padding-left: 40px;z-index: 999;"
+                                v-model="com">
                                 <option value="1">通用模板</option>
-                                <option value="2">酒店会员模板</option>
+                                <option value="2">酒店会员卡模板</option>
                                 <option value="3">多商品单选模板</option>
                                 <option value="4">多商品多选模板</option>
-                                <option value="5">酒店会员卡模板</option>
                             </select>
                             <img src="../images/xiajian.png" class="xiajian" style="left:160px;" />
                         </div>
@@ -395,7 +405,7 @@
                                     </div>
                                     卡券将于
                                     <div class="te-input" style="width: 104px;">
-                                        <input type="text" class="form-control" id="test1">
+                                        <input type="text" class="form-control" id="test1" autocomplete="off">
                                     </div>
                                     到期
                                 </div>
@@ -448,6 +458,12 @@
                             </div>
                         </div>
                     </div>
+                    <div class="main-info">
+                        <div class="form-title"><span class="xing">*</span> 卡券说明：</div>
+                        <div class="form-input" style="width: 700px;">
+                            <div class="editor" id="demo"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-sm-12 type-box" v-if="pageType == '1'">
@@ -470,6 +486,7 @@
 
             <div class="col-sm-12" style="text-align: center;" v-if="pageType == '1'">
                 <button class="btn btn-htz btn-primary" @click="save()">保 存</button>
+                <!-- <button class="btn btn-htz btn-primary" @click="test()">读富文本</button> -->
             </div>
 
             <!-- 卡券盒子结束  这个是pagetype为1的盒子 v-if="pageType == '1'" -->
@@ -486,6 +503,12 @@
                     <div class="shops-name" v-if="shopType != '2'" @click="teb(2)">第三方酒店</div>
                 </div>
                 <div class="goodsInfo-box" v-if="shopType == '1'">
+                    <div class="soso" style="margin-bottom: 12px;">
+                        <div class="soso-input">
+                            <input type="text" class="form-control" placeholder="请输入商品名称" v-model="keywordss">
+                        </div>
+                        <button class="btn btn-htz btn-primary" @click="getGoods()">搜 索</button>
+                    </div>
                     <table id="simple-table" class="table table-responsive table-bordered table-hover">
                         <thead>
                             <tr>
@@ -567,6 +590,7 @@
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
 <script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+<script src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
 
 <!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
 <script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>

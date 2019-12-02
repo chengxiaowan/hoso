@@ -60,6 +60,7 @@ window.app = new Vue({
                     this.tokenMessage = res;
                     uploaderReady(res)
                     uploaderReady2(res)
+                    uploadInit(res)
                 }
             })
         },
@@ -291,7 +292,7 @@ window.app = new Vue({
                     name: that.name,
                     pic: $("#vivew").attr("src"),
                     isOnsell: that.isOnsell,
-                    remark: that.editor.getContent(),
+                    remark: window.editor.txt.html(),
                     type: that.type,
                     topPic: $("#vivew2").attr("src"),
                     priceUsed: priceUsed.join(","),
@@ -309,9 +310,11 @@ window.app = new Vue({
                 }
 
 
-                if (this.once) {
+                if (this.onece) {
                     parmars.time = this.date
+
                 }
+                console.log(parmars)
 
                 $.ajax({
                     type: "post",
@@ -336,7 +339,7 @@ window.app = new Vue({
                     name: that.name,
                     pic: $("#vivew").attr("src"),
                     isOnsell: that.isOnsell,
-                    remark: that.editor.getContent(),
+                    remark: window.editor.txt.html(),
                     type: that.type,
                     topPic: $("#vivew2").attr("src"),
                     priceUsed: priceUsed.join(","),
@@ -352,11 +355,10 @@ window.app = new Vue({
 
                 }
 
-                if (this.once) {
+                if (this.onece) {
                     parmars.time = this.date
                 }
-                console.log(res)
-
+                console.log(parmars)
                 $.ajax({
                     url: config.api_save,
                     type: "post",
@@ -459,36 +461,26 @@ window.app = new Vue({
 
             });
         },
-        //格式化日期
-        formatDateTime(inputTime) {
-            var date = new Date(inputTime);
-            var y = date.getFullYear();
-            var m = date.getMonth() + 1;
-            m = m < 10 ? ('0' + m) : m;
-            var d = date.getDate();
-            d = d < 10 ? ('0' + d) : d;
-            var h = date.getHours();
-            h = h < 10 ? ('0' + h) : h;
-            var minute = date.getMinutes();
-            var second = date.getSeconds();
-            minute = minute < 10 ? ('0' + minute) : minute;
-            second = second < 10 ? ('0' + second) : second;
-            return y + '-' + m + '-' + d
-        },
-
+        
     },
     mounted() {
         console.log("Vue挂载成功")
+        var E = window.wangEditor
+        window.editor = new E('#demo')
+        window.editor.customConfig.qiniu = true
+        window.editor.create()
         this.getToken()
         // this.getdata(1)
 
-        this.editor = UE.getEditor('container', {
-            initialFrameHeight: 350,
-            // initialContent: "请填写详细描述",
-        });
-        this.editor.addListener("ready", function () {
-            // editor准备好之后才可以使用
-            this.editor.setContent(this.editorInfo);
-        });
+        // this.editor = UE.getEditor('container', {
+        //     initialFrameHeight: 350,
+        //     // initialContent: "请填写详细描述",
+        // });
+        // this.editor.addListener("ready", function () {
+        //     // editor准备好之后才可以使用
+        //     this.editor.setContent(this.editorInfo);
+        // });
+
+        
     },
 })

@@ -9,7 +9,7 @@ var config = {
 window.app = new Vue({
     el: "#app",
     data: {
-        pageType:"1",
+        pageType: "1",
         info: "OK",
         type: "1",           //卡券类型 ex：普通券 折扣券 满减券 抵用券等
         data_type: "",       //到期时间的类型 
@@ -34,12 +34,13 @@ window.app = new Vue({
         goodsno: "",             //加入的商品序列号
         tokenMessage: "",        //token
         //需求变更 添加字段模板
-        com:"1",
-        shopType:"1",
-        hotel:{},
-        shopsList:[],           //排除的店铺
-        keywords:"",
-        pageNo2:"1"
+        com: "1",
+        shopType: "1",
+        hotel: {},
+        shopsList: [],           //排除的店铺
+        keywords: "",
+        pageNo2: "1",
+        keywordss:"",
 
 
 
@@ -75,58 +76,58 @@ window.app = new Vue({
         //保存数据
         save() {
             //开始判断数据是否录入
-            if(this.name == ""){
+            if (this.name == "") {
                 layer.msg("请输入权益名称")
                 return
             }
 
-            if(this.price == "" && this.type == "1"){
+            if (this.price == "" && this.type == "1") {
                 layer.msg("请输入价格")
                 return
             }
 
-            if(this.count == "" && this.type == "2"){
+            if (this.count == "" && this.type == "2") {
                 layer.msg("请输入折扣比例")
                 return
             }
 
-            if(this.type == "3" && this.sum == ""){
+            if (this.type == "3" && this.sum == "") {
                 layer.msg("请输入抵用金额")
                 return
             }
 
-            if(this.type == "4" && this.pay == ""){
+            if (this.type == "4" && this.pay == "") {
                 layer.msg("请输入满足金额")
                 return
             }
 
-            if(this.type == "4" && this.pay == ""){
+            if (this.type == "4" && this.pay == "") {
                 layer.msg("请输入优惠金额")
                 return
             }
 
-            if(this.num == ""){
+            if (this.num == "") {
                 layer.msg("请输入优惠券数量")
                 return
             }
 
-            if(this.data_type == ""){
+            if (this.data_type == "") {
                 layer.msg("请选择到期时间")
                 return
             }
 
-            if(this.data_type == "1" && this.day == ""){
+            if (this.data_type == "1" && this.day == "") {
                 layer.msg("请输入到期天数")
                 return
 
             }
 
-            if(this.data_type == "2" && $("#test1").val() == ""){
+            if (this.data_type == "2" && $("#test1").val() == "") {
                 layer.msg("请选择到期日期")
                 return
             }
 
-            if($("#vivew").attr("src") == "../images/imgadd.png"){
+            if ($("#vivew").attr("src") == "../images/imgadd.png") {
                 layer.msg("请上传权益图片")
                 return
             }
@@ -142,10 +143,10 @@ window.app = new Vue({
                 pic: $("#vivew").attr("src"),
                 type: that.type,
                 isOnsell: that.isOnsell,
-                remark: that.remake,
+                remark: window.editor.txt.html(),
                 countUsed: that.num,
                 isReceive: that.isReceive,
-                model:that.com
+                model: that.com
             }
 
             if (that.data_type == 1) {
@@ -186,17 +187,22 @@ window.app = new Vue({
             let roomList = [1]
 
             that.goods.forEach(i => {
-                if(i.goods_no){
+                if (i.goods_no) {
                     goodsbox.push(i.goods_no)
                 }
-                if(i.room_no){
+                if (i.room_no) {
                     roomList.push(i.room_no)
                 }
             })
 
             let drool = []
-            drool.push(goodsbox.join(","))
-            drool.push(roomList.join(","))
+            if (goodsbox.length != 1) {
+                drool.push(goodsbox.join(","))
+            }
+            if (roomList.length != 1) {
+
+                drool.push(roomList.join(","))
+            }
             // console.log(c)
             // console.log(goodsbox)
             // console.log(roomList)
@@ -244,7 +250,8 @@ window.app = new Vue({
                 data: {
                     name: "橙券",
                     pageNo: that.pageNo,
-                    goodsNos: that.goodsno
+                    goodsNos: that.goodsno,
+                    keywords:that.keywordss
 
                 },
                 success: res => {
@@ -292,6 +299,7 @@ window.app = new Vue({
                 success: res => {
                     that.tokenMessage = res;
                     uploaderReady(res)
+                    uploadInit(res)
                 }
             })
         },
@@ -316,38 +324,38 @@ window.app = new Vue({
             }).catch(() => {
             });
         },
-        teb(index){
+        teb(index) {
             this.shopType = index;
-            if(index == '1'){
+            if (index == '1') {
                 this.getGoods()
             }
 
-            if(index == '2'){
+            if (index == '2') {
                 this.getHotel()
             }
         },
 
-        getHotel(){
+        getHotel() {
             const that = this
             $.ajax({
-                url:config.api_hotel,
-                type:"POST",
-                data:{
+                url: config.api_hotel,
+                type: "POST",
+                data: {
                     pageNo: that.hotel.pageNum,
-                    keywords:that.keywords,
-                    goodsNos:that.shopsList.join(",") || ""
+                    keywords: that.keywords,
+                    goodsNos: that.shopsList.join(",") || ""
 
                 },
-                success:res=>{
-                   if(res.error == "00"){
-                       that.hotel = res.result
-                   }else{
-                       layer.msg(res.msg)
-                   }
+                success: res => {
+                    if (res.error == "00") {
+                        that.hotel = res.result
+                    } else {
+                        layer.msg(res.msg)
+                    }
                 }
             })
         },
-        addShops(item){
+        addShops(item) {
             console.log(item)
             let room = {}
             room.name = item.shopsName
@@ -357,11 +365,20 @@ window.app = new Vue({
             this.shopsList.push(item.shopsId)
             console.log(this.goods)
             this.getHotel()
-            
+
+        },
+        test() {
+            console.log(window.editor.txt.html())
         }
     },
     mounted() {
         console.log("Vue初始化成功")
+        var E = window.wangEditor
+        window.editor = new E('#demo')
+        window.editor.customConfig.qiniu = true
+        window.editor.create()
+        // console.log(window)
         this.getToken()
+
     },
 })

@@ -174,6 +174,11 @@ window.app = new Vue({
                         that.studio = res.result.photoStudioId;
                         that.profit = res.result.achieve;
                         console.log(res)
+                        let drool = [];
+                        drool.push(res.result.province)
+                        drool.push(res.result.city)
+                        drool.push(res.result.area)
+                        $("#city").val(drool.join('-'))
                         for (var i in that.provinceList) {
                             if (that.provinceList[i].text == that.province) {
                                 that.provinceId = that.provinceList[i].id;
@@ -332,16 +337,16 @@ window.app = new Vue({
             that.clearDate($("#info6"), arr)
             that.clearDate($("#info7"), arr)
             console.log(arr)
+            let info = $("#city").val().split("-")
+
             if (that.name == '') {
                 layer.msg('请输入名称');
             } else if (that.style == '') {
                 layer.msg('请输入进行方式');
             } else if (that.studio == '') {
                 layer.msg('请选择工作室');
-            } else if (that.provinceId == '') {
-                layer.msg('请选择省');
-            } else if (that.cityId == '') {
-                layer.msg('请选择市');
+            } else if ($("#city").val() == '') {
+                layer.msg('请选择地区');
             } else if (that.type == '') {
                 layer.msg('请选择类型');
             } else if (that.imagePath == '../images/imgadd_head.jpg') {
@@ -357,8 +362,9 @@ window.app = new Vue({
                         title: that.name,
                         type: that.type,
                         studio: that.studio,
-                        province: that.province,
-                        city: that.city,
+                        province: info[0],
+                        city: info[1],
+                        area: info[2],
                         describes: that.summary,
                         remark: that.remark,
                         content: that.style,
