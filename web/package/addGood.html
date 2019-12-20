@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SKU</title>
+</head>
+
+<body>
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>绑定权益</title>
+        <link rel="stylesheet" href="../css/public.css">
+        <link rel="stylesheet" href="../css/bootstrap.min.css">
+        <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+        <link rel="stylesheet" href="../css/animate.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+        <link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+        <link rel="stylesheet" href="../js/plugins/utf8-jsp/themes/default/css/ueditor.css">
+        <link rel="stylesheet" href="../css/style.css">
+        <link rel="stylesheet" href="../css/layout.css">
+        <link rel="stylesheet" href="../css/htz.css" />
+        <style>
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+            <div class="ibox-content">
+                <table id="simple-table" class="table table-responsive table-bordered table-hover"
+                    style="margin-top: 10px;">
+                    <thead>
+                        <tr>
+                            <th width="20%">名称</th>
+                            <th width="20%">图片</th>
+                            <th width="10%">颜色</th>
+                            <th width="10%">型号</th>
+                            <th width="10%">采购价</th>
+                            <th width="10%">原价</th>
+                            <th width="10%">售价</th>
+                            <th width="10%">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in list.list" :key="item.goodsSkuId">
+                            <td>{{item.skuName}}</td>
+                            <td>
+                                <img :src="item.mainImgPath" alt="" style="width: 35px;height: 35px;">
+                            </td>
+                            <td>{{item.colorName}}</td>
+                            <td>{{item.skuName}}</td>
+                            <td>{{item.purchasePrice}}</td>
+                            <td>{{item.oldPrice}}</td>
+                            <td>{{item.price}}</td>
+                            <td class="btn-hide">
+                                <a @click="add(item)">加 入</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <el-pagination background layout="prev, pager, next" :total="list.total" @current-change="page">
+                </el-pagination>
+            </div>
+        </div>
+    </body>
+    <script src="../js/jquery-2.1.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/plugins/layer/layer.min.js"></script>
+    <script src="../js/jquery.navScroll.js"></script>
+    <script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+    <script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
+    <script src="../js/custom/common.js"></script>
+    <script src="../js/plugins/layui/layui.js"></script>
+
+    <!-- Vue+axios -->
+    <script src="../js/vue.js"></script>
+    <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.min.js"></script>
+
+
+    <script src="../js/module/module_pagination.js"></script>
+    <script src="../js/tagsinput.js"></script>
+    <script src="../js/content.min.js?v=1.0.0"></script>
+    <script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+    <script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+    <script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
+
+    <script src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
+
+
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+    <script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+    <script src="../js/qiniuyun/qiniu-package.js"></script>
+    <script src="../js/qiniuyun/qiniu_editor.js"></script>
+    <!-- <script src="../js/custom/package/addc.js"></script> -->
+    <script>
+        const config = {
+            api_sku: api_url + '/goodsSku/dataList'
+        }
+
+        window.app = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    list: [],
+                    info: {},
+                    pageNo:"1",
+                }
+            },
+            methods: {
+                getList() {
+                    $.ajax({
+                        url: config.api_sku,
+                        type: "get",
+                        data: {
+                            goodsId: this.info.id,
+                            pageNo:this.pageNo
+                        },
+                        success: res => {
+                            console.log(res)
+                            if (res.error == "00") {
+                                this.list = res.result
+                            }
+                        }
+                    })
+                },
+
+                page(e){
+                    this.pageNo = e
+                    getList()
+                },
+                add(item){
+                    sessionStorage.setItem("info",JSON.stringify(item));
+                    window.location.href="addgoods.html"
+                }
+            },
+            mounted() {
+                this.info = JSON.parse(sessionStorage.getItem("item"))
+                this.getList()
+            },
+        })
+    </script>
+
+    </html>
+
+</body>
+
+</html>

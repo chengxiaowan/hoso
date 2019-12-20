@@ -301,8 +301,6 @@ window.app = new Vue({
                     yearPrice: that.price1 || 0,
                     price: that.price || 0,
                     dataList: JSON.stringify(that.package),
-                    // time: Date.parse(that.date) || "",
-                    // time: that.date || "",
                     firstPrice: that.firstPrice || 0,
                     mfirstPrice: that.mfirstPrice || 0,
                     qfirstPrice: that.qfirstPrice || 0,

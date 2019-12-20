@@ -52,7 +52,9 @@ window.app = new Vue({
             const that = this;
             that.dialogVisible = true
             that.getShops()
+            console.log("cufa1")
             that.getGoods()
+            console.log("cufa")
         },
 
         //日期盒子的选择
@@ -106,26 +108,26 @@ window.app = new Vue({
                 return
             }
 
-            if (this.num == "") {
-                layer.msg("请输入优惠券数量")
-                return
-            }
+            // if (this.num == "") {
+            //     layer.msg("请输入优惠券数量")
+            //     return
+            // }
 
-            if (this.data_type == "") {
-                layer.msg("请选择到期时间")
-                return
-            }
+            // if (this.data_type == "") {
+            //     layer.msg("请选择到期时间")
+            //     return
+            // }
 
-            if (this.data_type == "1" && this.day == "") {
-                layer.msg("请输入到期天数")
-                return
+            // if (this.data_type == "1" && this.day == "") {
+            //     layer.msg("请输入到期天数")
+            //     return
 
-            }
+            // }
 
-            if (this.data_type == "2" && $("#test1").val() == "") {
-                layer.msg("请选择到期日期")
-                return
-            }
+            // if (this.data_type == "2" && $("#test1").val() == "") {
+            //     layer.msg("请选择到期日期")
+            //     return
+            // }
 
             if ($("#vivew").attr("src") == "../images/imgadd.png") {
                 layer.msg("请上传权益图片")
@@ -140,24 +142,24 @@ window.app = new Vue({
             const that = this;
             let parmas = {
                 name: that.name,
-                pic: $("#vivew").attr("src"),
+                // pic: $("#vivew").attr("src"),
                 type: that.type,
                 isOnsell: that.isOnsell,
                 remark: window.editor.txt.html(),
-                countUsed: that.num,
-                isReceive: that.isReceive,
+                // countUsed: that.num,
+                // isReceive: that.isReceive,
                 model: that.com
             }
 
-            if (that.data_type == 1) {
-                parmas.time = that.day
-            }
-            if (that.data_type == 2) {
-                parmas.time = $("#test1").val()
-            }
-            if (that.data_type == 3) {
-                parmas.time = "永不过期"
-            }
+            // if (that.data_type == 1) {
+            //     parmas.time = that.day
+            // }
+            // if (that.data_type == 2) {
+            //     parmas.time = $("#test1").val()
+            // }
+            // if (that.data_type == 3) {
+            //     parmas.time = "永不过期"
+            // }
 
             //私有参数添加
             //type = 1   普通券
@@ -369,6 +371,13 @@ window.app = new Vue({
         },
         test() {
             console.log(window.editor.txt.html())
+        },
+        drool(){
+            if(this.com == '1'){
+                this.shopType = 2
+            }else{
+                this.shopType = 1
+            }
         }
     },
     mounted() {
@@ -379,6 +388,8 @@ window.app = new Vue({
         window.editor.create()
         // console.log(window)
         this.getToken()
+        this.drool()
+        this.getGoods()
 
     },
 })

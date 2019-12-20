@@ -2,9 +2,9 @@
 let config = {
     role: localStorage.userRole,
     //接口地址写在下面 使用api_url变量拼接
-    api_list: api_url + "/memRights/list",
+    api_list: api_url + "/memPackage/listModel",
     api_del: api_url + '/memRights/delete',
-    api_save: api_url + '/memRights/update',        //上下架
+    // api_save: api_url + '/memRights/update',        //上下架
 
 }
 
@@ -14,7 +14,7 @@ window.app = new Vue({
         info: "这里是权益管理",
         keywords: "",
         type: "",
-        isOnsell: "",
+        // isOnsell: "",
         list: []
     },
     methods: {
@@ -38,10 +38,10 @@ window.app = new Vue({
                 type: "POST",
                 data: {
                     keywords: this.keywords,
-                    type: this.type,
                     isOnsell: this.isOnsell,
                     pageSize: this.list.pageSize || 10,
                     pageNo: this.list.pageNum || 1,
+
                 },
                 success: res => {
                     if (res.error == "00") {
@@ -75,11 +75,12 @@ window.app = new Vue({
             const that = this
             let index = layer.open({
                 type: 2,
-                title: "新增优惠券",
-                content: "../VIPS/add.html",
+                title: "新增第三方商品",
+                content: "../com/add.html",
                 area: ["100%", "100%"],
                 end: () => {
                     that.getdata()
+                    console.log("关了")
                 }
 
             })
@@ -92,10 +93,12 @@ window.app = new Vue({
         edit(item) {
             const that = this
             // console.log(item)
+            sessionStorage.setItem('item',JSON.stringify(item))
+            // console.log(sessionStorage.getItem('item'))
             let index = layer.open({
                 type: 2,
                 title: "编辑优惠券",
-                content: `../VIPS/edit.html?id=${item.id}&type=${item.type}`,
+                content: `../thirdParty/edit.html`,
                 area: ["100%", "100%"],
                 end: () => {
                     that.getdata()
@@ -117,7 +120,7 @@ window.app = new Vue({
                     data: {
                         id: item.id,
                         // tableName: "member_rights"
-                        type:item.type,
+                        type: item.type,
                     },
                     success: res => {
                         if (res.error == "00") {
@@ -132,66 +135,24 @@ window.app = new Vue({
             }).catch(() => { });
         },
 
-        //上下架
-        changesell(item) {
-            console.log(item)
-            const that = this
-            if (item.isOnsell == "1") {
-                that.$confirm('您确认下架该优惠券么？', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    $.ajax({
-                        url: config.api_save,
-                        type: "POST",
-                        data: {
-                            id: item.id,
-                            isOnsell: "0",
-                            // type: "100",
+        //时间格式化
+        formatDateTime(inputTime) {
+            var date = new Date(inputTime);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            m = m < 10 ? ('0' + m) : m;
+            var d = date.getDate();
+            d = d < 10 ? ('0' + d) : d;
+            var h = date.getHours();
+            h = h < 10 ? ('0' + h) : h;
+            var minute = date.getMinutes();
+            var second = date.getSeconds();
+            minute = minute < 10 ? ('0' + minute) : minute;
+            second = second < 10 ? ('0' + second) : second;
+            return y + '-' + m + '-' + d + ' ' + '　' + h + ':' + minute + ':' + second;
+        },
 
-                        },
-                        success: res => {
-                            if (res.error == "00") {
-                                that.$message({
-                                    type: 'success',
-                                    message: '操作成功'
-                                });
-                                that.getdata(1)
-                            } else {
-                                that.$message.error(res.msg)
-                            }
-                        }
-                    })
-                }).catch(() => {
-                   
-                });
-            }
-
-            if (item.isOnsell == "0") {
-                $.ajax({
-                    url: config.api_save,
-                    type: "POST",
-                    data: {
-                        id: item.id,
-                        isOnsell: "1",
-                        // type: "100",
-                    },
-                    success: res => {
-                        if (res.error == "00") {
-                            that.$message({
-                                type: 'success',
-                                message: '操作成功'
-                            });
-                            that.getdata(1)
-
-                        } else {
-                            that.$message.error(res.msg)
-                        }
-                    }
-                })
-            }
-        }
+        
     },
     mounted() {
         console.log(config.api_list)

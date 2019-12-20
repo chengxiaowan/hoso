@@ -1,4 +1,5 @@
 {
     "svn.path": "c:\\Program Files\\TortoiseSVN\\bin\\TortoiseProc.exe",
-    "svn.ignoreMissingSvnWarning": true
+    "svn.ignoreMissingSvnWarning": true,
+    "liveServer.settings.port": 5502
 }

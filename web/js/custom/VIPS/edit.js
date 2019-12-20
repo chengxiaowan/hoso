@@ -140,10 +140,10 @@ window.app = new Vue({
             const that = this;
             let parmas = {
                 name: that.name,
-                pic: $("#vivew").attr("src"),
+                // pic: $("#vivew").attr("src"),
                 type: that.type,
                 isOnsell: that.isOnsell,
-                remark: that.remake,
+                remark: window.editor.txt.html(),
                 countUsed: that.num,
                 isReceive: that.isReceive,
                 id: id,
@@ -338,22 +338,22 @@ window.app = new Vue({
 
 
                         //为了处理这个没有辨识的时间字段花了一个钟头，真的是烦躁
-                        let drool = res.result.time.split("-")
-                        if (drool.length >= 3) {
-                            that.data_type = "2"
-                            // $("#test1").val(res.result.time)
-                            that.date = res.result.time
-                            // window.laydate.render({
-                            //     elem: '#test1',
-                            //     value: res.result.time //必须遵循format参数设定的格式
-                            // });
-                        } else if (drool[0] == "永不过期") {
-                            that.data_type = "3"
+                        // let drool = res.result.time.split("-")
+                        // if (drool.length >= 3) {
+                        //     that.data_type = "2"
+                        //     // $("#test1").val(res.result.time)
+                        //     that.date = res.result.time
+                        //     // window.laydate.render({
+                        //     //     elem: '#test1',
+                        //     //     value: res.result.time //必须遵循format参数设定的格式
+                        //     // });
+                        // } else if (drool[0] == "永不过期") {
+                        //     that.data_type = "3"
 
-                        } else if (drool.length <= 3) {
-                            that.data_type = "1"
-                            that.day = res.result.time
-                        }
+                        // } else if (drool.length <= 3) {
+                        //     that.data_type = "1"
+                        //     that.day = res.result.time
+                        // }
 
                         $("#vivew").attr("src", res.result.pic)
                         that.com = res.result.model

@@ -20,7 +20,8 @@ window.app = new Vue({
             let index = layer.open({
                 type: 2,
                 title: "新增会员包",
-                content: "add.html",
+                content: "newadd.html",
+                // content: "add.html",
                 area: ["100%", "100%"],
                 end:()=>{
                     that.getdata(1)
@@ -72,10 +73,35 @@ window.app = new Vue({
         },
         edit(item) {
             console.log(item)
+            const that = this
             let index = layer.open({
                 type:2,
                 title:"编辑会员包",
-                content:`edit.html?id=${item.id}`,
+                content:`newedit.html?id=${item.id}`,
+                area: ["100%", "100%"],
+                end:()=>{
+                    that.getdata(1)
+                }              
+            })
+        },
+
+        adds(item) {
+            // console.log(item)
+            let index = layer.open({
+                type:2,
+                title:"绑定权益",
+                content:`addc.html?id=${item.id}`,
+                area: ["100%", "100%"]                
+            })
+        },
+
+        //添加商家商品
+        add1(item) {
+            // console.log(item)
+            let index = layer.open({
+                type:2,
+                title:"绑定商家商品",
+                content:`addShop.html?id=${item.id}`,
                 area: ["100%", "100%"]                
             })
         },
