@@ -20,7 +20,7 @@ window.app = new Vue({
         return {
             modelId: "",     //模板ID
             isMain: "",      //是否主次
-            isGroup: "",     //是否分组
+            isGroup: 1,     //是否分组
             dialogVisible: false,   //模态框
             dialogVisible2: false,
             quanList: [],              //优惠券列表
@@ -78,7 +78,7 @@ window.app = new Vue({
                     console.log(res)
                     if (res.error == "00") {
                         that.isMain = res.result.isMain;
-                        that.isGroup = res.result.isGroup
+                        // that.isGroup = res.result.isGroup
                         console.log(window.app)
                     } else {
                         layer.msg(res.msg)
@@ -226,8 +226,9 @@ window.app = new Vue({
             const that = this
             let parmars = {
                 name:that.linshi.shopsName,
-                type:that.linshi.shopsType,
+                type:0,
                 memPackageId:id,
+                relateId:that.linshi.shopsId,
                 parentId:that.linshiGroup || -1
             }
 

@@ -67,7 +67,8 @@ window.app = new Vue({
             let pic = ""
 
             if ($('#vivew').attr("src") == '../images/imgadd.png') {
-                pic = ''
+                layer.msg("请上传图标")
+                return
             } else {
                 pic = $('#vivew').attr("src")
             }

@@ -75,7 +75,7 @@ window.app = new Vue({
             const that = this
             let index = layer.open({
                 type: 2,
-                title: "新增第三方商品",
+                title: "新增模板",
                 content: "../com/add.html",
                 area: ["100%", "100%"],
                 end: () => {
@@ -93,12 +93,12 @@ window.app = new Vue({
         edit(item) {
             const that = this
             // console.log(item)
-            sessionStorage.setItem('item',JSON.stringify(item))
+            // sessionStorage.setItem('item',JSON.stringify(item))
             // console.log(sessionStorage.getItem('item'))
             let index = layer.open({
                 type: 2,
-                title: "编辑优惠券",
-                content: `../thirdParty/edit.html`,
+                title: "编辑模板",
+                content: `../com/edit.html?id=${item.id}`,
                 area: ["100%", "100%"],
                 end: () => {
                     that.getdata()

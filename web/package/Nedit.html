@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>编辑优惠券</title>
     <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/animate.min.css">
@@ -128,7 +128,7 @@
                             副标题:
                         </div>
                         <div class="col-sm-5">
-                            <input type="text" class="form-control" v-model="title">
+                            <input type="text" class="form-control" v-model="test[0]">
                         </div>
                     </div>
                     <template v-if="isMain=='1'">
@@ -177,8 +177,8 @@
                         </div>
                         <div class="col-sm-4">
                             <select class="form-control" v-model="countUsed">
-                                <option value="1">无限次数</option>
-                                <option value="2">单次使用</option>
+                                <option value="-1">无限次数</option>
+                                <option value="1">单次使用</option>
                             </select>
                         </div>
                     </div>
@@ -242,14 +242,14 @@
     let config = {
         api_info: api_url + '/memRights/detail',
         api_group: api_url + '/memPackage/showGroupOrmemRights',
-        api_add: api_url + '/memPackage/bindRights'
+        api_add: api_url + '/memPackage/updateGoods'
     }
 
-    var id = parameter().id;
-    var type = parameter().type;
-    var isGroup = parameter().isGroup;
-    var isMain = parameter().isMain;
-    var ids = parameter().ids;
+    // var id = parameter().id;
+    // var type = parameter().type;
+    // var isGroup = parameter().isGroup;
+    // var isMain = parameter().isMain;
+    // var ids = parameter().ids;
     window.app = new Vue({
         el: "#app",
         data() {
@@ -277,17 +277,31 @@
                 countUsed: "-1",      //1是无限次
                 countUseds: "1",
 
-                test: [""]
+                test: [""],
+
+                bobo:"",        //传递的参数
+
+
             }
         },
         methods: {
             //获取优惠券详细信息
             getInfo() {
+                // 筛选TYPE
+                let type
+                if(this.bobo.type == "0"){
+                    type = 2
+                }else if(this.bobo.type == "1"){
+                    type = 3
+                }else if(this.bobo.type == "2"){
+                    type = 4
+                }
+                console.log("走了")
                 $.ajax({
                     url: config.api_info,
                     type: "POST",
                     data: {
-                        id: id,
+                        id: this.bobo.memRightsId,             //优惠券的ID
                         type: type,
                     },
                     success: res => {
@@ -307,7 +321,7 @@
                     url: config.api_group,
                     type: "POST",
                     data: {
-                        memPackageId: ids
+                        memPackageId: "",       //这里添加会员包ID
                     },
                     success: res => {
                         console.log(res)
@@ -324,7 +338,7 @@
             save() {
                 let parmas = {
                     name: this.info.name,
-                    memPackageId: ids,           //权益卡ID
+                    memPackageId: "",           //权益卡ID
                     memRightsId: this.info.id,
                     maintitle: this.name,        //主标题
                     count: this.num,             //数量
@@ -332,7 +346,9 @@
                     // 2019年12月26日11:07:15
                     // price: this.price,            //售价
                     // title: this.title,                //副标题或者描述
-                    goodsPic: this.info.pic
+                    goodsPic: this.info.pic,
+                    memPackageId:this.bobo.memPackageId,
+                    groupId:this.bobo.groupId,
                 }
 
                 //糅合数据
@@ -372,15 +388,16 @@
 
 
                 // parmas.countUsed = this.countUsed
-                if (this.info.model == '1') {
-                    if (this.countUsed == "1") {
+                if (this.info.model == "1") {
+                    if (this.countUsed == "-1") {
                         parmas.countUsed = -1
                     } else {
                         parmas.countUsed = 1
-
                     }
+                } else {
+                    parmas.countUsed = 1
 
-                } 
+                }
 
                 //判断type
                 parmas.remark = editor.txt.html()
@@ -414,18 +431,26 @@
 
         },
         mounted() {
-            this.isGroup = isGroup
-            this.isMains = isMain
-
-
-            this.getGroup()
-
 
             var E = window.wangEditor
             window.editor = new E('#demo')
             window.editor.customConfig.qiniu = true
             window.editor.create()
 
+
+            let drool = JSON.parse(sessionStorage.getItem("edit"))
+            console.log(drool)
+            // this.isGroup = drool.
+            // this.isMains = 0
+            this.name = drool.name;     //名称
+            this.test = drool.title.split("@1x1@"); //富文本
+            this.num = drool.count;             //数量
+            editor.txt.html(drool.remark);       //描述
+            this.background = drool.pic;         //背景图
+            this.countUsed = drool.countUsed;    //可使用次数
+            this.bobo = drool
+
+            this.getGroup()
             this.getInfo()
 
 

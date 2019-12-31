@@ -1,10 +1,12 @@
 let config = {
-    api_save: api_url + '/memPackage/addModel',
+    api_save: api_url + '/memPackage/updateModel',
     api_token: api_url + '/qiniu/getUpToken',
-    api_info: api_url + ''
+    api_info: api_url + '/memPackage/detailModel',
+
 
 }
 
+let id = parameter().id
 window.app = new Vue({
     el: "#app",
     data() {
@@ -23,6 +25,7 @@ window.app = new Vue({
                 return
             }
             let parmars = {
+                id:id,
                 name: this.name,
                 pic: window.editor.txt.html(),
                 isGroup: this.type,
@@ -63,6 +66,29 @@ window.app = new Vue({
                 }
             })
         },
+
+        getInfo(){
+            const that = this
+            $.ajax({
+                url:config.api_info,
+                type:"POST",
+                async:true,
+                data:{
+                    id:id
+                },
+                success:res=>{
+                    console.log(res)
+                    if(res.error == '00'){
+                        that.name = res.result.name;
+                        that.type = res.result.isGroup;
+                        that.isMain = res.result.isMain;
+                        that.isGoods = res.result.isGoods;
+                        window.editor.txt.html(res.result.pic)
+
+                    }
+                }
+            })
+        }
     },
     mounted() {
         this.getToken()
@@ -70,5 +96,7 @@ window.app = new Vue({
         window.editor = new E('#demo')
         window.editor.customConfig.qiniu = true
         window.editor.create()
+
+        this.getInfo()
     },
 })

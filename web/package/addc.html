@@ -158,7 +158,7 @@
                     <table id="simple-table" class="table table-responsive table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th width="25%">名称</th>
+                                <th width="20%">名称</th>
                                 <th width="10%">图片</th>
                                 <th width="10%">类型</th>
                                 <th width="5%">数量</th>
@@ -166,7 +166,7 @@
                                 <th width="10%">售价</th>
                                 <th width="10%">是否主权益</th>
                                 <th width="15%">加入时间</th>
-                                <th width="5%">操作</th>
+                                <th width="10%">操作</th>
 
                             </tr>
                         </thead>
@@ -175,7 +175,7 @@
                                 <tr v-for="item in list">
                                     <td>{{item.name}}</td>
                                     <td>
-                                        <img :src="item.pic" alt="" style="height:35px;width: 35px;">
+                                        <img :src="item.goodsPic" alt="" style="height:35px;width: 35px;">
                                     </td>
                                     <td v-if="item.type=='0' || item.type=='1' || item.type=='2'">优惠券</td>
                                     <td v-if="item.type=='3'">虚拟商品</td>
@@ -187,7 +187,9 @@
                                     <td>{{item.isMain=='1'?'是':'否'}}</td>
                                     <td>2019年12月18日10:26:39</td>
                                     <td class="btn-hide">
-                                        <a href="#" class="btn btn-success">编辑</a>
+                                        <a class="btn btn-success" @click="edit(item)">编辑</a>
+                                        <a class="btn btn-success" @click="del(item)" style="color: #D0021B;">删除</a>
+
                                     </td>
                                 </tr>
                             </template>
@@ -217,7 +219,7 @@
                 <table id="simple-table" class="table table-responsive table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th width="25%">名称</th>
+                            <th width="20%">名称</th>
                             <th width="10%">图片</th>
                             <th width="10%">类型</th>
                             <th width="5%">数量</th>
@@ -225,7 +227,7 @@
                             <th width="10%">售价</th>
                             <th width="10%">是否主权益</th>
                             <th width="15%">加入时间</th>
-                            <th width="5%">操作</th>
+                            <th width="10%">操作</th>
 
                         </tr>
                     </thead>
@@ -234,19 +236,20 @@
                             <tr v-for="item in list">
                                 <td>{{item.name}}</td>
                                 <td>
-                                    <img :src="item.pic" alt="" style="height:35px;width: 35px;">
+                                    <img :src="item.goodsPic" alt="" style="height:35px;width: 35px;">
                                 </td>
                                 <td v-if="item.type=='0' || item.type=='1' || item.type=='2'">优惠券</td>
                                 <td v-if="item.type=='3'">虚拟商品</td>
                                 <td v-if="item.type=='4'">实物商品</td>
 
                                 <td>{{item.count}}</td>
-                                <td>{{item.countUsed=='-1'?"无限次":"item.countUsed"}}</td>
+                                <td>{{item.countUsed=='-1'?"无限次": item.countUsed}}</td>
                                 <td>{{item.price}}</td>
                                 <td>{{item.isMain=='1'?'是':'否'}}</td>
                                 <td>2019年12月18日10:26:39</td>
                                 <td class="btn-hide">
-                                    <a href="#" class="btn btn-success">编辑</a>
+                                    <a class="btn btn-success" @click="edit(item)">编辑</a>
+                                    <a class="btn btn-success" @click="del(item)" style="color: #D0021B;">删除</a>
                                 </td>
                             </tr>
                         </template>
@@ -280,8 +283,8 @@
                     <div class="type-item" v-if="flag!='1'" @click="flag=1">优惠券</div>
                     <div class="type-item item-hove" v-if="flag=='1'">优惠券</div>
 
-                    <div class="type-item" v-if="flag!='2'" @click="flag=2">实物</div>
-                    <div class="type-item item-hove" v-if="flag=='2'">实物</div>
+                    <!-- <div class="type-item" v-if="flag!='2'" @click="flag=2">实物</div>
+                    <div class="type-item item-hove" v-if="flag=='2'">实物</div> -->
 
                     <div class="type-item" v-if="flag!='3'" @click="flag=3">虚拟商品</div>
                     <div class="type-item item-hove" v-if="flag=='3'">虚拟商品</div>
@@ -400,7 +403,7 @@
                                 <td>{{item.official_price}}</td>
                                 <td>{{item.price}}</td>
                                 <td>{{item.salePrice}}</td>
-                                <td>{{item.type=='0'?"直充":"卡券"}}</td>
+                                <td>{{item.type=='1'?"直充":"卡券"}}</td>
                                 <td class="btn-hide">
                                     <a @click="add2(item)">加 入</a>
                                 </td>
@@ -444,6 +447,6 @@
 <script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
 <script src="../js/qiniuyun/qiniu-package.js"></script>
 <script src="../js/qiniuyun/qiniu_editor.js"></script>
-<script src="../js/custom/package/addc.js"></script> 
+<script src="../js/custom/package/addc.js"></script>  
 
 </html>

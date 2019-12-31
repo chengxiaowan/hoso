@@ -50,7 +50,7 @@ window.app = new Vue({
         shopsList: [],           //排除的店铺
         keywords: "",
         pageNo2: "1",
-        keywordss:""
+        keywordss: ""
 
     },
     methods: {
@@ -85,7 +85,7 @@ window.app = new Vue({
         save() {
             //开始判断数据是否录入
             if (this.name == "") {
-                layer.msg("请输入权益名称")
+                layer.msg("请输入优惠券名称")
                 return
             }
 
@@ -119,18 +119,20 @@ window.app = new Vue({
                 return
             }
 
-            if (this.data_type == "") {
-                layer.msg("请选择到期时间")
-            }
+            //2019年12月25日09:36:36 移除
 
-            if (this.data_type == "1" && this.day == "") {
-                layer.msg("请输入到期天数")
-            }
+            // if (this.data_type == "") {
+            //     layer.msg("请选择到期时间")
+            // }
 
-            if (this.data_type == "2" && $("#test1").val() == "") {
-                layer.msg("请选择到期日期")
-                return
-            }
+            // if (this.data_type == "1" && this.day == "") {
+            //     layer.msg("请输入到期天数")
+            // }
+
+            // if (this.data_type == "2" && $("#test1").val() == "") {
+            //     layer.msg("请选择到期日期")
+            //     return
+            // }
 
             if ($("#vivew").attr("src") == "../images/imgadd.png") {
                 layer.msg("请上传权益图片")
@@ -140,7 +142,7 @@ window.app = new Vue({
             const that = this;
             let parmas = {
                 name: that.name,
-                // pic: $("#vivew").attr("src"),
+                pic: $("#vivew").attr("src"),
                 type: that.type,
                 isOnsell: that.isOnsell,
                 remark: window.editor.txt.html(),
@@ -261,7 +263,7 @@ window.app = new Vue({
                     name: "橙券",
                     pageNo: that.pageNo,
                     goodsNos: that.goodsno,
-                    keywords:that.keywordss,
+                    keywords: that.keywordss,
 
                 },
                 success: res => {
@@ -281,6 +283,10 @@ window.app = new Vue({
 
         //本地添加
         addgoods(item) {
+            if(this.com == "2" && this.goods.length == 1){
+                layer.msg("只能加入一个商品")
+                return
+            }
             this.goods.push(item);
             let rtIds = []
             this.goods.forEach(i => {
@@ -331,6 +337,7 @@ window.app = new Vue({
                         //type2渲染不上去
                         that.count = res.result.discount
                         // $("#count").val(res.result.discount)
+                        $("#vivew").attr("src",res.result.pic)
 
                         that.sum = res.result.price
                         that.pay = res.result.fullPrice
@@ -369,7 +376,7 @@ window.app = new Vue({
         //删除
         del(item) {
             const that = this
-            that.$confirm(`确认从权益移除${item.name}么？`, '提示', {
+            that.$confirm(`是否确认删除${item.name}？`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'

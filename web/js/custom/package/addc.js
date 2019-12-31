@@ -8,6 +8,8 @@ var config = {
     api_quan: api_url + '/memRights/list',           //优惠券列表
     api_goods: api_url + '/goods/dataList',         //实物商品列表
     api_Numgoods: api_url + '/memRights/getGoodsByFacilitatorName',
+
+    api_del:api_url + '/memPackage/deleteRightsBind'
 }
 
 var id = parameter().id;
@@ -196,7 +198,7 @@ window.app = new Vue({
         //优惠券的分页
         page(e) {
             this.pageNo = e;
-            this.getQuan;
+            this.getQuan();
         },
 
         page2(e) {
@@ -233,7 +235,8 @@ window.app = new Vue({
                 type: "POST",
                 data: {
                     memPackageId: id,
-                    parentId: this.parentId
+                    parentId: this.parentId,
+                    pageSize:"100",
                 },
                 success: res => {
                     if (res.error == "00") {
@@ -297,6 +300,49 @@ window.app = new Vue({
                     that.getlist()
                 }
             })
+        },
+        edit(item){
+            const that = this
+            console.log(item)
+            sessionStorage.setItem("edit",JSON.stringify(item))
+            let index = layer.open({
+                type: 2,
+                title: "完善其他信息",
+                // content: `Nedit.html?&isGroup=${that.isGroup}&isMain=${that.isMain}&ids=${id}`,
+                content: `Nedit.html`,
+                area: ["1053px", "600px"],
+                end: () => {
+                    that.getlist()
+                }
+            })
+        },
+
+        del(item){
+            this.$confirm('您确定删除该优惠券？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                $.ajax({
+                    url: config.api_del,
+                    type: "post",
+                    async: true,
+                    data: {
+                        groupId: item.groupId,
+                    },
+                    success: res => {
+                        if (res.error == "00") {
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            this.getlist()
+
+                        }
+                    }
+                })
+            }).catch(() => { });
+
         }
 
 

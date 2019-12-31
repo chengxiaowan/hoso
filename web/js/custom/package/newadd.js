@@ -74,6 +74,9 @@ window.app = new Vue({
                     that.token = res.data
                     uploaderReady(res.data)
                     uploaderReady2(res.data)
+                    uploaderReady3(res.data)
+                    uploadInit(res.data)
+
                 })
 
         },
@@ -184,7 +187,7 @@ window.app = new Vue({
         //优惠券的分页
         page(e) {
             this.pageNo = e;
-            this.getQuan;
+            this.getQuan();
         },
 
         page2(e) {
@@ -236,7 +239,7 @@ window.app = new Vue({
             //首先进行必填项校验
             //配置
             if (this.name == "") {
-                layer.msg("请输入权益卡名称")
+                layer.msg("请输入名称")
                 return
             }
 
@@ -252,6 +255,12 @@ window.app = new Vue({
 
             if ($("#vivew2").attr('src') == "../images/imgadd.png") {
                 layer.msg("请上传顶部图片")
+                return
+            }
+
+            
+            if ($("#vivew3").attr('src') == "../images/imgadd.png") {
+                layer.msg("请上传权益卡图片")
                 return
             }
 
@@ -276,10 +285,10 @@ window.app = new Vue({
                 return
             }
 
-            if (this.payused.includes("0") && this.date == "") {
-                layer.msg("请选择到期时间")
-                return
-            }
+            // if (this.payused.includes("0") && this.date == "") {
+            //     layer.msg("请选择到期时间")
+            //     return
+            // }
 
             //包时长
             if (this.payused.includes("1") && this.mprice == "") {
@@ -338,7 +347,8 @@ window.app = new Vue({
                 // type:this.cominfo.isGroup,   //根据模板判断是否分组
                 pic: $("#vivew").attr('src'),                 //封面图片
                 topPic: $("#vivew2").attr('src'),              //顶部图片
-                remark: this.textarea,     //描述
+                memPic:$("#vivew3").attr('src'),
+                remark: window.editor.txt.html(),       //描述
                 priceUsed: this.payused.join(","),
 
                 //价格
@@ -358,9 +368,13 @@ window.app = new Vue({
                 oldyearprice: this.yprice || 0,
             }
 
-            if(this.payused.includes("0")){
-                parmas.time = this.date
-            }
+            // 2019年12月23日17:32:47
+            // 去掉了到期时间
+
+            // if(this.payused.includes("0")){
+            //     parmas.time = this.date
+            // }
+
 
             $.ajax({
                 url: config.api_save,
@@ -408,6 +422,13 @@ window.app = new Vue({
         this.getToken()
         this.get_com()
         this.getQuan()
+
+        //初始化富文本
+        var E = window.wangEditor
+        window.editor = new E('#demo')
+        window.editor.customConfig.qiniu = true
+        window.editor.create()
+        // console.log(window)
     },
 
     //监听啊

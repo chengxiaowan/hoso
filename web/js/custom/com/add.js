@@ -66,6 +66,7 @@ window.app = new Vue({
     },
     mounted() {
         this.getToken()
+        //初始化富文本
         var E = window.wangEditor
         window.editor = new E('#demo')
         window.editor.customConfig.qiniu = true

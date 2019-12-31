@@ -58,13 +58,13 @@
             margin-top: 20px;
         }
 
-        .imginfo{
+        .imginfo {
             width: 100px;
             height: 100px;
         }
 
-        .form-control{
-            border-radius: 2px!important;
+        .form-control {
+            border-radius: 2px !important;
         }
     </style>
 </head>
@@ -95,7 +95,7 @@
                         <div class="title-from"><span class="xing">*</span> 充值方式：</div>
                         <div class="title-input" style="width: 146px;">
                             <select class="form-control" v-model="type" disabled>
-                                <option value="1">直充</option>
+                                <option value="1">视频直充</option>
                                 <option value="0">卡券</option>
                             </select>
                         </div>
@@ -104,21 +104,24 @@
                     <div class="main-info">
                         <div class="title-from"><span class="xing">*</span> 面值（元）：</div>
                         <div class="title-input">
-                            <input type="text" class="form-control" placeholder="请输入面值，最多两位小数" v-model="price">
+                            <input type="text" class="form-control" placeholder="请输入面值，最多两位小数" v-model="price"
+                                onkeyup="this.value= this.value.match(/\d+(\.\d{0,2})?/) ? this.value.match(/\d+(\.\d{0,2})?/)[0] : ''" />
                         </div>
                     </div>
 
                     <div class="main-info">
                         <div class="title-from"><span class="xing">*</span> 采购价（元）：</div>
                         <div class="title-input">
-                            <input type="text" class="form-control" placeholder="请输入采购价，最多两位小数" v-model="gprice">
+                            <input type="text" class="form-control" placeholder="请输入采购价，最多两位小数" v-model="gprice"
+                                onkeyup="this.value= this.value.match(/\d+(\.\d{0,2})?/) ? this.value.match(/\d+(\.\d{0,2})?/)[0] : ''" />
                         </div>
                     </div>
 
                     <div class="main-info">
                         <div class="title-from"><span class="xing">*</span> 销售价（元）：</div>
                         <div class="title-input">
-                            <input type="text" class="form-control" placeholder="请输入销售价，最多两位小数" v-model="sprice">
+                            <input type="text" class="form-control" placeholder="请输入销售价，最多两位小数" v-model="sprice"
+                                onkeyup="this.value= this.value.match(/\d+(\.\d{0,2})?/) ? this.value.match(/\d+(\.\d{0,2})?/)[0] : ''" />
                         </div>
                     </div>
 
