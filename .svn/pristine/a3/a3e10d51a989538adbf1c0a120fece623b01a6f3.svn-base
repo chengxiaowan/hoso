@@ -198,7 +198,7 @@
                             </div>
                         </div>
                         <div class="image-box">
-                            <div class="drool-title"><span class="xing">*</span>顶部图片:</div>
+                            <div class="drool-title"><span class="xing">*</span>封面:</div>
                             <div style="margin-left: 10px;" id="drool2">
                                 <div id="updataImage2" class="imageup">
                                     <img id="vivew2" src="../images/imgadd.png" class="imginfo">

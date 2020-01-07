@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>添加旅拍</title>
+<meta name="keywords" content="寒舍">
+<meta name="description" content="寒舍">
+<link rel="stylesheet" href="../css/public.css">
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+<link rel="stylesheet" href="../css/animate.min.css">
+<link rel="stylesheet" href="../js/plugins/layui/css/layui.css">
+<link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="../js/plugins/utf8-jsp/themes/default/css/ueditor.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/layout.css">
+<link rel="stylesheet" href="../css/htz.css" />
+<link rel="stylesheet" href="../css/custom/brands/add.css">
+</head>
+<style>
+    .input-container {
+        height: 34px !important;
+        line-height: 34px !important;
+    }
+
+    .select2-container {
+        z-index: 99999999999999;
+    }
+
+    textarea.form-control {
+        height: 100px;
+        resize: none;
+    }
+
+    .form-label {
+        height: 120px;
+        color: #a4a4a4;
+        font-size: 12px;
+    }
+
+    .form-label input {
+        width: 100px;
+        border: 0;
+    }
+
+    body {
+        font-size: 12px;
+    }
+
+    .form-group {
+        position: relative;
+        margin-bottom: 40px;
+    }
+
+    .form-group label {
+        width: 100%;
+    }
+
+    .tips {
+        color: #b8b8b8;
+        font-size: 12px;
+        font-weight: normal;
+    }
+
+    .dot {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        /*修改过，原为10px*/
+        transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        -webkit-transform: translateY(-50%);
+        width: 8px;
+        height: 8px;
+        background: #ff8d41;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+    }
+
+    .up-hot-tag {
+        /*margin-left: 10px;*/
+    }
+
+    .up-hot-tag a {
+        float: left;
+        margin: 10px 10px 0 0;
+        background: linear-gradient(45deg, transparent 50%, #61C4CF 0%);
+        background-size: 16px 16px;
+        border-top-right-radius: 3px;
+    }
+
+    .up-hot-tag a i {
+        float: left;
+        line-height: 30px;
+        font-size: 30px;
+        color: #fff;
+        background: #e4ebee;
+    }
+
+    .up-hot-tag a:hover i {
+        color: #e4ebee
+    }
+
+    .up-hot-tag a span {
+        float: left;
+        margin-left: -10px;
+        padding-right: 10px;
+        background-color: #e4ebee;
+        line-height: 30px;
+        font-size: 12px;
+        color: #34495e;
+    }
+
+    .cl:before,
+    .cl:after {
+        content: " ";
+        display: table;
+    }
+
+    .cl:after {
+        clear: both
+    }
+
+    .cl {
+        *zoom: 1
+    }
+
+    .form-price .form-control,
+    .form-status .form-control {
+        width: 80px;
+    }
+
+    .form-price label {
+        display: inline-block;
+        width: 14px;
+        text-align: center;
+    }
+
+    .ibox-content {
+        padding: 15px 0 20px;
+    }
+
+    .iconfont,
+    [class^="icon-"],
+    [class*=" icon-"] {
+        font-family: "iconfont" !important;
+        font-size: 16px;
+        color: #b8c4ce;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -webkit-text-stroke-width: 0.2px;
+        -moz-osx-font-smoothing: grayscale;
+        /*  -webkit-font-smoothing: none;
+        -webkit-text-stroke-width: initial;
+        -moz-osx-font-smoothing: initial;*/
+    }
+
+    .form-select {
+        padding-left: 0;
+    }
+
+    .form-create {
+        padding: 6px 12px;
+        height: 34px;
+        line-height: 22px;
+        color: #4a4a4a;
+        text-align: center;
+        background: #edf1f3;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+    }
+
+    .form-create:hover {
+        background: #e6e6e6;
+        color: #333;
+        cursor: pointer;
+        border-color: #adadad;
+    }
+
+
+    .symbol {
+        position: absolute;
+        left: 6px;
+        color: #a4a4a4;
+        font-weight: normal;
+    }
+
+    .form-control[type='number'] {
+        text-indent: 10px;
+    }
+
+    #tab-2 .btn,
+    #tab-4 .btn {
+        margin-bottom: 0;
+    }
+
+    .btn-htz.btn-success {
+        background: #50bfa5;
+        outline: #50bfa5;
+    }
+
+    .btn-htz.btn-success:hover {
+        background: #50bfa5;
+    }
+
+    .ibox-content-btn .btn-primary {
+        width: 141px;
+        height: 38px;
+        line-height: 26px;
+        color: #4a4a4a;
+        background: #edf1f3;
+        border: 1px solid #edf1f3;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+    }
+
+    .upload {
+        overflow: hidden;
+    }
+
+    .upload_img,
+    .upload_cover {
+        position: relative;
+        padding-left: 0;
+    }
+
+    .upload_img {
+        height: 215px;
+        border: 2px dashed #e2e9f0;
+    }
+
+    .upload_cover {
+        margin-top: 40px;
+        height: 215px;
+    }
+
+    .upload_pic {
+        padding-right: 0;
+        height: 470px;
+        border: 2px dashed #e2e9f0;
+    }
+
+    .upload_info {
+        text-align: center;
+    }
+
+    .icon_upload {
+        display: inline-block;
+        color: #4a90e2;
+        font-size: 30px;
+    }
+
+    .imgTitle {
+        max-width: 100%;
+        margin-bottom: 5px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .image-box{
+        width:100px;
+        height: 100px;
+    }
+
+    /*测试代码*/
+
+    #bobodrool{
+        padding-top:20px;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    #updataImage{
+        width: 100px;
+        height: 100px;
+    }
+
+    .imginfo{
+        width: 100px;
+        height: 100px;
+    }
+    .el-input__inner{
+        width: 282px;
+        height: 34px;
+        line-height: 34px;
+    }
+    .el-input__icon{
+        position: absolute;
+        right: 16px;
+    }
+    .form-select .el-select__caret{
+        position: absolute;
+        top: 2px;
+        right: 20px;
+        transform: rotateZ(180deg);
+        color: #c0c4cc;
+        font-size: 14px;
+    }
+    .form-select .dot{
+        right: 10px;
+    }
+    .form-template .dot{
+        right: 16px;
+        top: 36px;
+    }
+    .form-textarea .dot{
+        top: 36px;
+    }
+    .table>thead>tr>th {
+        color: #5b5b5b;
+        background: #e4e9ef !important;
+    }
+    .form-inline .form-group em{
+        font-size: 12px;
+    }
+    .form-select input{
+        width: 100%;
+    }
+    .form-select .col-sm-4{
+        padding-left: 0;
+    }
+    .tips-name{
+        position: absolute;
+        top:0;
+        left:0;
+        width: 100%;
+        height: 18px;
+        color:#fff;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.8);
+    }
+
+    ._citys {
+			width: 450px;
+			display: inline-block;
+			border: 2px solid #eee;
+			padding: 5px;
+			position: relative;
+			background: #fff;
+		}
+
+		._citys span {
+			color: #56b4f8;
+			height: 15px;
+			width: 15px;
+			line-height: 15px;
+			text-align: center;
+			border-radius: 3px;
+			position: absolute;
+			right: 10px;
+			top: 10px;
+			border: 1px solid #56b4f8;
+			cursor: pointer;
+		}
+
+		._citys0 {
+			width: 100%;
+			height: 34px;
+			display: inline-block;
+			border-bottom: 2px solid #56b4f8;
+			padding: 0;
+			margin: 0;
+		}
+
+		._citys0 li {
+			display: inline-block;
+			line-height: 34px;
+			font-size: 15px;
+			color: #888;
+			width: 80px;
+			text-align: center;
+			cursor: pointer;
+		}
+
+		.citySel {
+			background-color: #56b4f8;
+			color: #fff !important;
+		}
+
+		._citys1 {
+			width: 100%;
+			display: inline-block;
+			padding: 10px 0;
+		}
+
+		._citys1 a {
+			width: 83px;
+			height: 35px;
+			display: inline-block;
+			background-color: #f5f5f5;
+			color: #666;
+			margin-left: 6px;
+			margin-top: 3px;
+			line-height: 35px;
+			text-align: center;
+			cursor: pointer;
+			font-size: 13px;
+			overflow: hidden;
+		}
+
+		._citys1 a:hover {
+			color: #fff;
+			background-color: #56b4f8;
+		}
+
+		.AreaS {
+			background-color: #56b4f8 !important;
+			color: #fff !important;
+		}
+</style>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content" id="app">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="tabs-container">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab" @click="tab(1)" href="#tab-1" aria-expanded="true"> 基本信息</a>
+                    </li>
+                    <li class="">
+                        <a data-toggle="tab" @click="tab(2)" href="#tab-2" aria-expanded="false">旅拍日期</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div id="tab-1" class="tab-pane active">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>名称：<div class="tips fr"><em>{{nameLength}}</em>/<em>30</em></div></label>
+                                        <div class="form-group">
+                                            <input type="text" placeholder="请输入名称，1~30字" class="form-control" maxlength="30" v-model="name" @input="inputName">
+                                            <em class="dot"></em>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>所属工作室：</label>
+                                        <div class="form-group form-select">
+                                            <select class="form-control" v-model="studio">
+                                                <option selected="selected">请选择工作室</option>
+                                                <option v-for="item in studioList" :value="item.id">{{item.name}}</option>
+                                            </select>
+                                            <i class="el-select__caret el-input__icon el-icon-arrow-up"></i>
+                                            <em class="dot"></em>
+                                        </div>
+                                    </div>
+                                    <div class="form-select clearfix">
+                                        <div class="col-sm-8">
+                                            <div class="form-template form-group">
+                                                <label>地区：</label>
+                                                <input type="text" class="form-control" id="city" autocomplete="off"/>
+                                               
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label>类型：</label>
+                                                <div class="form-group">
+                                                    <select class="form-control" v-model="type">
+                                                        <option value="">请选择类型</option>
+                                                        <option value="1">定制</option>
+                                                        <option value="2">团购</option>
+                                                    </select>
+                                                    <i class="el-select__caret el-input__icon el-icon-arrow-up"></i>
+                                                    <em class="dot"></em>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-textarea clearfix">
+                                        <label>简介：<div class="tips fr"><em>{{summaryLength}}</em>/<em>1000</em></div></label>
+                                        <textarea type="content" placeholder="请输入简介" class="form-control" maxlength="300" v-model="summary" @input="inputSummary()"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group form-textarea clearfix">
+                                        <label>进行方式：<div class="tips fr"><em>{{styleLength}}</em>/<em>300</em></div></label>
+                                        <textarea type="content" placeholder="请输入旅拍进行方式" class="form-control" maxlength="300" v-model="style" @input="inputStyle()"></textarea>
+                                        <em class="dot"></em>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>摄影成果：<div class="tips fr"><em>{{profitLength}}</em>/<em>300</em></div></label>
+                                        <textarea type="content" placeholder="请输入摄影成果" class="form-control" maxlength="300" v-model="profit" @input="inputProfit()"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>备注：<div class="tips fr"><em>{{remarkLength}}</em>/<em>300</em></div></label>
+                                        <textarea type="content" placeholder="请输入备注" class="form-control" maxlength="300" v-model="remark" @input="inputRemark()"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 图片上传 -->
+                            <div class="row" style="margin-bottom: 40px">
+                                <div class="col-sm-12">
+                                    <h3>图片</h3>
+                                    <p style="margin-top: 10px">1、请上传png,jpg,jpeg等规范格式的图片，大小不能超过5MB。 </p>
+                                    <p>2、精致封面会吸引更多的人关注哦。</p>
+                                    <p>3、更多图片设置信息，请参考<em class="">图片示例</em></p>
+                                    <div id="bobodrool">
+                                        <!-- 封面 -->
+                                        <div id="updataImage1">
+                                            <p class="tips-name"><i class="text-danger">*</i>封面</p>
+                                            <img id="vivew1" src="../images/imgadd.png" class="imginfo">
+                                        </div>
+                                        <!-- logo -->
+                                        <div id="updataInfo1">
+                                            <p class="tips-name">案列</p>
+                                            <img id="info1" src="../images/imgadd.png" class="imginfo">
+                                        </div>
+                                        <!-- 商品描述图片-->
+                                        <div id="updataInfo2">
+                                            <img id="info2" src="../images/imgadd.png" class="imginfo">
+                                        </div>
+
+                                        <div id="updataInfo3">
+                                            <img id="info3" src="../images/imgadd.png" class="imginfo">
+                                        </div>
+                                        <div id="updataInfo4">
+                                            <img id="info4" src="../images/imgadd.png" class="imginfo">
+                                        </div>
+                                        <div id="updataInfo5">
+                                            <img id="info5" src="../images/imgadd.png" class="imginfo">
+                                        </div>
+
+                                        <div id="updataInfo6">
+                                            <img id="info6" src="../images/imgadd.png" class="imginfo">
+                                        </div>
+
+                                        <div id="updataInfo7">
+                                            <img id="info7" src="../images/imgadd.png" class="imginfo">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 图片上传 end-->
+                            <div class="ibox-content-btn clear" style="margin: 30px 0 20px;">
+                                <a class="btn btn-htz  btn-primary" title="保存" @click="save()">保存</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!--商品信息-->
+                    <div id="tab-2" class="tab-pane">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <!-- 检索 start -->
+                                    <div class="form-inline" role="form">
+                                        <div class="form-group fl">
+                                            <em>开始日期</em>
+                                            <input class="form-control" type="text" id="start" placeholder="请选择日期" v-model="startTime" autocomplete="off">
+                                        </div>
+                                        <div class="form-group fl">
+                                            <em>结束日期</em>
+                                            <input class="form-control" type="text" id="end" placeholder="请选择日期" v-model="endTime" autocomplete="off">
+                                        </div>
+                                        <button type="submit" class="btn btn-htz btn-primary fl" @click="search()">
+                                            <i class="icon icon_search"></i> 搜索
+                                        </button>
+                                        <button type="reset" class="btn btn-htz btn-success hide fl" @click="jump();" :class="id!=null?'show':''">
+                                            <i id="nav-search-icon" class="icon icon_plus"></i> 新增
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ibox-content">
+                                <table id="simple-table" class="table table-responsive table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th width="20%">日期</th>
+                                        <th width="15%">起止时间</th>
+                                        <th width="15%" v-if="type==2">人数</th>
+                                        <th width="15%">费用（人/元）</th>
+                                        <th width="20%" v-if="type==2">集合时间地点</th>
+                                        <th width="15%">操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-if="list.total > 0" v-for="item in list.list">
+                                        <td>{{item.time}}</td>
+                                        <td>{{item.timeSlot}}</td>
+                                        <td v-if="type==2">{{item.peopleNum}}</td>
+                                        <td>{{item.price}}</td>
+                                        <td v-if="type==2">{{item.gatherAdrTime}}</td>
+                                        <td class="btn-hide">
+                                            <a class="btn btn-success" title="查看" @click="view(item.id);">查看</a>
+                                            <a class="btn btn-default" title="删除" @click="del(item.id);">删除</a>
+                                        </td>
+                                    </tr>
+                                    <tr class="main_info" v-else>
+                                        <td colspan="10">没有相关数据</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="pull-left form form-inline">
+                                    <div class="form-group form-group-sm">
+                                        共 {{list.total}} 条数据,每页显示
+                                        <select @change="getData(1)" v-model="list.pageSize" class="form-control">
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
+                                            <option value="40">40</option>
+                                            <option value="50">50</option>
+                                        </select> 条
+                                    </div>
+                                </div>
+                                <div class="pagi pull-right"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 全局js -->
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/jquery.navScroll.js"></script>
+<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+<script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+<script src="../js/plugins/utf8-jsp/third-party/zeroclipboard/ZeroClipboard.js"></script>
+<script src="../js/plugins/utf8-jsp/ueditor.config.js"></script>
+<script src="../js/plugins/utf8-jsp/uemy.js"></script>
+<script src="../js/plugins/utf8-jsp/lang/zh-cn/zh-cn.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<script src="../js/tagsinput.js"></script>
+
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+<script src="../js/qiniuyun/qiniuImg-bands.js"></script>
+<script src="../js/jquery.h5upload.js"></script>
+<script src="../js/custom/service/edit.js"></script>
+
+<!-- 引入省市地三联插件和数据 -->
+<script src="../js/citys/cityJson.js"></script>
+<script src="../js/citys/citySet.js"></script>
+<script src="../js/citys/Popt.js"></script>
+<script>
+    $("#city").click(function (e) {
+        SelCity(this, e);
+        console.log("inout", $(this).val(), new Date())
+        console.log($("#city").val().split("-"))
+    });
+</script>
+</body>
+</html>

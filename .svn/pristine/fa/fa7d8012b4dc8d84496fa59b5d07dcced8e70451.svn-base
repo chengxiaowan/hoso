@@ -100,7 +100,6 @@
                                 <option value="2">出行</option>
                                 <option value="3">吃喝</option>
                                 <option value="4">生活其他</option>
-                                <option value="5">教育办公</option>
                             </select>
                         </div>
                     </div>

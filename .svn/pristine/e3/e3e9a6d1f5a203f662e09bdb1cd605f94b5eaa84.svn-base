@@ -21,10 +21,9 @@
             width: 100%;
             /* margin: 0 28px; */
             background: #E4E9EF;
-            /* height: 98px; */
+            height: 98px;
             margin-bottom: 28px;
             border-radius: 4px;
-            padding-bottom: 25px;
         }
 
         .title-index>h3 {
@@ -41,7 +40,6 @@
             font-family: PingFangSC-Regular, PingFangSC;
             font-weight: 400;
             color: rgba(74, 74, 74, 1);
-            margin-bottom: 9px;
         }
 
         select {
@@ -58,28 +56,28 @@
         <div class="ibox-content">
             <div class="title-index">
                 <h3>说明</h3>
-                <p>1、显示与第三方对接过来的产品。</p>
+                <p>1、请慎重下架已上架的会员包。</p>
             </div>
             <div class="row">
                 <div class="col-sm-12">
                     <!-- 检索 start -->
                     <div class="form-inline" role="form" id="customerForm">
                         <div class="form-group">
-                            <input class="form-control" id="nav-search-input" type="text" placeholder="请输入权益名称"
+                            <input class="form-control" id="nav-search-input" type="text" placeholder="请输入名称"
                                 v-model="keywords">
                         </div>
                         <div class="form-group">
-                            <em>充值方式：</em>
-                            <select v-model="type" class="form-control" style="width:100px;">
+                            <em>上/下架状态：</em>
+                            <select v-model="type" class="form-control" style="width: 100px;">
                                 <option value="">全部</option>
-                                <option value="0">卡券</option>
-                                <option value="1">直充</option>
+                                <option value="0">下架</option>
+                                <option value="1">上架</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-htz btn-primary" @click="soso()">
+                        <button type="submit" class="btn btn-htz btn-primary" @click="getdata(1)">
                             <i class="icon icon_search"></i> 搜索
                         </button>
-                        <button type="reset" class="btn btn-htz btn-success" @click="add()">
+                        <button type="reset" class="btn btn-htz btn-success" @click="goAdd()">
                             <i id="nav-search-icon" class="icon icon_plus"></i> 新增
                         </button>
                     </div>
@@ -89,34 +87,31 @@
                     <table id="simple-table" class="table table-responsive table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th width="30%">名称</th>
-                                <th width="15%">产品编号</th>
-                                <th width="5%">图标</th>
-                                <th width="10%">面值（元）</th>
-                                <th width="10%">采购价（元）</th>
-                                <th width="10%">销售价（元）</th>
-                                <th width="10%">充值方式</th>
-                                <th width="10%">操作</th>
+                                <th width="40%">名称</th>
+                                <th width="10%">上/下架状态</th>
+                                <th width="25%">创建时间</th>
+                                <th width="25%">操作</th>
                             </tr>
                         </thead>
                         <tbody>
-
-                            <tr v-for="item in list.list">
-                                <td>{{item.name}}</td>
-                                <td>{{item.goods_no}}</td>
-                                <td v-if="item.pic"><img :src="item.pic" style="width:35px"></td>
-                                <td v-else></td>
-                                <td>{{item.official_price}}</td>
-                                <td>{{item.price}}</td>
-                                <td>{{item.salePrice}}</td>
-                                <td>{{item.type == 0?'卡券':'直充'}}</td>
-                                <td class="btn-hide">
-                                    <a class="btn btn-success" @click="edit(item)">编辑</a>
-                                    <a class="btn btn-success" @click="del(item)" style="color: #D0021B;">删除</a>
-                                </td>
-                            </tr>
-
-
+                            <template>
+                                <tr v-for="item in list.list">
+                                    <td>{{item.name}}</td>
+                                    <td v-if="item.isOnsell == '1'">上架</td>
+                                    <td v-if="item.isOnsell == '0'">下架</td>
+                                    <td>{{formatDateTime(item.createTime)}}</td>
+                                    <td class="btn-hide">
+                                        <a href="#" class="btn btn-success" @click="edit(item)">编辑</a>
+                                        <a href="#" class="btn btn-success" @click="adds(item)">绑定权益</a>
+                                        <a href="#" class="btn btn-success" v-if="item.isGoods=='1'" @click="add1(item)">绑定商家商品</a>
+                                        <a href="#" class="btn btn-success">下架</a>
+                                        <a href="#" class="btn btn-success" @click="del(item)" style="color: #D0021B;">删除</a>
+                                    </td>
+                                </tr>
+                            </template>
+                            <!-- <tr v-if="list.list.length == 0 ">
+                                <td colspan="4"> 暂无数据</td>
+                            </tr> -->
                         </tbody>
                     </table>
                     <div class="pull-left form form-inline">
@@ -146,7 +141,7 @@
 <!-- 自定义js -->
 <script src="../js/content.min.js?v=1.0.0"></script>
 <script src="../js/custom/common.js"></script>
-<script src="../js/custom/thirdParty/index.js"></script> 
+<script src="../js/custom/package/index.js"></script>
 
 <!-- ui库 -->
 

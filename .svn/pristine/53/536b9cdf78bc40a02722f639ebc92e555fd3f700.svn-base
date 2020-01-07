@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>编辑模板</title>
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../js/plugins/layui/css/layui.css">
+    <style>
+        .title {
+            color: #4A4A4A;
+            background: #F5F5F5;
+        }
+
+        .main-info {
+            overflow: hidden;
+            line-height: 35px;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #666666;
+            margin-bottom: 30px;
+        }
+
+        .title-from {
+            float: left;
+            margin-left: 20px;
+            width: 110px;
+            text-align: right;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #666;
+        }
+
+        .title-input {
+            float: left;
+            margin-left: 20px;
+            width: 625px;
+        }
+
+        .xing {
+            color: #F64D62;
+        }
+
+        .tips {
+            font-size: 10px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(74, 144, 226, 1);
+            margin-top: 20px;
+        }
+
+        .imginfo {
+            width: 100px;
+            height: 100px;
+        }
+
+        .form-control {
+            border-radius: 2px !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="ibox-content">
+            <div class="title">
+                请完善以下信息
+            </div>
+            <div class="row" style="margin-top: 35px;">
+                <div class="col-sm-12">
+                    <div class="main-info">
+                        <div class="title-from"><span class="xing">*</span> 模板名称：</div>
+                        <div class="title-input">
+                            <input type="text" class="form-control" placeholder="请输入模板名称" v-model="name">
+                        </div>
+                    </div>
+
+                    <div class="main-info">
+                        <div class="title-from"><span class="xing">*</span> 是否分项：</div>
+                        <div class="title-input" style="width: 146px;">
+                            <select class="form-control" style="padding-left:60px" v-model="type">
+                                <option value="0">是</option>
+                                <option value="1">否</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="main-info">
+                        <div class="title-from"><span class="xing">*</span> 模板样式：</div>
+                        <div class="title-input" style="width: 146px;">
+                            <select class="form-control" style="padding-left:60px" v-model="isMain">
+                                <option value="0">主/次</option>
+                                <option value="1">非主次</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="main-info">
+                        <div class="title-from"><span class="xing">*</span> 是否包含商家产品：</div>
+                        <div class="title-input" style="width: 146px;">
+                            <select class="form-control" style="padding-left:60px" v-model="isGoods">
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="main-info">
+                        <div class="title-from"><span class="xing">*</span> 图文详情：</div>
+                        <div class="title-input" style="width: 800px;">
+                            <div id="demo"></div>
+
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-htz btn-primary" style="margin-left: 196px;" @click=save()>
+                        保存
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+<script src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
+
+<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+<script src="../js/qiniuyun/qiniuVip.js"></script>
+
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/custom/com/edit.js"></script>  
+
+</html>

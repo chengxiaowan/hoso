@@ -150,9 +150,7 @@ window.app = new Vue({
                 countUsed: that.num,
                 isReceive: that.isReceive,
                 id: id,
-                model: that.com,
-                solt:that.solt,
-
+                model: that.com
 
             }
 
@@ -346,8 +344,6 @@ window.app = new Vue({
                         that.pay = res.result.fullPrice
                         that.dpay = res.result.reducePrice
 
-
-                        that.solt = res.result.solt
 
                         //为了处理这个没有辨识的时间字段花了一个钟头，真的是烦躁
                         // let drool = res.result.time.split("-")

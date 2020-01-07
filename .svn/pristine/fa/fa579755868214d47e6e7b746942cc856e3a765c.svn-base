@@ -228,27 +228,26 @@
 
         }
 
-        .soso {
+        .soso{
             display: flex;
         }
 
-        .soso-input {
+        .soso-input{
             width: 267px;
             margin-right: 18px;
         }
 
-        .el-dialog {
-            z-index: 99999 !important;
+        .el-dialog{
+            z-index: 99999!important;
         }
 
-        .el-dialog__wrapper {
-            z-index: 99999 !important;
+        .el-dialog__wrapper{
+            z-index: 99999!important;
         }
 
-        .el-message-box__wrapper {
-            z-index: 99999 !important;
+        .el-message-box__wrapper{
+            z-index: 99999!important;
         }
-
         .title {
             font-size: 14px;
             font-family: PingFangSC-Regular, PingFang SC;
@@ -285,19 +284,16 @@
                                 <option value="2">出行</option>
                                 <option value="3">吃喝</option>
                                 <option value="4">生活其他</option>
-                                <option value="5">教育办公</option>
                             </select>
                             <img src="../images/xiajian.png" class="xiajian" />
                         </div>
                     </div>
 
-
                     <div class="main-info">
                         <div class="form-title"><span class="xing">*</span> 类型：</div>
                         <div class="form-input">
-                            <select class="form-control" style="width: 146px;padding-left: 46px; z-index: 999;"
-                                v-model="type">
-                                <!-- <option value="1">普通券</option> -->
+                            <select class="form-control" style="width: 146px;padding-left: 46px;z-index: 999;" v-model="type" disabled>
+                                <option value="1">普通券</option>
                                 <option value="2">打折券</option>
                                 <option value="3">抵用券</option>
                                 <option value="4">满减券</option>
@@ -347,8 +343,7 @@
                     <div class="main-info">
                         <div class="form-title"><span class="xing">*</span> 展现方式：</div>
                         <div class="form-input">
-                            <select class="form-control" style="width: 184px;padding-left: 40px;z-index: 999;"
-                                v-model="com" @change="drool()">
+                            <select class="form-control" style="width: 184px;padding-left: 40px;z-index: 999;" v-model="com">
                                 <!-- <option value="1">通用模板</option> -->
                                 <option value="1">二维码</option>
                                 <option value="2">单个商品</option>
@@ -382,7 +377,7 @@
                                     </div>
                                     卡券将于
                                     <div class="te-input" style="width: 104px;">
-                                        <input type="text" class="form-control" id="test1" autocomplete="off">
+                                        <input type="text" class="form-control" id="test1" v-model="date" autocomplete="off">
                                     </div>
                                     到期
                                 </div>
@@ -454,7 +449,7 @@
                         </div>
                     </div>
                     <div class="goodsadd" @click="add()">
-                        <!-- <img src="../images/add.png" alt="" style="width: 12px; height: 12px;"> -->
+                        <img src="../images/add.png" alt="" style="width: 12px; height: 12px;">
                         <!-- 点击添加商品 -->
                     </div>
                 </div>
@@ -463,7 +458,6 @@
 
             <div class="col-sm-12" style="text-align: center;" v-if="pageType == '1'">
                 <button class="btn btn-htz btn-primary" @click="save()">保 存</button>
-                <!-- <button class="btn btn-htz btn-primary" @click="test()">读富文本</button> -->
             </div>
 
             <!-- 卡券盒子结束  这个是pagetype为1的盒子 v-if="pageType == '1'" -->
@@ -472,21 +466,21 @@
         <el-dialog :visible.sync="dialogVisible" width="1031px" title="">
             <div class="goodsadd-box">
                 <div class="shops-box">
-                    <div class="shops-name" style="background: url('../images/bg-s.png');" v-if="shopType == '1' && com !='1'">橙券
+                    <div class="shops-name" style="background: url('../images/bg-s.png');" v-if="shopType == '1'">橙券
                     </div>
-                    <div class="shops-name" v-if="shopType != '1' && com !='1'" @click="teb(1)">橙券</div>
-                    <div class="shops-name" style="background: url('../images/bg-s.png');" v-if="shopType == '2' && com=='1'">第三方酒店
+                    <div class="shops-name" v-if="shopType != '1'" @click="teb(1)">橙券</div>
+                    <div class="shops-name" style="background: url('../images/bg-s.png');" v-if="shopType == '2'">第三方酒店
                     </div>
-                    <div class="shops-name" v-if="shopType != '2' && com=='1'" @click="teb(2)">第三方酒店</div>
+                    <div class="shops-name" v-if="shopType != '2'" @click="teb(2)">第三方酒店</div>
                 </div>
                 <div class="goodsInfo-box" v-if="shopType == '1'">
-                    <div class="soso" style="margin-bottom: 12px;">
-                        <div class="soso-input">
-                            <input type="text" class="form-control" placeholder="请输入商品名称" v-model="keywordss">
-                        </div>
-                        <button class="btn btn-htz btn-primary" @click="getGoods()">搜 索</button>
-                    </div>
                     <table id="simple-table" class="table table-responsive table-bordered table-hover">
+                            <div class="soso" style="margin-bottom: 12px;">
+                                    <div class="soso-input">
+                                        <input type="text" class="form-control" placeholder="请输入商品名称" v-model="keywordss">
+                                    </div>
+                                    <button class="btn btn-htz btn-primary" @click="getGoods()">搜 索</button>
+                                </div>
                         <thead>
                             <tr>
                                 <th width="20%">产品名称</th>
@@ -567,7 +561,12 @@
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
 <script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+
+<!-- 富文本 -->
 <script src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
+
+
 
 <!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
 <script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
@@ -576,20 +575,8 @@
 <!-- 自定义js -->
 <script src="../js/content.min.js?v=1.0.0"></script>
 <script src="../js/custom/common.js"></script>
-<script src="../js/custom/VIPS/add.js"></script>
+<script src="../js/custom/VIPS/edit.js"></script>
 
 
-<script src="../js/plugins/layui/layui.js"></script> 
-<script>
-    layui.use('laydate', function () {
-        var laydate = layui.laydate;
-
-        //执行一个laydate实例
-        laydate.render({
-            elem: '#test1', //指定元素
-            min: "0",
-        });
-    });
-</script>
 
 </html>

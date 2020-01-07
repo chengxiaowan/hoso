@@ -3,7 +3,7 @@ let config = {
     role: localStorage.userRole,
     //接口地址写在下面 使用api_url变量拼接
     api_list: api_url + "/memPackage/listModel",
-    api_del: api_url + '/shops/deleteTable',
+    api_del: api_url + '/memRights/delete',
     // api_save: api_url + '/memRights/update',        //上下架
 
 }
@@ -108,7 +108,6 @@ window.app = new Vue({
 
         //删除指定项
         del(item) {
-            console.log(item)
             this.$confirm('您确定删除该优惠券？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -120,8 +119,8 @@ window.app = new Vue({
                     async: true,
                     data: {
                         id: item.id,
-                        tableName: "model"
-                        // type: item.type,
+                        // tableName: "member_rights"
+                        type: item.type,
                     },
                     success: res => {
                         if (res.error == "00") {

@@ -205,8 +205,9 @@
                                 </div>
                             </div>
                         </div>
-                         <!-- 2019年12月24日15:31:54  迭代 -->
-                         <div class="image-box">
+
+                        <!-- 2019年12月24日15:31:54  迭代 -->
+                        <div class="image-box">
                             <div class="drool-title"><span class="xing">*</span>权益卡图片:</div>
                             <div style="margin-left: 10px;" id="drool3">
                                 <div id="updataImage3" class="imageup">
@@ -370,8 +371,9 @@
                             <span>说明：</span>
                         </div>
                         <div class="input-box" style="width: 700px;">
-                            <!-- <textarea class="form-control" rows="5" v-model="textarea"></textarea> -->
-                            <div id="demo"></div>
+                            <!-- <textarea class="form-control" rows="5" v-model="textarea"></textarea>
+                             -->
+                             <div id="demo"></div>
                         </div>
                     </div>
                 </div>
@@ -635,6 +637,6 @@
 <script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
 <script src="../js/qiniuyun/qiniu-package.js"></script>
 <script src="../js/qiniuyun/qiniu_editor.js"></script>
-<script src="../js/custom/package/newedit.js"></script> 
+<script src="../js/custom/package/newadd.js"></script>  
 
 </html>

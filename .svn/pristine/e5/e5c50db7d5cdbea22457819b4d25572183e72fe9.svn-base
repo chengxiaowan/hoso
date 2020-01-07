@@ -1,19 +1,10 @@
 var config = {
-    api_save: api_url + '/memRights/update',
+    api_save: api_url + '/memRights/add',
     api_shop: api_url + '/memRights/getFacilitatorList',
     api_goods: api_url + "/memRights/getGoodsByFacilitatorName",
     api_token: api_url + '/qiniu/getUpToken',
-    api_info: api_url + '/memRights/detail',
     api_hotel: api_url + '/shops/dataList'
-
 }
-
-let id = parameter().id
-let type = parameter().type
-
-console.log(id)
-console.log(type)
-
 
 window.app = new Vue({
     el: "#app",
@@ -39,19 +30,20 @@ window.app = new Vue({
         shop_list: {},        //供应商列表
         goodsList: {},         //商品列表
         page: "1",            //页码
-        goods: [],              //加入的商品
+        goods: [],              //加入的商品和大列表
         goodsno: "",             //加入的商品序列号
         tokenMessage: "",        //token
-        //添加新字段
-        com: "1",                 //模板
         //需求变更 添加字段模板
+        com: "1",
         shopType: "1",
         hotel: {},
         shopsList: [],           //排除的店铺
         keywords: "",
         pageNo2: "1",
-        keywordss: "",
+        keywordss:"",
         solt:"0",
+
+
 
     },
     methods: {
@@ -61,7 +53,9 @@ window.app = new Vue({
             const that = this;
             that.dialogVisible = true
             that.getShops()
+            console.log("cufa1")
             that.getGoods()
+            console.log("cufa")
         },
 
         //日期盒子的选择
@@ -115,19 +109,20 @@ window.app = new Vue({
                 return
             }
 
-            if (this.num == "") {
-                layer.msg("请输入优惠券数量")
-                return
-            }
-
-            //2019年12月25日09:36:36 移除
+            // if (this.num == "") {
+            //     layer.msg("请输入优惠券数量")
+            //     return
+            // }
 
             // if (this.data_type == "") {
             //     layer.msg("请选择到期时间")
+            //     return
             // }
 
             // if (this.data_type == "1" && this.day == "") {
             //     layer.msg("请输入到期天数")
+            //     return
+
             // }
 
             // if (this.data_type == "2" && $("#test1").val() == "") {
@@ -139,6 +134,11 @@ window.app = new Vue({
                 layer.msg("请上传权益图片")
                 return
             }
+
+
+
+
+
             //整理数据
             const that = this;
             let parmas = {
@@ -147,24 +147,20 @@ window.app = new Vue({
                 type: that.type,
                 isOnsell: that.isOnsell,
                 remark: window.editor.txt.html(),
-                countUsed: that.num,
-                isReceive: that.isReceive,
-                id: id,
-                model: that.com,
-                solt:that.solt,
-
-
+                // countUsed: that.num,
+                // isReceive: that.isReceive,
+                model: that.com
             }
 
-            if (that.data_type == 1) {
-                parmas.time = that.day
-            }
-            if (that.data_type == 2) {
-                parmas.time = $("#test1").val()
-            }
-            if (that.data_type == 3) {
-                parmas.time = "永不过期"
-            }
+            // if (that.data_type == 1) {
+            //     parmas.time = that.day
+            // }
+            // if (that.data_type == 2) {
+            //     parmas.time = $("#test1").val()
+            // }
+            // if (that.data_type == 3) {
+            //     parmas.time = "永不过期"
+            // }
 
             //私有参数添加
             //type = 1   普通券
@@ -190,40 +186,32 @@ window.app = new Vue({
             }
 
             //整理商品列表
-            let goodBox = [0];
-            let roomBox = [1];
+            let goodsbox = [0]
+            let roomList = [1]
+
             that.goods.forEach(i => {
-                console.log(i)
-                if (i.type == undefined || i.type == "0") {
-                    if (i.relateId) {
-                        goodBox.push(i.relateId)
-                    }
-
-                    if (i.goods_no) {
-                        goodBox.push(i.goods_no)
-                    }
+                if (i.goods_no) {
+                    goodsbox.push(i.goods_no)
                 }
-
-                if (i.type == "1") {
-                    if (i.relateId) {
-                        roomBox.push(i.relateId)
-                    }
-
-                    if (i.room_no) {
-                        roomBox.push(i.room_no)
-                    }
+                if (i.room_no) {
+                    roomList.push(i.room_no)
                 }
             })
-            let drool = []
-            if (goodBox.length != 1) {
-                drool.push(goodBox.join(","))
-            }
-            if (roomBox.length != 1) {
 
-                drool.push(roomBox.join(","))
+            let drool = []
+            if (goodsbox.length != 1) {
+                drool.push(goodsbox.join(","))
             }
+            if (roomList.length != 1) {
+
+                drool.push(roomList.join(","))
+            }
+            // console.log(c)
+            // console.log(goodsbox)
+            // console.log(roomList)
+
+
             parmas.goods = JSON.stringify(drool);
-            console.log(drool)
             console.log(parmas)
             $.ajax({
                 url: config.api_save,
@@ -231,7 +219,7 @@ window.app = new Vue({
                 data: parmas,
                 success: res => {
                     if (res.error == "00") {
-                        layer.msg("修改成功")
+                        layer.msg("保存成功")
                         setTimeout(() => {
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                             parent.layer.close(index); //再执行关闭
@@ -266,7 +254,7 @@ window.app = new Vue({
                     name: "橙券",
                     pageNo: that.pageNo,
                     goodsNos: that.goodsno,
-                    keywords: that.keywordss,
+                    keywords:that.keywordss
 
                 },
                 success: res => {
@@ -284,12 +272,20 @@ window.app = new Vue({
             this.getGoods()
         },
 
+        //分页
+        pages2(e) {
+            console.log(e)
+            this.hotel.pageNum = e;
+            this.getHotel()
+        },
+
         //本地添加
         addgoods(item) {
             if(this.com == "2" && this.goods.length == 1){
                 layer.msg("只能加入一个商品")
                 return
             }
+            console.log(item)
             this.goods.push(item);
             let rtIds = []
             this.goods.forEach(i => {
@@ -311,74 +307,10 @@ window.app = new Vue({
                     that.tokenMessage = res;
                     uploaderReady(res)
                     uploadInit(res)
-
                 }
             })
         },
 
-        //获取信息
-        getinfo() {
-            const that = this
-            $.ajax({
-                url: config.api_info,
-                type: "GET",
-                data: {
-                    id: id,
-                    type: type,
-                },
-                success: res => {
-                    if (res.error == "00") {
-                        that.name = res.result.name
-                        // that.remake = res.result.remark
-                        that.type = type
-                        that.isOnsell = res.result.isOnsell
-                        that.isReceive = res.result.isReceive
-                        that.price = res.result.price
-                        that.goods = res.result.cqGoodsList
-                        that.num = res.result.countUsed
-
-                        //type2渲染不上去
-                        that.count = res.result.discount
-                        // $("#count").val(res.result.discount)
-                        $("#vivew").attr("src",res.result.pic)
-
-                        that.sum = res.result.price
-                        that.pay = res.result.fullPrice
-                        that.dpay = res.result.reducePrice
-
-
-                        that.solt = res.result.solt
-
-                        //为了处理这个没有辨识的时间字段花了一个钟头，真的是烦躁
-                        // let drool = res.result.time.split("-")
-                        // if (drool.length >= 3) {
-                        //     that.data_type = "2"
-                        //     // $("#test1").val(res.result.time)
-                        //     that.date = res.result.time
-                        //     // window.laydate.render({
-                        //     //     elem: '#test1',
-                        //     //     value: res.result.time //必须遵循format参数设定的格式
-                        //     // });
-                        // } else if (drool[0] == "永不过期") {
-                        //     that.data_type = "3"
-
-                        // } else if (drool.length <= 3) {
-                        //     that.data_type = "1"
-                        //     that.day = res.result.time
-                        // }
-
-                        $("#vivew").attr("src", res.result.pic)
-                        that.com = res.result.model
-                        window.editor.txt.html(res.result.remark)
-
-
-
-
-                    }
-                }
-            })
-        },
-        //删除
         del(item) {
             const that = this
             that.$confirm(`是否确认删除${item.name}？`, '提示', {
@@ -416,7 +348,7 @@ window.app = new Vue({
                 url: config.api_hotel,
                 type: "POST",
                 data: {
-                    pageNo: that.pageNo2,
+                    pageNo: that.hotel.pageNum,
                     keywords: that.keywords,
                     goodsNos: that.shopsList.join(",") || ""
 
@@ -435,41 +367,35 @@ window.app = new Vue({
             let room = {}
             room.name = item.shopsName
             room.room_no = Number(item.shopsId)
-            room.type = 1
+            room.type = 2
             this.goods.push(room)
             this.shopsList.push(item.shopsId)
             console.log(this.goods)
             this.getHotel()
 
         },
-
-        //分页
-        pages2(e) {
-            console.log(e)
-            this.pageNo2 = e;
-            this.getHotel()
+        test() {
+            console.log(window.editor.txt.html())
         },
+        drool(){
+            if(this.com == '1'){
+                this.shopType = 2
+            }else{
+                this.shopType = 1
+            }
+        }
     },
     mounted() {
-        const that = this
         console.log("Vue初始化成功")
-        this.getToken()
-        this.getinfo()
-        layui.use('laydate', function () {
-            var laydate = layui.laydate;
-
-            //执行一个laydate实例
-            laydate.render({
-                elem: '#test1', //指定元素
-                value: that.date,
-                min: "0"
-            });
-        });
         var E = window.wangEditor
         window.editor = new E('#demo')
         window.editor.customConfig.qiniu = true
         window.editor.create()
         // console.log(window)
         this.getToken()
+        this.drool()
+        this.getGoods()
+        this.getHotel()
+
     },
 })
