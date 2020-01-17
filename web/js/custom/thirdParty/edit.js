@@ -91,6 +91,9 @@ window.app = new Vue({
                 originalGoods_no:that.originalGoods_no,
                 id:that.id,
                 solt:that.solt,
+                describes:editor.txt.html()        //获取富文本
+
+
             }
             console.log(parmas)
             $.ajax({
@@ -115,6 +118,7 @@ window.app = new Vue({
         this.getToken()
         let parmars = JSON.parse(sessionStorage.getItem("item"))
         console.log(parmars)
+
         this.name = parmars.name
         this.No = parmars.goods_no
         this.price = parmars.official_price
@@ -132,6 +136,14 @@ window.app = new Vue({
             $('#vivew').attr("src",parmars.pic)
         }
         console.log(this)
+
+        // 初始化富文本
+        var E = window.wangEditor
+        window.editor = new E('#demo')
+        window.editor.customConfig.qiniu = true
+        window.editor.create()
+        //填充富文本
+         window.editor.txt.html(parmars.describes)
 
     },
 })

@@ -1,18 +1,19 @@
 
 var config = {
     role: localStorage.userRole,
-    api_save: api_url + '/shopsBrand/addShopsBrandUser', //新建店铺品牌负责人
-    api_phone: api_url + '/shops/findByUserName'   //校验用户名手机
+    api_save: api_url + '/shopsBrand/addShopsBrandOwner', //新建店铺品牌负责人
+    // api_phone: api_url + '/shops/findByUserName'   //校验用户名手机
 }
 window.app = new Vue({
     el: "#app",
     data: {
-        roleId: config.role,
+        // roleId: config.role,
         name: '',         //姓名
         phone: '',        //电话
         email: '',        //邮箱
         qq: '',
-        remark: ''        //备注
+        remark: '',        //备注
+        // password:"123456"
     },
     methods: {
         Save() {
@@ -35,7 +36,7 @@ window.app = new Vue({
                         email: that.email,
                         QQ: that.qq,
                         remark: that.remark,
-                        roleId: "5",
+                        // roleId: "5",
                     },
                     success: function (res) {
                         if(res.error == "00"){
@@ -52,19 +53,19 @@ window.app = new Vue({
         //手机号校验
         phone () {
             var that = this
-            $.ajax({
-                url: config.api_phone,
-                type: "post",
-                async: true,
-                data: {
-                    userName: that.phone
-                },
-                success: res => {
-                    if (res.error == "01") {
-                        layer.msg("该手机号已经使用过了，请更换手机号")
-                    }
-                }
-            })
+            // $.ajax({
+            //     url: config.api_phone,
+            //     type: "post",
+            //     async: true,
+            //     data: {
+            //         userName: that.phone
+            //     },
+            //     success: res => {
+            //         if (res.error == "01") {
+            //             layer.msg("该手机号已经使用过了，请更换手机号")
+            //         }
+            //     }
+            // })
         }
     },
 })

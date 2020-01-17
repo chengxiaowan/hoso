@@ -5,7 +5,9 @@ var config = {
     api_edit: api_url + '/brand/saveOrupdate', //修改品牌
     api_del: api_url + '/shopsBrand/del', //删除品牌
     api_user: api_url + '/user/userList3', //获取负责人列表
-    api_token: api_url + '/qiniu/getUpToken' //获取七牛的token
+    api_token: api_url + '/qiniu/getUpToken', //获取七牛的token
+    // 2020年1月16日15:48:19  迭代
+    api_users:api_url + '/service/showMerchantsUsers'
 }
 window.app = new Vue({
     el: '#app',
@@ -65,9 +67,12 @@ window.app = new Vue({
         getUserlist() {
             var that = this
             $.ajax({
-                url: config.api_user,
+                url: config.api_users,
                 async: true,
                 type: 'post',
+                data:{
+                    roleId:7
+                },
                 success: res => {
                     that.newuserlist = res.result;
                     console.log(that.newuserlist)

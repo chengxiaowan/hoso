@@ -51,7 +51,7 @@ var config = {
 	api_getrole: api_url + '/shops/shopsRoleList', //获取角色列表
 	api_addrole: api_url + '/shops/addShopsRole', //添加角色
 	api_getAlluser: api_url + '/shops/shopsDistributorList', //获取店铺人员列表
-	api_userDel: api_url + '/user/changeIsQuit', //员工离职
+	api_userDel: api_url + '/shops/updateQuit', //员工离职
 	api_goodsList: api_url + '/shops/showShopsGoods', //获取商品列表
 	api_getsort: api_url + '/type/dataList', //获取分类 level1
 	api_delgoods: api_url + '/shops/deleteTable', //删除商品
@@ -1365,7 +1365,7 @@ window.app = new Vue({
 				})
 		},
 		//员工离职
-		deluser(id) {
+		deluser(item) {
 			const that = this;
 			const dialog = layer.confirm("确认该负责人已经离职？", {
 				title: "提示"
@@ -1373,7 +1373,7 @@ window.app = new Vue({
 				$.ajax({
 					url: config.api_userDel,
 					data: {
-						userId: id
+						shopsDistributorId: item.shopsDistributorId,
 					},
 					success: res => {
 						layer.msg(res.msg);
@@ -1445,7 +1445,7 @@ window.app = new Vue({
 				})
 		},
 		//员工离职
-		deluser(id) {
+		deluser(item) {
 			const that = this;
 			const dialog = layer.confirm("确认该负责人已经离职？", {
 				title: "提示"
@@ -1453,7 +1453,7 @@ window.app = new Vue({
 				$.ajax({
 					url: config.api_userDel,
 					data: {
-						userId: id
+						shopsDistributorId: item.shopsDistributorId,
 					},
 					success: res => {
 						layer.msg(res.msg);

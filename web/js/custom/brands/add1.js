@@ -7,7 +7,7 @@ console.log(labels)
 var config = {
     role: localStorage.userRole,
     api_save: api_url + '/shopsBrand/add', //添加品牌
-    api_edit: api_url + '/brand/saveOrupdate', //修改品牌
+    api_edit: api_url + '/shopsBrand/edit', //修改品牌
     api_getinfo: api_url + '/shopsBrand/editInfo', //获取当前品牌信息
     api_user: api_url + '/user/userList3', //获取负责人列表
     api_token: api_url + '/qiniu/getUpToken', //获取七牛的token
@@ -21,6 +21,9 @@ var config = {
     api_brandList: api_url + '/shopsBrand/showAShopsBrandService', //获取品牌服务列表
     api_del: api_url + '/shopsBrand/deleteAShopsBrandServiceById', // 删除品牌服务
     api_ewm: api_url + '/weixin/getwxTwoEconde', //小程序码
+
+    // 2020年1月16日15:51:47  迭代
+    api_users:api_url + '/service/showMerchantsUsers'
 
    
 }
@@ -168,9 +171,12 @@ window.app = new Vue({
         getUserlist() {
             var that = this
             $.ajax({
-                url: config.api_user,
+                url: config.api_users,
                 async: true,
                 type: 'post',
+                data:{
+                    roleId:7
+                },
                 success: res => {
                     if (res.error == "00") {
                         that.newuserlist = res.result;
@@ -417,7 +423,8 @@ window.app = new Vue({
                         description: that.editor.getContent(), //富文本
                         logoPath: $('#vivew').attr('src'), //logo地址
                         imagePath: $('#vivew1').attr('src'), //封面
-                        shopsBrandPicList: ""
+                        shopsBrandPicList: "",
+                        shopsBrandId:shopsBrandId
                     },
                     success: res => {
                         console.log(res);

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>订单</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../js/plugins/layui/css/layui.css">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .drool {
+            /* height: 100%; */
+            min-height: 100vh;
+        }
+
+        .keywords-box {
+            width: 310px;
+            margin-right: 24px;
+        }
+
+        .flex-box {
+            display: flex;
+        }
+
+        .sele-box {
+            width: 141px;
+            margin-right: 25px;
+        }
+
+        .date-box {
+            margin-right: 25px;
+            width: 141px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="ibox-content">
+        <div class="layui-tab layui-tab-card">
+            <ul class="layui-tab-title">
+                <li class="layui-this">权益卡订单</li>
+                <li>实物订单</li>
+                <li>虚拟商品订单</li>
+            </ul>
+            <div class="layui-tab-content">
+
+                <!-- 权益卡 -->
+                <div class="layui-tab-item layui-show">
+                    <div class="ibox-content drool">
+                        <div class="row">
+                            <div class="col-sm-12 flex-box">
+                                <div class="keywords-box">
+                                    <input type="text" class="form-control" placeholder="请输入订单编号，权益卡名称，客户手机号码"
+                                        v-model="keywords">
+                                </div>
+                                <div style="line-height: 35px;margin-right:5px ;">订单状态</div>
+                                <div class="sele-box">
+                                    <select class="form-control" v-model="type">
+                                        <option value="">全部</option>
+                                        <option value="1">待付款</option>
+                                        <option value="5">已支付</option>
+                                    </select>
+                                </div>
+                                <div style="line-height: 35px;margin-right:5px ;">开始时间</div>
+                                <div class="date-box">
+                                    <input type="text" class="form-control" id="start" autocomplete="off">
+                                </div>
+                                <div style="line-height: 35px;margin-right:5px ;">结束时间</div>
+                                <div class="date-box">
+                                    <input type="text" class="form-control" id="end" autocomplete="off">
+                                </div>
+                                <div>
+                                    <button type="submit" class="btn btn-htz btn-primary" @click="getcard()">
+                                        <i class="icon icon_search"></i> 搜索
+                                    </button>
+                                </div>
+
+
+
+
+                            </div>
+                            <div class="col-sm-12" style="margin-top: 30px;">
+                                <table>
+                                    <table id="simple-table" class="table table-responsive table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th width="20%">权益卡名称</th>
+                                                <th width="10%">购买方式</th>
+                                                <th width="10%">订单状态</th>
+                                                <th width="20%">客户手机号码</th>
+                                                <th width="10%">金额</th>
+                                                <th width="20%">下单时间</th>
+                                                <th width="10%">操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template v-if="list.list != '0' ">
+                                                <tr v-for="item in list.list">
+                                                    <td>{{item.memberName}}</td>
+                                                    <td v-if="item.priceUsed == '0'">单次购买</td>
+                                                    <td v-if="item.priceUsed == '1'">包月</td>
+                                                    <td v-if="item.priceUsed == '2'">包季</td>
+                                                    <td v-if="item.priceUsed == '3'">包年</td>
+
+                                                    <td v-if="item.orderStatus==0">已取消</td>
+                                                    <td v-if="item.orderStatus==1">待付款</td>
+                                                    <td v-if="item.orderStatus==2">待收货</td>
+                                                    <!--<td v-if="item.orderStatus==3">已审核</td>-->
+                                                    <td v-if="item.orderStatus==4">待出库</td>
+                                                    <td v-if="item.orderStatus==5">已完成</td>
+                                                    <td>{{item.tel}}</td>
+                                                    <td>{{item.payAmount}}</td>
+                                                    <td>{{item.createTime}}</td>
+                                                    <td class="btn-hide">
+                                                        <a class="btn btn-success" title="查看">查看</a>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                            <tr v-else>
+                                                <td colspan="7"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </table>
+                            </div>
+                            <div class="col-sm-12">
+                                <el-pagination background layout="total, sizes, prev, pager, next, jumper"
+                                    :total="list.total" @current-change="page" style="text-align: right;"
+                                    :page-sizes="[10, 50, 100]" @size-change="size">
+                                </el-pagination>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 实物 -->
+                <div class="layui-tab-item">
+                    <div class="ibox-content drool">
+                        <div class="row">
+                            <div class="col-sm-12 flex-box">
+                                <div class="keywords-box">
+                                    <input type="text" class="form-control" placeholder="请输入订单编号，商品名称，收货人姓名"
+                                        v-model="keywords2">
+                                </div>
+                                <div style="line-height: 35px;margin-right:5px ;">订单状态</div>
+                                <div class="sele-box">
+                                    <select class="form-control" v-model="type2">
+                                        <option value="">全部</option>
+                                        <option value="1">待付款</option>
+                                        <option value="2">待收货</option>
+                                        <option value="4">待出库</option>
+                                        <option value="5">已完成</option>
+                                        <!-- <option value="">已支付</option> -->
+                                    </select>
+                                </div>
+                                <div style="line-height: 35px;margin-right:5px ;">开始时间</div>
+                                <div class="date-box">
+                                    <input type="text" class="form-control" id="start1" autocomplete="off">
+                                </div>
+                                <div style="line-height: 35px;margin-right:5px ;">结束时间</div>
+                                <div class="date-box">
+                                    <input type="text" class="form-control" id="end1" autocomplete="off">
+                                </div>
+                                <div>
+                                    <button type="submit" class="btn btn-htz btn-primary" @click="getorder()">
+                                        <i class="icon icon_search"></i> 搜索
+                                    </button>
+                                </div>
+
+
+
+
+                            </div>
+                            <div class="col-sm-12" style="margin-top: 30px;">
+                                <table>
+                                    <table id="simple-table" class="table table-responsive table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th width="10%">订单编号</th>
+                                                <th width="10%">下单时间</th>
+                                                <th width="5%">订单状态</th>
+                                                <th width="10%">订单金额（元）</th>
+                                                <th width="10%">实付金额（元）</th>
+                                                <th width="10%">收货人</th>
+                                                <th width="10%">联系电话</th>
+                                                <th width="15%">收货地址</th>
+                                                <th width="10%">操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template v-if="list2.list.length !='0' ">
+                                                <tr v-for="item in list2.list">
+                                                    <td>{{item.orderNo}}</td>
+                                                    <td>{{item.createTime}}</td>
+                                                    <td v-if="item.orderStatus==0">已取消</td>
+                                                    <td v-if="item.orderStatus==1">待付款</td>
+                                                    <td v-if="item.orderStatus==2">待收货</td>
+                                                    <!--<td v-if="item.orderStatus==3">已审核</td>-->
+                                                    <td v-if="item.orderStatus==4">待出库</td>
+                                                    <td v-if="item.orderStatus==5">已完成</td>
+                                                    <td>{{item.totalAmount}}</td>
+                                                    <td>{{item.payAmount}}</td>
+                                                    <td>{{item.name}}</td>
+                                                    <td>{{item.tel}}</td>
+                                                    <td>{{item.address}}</td>
+                                                    <td class="btn-hide">
+                                                        <a class="btn btn-success" title="查看" @click="edit(item.saleOrderId,item.orderType)">查看</a>
+                                                        <!-- <a class="btn btn-success" title="查看">删除</a> -->
+
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                            <tr v-else>
+                                                <td colspan="9">暂无数据</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </table>
+                            </div>
+                            <div class="col-sm-12">
+                                <el-pagination background layout="total, sizes, prev, pager, next, jumper"
+                                    :total="list2.total" @current-change="page2" style="text-align: right;"
+                                    :page-sizes="[10, 50, 100]" @size-change="size2">
+                                </el-pagination>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 虚拟商品 -->
+                <div class="layui-tab-item">
+                    <div class="ibox-content drool">
+                        <div class="row">
+                            <div class="col-sm-12 flex-box">
+                                <div class="keywords-box">
+                                    <input type="text" class="form-control" placeholder="请输入订单编号，权益卡名称，客户手机号码" v-model="keywords3">
+                                </div>
+                                <div style="line-height: 35px;margin-right:5px ;">订单状态</div>
+                                <div class="sele-box">
+                                    <select class="form-control" v-model="type3">
+                                        <option value="">全部</option>
+                                        <option value="1">待付款</option>
+                                        <option value="5">已支付</option>
+                                    </select>
+                                </div>
+                                <div style="line-height: 35px;margin-right:5px ;">开始时间</div>
+                                <div class="date-box">
+                                    <input type="text" class="form-control" id="start2" autocomplete="off">
+                                </div>
+                                <div style="line-height: 35px;margin-right:5px ;">结束时间</div>
+                                <div class="date-box">
+                                    <input type="text" class="form-control" id="end2" autocomplete="off">
+                                </div>
+                                <div>
+                                    <button type="submit" class="btn btn-htz btn-primary" @click="getGoods">
+                                        <i class="icon icon_search"></i> 搜索
+                                    </button>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-12" style="margin-top: 30px;">
+                                <table>
+                                    <table id="simple-table" class="table table-responsive table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th width="25%">商品名称</th>
+                                                <th width="15%">订单状态</th>
+                                                <th width="20%">客户手机号码</th>
+                                                <th width="10%">金额</th>
+                                                <th width="20%">下单时间</th>
+                                                <th width="10%">操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template v-if="list3.list.length != '0'">
+                                                <tr v-for="item in list3.list">
+                                                    <td>{{item.goodsName}}</td>
+                                                    <td v-if="item.orderStatus==0">已取消</td>
+                                                    <td v-if="item.orderStatus==1">待付款</td>
+                                                    <td v-if="item.orderStatus==2">待收货</td>
+                                                    <!--<td v-if="item.orderStatus==3">已审核</td>-->
+                                                    <td v-if="item.orderStatus==4">待出库</td>
+                                                    <td v-if="item.orderStatus==5">已完成</td>
+                                                    <td>{{item.tel}}</td>
+                                                    <td>{{item.payAmount}}</td>
+                                                    <td>{{item.createTime}}</td>
+                                                    <td class="btn-hide">
+                                                        <a class="btn btn-success" title="查看">查看</a>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </table>
+                            </div>
+                            <div class="col-sm-12">
+                                <el-pagination background layout="total, sizes, prev, pager, next, jumper"
+                                    :total="list3.total" @current-change="page3" style="text-align: right;"
+                                    :page-sizes="[10, 50, 100]" @size-change="size3">
+                                </el-pagination>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<!-- 全局js -->
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+<script src="../js/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+<script src="../js/module/module_pagination.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script src="index.js"></script>
+<script>
+
+</script>
+
+</html>

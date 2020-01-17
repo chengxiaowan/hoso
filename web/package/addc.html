@@ -121,7 +121,7 @@
             color: rgba(154, 154, 154, 1);
         }
 
-        .el-pagination{
+        .el-pagination {
             text-align: right;
         }
     </style>
@@ -136,7 +136,8 @@
             <!-- 分组模板 -->
             <div class="box" v-if="isGroup == '1'">
                 <div class="group">
-                    <div class="group-item" v-for="item in groupList" :key="item.groupId" style="color: #333;" @click="zu(item)">
+                    <div class="group-item" v-for="item in groupList" :key="item.groupId" style="color: #333;"
+                        @click="zu(item)">
                         {{item.name}}
                     </div>
                     <div class="group-item" @click="dialogVisible=true">
@@ -158,14 +159,14 @@
                     <table id="simple-table" class="table table-responsive table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th width="20%">名称</th>
-                                <th width="10%">图片</th>
+                                <th width="20%">主标题</th>
+                                <th width="10%">副标题</th>
+                                <th width="10%">原标题</th>
+                                <th width="5%">图片</th>
                                 <th width="10%">类型</th>
-                                <th width="5%">数量</th>
+                                <th width="10%">数量</th>
                                 <th width="10%">可用次数</th>
-                                <th width="10%">售价</th>
-                                <th width="10%">是否主权益</th>
-                                <th width="15%">加入时间</th>
+                                <th width="15%">是否主权益</th>
                                 <th width="10%">操作</th>
 
                             </tr>
@@ -173,23 +174,25 @@
                         <tbody>
                             <template v-if="list.length !='0'">
                                 <tr v-for="item in list">
-                                    <td>{{item.name}}</td>
-                                    <td>
-                                        <img :src="item.goodsPic" alt="" style="height:35px;width: 35px;">
+                                    <td>{{item.maintitle}}</td>
+                                    <td style="text-align: left;">
+                                        <div style="text-align: left;" v-for="drool in item.title.split('@1x1@')">
+                                            {{drool}}
+                                        </div>
                                     </td>
+                                    <td>
+                                        <img :src="item.goodsPic" alt="" style="width: 35px;height: 35px;">
+                                    </td>
+                                    <!-- 类型 -->
                                     <td v-if="item.type=='0' || item.type=='1' || item.type=='2'">优惠券</td>
                                     <td v-if="item.type=='3'">虚拟商品</td>
                                     <td v-if="item.type=='4'">实物商品</td>
-
                                     <td>{{item.count}}</td>
                                     <td>{{item.countUsed=='-1'?"无限次": item.countUsed}}</td>
-                                    <td>{{item.price}}</td>
                                     <td>{{item.isMain=='1'?'是':'否'}}</td>
-                                    <td>2019年12月18日10:26:39</td>
                                     <td class="btn-hide">
                                         <a class="btn btn-success" @click="edit(item)">编辑</a>
                                         <a class="btn btn-success" @click="del(item)" style="color: #D0021B;">删除</a>
-
                                     </td>
                                 </tr>
                             </template>
@@ -219,34 +222,46 @@
                 <table id="simple-table" class="table table-responsive table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th width="20%">名称</th>
-                            <th width="10%">图片</th>
-                            <th width="10%">类型</th>
+                            <th width="20%">主标题</th>
+                            <th width="20%">副标题</th>
+                            <th width="20%">原标题</th>
+                            <th width="5%">图片</th>
+                            <th width="5%">类型</th>
                             <th width="5%">数量</th>
-                            <th width="10%">可用次数</th>
-                            <th width="10%">售价</th>
-                            <th width="10%">是否主权益</th>
-                            <th width="15%">加入时间</th>
-                            <th width="10%">操作</th>
+                            <th width="5%">可用次数</th>
+                            <th width="5%">是否主权益</th>
+                            <th width="15%">操作</th>
 
                         </tr>
                     </thead>
                     <tbody>
                         <template v-if="list.length !='0'">
                             <tr v-for="item in list">
+                                <td>{{item.maintitle}}</td>
+                                <td>
+                                    <template v-if="item.title.split('@1x1@').length>1">
+                                       
+                                        <ul style="margin-left: 12px;">
+                                            <li v-for="drool in item.title.split('@1x1@')" style="text-align: left;">{{drool}}</li>
+                                        </ul>
+                                    </template>
+                                    <template v-else>
+                                        <div v-for="drool in item.title.split('@1x1@')">
+                                            {{drool}}
+                                        </div>
+                                    </template>
+                                </td>
                                 <td>{{item.name}}</td>
                                 <td>
-                                    <img :src="item.goodsPic" alt="" style="height:35px;width: 35px;">
+                                    <img :src="item.goodsPic" alt="" style="width: 35px;height: 35px;">
                                 </td>
+                                <!-- 类型 -->
                                 <td v-if="item.type=='0' || item.type=='1' || item.type=='2'">优惠券</td>
                                 <td v-if="item.type=='3'">虚拟商品</td>
                                 <td v-if="item.type=='4'">实物商品</td>
-
                                 <td>{{item.count}}</td>
                                 <td>{{item.countUsed=='-1'?"无限次": item.countUsed}}</td>
-                                <td>{{item.price}}</td>
                                 <td>{{item.isMain=='1'?'是':'否'}}</td>
-                                <td>2019年12月18日10:26:39</td>
                                 <td class="btn-hide">
                                     <a class="btn btn-success" @click="edit(item)">编辑</a>
                                     <a class="btn btn-success" @click="del(item)" style="color: #D0021B;">删除</a>
@@ -447,6 +462,6 @@
 <script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
 <script src="../js/qiniuyun/qiniu-package.js"></script>
 <script src="../js/qiniuyun/qiniu_editor.js"></script>
-<script src="../js/custom/package/addc.js"></script>  
+<script src="../js/custom/package/addc.js"></script>
 
 </html>

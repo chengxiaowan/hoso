@@ -30,7 +30,7 @@ window.app = new Vue({
                 success: res => {
                     that.token = res;
                     uploaderReady(res)
-                    // uploadInit(res)      这个是富文本的
+                    uploadInit(res)      //这个是富文本的
                 }
             })
         },
@@ -84,7 +84,8 @@ window.app = new Vue({
                 salePrice: that.sprice,
                 price: that.gprice,
                 pic: pic,
-                solt:that.solt
+                solt:that.solt,
+                describes:editor.txt.html()
             }
             console.log(parmas)
             $.ajax({
@@ -107,5 +108,10 @@ window.app = new Vue({
     mounted() {
         console.log("Vue挂载成功")
         this.getToken()
+        var E = window.wangEditor
+        window.editor = new E('#demo')
+        window.editor.customConfig.qiniu = true
+        window.editor.create()
+        // console.log(window)
     },
 })
