@@ -30,7 +30,7 @@ var config = {
 	api_deleteShopsRoom: api_url + '/shopsLinkMan/deleteShopsRoom', //删除房间
 	api_img: api_url + '/create_image', //二维码
 	api_ewm: api_url + '/weixin/getwxTwoEconde',
-	api_user: api_url + '/user/userList2', //新增店铺,
+	api_user: api_url + '/user/userList7', //新增店铺,
 	api_delrole: api_url + '/shops/delShopsRole', //删除角色
 
 	api_province: api_url + '/region/provinceList', // 获取省份
@@ -336,7 +336,7 @@ window.app = new Vue({
 						that.status = res.result.status
 						that.reason = res.result.reason
 						that.realName = res.result.realName
-						that.userId = res.result.userId
+						that.userId = stringify(res.result.userId)
 						that.city = res.result.city
 						that.province = res.result.province
 						that.shopsBrandId = String(res.result.shopsBrandId)

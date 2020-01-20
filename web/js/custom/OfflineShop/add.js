@@ -1,7 +1,9 @@
 var config = {
 	role: localStorage.userRole,
 	api_add: api_url + '/shops/add', //新增店铺,
-	api_user: api_url + '/user/userList2', //新增店铺,
+	// api_user: api_url + '/user/userList2', //新增店铺,
+	// 2020年1月17日17:16:03 迭代
+	api_user: api_url + '/user/userList7', //新增店铺,
 	api_getToken: api_url + '/qiniu/getUpToken', //获取七牛云token
 
 	api_getpro: api_url + "/region/provinceList",	//获取省份
