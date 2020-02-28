@@ -336,10 +336,10 @@ window.app = new Vue({
 						that.status = res.result.status
 						that.reason = res.result.reason
 						that.realName = res.result.realName
-						that.userId = stringify(res.result.userId)
+						that.userId = res.result.userId + ""
 						that.city = res.result.city
 						that.province = res.result.province
-						that.shopsBrandId = String(res.result.shopsBrandId)
+						that.shopsBrandId = res.result.shopsBrandId + ""
 						let str = `${res.result.province}-${res.result.city}-${res.result.area}`
 						$("#city").val(str)
 					} else {
@@ -710,7 +710,7 @@ window.app = new Vue({
 					labels: $('#tagsinputval').val(),
 					shopsType: that.shopsType,
 					userId: userId,
-					province: info[0],
+					province: info[0], 
 					city: info[1],
 					area: info[2],
 					shopsBrandId: that.shopsBrandId

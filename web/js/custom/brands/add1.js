@@ -200,7 +200,7 @@ window.app = new Vue({
                     if (res.error == "00") {
                         // console.log(res)
                         that.bandname = res.result.brandName //品牌名称
-                        that.userId = res.result.userId //负责人id
+                        that.userId = Number(res.result.userId) //负责人id
                         that.summary = res.result.summary
                         that.description = res.result.description; //图文描述
                         that.imagePath = res.result.imagePath

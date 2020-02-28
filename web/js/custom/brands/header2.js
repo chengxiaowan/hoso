@@ -69,6 +69,7 @@ window.app = new Vue({
                     email:that.email,
                     QQ:that.qq,
                     remark:that.remark,
+                    shopsBrandShopsOwnerId:shopsBrandShopsOwnerId
                 },
                 success:function(res){
                     console.log(res)
