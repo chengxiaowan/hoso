@@ -67,7 +67,7 @@ window.app = new Vue({
                     password:"1",
                     name:that.name,
                     email:that.email,
-                    QQ:that.qq,
+                    qq:that.qq,
                     remark:that.remark,
                     shopsBrandShopsOwnerId:shopsBrandShopsOwnerId
                 },

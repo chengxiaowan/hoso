@@ -30,7 +30,7 @@ window.app = new Vue({
                     mobilePhone:that.phone,
                     password:"1",
                     email:that.email,
-                    QQ:that.qq,
+                    qq:that.qq,
                     remark:that.remark,
                     roleId:1,
                 },
