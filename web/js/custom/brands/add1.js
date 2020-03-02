@@ -317,12 +317,16 @@ window.app = new Vue({
         },
         // 新建负责人
         jumpToHeader() {
+            let that = this
             var index = layer
                 .open({
                     type: 2,
                     title: '新建负责人',
                     content: 'headers.html',
-                    area: ['80%', '80%']
+                    area: ['80%', '80%'],
+                    end:()=>{
+                        that.getUserlist()
+                    }
                 });
         },
 

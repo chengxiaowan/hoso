@@ -51,8 +51,8 @@ window.app = new Vue({
             }
         },
         //手机号校验
-        phone () {
-            var that = this
+        // phone () {
+            // var that = this
             // $.ajax({
             //     url: config.api_phone,
             //     type: "post",
@@ -66,7 +66,7 @@ window.app = new Vue({
             //         }
             //     }
             // })
-        }
+        // }
     },
 })
 
