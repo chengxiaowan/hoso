@@ -64,6 +64,9 @@ window.app = new Vue({
             yprice: "",      //包年原价
             ysprice: "",     //包年售价
             yfprice: "",     //包年首冲
+
+             //分享佣金
+             shareprice:"0.00",
         }
     },
 
@@ -78,6 +81,8 @@ window.app = new Vue({
                     uploaderReady(res.data)
                     uploaderReady2(res.data)
                     uploaderReady3(res.data)
+                    uploaderReady4(res.data)
+
                     uploadInit(res.data)
 
 
@@ -239,6 +244,13 @@ window.app = new Vue({
             })
         },
 
+         //防止为空
+         share(){
+            if(this.shareprice == ""){
+                this.shareprice = "0.00"
+            }
+        },
+
         save() {
             //首先进行必填项校验
             //配置
@@ -265,6 +277,11 @@ window.app = new Vue({
             
             if ($("#vivew3").attr('src') == "../images/imgadd.png") {
                 layer.msg("请上传权益卡图片")
+                return
+            }
+
+            if ($("#vivew4").attr('src') == "../images/imgadd.png") {
+                layer.msg("请上传分享图片")
                 return
             }
 
@@ -354,6 +371,8 @@ window.app = new Vue({
                 topPic: $("#vivew2").attr('src'),              //顶部图片
                 // topPic: $("#vivew3").attr('src'),              //权益卡图片图片
                 memPic:$("#vivew3").attr('src'),
+                sharePic:$("#vivew3").attr('src'),                //分享图片
+
 
                 // remark: this.textarea,     //描述
                 remark: window.editor.txt.html(),       //描述
@@ -375,6 +394,9 @@ window.app = new Vue({
                 oldmonthprice: this.mprice || 0,
                 oldquarterprice: this.dprice || 0,
                 oldyearprice: this.yprice || 0,
+
+                 //分享佣金  2020/3/6
+                 sharePrice: this.shareprice,
             }
 
             // 2019年12月23日17:32:21
@@ -438,9 +460,13 @@ window.app = new Vue({
                         $("#vivew").attr("src", drool.pic);
                         $("#vivew2").attr("src", drool.topPic);
                         $("#vivew3").attr("src", drool.memPic);
+                        $("#vivew4").attr("src", drool.sharePic);
                         // that.textarea = drool.remark;
                         window.editor.txt.html(drool.remark)
                         that.payused = drool.priceUsed.split(",");
+
+                        //佣金啊
+                        TouchList.shareprice = drool.sharePrice
                     
 
                         //处理单次信息

@@ -61,6 +61,9 @@ window.app = new Vue({
             yprice: "",      //包年原价
             ysprice: "",     //包年售价
             yfprice: "",     //包年首冲
+
+            //分享佣金
+            shareprice:"0.00",
         }
     },
 
@@ -75,6 +78,7 @@ window.app = new Vue({
                     uploaderReady(res.data)
                     uploaderReady2(res.data)
                     uploaderReady3(res.data)
+                    uploaderReady4(res.data)
                     uploadInit(res.data)
 
                 })
@@ -235,6 +239,13 @@ window.app = new Vue({
             })
         },
 
+        //防止为空
+        share(){
+            if(this.shareprice == ""){
+                this.shareprice = "0.00"
+            }
+        },
+
         save() {
             //首先进行必填项校验
             //配置
@@ -261,6 +272,11 @@ window.app = new Vue({
             
             if ($("#vivew3").attr('src') == "../images/imgadd.png") {
                 layer.msg("请上传权益卡图片")
+                return
+            }
+
+            if ($("#vivew4").attr('src') == "../images/imgadd.png") {
+                layer.msg("请上传分享图片")
                 return
             }
 
@@ -347,8 +363,9 @@ window.app = new Vue({
                 // type:this.cominfo.isGroup,   //根据模板判断是否分组
                 pic: $("#vivew").attr('src'),                 //封面图片
                 topPic: $("#vivew2").attr('src'),              //顶部图片
-                memPic:$("#vivew3").attr('src'),
-                remark: window.editor.txt.html(),       //描述
+                memPic:$("#vivew3").attr('src'),                //权益卡图片
+                sharePic:$("#vivew3").attr('src'),                //分享图片
+                remark: window.editor.txt.html(),       //描述ic
                 priceUsed: this.payused.join(","),
 
                 //价格
@@ -360,6 +377,9 @@ window.app = new Vue({
                 mfirstPrice: this.mfprice || 0,
                 qfirstPrice: this.dfprice || 0,
                 yfirstPrice: this.yfprice || 0,
+
+                //分享佣金  2020/3/6
+                sharePrice: this.shareprice,
 
                 //原价字段 单次 包月 包季度 包年
                 oldprice: this.price || 0,        //单次

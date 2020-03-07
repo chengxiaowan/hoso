@@ -215,6 +215,17 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="image-box">
+                            <div class="drool-title"><span class="xing">*</span>分享图片:</div>
+                            <div style="margin-left: 10px;" id="drool4">
+                                <div id="updataImage4" class="imageup">
+                                    <img id="vivew4" src="../images/imgadd.png" class="imginfo">
+                                </div>
+                            </div>
+                        </div>
+
+                        
                     </div>
 
                     <div class="user-box">
@@ -363,6 +374,16 @@
 
 
                     </template>
+
+                    <div class="user-box">
+                        <div class="title-box">
+                            <span class="xing">*</span>
+                            <span>分享佣金（元）：</span>
+                        </div>
+                        <div class="input-box" style="width: 144px;">
+                            <input type="text" class="form-control" placeholder="请输入佣金" v-model="shareprice" @blur="share" onkeyup="this.value= this.value.match(/\d+(\.\d{0,2})?/) ? this.value.match(/\d+(\.\d{0,2})?/)[0] : ''"  />
+                        </div>
+                    </div>
 
                     <!-- 描述 -->
                     <div class="user-box">

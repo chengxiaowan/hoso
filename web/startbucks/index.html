@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../js/plugins/layui/css/layui.css">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .card-title {
+            height: 98px;
+            background: rgba(228, 233, 239, 1);
+            border-radius: 4px;
+        }
+
+        .card-title>h3 {
+            padding-top: 16px;
+            margin-left: 16px;
+            font-size: 20px;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: rgba(74, 74, 74, 1);
+        }
+
+        .card-title>p {
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(74, 74, 74, 1);
+            margin-top: 12px;
+            margin-left: 20px;
+        }
+
+        .keywords-box {
+            width: 310px;
+            margin-right: 24px;
+        }
+
+        .flex-box {
+            display: flex;
+        }
+
+        .sele-box {
+            width: 141px;
+            margin-right: 25px;
+        }
+
+        .date-box {
+            margin-right: 25px;
+            width: 141px;
+        }
+
+        .soso-box {
+            display: flex;
+            margin-top: 21px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="ibox-content">
+            <div class="card-title">
+                <h3>说明</h3>
+                <p>1、此处显示用户某些优惠券使用情况。</p>
+            </div>
+            <div class="soso-box">
+                <div style="line-height: 35px;margin-right:5px ;">开始时间</div>
+                <div class="date-box">
+                    <input type="text" class="form-control" id="start" autocomplete="off">
+                </div>
+                <div style="line-height: 35px;margin-right:5px ;">结束时间</div>
+                <div class="date-box">
+                    <input type="text" class="form-control" id="end" autocomplete="off">
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-htz btn-primary">
+                        <i class="icon icon_search"></i> 搜索
+                    </button>
+                </div>
+            </div>
+
+            <!-- 列表 -->
+            <table id="simple-table" class="table table-responsive table-bordered table-hover"
+                style="margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th width="40%">优惠券名称</th>
+                        <th width="20%">客户手机号码</th>
+                        <th width="20%">使用时间</th>
+                        <th width="20%">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template v-if="list.length != 0">
+                        <tr v-for="item in list.list">
+                            <td>{{item.name}}</td>
+                            <td>{{item.phone}}</td>
+                            <td>{{formatDateTime(item.createTime)}}</td>
+                            <td class="btn-hide">
+                                <a class="btn btn-success" title="查看" @click="view(item)">查看</a>
+                            </td>
+                        </tr>
+                    </template>
+                    <!-- <tr v-else>
+                        <td colspan="9">暂无数据</td>
+                    </tr> -->
+                </tbody>
+            </table>
+            <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="list.total"
+                @current-change="page" style="text-align: right;" :page-sizes="[10, 50, 100]" @size-change="size">
+            </el-pagination>
+            <el-dialog title="详情" :visible.sync="dialogVisible" width="30%" center>
+                <div class="ibox-content">
+                    <div class="col-sm-4" style="text-align: right;">名称：</div>
+                    <div class="col-sm-8">{{drool.name}}</div>
+                </div>
+                <div class="ibox-content">
+                    <div class="col-sm-4" style="text-align: right;">电话：</div>
+                    <div class="col-sm-8">{{drool.phone}}</div>
+                </div>
+                <div class="ibox-content">
+                    <div class="col-sm-4" style="text-align: right;">使用时间：</div>
+                    <div class="col-sm-8">{{formatDateTime(drool.createTime)}}</div>
+                </div>
+                <div class="ibox-content">
+                    <div class="col-sm-4" style="text-align: right;">短信状态：</div>
+                    <div class="col-sm-8">{{msgType.error=="00"?"未发送":"已发送"}}</div>
+                </div>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="dialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="sendMsg()" v-if="flag == false">发 送 短 信</el-button>
+                    <el-button type="primary" @click="sendMsg()" disabled v-else>发 送 短 信</el-button>
+                </span>
+            </el-dialog>
+        </div>
+    </div>
+</body>
+<!-- 全局js -->
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+<script src="../js/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+<script src="../js/module/module_pagination.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<!-- <script src="index.js"></script> -->
+<script>
+    let config = {
+        api_list: `${api_url}/memPackage/getYhqLogs`,         //列表
+        api_sendmsg: `${api_url}/memPackage/sendInfo`,      //发送短信
+        api_ismsg: `${api_url}/memPackage/IsSendInfo`,        //查询是否发生短信
+    }
+
+    window.app = new Vue({
+        el: "#app",
+        data() {
+            return {
+                keywords: "",    //关键字
+                start: "",       //开始时间
+                end: "",         //结束时间
+                type: "",        //状态
+                list: [],
+                pageNo: "1",
+                pageSize: "10",
+                dialogVisible: false,        //模态框控制
+                drool: "",                    //点击时的信息
+                msgType: {},                 //消息状态
+                flag:false,
+            }
+        },
+        methods: {
+            getData() {
+                const that = this
+                $.ajax({
+                    url: config.api_list,
+                    type: "POST",
+                    data: {
+                        keywords: that.keywords,
+                        pageNo: that.pageNo,
+                        pageSize: this.pageSize,
+                        createTimeStart: $("#start").val(),
+                        createTimeEnd: $("#end").val(),
+                    },
+                    success: res => {
+                        that.list = res.result
+                    }
+                })
+            },
+
+            view(item) {
+                const that = this;
+                that.drool = item
+                $.ajax({
+                    url: config.api_ismsg,
+                    type: "POST",
+                    data: {
+                        id: item.id
+                    },
+                    success: res => {
+                        that.msgType = res;
+                        that.dialogVisible = true
+                    }
+                })
+            },
+
+            sendMsg() {
+                const that = this;
+                this.$confirm(`确定发送详情信息给${that.drool.phone}？`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    that.flag = true
+                    $.ajax({
+                        url: config.api_sendmsg,
+                        type: "POST",
+                        data: {
+                            id: that.drool.id,
+                            phone: that.drool.phone,
+                            content: that.msgType.result,
+                        },
+                        success: res => {
+                            if(res.error=="00"){
+                                that.$message({
+                                type: 'success',
+                                message: '发送成功'
+                            }); 
+                            that.flag = false
+
+                            }else{
+                                that.$message({
+                                type: 'warning',
+                                message: '短信发送失败，请重试或联系管理员'
+                            });
+                            that.flag = false
+                            }
+                            
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+
+            page(e) {
+                this.pageNo = e
+                this.getData()
+            },
+            size(e) {
+                this.pageSize = e
+                this.getData()
+            },
+            //时间格式化
+            formatDateTime(inputTime) {
+                var date = new Date(inputTime);
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                m = m < 10 ? ('0' + m) : m;
+                var d = date.getDate();
+                d = d < 10 ? ('0' + d) : d;
+                var h = date.getHours();
+                h = h < 10 ? ('0' + h) : h;
+                var minute = date.getMinutes();
+                var second = date.getSeconds();
+                minute = minute < 10 ? ('0' + minute) : minute;
+                second = second < 10 ? ('0' + second) : second;
+                return y + '-' + m + '-' + d + ' ' + '　' + h + ':' + minute + ':' + second;
+            },
+        },
+        mounted() {
+            //日期
+            window.layui.use('laydate', function () {
+                var laydate = layui.laydate;
+
+                //执行一个laydate实例
+                laydate.render({
+                    elem: '#start' //指定元素
+                });
+                laydate.render({
+                    elem: '#end' //指定元素
+                });
+            })
+
+            this.getData()
+        }
+    })
+</script>
+
+</html>
