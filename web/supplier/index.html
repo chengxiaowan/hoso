@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../js/plugins/layui/css/layui.css">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .card-title {
+            height: 98px;
+            background: rgba(228, 233, 239, 1);
+            border-radius: 4px;
+        }
+
+        .card-title>h3 {
+            padding-top: 16px;
+            margin-left: 16px;
+            font-size: 20px;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: rgba(74, 74, 74, 1);
+        }
+
+        .card-title>p {
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(74, 74, 74, 1);
+            margin-top: 12px;
+            margin-left: 20px;
+        }
+
+        .keywords-box {
+            width: 310px;
+            margin-right: 24px;
+        }
+
+        .flex-box {
+            display: flex;
+        }
+
+        .sele-box {
+            width: 141px;
+            margin-right: 25px;
+        }
+
+        .date-box {
+            margin-right: 25px;
+            width: 141px;
+        }
+
+        .soso-box {
+            display: flex;
+            margin-top: 21px;
+        }
+
+        .el-input__inner{
+            height: 35px;
+        }
+
+        .el-input__prefix, .el-input__suffix{
+            top:4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="ibox-content">
+            <!-- 暂时不需要 -->
+            <!-- <div class="card-title">
+                <h3>说明</h3>
+                <p>1、此处显示用户某些优惠券使用情况。</p>
+            </div> -->
+            <div class="soso-box">
+                <div class="keywords-box">
+                    <input type="text" class="form-control" placeholder="请输入供应商名称" v-model="keywords">
+                </div>
+                <div style="line-height: 35px;margin-right:5px ;">类型</div>
+                <div class="date-box">
+                   <select class="form-control" v-model="type">
+                       <option value="">全部</option>
+                       <option value="0">实物</option>
+                       <option value="1">权益</option>
+                       <option value="2">其他</option>
+                   </select>
+                </div>
+                <div style="line-height: 35px;margin-right:5px ;">省</div>
+                <div class="date-box">
+                    <el-select v-model="province" filterable placeholder="请选择" @change="cityc()">
+                        <el-option label="全部" value="">全部</el-option>
+                        <el-option
+                          v-for="item in provinces"
+                          :label="item"
+                          :value="item">
+                        </el-option>
+                      </el-select>
+                </div>
+                <div style="line-height: 35px;margin-right:5px ;">市</div>
+                <div class="date-box">
+                    <el-select v-model="city" filterable placeholder="请选择" @change="cityc()">
+                        <el-option label="全部" value="">全部</el-option>
+                        <el-option
+                          v-for="item in citys"
+                          :label="item.name"
+                          :value="item.name"
+                          :key = "item.id"
+                          >
+                        </el-option>
+                      </el-select>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-htz btn-primary" @click=soso()>
+                        <i class="icon icon_search"></i> 搜索
+                    </button>
+                    <button type="submit" class="btn btn-htz btn-success" style="margin-left: 30px;" @click="add()">
+                        <i class="icon icon_plus"></i> 新增
+                    </button>
+                </div>
+            </div>
+
+            <!-- 列表 -->
+            <table id="simple-table" class="table table-responsive table-bordered table-hover"
+                style="margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th width="20%">供应商名称</th>
+                        <th width="10%">类型</th>
+                        <th width="40%">地址</th>
+                        <th width="20%">创建时间</th>
+                        <th width="10%">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template v-if="list.length != 0">
+                        <tr v-for="item in list.list">
+                            <td>{{item.name}}</td>
+                            <td v-if="item.type == '' || item.type == undefined">-</td>
+                            <td v-if="item.type == 0">实物</td>
+                            <td v-if="item.type == 1">权益</td>
+                            <td v-if="item.type == 2">其他</td>
+                            <td>{{item.province}} {{item.city}} {{item.area}} {{item.address}}</td>
+                            <td>{{item.createTime}}</td>
+                            <td class="btn-hide">
+                                <a class="btn btn-success" @click="edit(item)">编辑</a>
+                            </td>
+                        </tr>
+                    </template>
+                    <!-- <tr v-else>
+                        <td colspan="9">暂无数据</td>
+                    </tr> -->
+                </tbody>
+            </table>
+            <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="list.total"
+                @current-change="page" style="text-align: right;" :page-sizes="[10, 50, 100]" @size-change="size">
+            </el-pagination>
+        </div>
+    </div>
+</body>
+<!-- 全局js -->
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+<script src="../js/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+<script src="../js/module/module_pagination.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/citys/cityJson.js"></script>
+
+<script src="../js/custom/supplier/index.js"></script>
+
+</html>

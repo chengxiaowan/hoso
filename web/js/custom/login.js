@@ -20,7 +20,7 @@ function severCheck() {
                     window.sessionStorage.setItem("userId",data.userId)
                     window.sessionStorage.setItem("roleType",data.roleType)
                     window.sessionStorage.setItem("roleName",data.roleName)
-                    window.location.href = "/static/web/index.html";
+                    window.location.href = "/index.html";
                 } else if ("usererror" == data.result) {
                     layer.tips('用户名或密码有误', "#loginBtn")
                     $("#loginname").focus();

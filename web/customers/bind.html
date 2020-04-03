@@ -71,7 +71,7 @@
 
                         <div class="form-group">
                             <em>供应商：</em>
-                            <select  class="form-control" style="width:141px;" v-model="shop">
+                            <select  class="form-control" style="width:141px;">
                                 <option value="">全部</option>
                                 <option v-for="item in shops" :value="item.id">{{item.name}}</option>
                             </select>
@@ -113,15 +113,15 @@
                         <thead>
                             <tr>
                                 <td width="10%">供应商</td>
-                                <td width="10%">产品名称</td>
+                                <td width="15%">产品名称</td>
                                 <td width="10%">产品编号</td>
                                 <td width="5%">图标</td>
                                 <td width="10%">分类</td>
                                 <td width="10%">类型</td>
                                 <td width="10%">面值（元）</td>
-                                <td width="10%">采购价（元）</td>
-                                <td width="10%">销售价（元）</td>
-                                <td width="15%">操作</td>
+                                <td width="10%">单价（元）</td>
+                                <td width="10%">状态</td>
+                                <td width="10%">操作</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -147,7 +147,7 @@
 
                                 <td>{{item.official_price}}</td>
                                 <td>{{item.price}}</td>
-                                <td>{{item.salePrice}}</td>
+                                <td>{{item.state == "1"?"上架" : "下架"}}</td>
                                 <td class="btn-hide">
                                     <a class="btn btn-success" @click="edit(item)">编辑</a>
                                     <a class="btn btn-success" @click="del(item)" style="color: #D0021B;">删除</a>
@@ -184,7 +184,7 @@
 <!-- 自定义js -->
 <script src="../js/content.min.js?v=1.0.0"></script>
 <script src="../js/custom/common.js"></script>
-<script src="../js/custom/thirdParty/index.js"></script> 
+<script src="../js/custom/customers/bind.js"></script> 
 
 <!-- ui库 -->
 

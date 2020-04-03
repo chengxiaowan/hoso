@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0" />
+    <link rel="stylesheet" href="../js/plugins/layui/css/layui.css" />
+    <link rel="stylesheet" href="../css/animate.min.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css" />
+    <style>
+        /*省市地插件*/
+        ._citys {
+            width: 450px;
+            display: inline-block;
+            border: 2px solid #eee;
+            padding: 5px;
+            position: relative;
+            background: #fff;
+        }
+
+        ._citys span {
+            color: #56b4f8;
+            height: 15px;
+            width: 15px;
+            line-height: 15px;
+            text-align: center;
+            border-radius: 3px;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            border: 1px solid #56b4f8;
+            cursor: pointer;
+        }
+
+        ._citys0 {
+            width: 100%;
+            height: 34px;
+            display: inline-block;
+            border-bottom: 2px solid #56b4f8;
+            padding: 0;
+            margin: 0;
+        }
+
+        ._citys0 li {
+            display: inline-block;
+            line-height: 34px;
+            font-size: 15px;
+            color: #888;
+            width: 80px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .citySel {
+            background-color: #56b4f8;
+            color: #fff !important;
+        }
+
+        ._citys1 {
+            width: 100%;
+            display: inline-block;
+            padding: 10px 0;
+        }
+
+        ._citys1 a {
+            width: 83px;
+            height: 35px;
+            display: inline-block;
+            background-color: #f5f5f5;
+            color: #666;
+            margin-left: 6px;
+            margin-top: 3px;
+            line-height: 35px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 13px;
+            overflow: hidden;
+        }
+
+        ._citys1 a:hover {
+            color: #fff;
+            background-color: #56b4f8;
+        }
+
+        .AreaS {
+            background-color: #56b4f8 !important;
+            color: #fff !important;
+        }
+
+        .control-label {
+            text-align: right !important;
+            color: #666 !important;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            line-height: 35px;
+        }
+
+        .title {
+            margin-bottom: 30px;
+        }
+
+        .xing {
+            color: #f64d62;
+        }
+
+        .form-group {
+            margin-bottom: 30px !important;
+        }
+
+        .tips {
+            font-size: 10px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(74, 144, 226, 1);
+            margin-top: 20px;
+        }
+
+        .imginfo {
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="ibox-content">
+            <div class="title">
+                请完善以下信息
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-sm-1"><span class="xing">*</span>供应商:</label>
+                <div class="col-sm-2">
+                    <template>
+                        <el-select v-model="shops" filterable placeholder="请选择供应商">
+                            <el-option v-for="item in shop" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </template>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label class="control-label col-sm-1"><span class="xing">*</span>产品名称:</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" v-model="name" placeholder="请输入产品名称" />
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label class="control-label col-sm-1"><span class="xing">*</span>产品编码:</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" v-model="no" placeholder="请输入产品编码" />
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label class="control-label col-sm-1"><span class="xing">*</span>分类:</label>
+                <div class="col-sm-1">
+                    <select class="form-control" v-model="type">
+                        <option value="1">直充</option>
+                        <option value="0">卡券</option>
+                        <option value="2">线下</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label class="control-label col-sm-1"><span class="xing">*</span>类型:</label>
+                <div class="col-sm-1">
+                    <select class="form-control" v-model="solt">
+                        <option value="0">视频音乐</option>
+                        <option value="1">旅游</option>
+                        <option value="2">出行</option>
+                        <option value="3">吃喝</option>
+                        <option value="4">生活其他</option>
+                        <option value="5">教育办公</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label class="control-label col-sm-1"><span class="xing">*</span>面值:</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" v-model="price" placeholder="请输入产品面值"
+                        onkeyup="this.value= this.value.match(/\d+(\.\d{0,2})?/) ? this.value.match(/\d+(\.\d{0,2})?/)[0] : ''" />
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label class="control-label col-sm-1"><span class="xing">*</span>采购价:</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" v-model="gprice" placeholder="请输入采购价"
+                        onkeyup="this.value= this.value.match(/\d+(\.\d{0,2})?/) ? this.value.match(/\d+(\.\d{0,2})?/)[0] : ''" />
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label class="control-label col-sm-1"><span class="xing">*</span>销售价:</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" v-model="sprice" placeholder="请输入销售价"
+                        onkeyup="this.value= this.value.match(/\d+(\.\d{0,2})?/) ? this.value.match(/\d+(\.\d{0,2})?/)[0] : ''" />
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label class="control-label col-sm-1"><span class="xing">*</span>本地库存:</label>
+                <div class="col-sm-2" style="line-height: 35px;">
+                    <el-radio v-model="ku" label="1">有</el-radio>
+                    <el-radio v-model="ku" label="0">无</el-radio>
+                </div>
+            </div>
+
+            <div class="row form-group" v-if="ku == 1">
+                <label class="control-label col-sm-1"><span class="xing">*</span>数据类型:</label>
+                <div class="col-sm-1">
+                    <select class="form-control" v-model="kuType">
+                        <option value="0">卡号</option>
+                        <option value="1">卡号卡密</option>
+                        <option value="2">链接</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label class="control-label col-sm-1"><span class="xing">*</span>图标:</label>
+                <div class="col-sm-4" id="drool">
+                    <div id="updataImage" class="imageup">
+                        <img id="vivew" src="../images/imgadd.png" class="imginfo" />
+                    </div>
+                    <div class="tips">
+                        请上传png,jpg,jpeg等规范格式的图片，大小不能超过5MB。
+                    </div>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label class="control-label col-sm-1"><span class="xing">*</span>说明:</label>
+                <div class="col-sm-6">
+                    <div id="demo" class="editor"></div>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-sm-3">
+                    <button class="btn btn-htz btn-primary" style="float: right;" @click="save()">
+                        保存
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+<script src="../js/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+<script src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
+
+<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+<script src="../js/qiniuyun/qiniuVip.js"></script>
+<script src="../js/qiniuyun/qiniu_editor.js"></script>
+
+<script src="../js/module/module_pagination.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/custom/thirdParty/edits.js"></script>
+
+<!-- 引入省市地三联插件和数据 -->
+<!-- <script src="../js/citys/cityJson.js"></script>
+  <script src="../js/citys/citySet.js"></script>
+  <script src="../js/citys/Popt.js"></script> -->
+
+</html>

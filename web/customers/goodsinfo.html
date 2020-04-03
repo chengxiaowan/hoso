@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0" />
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/animate.min.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css" />
+    <link rel="stylesheet" href="../js/plugins/layui/css/layui.css" />
+    <style>
+        * {
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(102, 102, 102, 1);
+        }
+
+        .info-box {
+            width: 750px;
+            margin: 0 auto;
+            /* height: 121px; */
+            border: 1px solid #f5f5f5;
+        }
+
+        .info-title {
+            background: rgba(229, 229, 229, 1);
+            height: 30px;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(102, 102, 102, 1);
+            line-height: 30px;
+            text-indent: 11px;
+        }
+
+        div>span {
+            color: #333;
+        }
+
+        .form-title {
+            text-align: right;
+            line-height: 35px;
+        }
+
+        .xing {
+            color: #f98997;
+        }
+
+        .row {
+            margin-bottom: 15px;
+        }
+
+        .col-sm-6 {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="ibox-content">
+            <div class="info-box">
+                <div class="info-title">产品信息</div>
+                <!-- 打折券时候 -->
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-6">产品名称：<span>{{info.name}}</span></div>
+                        <div class="col-sm-6" style="text-indent: 14px;">供应商：<span>{{info.supplierName || "--"}}</span>
+                        </div>
+                        <!-- 类型 -->
+                        <div class="col-sm-6" v-if="info.type=='1'" style="text-indent: 28px;">分类：<span>直充</span></div>
+                        <div class="col-sm-6" v-if="info.type=='0'" style="text-indent: 28px;">分类：<span>卡券</span></div>
+                        <div class="col-sm-6" v-if="info.type=='2'" style="text-indent: 28px;">分类：<span>线下</span></div>
+                        <!-- 分类 -->
+                        <div class="col-sm-6" v-if="info.solt=='0'" style="text-indent: 28px;">类型：<span>视频音乐</span>
+                        </div>
+                        <div class="col-sm-6" v-if="info.solt=='1'" style="text-indent: 28px;">类型：<span>旅游</span></div>
+                        <div class="col-sm-6" v-if="info.solt=='2'" style="text-indent: 28px;">类型：<span>出行</span></div>
+                        <div class="col-sm-6" v-if="info.solt=='3'" style="text-indent: 28px;">类型：<span>吃喝</span></div>
+                        <div class="col-sm-6" v-if="info.solt=='4'" style="text-indent: 28px;">类型：<span>生活其他</span>
+                        </div>
+                        <div class="col-sm-6" v-if="info.solt=='5'" style="text-indent: 28px;">类型：<span>教育办公</span>
+                        </div>
+                        <div class="col-sm-6" style="text-indent: 28px;">
+                            面值：<span>{{info.official_price}}</span>
+                        </div>
+                        <div class="col-sm-6" style="text-indent: 14px;">采购价：<span>{{info.price}}</span></div>
+                        <div class="col-sm-6" style="text-indent: 28px;">售价：<span>{{info.salePrice}}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="height: 20px;"></div>
+        <div class="info-box">
+            <div class="info-title">其他信息</div>
+            <div class="ibox-content">
+                <div class="row form-group">
+                    <label class="control-label col-sm-4" style="text-align: right;color: #666;font-size: 14px;font-weight: 400;"><span class="xing">*</span>单价元）:</label>
+                    <div class="col-sm-4">
+                        <input class="form-control" autocomplete="off" placeholder="请输入单价" v-model="price" />
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-sm-4" style="text-align: right;color: #666;font-size: 14px;font-weight: 400;"><span class="xing">*</span>产品状态:</label>
+                    <div class="col-sm-4">
+                        <el-radio v-model="type" label="1">上架</el-radio>
+                        <el-radio v-model="type" label="0">下架</el-radio>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                   <div class="col-sm-12" style="text-align: center;margin-top: 40px;">
+                    <button type="submit" class="btn btn-htz btn-primary" @click="save()">
+                        保存
+                    </button>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+<script src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+
+<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+<script src="../js/qiniuyun/qiniu-package.js"></script>
+<script src="../js/qiniuyun/qiniu_editor.js"></script>
+
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script>
+    let config = {
+        api_add: api_url + "/memberCustomer/bindGoods"
+    };
+    var id = parameter().id;
+    console.log(id)
+    window.app = new Vue({
+        el: "#app",
+        data() {
+            return {
+                test: [""],
+                //配置
+                info: {}, //获取到的信息
+                price: "0.00", //售价
+                type: "0"
+            };
+        },
+        methods: {
+            //获取参数
+            save() {
+                let parmas = {
+                    price: this.price, //售价
+                    customerId: id,      //客户ID
+                    state: this.type,           //上下架状态
+                    goodsNo: this.info.goods_no,     //产品编号
+                };
+
+                $.ajax({
+                    url: config.api_add,
+                    type: "post",
+                    data: parmas,
+                    success: res => {
+                        if (res.error == "00") {
+                            layer.msg("添加成功");
+                            setTimeout(() => {
+                                var index1 = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index1); //再执行关闭
+                            }, 2000);
+                        } else {
+                            layer.msg(res.msg);
+                        }
+                    }
+                });
+            },
+            add() {
+                this.test.push("");
+            },
+            add2(index) {
+                this.test.splice(index, 1);
+            }
+        },
+        mounted() {
+            this.info = JSON.parse(sessionStorage.getItem("drool"));
+
+        }
+    });
+</script>
+
+</html>
