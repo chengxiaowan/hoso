@@ -40,6 +40,9 @@ window.app = new Vue({
             parentId: "-1",          //选择的分组
             list: [],
 
+            type:"",
+            solt:""
+
         }
     },
     methods: {
@@ -187,6 +190,9 @@ window.app = new Vue({
                 pageSize: 10,
                 keywords: this.keywords3,
                 name: "",
+                type:this.type,
+                solt:this.solt
+
             }
 
             $.ajax({

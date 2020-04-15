@@ -151,6 +151,8 @@
                             <td>{{item.createTime}}</td>
                             <td class="btn-hide">
                                 <a class="btn btn-success" @click="edit(item)">编辑</a>
+                                <a class="btn btn-success" @click="edit(item)"></a>
+                                <a class="btn btn-default" title="删除" @click="del(item.id);">删除</a>
                             </td>
                         </tr>
                     </template>

@@ -67,6 +67,10 @@ window.app = new Vue({
 
              //分享佣金
              shareprice:"0.00",
+
+             //过期时间
+             timeType:"",
+             time:"",
         }
     },
 
@@ -405,9 +409,9 @@ window.app = new Vue({
 
 
 
-            // if(this.payused.includes("0")){
-            //     parmas.time = this.date
-            // }
+            if(this.payused.includes("0")){
+                parmas.time = this.time
+            }
 
             $.ajax({
                 url: config.api_save,
@@ -467,6 +471,11 @@ window.app = new Vue({
 
                         //佣金啊
                         TouchList.shareprice = drool.sharePrice
+
+                        //过期时长
+                        //2020年4月27日09:58:31
+                        that.timeType = drool.timeType
+                        that.time = drool.time
                     
 
                         //处理单次信息

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0" />
+    <link rel="stylesheet" href="../css/animate.min.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../js/plugins/layui/css/layui.css" />
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css" />
+    <style>
+        .el-upload__input {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="wrapper wrapper-content animated fadeInRight">
+        <div class="ibox-content">
+            <div style="display: flex;justify-content: center;margin-top: 55px;">
+                <div style="line-height: 35px;text-align: right;">到期时间：</div>
+                <div>
+                    <input type="text" class="form-control" id="test" style="width: 210px;">
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; display: flex;justify-content: center;">
+                <div class="col-2" style="line-height: 35px;text-align: right;">选择文件：</div>
+                <div class="col-6">
+                    <el-upload class="upload-demo" ref="upload" :action="baseUrl" :auto-upload="false"
+                        :on-success="upsuccess" :show-file-list="true" accept=".xls,.xlsx" :data="parmars" headers="">
+                        <el-button slot="trigger" size="small" type="success">选取文件</el-button>
+                        <div slot="tip" class="el-upload__tip">只能上传.xls .xlsx文件，且不超过500kb</div>
+                    </el-upload>
+                </div>
+            </div>
+            <div style="display: flex;justify-content: center;"><div></div>
+            
+            <el-button style="margin-left: 25px;margin-top: 110px;" size="small" type="primary" @click="submitUpload">
+                上传
+            </el-button>
+            </div>
+
+        </div>
+    </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script>
+    var config = {
+        api_update: api_url + '/memPackage/importExcel'
+    };
+
+    var goodsNo = parameter().goodsNo;
+    var type = parameter().type;
+
+    console.log(goodsNo)
+    console.log(type)
+
+    window.app = new Vue({
+        el: "#app",
+        data() {
+            return {
+                baseUrl: config.api_update,         //上传基础
+                parmars: {
+                    goodsNo: goodsNo,
+                    dataType: type,
+                    pastTime: "1",
+                },
+                // parmars: {
+                //     goodsNo: 123,
+                //     dataType: 111,
+                //     pastTime: "1111",
+                // },
+            };
+        },
+        methods: {
+            submitUpload() {
+                if ($("#test").val() == '') {
+                    this.$message({
+                        message: '请选择过期时间',
+                        type: 'warning'
+                    });
+                    return
+                } else {
+                    this.parmars.pastTime = $("#test").val()
+                }
+                console.log(this.parmars)
+                this.$refs.upload.submit();
+            },
+            upsuccess(res) {
+                if (res.error == "00") {
+                    this.$message({
+                        message: '上传成功',
+                        type: 'success'
+                    });
+                    setTimeout(() => {
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+                    }, 2000);
+                } else {
+                    this.$message({
+                        message: res.msg,
+                        type: 'error'
+                    });
+                }
+            }
+        },
+        mounted() {
+
+        }
+
+    });
+</script>
+
+<script>
+    window.layui.use('laydate', function () {
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#test', //指定元素
+            type: "datetime"
+        });
+    });
+
+
+</script>
+
+<!-- ui库 -->
+
+</html>

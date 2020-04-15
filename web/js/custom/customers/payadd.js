@@ -82,7 +82,8 @@ window.app = new Vue({
 
             //执行一个laydate实例
             laydate.render({
-                elem: '#time' //指定元素
+                elem: '#time', //指定元素
+                max:0
             })
         })
     },

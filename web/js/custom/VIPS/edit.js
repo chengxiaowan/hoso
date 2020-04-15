@@ -53,6 +53,10 @@ window.app = new Vue({
         keywordss: "",
         solt:"0",
 
+        //过滤条件
+        viptype:"",
+        vipsolt:"",
+
     },
     methods: {
         //添加模态框
@@ -267,6 +271,8 @@ window.app = new Vue({
                     pageNo: that.pageNo,
                     goodsNos: that.goodsno,
                     keywords: that.keywordss,
+                    type:that.viptype,
+                    solt:that.vipsolt
 
                 },
                 success: res => {

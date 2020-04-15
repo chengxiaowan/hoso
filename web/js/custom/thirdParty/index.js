@@ -160,6 +160,47 @@ window.app = new Vue({
                     }
                 }
             })
+        },
+        lead(item){
+            const that = this
+            if(item.dataType == "0"){
+                console.log("卡号")
+                let index = layer.open({
+                    type: 2,
+                    title: "本地库存",
+                    content: `card.html?goodsNo=`+item.goods_no,
+                    area: ["100%", "100%"],
+                    end: () => {
+                        that.getdata()
+                    }
+                })
+            }
+
+            if(item.dataType == "1"){
+                console.log("卡号卡密")
+                let index = layer.open({
+                    type: 2,
+                    title: "本地库存",
+                    content: `card&word.html?goodsNo=`+item.goods_no,
+                    area: ["100%", "100%"],
+                    end: () => {
+                        that.getdata()
+                    }
+                })
+            }
+
+            if(item.dataType == "2"){
+                console.log("链接")
+                let index = layer.open({
+                    type: 2,
+                    title: "本地库存",
+                    content: `link.html?goodsNo=`+item.goods_no,
+                    area: ["100%", "100%"],
+                    end: () => {
+                        that.getdata()
+                    }
+                })
+            }
         }
 
         // //上下架

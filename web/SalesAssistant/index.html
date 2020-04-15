@@ -58,53 +58,53 @@
         <div class="ibox-content">
             <div class="title-index">
                 <h3>说明</h3>
-                <p>1、显示客户已绑定的权益产品。</p>
+                <p>1、显示已过期或即将过期的权益产品</p>
             </div>
             <div class="row">
                 <div class="col-sm-12">
                     <!-- 检索 start -->
                     <div class="form-inline" role="form" id="customerForm">
                         <div class="form-group">
-                            <input class="form-control" id="nav-search-input" type="text" placeholder="请输入权益名称"
+                            <input class="form-control" id="nav-search-input" type="text" placeholder="请输入产品名称"
                                 v-model="keywords">
                         </div>
-
+                        <div class="form-group" style="margin-left: 15px;">
+                            <input class="form-control" id="nav-search-input" type="text" placeholder="请输入卡号/卡密/链接"
+                                v-model="keywords">
+                        </div>
                         <div class="form-group">
-                            <em>分类：</em>
-                            <select v-model="type" class="form-control" style="width:141px;">
+                            <em>供应商：</em>
+                            <select v-model="type" class="form-control" style="width:100px;">
                                 <option value="">全部</option>
-                                <option value="0">卡券</option>
-                                <option value="1">直充</option>
-                                <option value="2">线下</option>
+                                <option value="2">打折券</option>
+                                <option value="3">抵用券</option>
+                                <option value="4">满减券</option>
                             </select>
                         </div>
-
-                        <div class="form-group">
-                            <em>类型：</em>
-                            <select class="form-control" style="width:141px;" v-model="solt">
-                                <option value="">全部</option>
-                                <option value="0">视频音乐</option>
-                                <option value="1">旅游</option>
-                                <option value="2">出行</option>
-                                <option value="3">吃喝</option>
-                                <option value="4">生活其他</option>
-                                <option value="5">教育办公</option>
-                            </select>
-                        </div>
-
                         <div class="form-group">
                             <em>状态：</em>
-                            <select class="form-control" style="width:141px;" v-model="isOnsell">
+                            <select v-model="isOnsell" class="form-control" style="width: 100px;">
                                 <option value="">全部</option>
-                                <option value="0">下架</option>
-                                <option value="1">上架</option>
+                                <option value="0">已过期</option>
+                                <option value="1">即将过期</option>
                             </select>
+                        </div>
+                        <div class="form-group" style="margin-left: 15px;">
+                            <input class="form-control" id="nav-search-input" type="text" placeholder="请选择开始时间"
+                                v-model="keywords">
+                        </div>
+                        <div class="form-group" style="margin-left: 15px;">
+                            <input class="form-control" id="nav-search-input" type="text" placeholder="请选择结束时间"
+                                v-model="keywords">
                         </div>
                         <button type="submit" class="btn btn-htz btn-primary" @click="soso()">
                             <i class="icon icon_search"></i> 搜索
                         </button>
                         <button type="reset" class="btn btn-htz btn-success" @click="add()">
-                            <i id="nav-search-icon" class="icon icon_plus"></i> 新增
+                            批量修改
+                        </button>
+                        <button type="reset" class="btn btn-htz btn-success" @click="add()">
+                            导出excel
                         </button>
                     </div>
                     <!-- 检索 end -->
@@ -113,51 +113,34 @@
                     <table id="simple-table" class="table table-responsive table-bordered table-hover">
                         <thead>
                             <tr>
-                                <td width="10%">供应商</td>
-                                <td width="10%">产品名称</td>
-                                <td width="10%">产品编号</td>
-                                <td width="5%">图标</td>
-                                <td width="10%">分类</td>
-                                <td width="10%">类型</td>
-                                <td width="10%">面值（元）</td>
-                                <td width="10%">单价（元）</td>
-                                <td width="10%">状态</td>
-                                <td width="15%">操作</td>
+                                <th width="20%">产品名称</th>
+                                <th width="15%">卡号</th>
+                                <th width="15%">卡密</th>
+                                <th width="15%">链接</th>
+                                <th width="15%">导入时间</th>
+                                <th width="15%">过期时间</th>
+                                <th width="5%">操作</th>
                             </tr>
                         </thead>
                         <tbody>
-
-                            <tr v-for="item in list.list">
-                                <td>{{item.supplierName || "--"}}</td>
-                                <td>{{item.name}}</td>
-                                <td>{{item.goods_no}}</td>
-
-                                <td v-if="item.pic"><img :src="item.pic" alt="" style="width: 25px;height: 25px;"></td>
-                                <td v-else></td>
-
-                                <td v-if="item.type == 0">卡券</td>
-                                <td v-if="item.type == 1">直充</td>
-                                <td v-if="item.type == 2">线下</td>
-
-                                <td v-if="item.solt == 0">视频音乐</td>
-                                <td v-if="item.solt == 1">旅游</td>
-                                <td v-if="item.solt == 2">出行</td>
-                                <td v-if="item.solt == 3">吃喝</td>
-                                <td v-if="item.solt == 4">生活其他</td>
-                                <td v-if="item.solt == 5">教育办公</td>
-
-                                <td>{{item.official_price}}</td>
-                                <td>{{item.price}}</td>
-                                <td>{{item.state == "1"?"上架" : "下架"}}</td>
-                                <td class="btn-hide">
-                                    <a class="btn btn-success" @click="edit(item)">编辑</a>
-                                    <a class="btn btn-success" v-if="item.state == '1'" @click="onsell(item)">下架</a>
-                                    <a class="btn btn-success" v-if="item.state == '0'" @click="onsell(item)">上架</a>
-                                    <a class="btn btn-success" @click="del(item)" style="color: #D0021B;">删除</a>
+                            <template v-if="list.list != []">
+                                <tr>
+                                    <td>星巴克</td>
+                                    <td>10016111111111111</td>
+                                    <td>*****************</td>
+                                    <td>www.baidu.com</td>
+                                    <td>2020年4月28日17:10:35</td>
+                                    <td>2020年4月28日17:10:35</td>
+                                    <td class="btn-hide">
+                                        <a>编辑</a>
+                                    </td>
+                                </tr>
+                            </template>
+                            <!-- <tr v-else>
+                                <td colspan="6">
+                                    暂时没有数据
                                 </td>
-                            </tr>
-
-
+                            </tr> -->
                         </tbody>
                     </table>
                     <div class="pull-left form form-inline">
@@ -187,7 +170,7 @@
 <!-- 自定义js -->
 <script src="../js/content.min.js?v=1.0.0"></script>
 <script src="../js/custom/common.js"></script>
-<script src="../js/custom/customers/bind.js"></script>
+<script src="../js/custom/SalesAssistant/index.js"></script>
 
 <!-- ui库 -->
 

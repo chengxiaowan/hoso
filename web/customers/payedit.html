@@ -137,7 +137,8 @@
             <div class="row form-group">
                 <label class="control-label col-sm-1"><span class="xing">*</span> 充值金额:</label>
                 <div class="col-sm-4">
-                    <input type="text" class="form-control" placeholder="请输入充值金额，最多两位小数" v-model="payPrice">
+                    <input type="text" class="form-control" placeholder="请输入充值金额，最多两位小数" v-model="payPrice"
+                        onkeyup="this.value= this.value.match(/\d+(\.\d{0,2})?/) ? this.value.match(/\d+(\.\d{0,2})?/)[0] : ''" />
                 </div>
             </div>
 
@@ -179,18 +180,18 @@
             <div class="row form-group">
                 <label class="control-label col-sm-1"><span class="xing">*</span> 充值时间:</label>
                 <div class="col-sm-2">
-                   <input class="form-control" placeholder="请选择时间" id="time">
+                    <input class="form-control" placeholder="请选择时间" id="time" autocomplete="off">
                 </div>
             </div>
 
             <div class="row form-group">
                 <label class="control-label col-sm-1">备注:</label>
                 <div class="col-sm-4">
-                  <textarea v-model="remark" class="form-control" style="height: 150px;"></textarea>
+                    <textarea v-model="remark" class="form-control" style="height: 150px;"></textarea>
                 </div>
             </div>
 
-           
+
 
 
 

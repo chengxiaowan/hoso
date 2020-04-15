@@ -181,10 +181,10 @@
         }
 
         .goodsInfo-box {
-            width: 800px;
+            /* width: 800px; */
             /* height: 500px; */
             /* background: cyan; */
-            float: right;
+            /* float: right; */
 
         }
 
@@ -271,7 +271,7 @@
                     <div class="main-info">
                         <div class="form-title"><span class="xing">*</span> 名称：</div>
                         <div class="form-input">
-                            <input type="text" class="form-control" placeholder="请输入权益名称，1-30个字" v-model="name">
+                            <input type="text" class="form-control" placeholder="请输入优惠券名称，1-30个字" v-model="name">
                         </div>
                     </div>
 
@@ -350,7 +350,7 @@
                             <select class="form-control" style="width: 184px;padding-left: 40px;z-index: 999;"
                                 v-model="com" @change="drool()">
                                 <!-- <option value="1">通用模板</option> -->
-                                <option value="1">二维码</option>
+                                <!-- <option value="1">二维码</option> -->
                                 <option value="2">单个商品</option>
                                 <option value="3">多商品单选</option>
                                 <!-- <option value="5">酒店会员卡模板</option> -->
@@ -471,38 +471,65 @@
         <!-- 绑定券码 -->
         <el-dialog :visible.sync="dialogVisible" width="1031px" title="">
             <div class="goodsadd-box">
-                <div class="shops-box">
-                    <div class="shops-name" style="background: url('../images/bg-s.png');" v-if="shopType == '1' && com !='1'">橙券
-                    </div>
-                    <div class="shops-name" v-if="shopType != '1' && com !='1'" @click="teb(1)">橙券</div>
-                    <div class="shops-name" style="background: url('../images/bg-s.png');" v-if="shopType == '2' && com=='1'">第三方酒店
-                    </div>
-                    <div class="shops-name" v-if="shopType != '2' && com=='1'" @click="teb(2)">第三方酒店</div>
-                </div>
-                <div class="goodsInfo-box" v-if="shopType == '1'">
+                <div class="goodsInfo-box">
                     <div class="soso" style="margin-bottom: 12px;">
                         <div class="soso-input">
                             <input type="text" class="form-control" placeholder="请输入商品名称" v-model="keywordss">
+                        </div>
+                        <div style="line-height: 35px;">分类:</div>
+                        <div style="width: 100px;margin:0 15px 0 5px">
+                            <select v-model="viptype" class="form-control">
+                                <option value="">全部</option>
+                                <option value="0">卡券</option>
+                                <option value="1">直充</option>
+                                <option value="2">线下</option>
+                            </select>
+                        </div>
+                        <div style="line-height: 35px;">类型:</div>
+                        <div style="width: 100px;margin:0 15px 0 5px">
+                            <select v-model="vipsolt" class="form-control">
+                                <option value="">全部</option>
+                                <option value="0">视频音乐</option>
+                                <option value="1">旅游</option>
+                                <option value="2">出行</option>
+                                <option value="3">吃喝</option>
+                                <option value="4">生活其他</option>
+                                <option value="5">教育办公</option>
+                            </select>
                         </div>
                         <button class="btn btn-htz btn-primary" @click="getGoods()">搜 索</button>
                     </div>
                     <table id="simple-table" class="table table-responsive table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th width="20%">产品名称</th>
-                                <th width="20%">产品编号</th>
-                                <th width="20%">产品价格（元）</th>
-                                <th width="20%">产品面值（元）</th>
+                                <th width="10%">供应商</th>
+                                <th width="15%">产品名称</th>
+                                <th width="10%">分类</th>
+                                <th width="15%">类型</th>
+                                <th width="10%">面值（元）</th>
+                                <th width="15%">采购价（元）</th>
+                                <th width="15%">销售价（元）</th>
                                 <th width="20%">操作</th>
                             </tr>
                         </thead>
                         <tbody>
                             <template>
                                 <tr v-for="item in goodsList.list" :key="item.goods_no">
+                                    <td>{{item.supplierName || "--"}}</td>
                                     <td>{{item.name}}</td>
-                                    <td>{{item.goods_no}}</td>
-                                    <td>{{item.price}}</td>
+                                    <td v-if="item.type == 0">卡券</td>
+                                    <td v-if="item.type == 1">直充</td>
+                                    <td v-if="item.type == 2">线下</td>
+                                    
+                                    <td v-if="item.solt == 0">视频音乐</td>
+                                    <td v-if="item.solt == 1">旅游</td>
+                                    <td v-if="item.solt == 2">出行</td>
+                                    <td v-if="item.solt == 3">吃喝</td>
+                                    <td v-if="item.solt == 4">生活其他</td>
+                                    <td v-if="item.solt == 5">教育办公</td>
                                     <td>{{item.official_price}}</td>
+                                    <td>{{item.price}}</td>
+                                    <td>{{item.salePrice}}</td>
                                     <td class="btn-hide">
                                         <a class="btn btn-success" @click="addgoods(item)">加入</a>
                                     </td>
@@ -518,40 +545,6 @@
                     <div style="float: right;">
                         <el-pagination background layout="prev, pager, next" :total="goodsList.total"
                             @current-change="pages">
-                        </el-pagination>
-                    </div>
-                </div>
-                <div class="goodsInfo-box" v-if="shopType == '2'">
-                    <div class="soso" style="margin-bottom: 12px;">
-                        <div class="soso-input">
-                            <input type="text" class="form-control" placeholder="请输入酒店名称" v-model="keywords">
-                        </div>
-                        <button class="btn btn-htz btn-primary" @click="getHotel()">搜 索</button>
-                    </div>
-                    <table class="table table-responsive table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th width="40%">酒店名称</th>
-                                <th width="10%">类型</th>
-                                <th width="40%">酒店地址</th>
-                                <th width="10%">操作</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="item in hotel.list">
-                                <td>{{item.shopsName}}</td>
-                                <td v-if="item.shopsType == '1'">酒店</td>
-                                <td v-if="item.shopsType == '2'">民宿</td>
-                                <td>{{item.province}} {{item.city}} {{item.area}} {{item.address}}</td>
-                                <td class="btn-hide">
-                                    <a class="btn btn-success" @click="addShops(item)">加入</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div style="float: right;">
-                        <el-pagination background layout="prev, pager, next" :total="hotel.total"
-                            @current-change="pages2" :current-page.sync="pageNo2">
                         </el-pagination>
                     </div>
                 </div>

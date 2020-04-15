@@ -2,15 +2,11 @@
 let config = {
     role: localStorage.userRole,
     //接口地址写在下面 使用api_url变量拼接
-    api_list: api_url + "/memRights/getGoodsByFacilitatorName",
+    api_list: api_url + "/memRights/list",
     api_del: api_url + '/memRights/delete',
-    // api_save: api_url + '/memRights/update',        //上下架
-    api_del:api_url + '/memPackage/deleteCq'        //SHENCHU1
+    api_save: api_url + '/memRights/update',        //上下架
 
 }
-
-var id = parameter().id;
-console.log(id)
 
 window.app = new Vue({
     el: "#app",
@@ -18,21 +14,10 @@ window.app = new Vue({
         info: "这里是权益管理",
         keywords: "",
         type: "",
-        // isOnsell: "",
-        list: [],
-        solt:"",
-        goodsList:JSON.parse(sessionStorage.getItem("goodsNo")) || ""
+        isOnsell: "",
+        list: []
     },
     methods: {
-        goRoom(item) {
-            let index = layer.open({
-                type: 2,
-                title: "绑定房券",
-                content: "add-rom.html?mrId=" + item.id,
-                area: ["100%", "100%"]
-            })
-            console.log(item)
-        },
         getdata(page) {
             // console.log("drool")
             const that = this
@@ -48,9 +33,6 @@ window.app = new Vue({
                     isOnsell: this.isOnsell,
                     pageSize: this.list.pageSize || 10,
                     pageNo: this.list.pageNum || 1,
-                    name:"橙券",
-                    solt:this.solt,
-                    goodsNos:this.goodsList.join(",")
                 },
                 success: res => {
                     if (res.error == "00") {
@@ -84,35 +66,67 @@ window.app = new Vue({
             const that = this
             let index = layer.open({
                 type: 2,
-                title: "添加权益",
-                content: "../thirdParty/adds.html",
-                area: ["80%", "80%"],
+                title: "新增优惠券",
+                content: "../VIPS/add.html",
+                area: ["100%", "100%"],
                 end: () => {
                     that.getdata()
-                    console.log("关了")
                 }
 
             })
         },
-
-        bind(item){
-            const that = this
-            sessionStorage.setItem("drool",JSON.stringify(item))
-            window.location.href = "goodsinfo.html?id="+id
-        },
-
         soso() {
             this.list.pageSize = 10
             this.list.pageNum = 1
             this.getdata()
         },
-       
+        edit(item) {
+            const that = this
+            // console.log(item)
+            let index = layer.open({
+                type: 2,
+                title: "编辑优惠券",
+                content: `../VIPS/edit.html?id=${item.id}&type=${item.type}`,
+                area: ["100%", "100%"],
+                end: () => {
+                    that.getdata()
+                }
+            })
+        },
 
+        //删除指定项
+        del(item) {
+            this.$confirm('您确定删除该优惠券？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                $.ajax({
+                    url: config.api_del,
+                    type: "get",
+                    async: true,
+                    data: {
+                        id: item.id,
+                        // tableName: "member_rights"
+                        type:item.type,
+                    },
+                    success: res => {
+                        if (res.error == "00") {
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            this.getdata(1)
+                        }
+                    }
+                })
+            }).catch(() => { });
+        },
 
+        
     },
     mounted() {
         console.log(config.api_list)
         this.getdata()
-
     },
 })

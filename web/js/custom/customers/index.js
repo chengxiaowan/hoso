@@ -84,7 +84,7 @@ window.app = new Vue({
             var index = layer.open({
                 type: 2,
                 title: '编辑客户',
-                content: 'edit.html',
+                content: 'edit.html?id='+ item.id,
                 area: ['100%', '100%'],
                 end: () => {
                     that.getData()
@@ -133,11 +133,13 @@ window.app = new Vue({
                     },
                     success: res => {
                         if (res.error == "00") {
-                            layer.msg("删除成功")
-                        } else {
                             layer.close(dialog)
                             layer.msg("删除成功")
                             that.getData()
+                        } else {
+                           
+                            layer.msg(res.msg)
+                           
                         }
                     }
                 })

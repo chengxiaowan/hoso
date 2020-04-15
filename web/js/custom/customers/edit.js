@@ -1,6 +1,10 @@
 config = {
-    api_save: api_url + '/memberCustomer/add'
+    api_save: api_url + '/memberCustomer/update',
+    api_info:api_url + '/memberCustomer/detail'
 }
+
+var id = parameter().id;
+
 
 window.app = new Vue({
     el: "#app",
@@ -15,7 +19,7 @@ window.app = new Vue({
             loginPasswd: "", //登录密码
             remark: "",      //备注
 
-            id: "",          //编辑的条目
+            id: id,          //编辑的条目
         }
     },
     methods: {
@@ -86,6 +90,23 @@ window.app = new Vue({
                     }
                 }
             })
+        },
+
+        //获取详情
+        getinfo(){
+            let that = this;
+            $.ajax({
+                url:config.api_info,
+                type:"POST",
+                data:{
+                    id:id
+                },
+                success:res=>{
+                    if(res.error == "00"){
+                        that.loginPasswd = res.result.loginPasswd
+                    }
+                }
+            })
         }
     },
     mounted() {
@@ -101,6 +122,8 @@ window.app = new Vue({
        this.remark = info.remark
        let drool = [info.province,info.city,info.area].join("-")
        $("#city").val(drool)
+
+       this.getinfo()
 
 
 

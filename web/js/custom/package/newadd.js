@@ -63,7 +63,11 @@ window.app = new Vue({
             yfprice: "",     //包年首冲
 
             //分享佣金
-            shareprice:"0.00",
+            shareprice: "0.00",
+
+            //过期时间
+            timeType: "0",
+            time: ""
         }
     },
 
@@ -240,8 +244,8 @@ window.app = new Vue({
         },
 
         //防止为空
-        share(){
-            if(this.shareprice == ""){
+        share() {
+            if (this.shareprice == "") {
                 this.shareprice = "0.00"
             }
         },
@@ -269,7 +273,7 @@ window.app = new Vue({
                 return
             }
 
-            
+
             if ($("#vivew3").attr('src') == "../images/imgadd.png") {
                 layer.msg("请上传权益卡图片")
                 return
@@ -298,6 +302,17 @@ window.app = new Vue({
 
             if (this.payused.includes("0") && this.fprice == "") {
                 layer.msg("请输入首次购买价格")
+                return
+            }
+
+            if(this.timeType=="1" && this.time==""){
+                layer.msg("请输入过期时间")
+                return
+            }
+
+            
+            if(this.timeType=="2" && this.time==""){
+                layer.msg("请输入过期时间")
                 return
             }
 
@@ -363,8 +378,8 @@ window.app = new Vue({
                 // type:this.cominfo.isGroup,   //根据模板判断是否分组
                 pic: $("#vivew").attr('src'),                 //封面图片
                 topPic: $("#vivew2").attr('src'),              //顶部图片
-                memPic:$("#vivew3").attr('src'),                //权益卡图片
-                sharePic:$("#vivew3").attr('src'),                //分享图片
+                memPic: $("#vivew3").attr('src'),                //权益卡图片
+                sharePic: $("#vivew3").attr('src'),                //分享图片
                 remark: window.editor.txt.html(),       //描述ic
                 priceUsed: this.payused.join(","),
 
@@ -373,6 +388,7 @@ window.app = new Vue({
                 quarterPrice: this.dprice || 0,
                 yearPrice: this.yprice || 0,
                 price: this.price || 0,
+
                 firstPrice: this.fprice || 0,
                 mfirstPrice: this.mfprice || 0,
                 qfirstPrice: this.dfprice || 0,
@@ -391,9 +407,12 @@ window.app = new Vue({
             // 2019年12月23日17:32:47
             // 去掉了到期时间
 
-            // if(this.payused.includes("0")){
-            //     parmas.time = this.date
-            // }
+            //2020年4月27日09:54:11   又把到期时间加上了
+
+            if(this.payused.includes("0")){
+                parmas.timeType = this.timeType
+                parmas.time = this.time
+            }
 
 
             $.ajax({

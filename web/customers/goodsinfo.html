@@ -101,7 +101,7 @@
             <div class="info-title">其他信息</div>
             <div class="ibox-content">
                 <div class="row form-group">
-                    <label class="control-label col-sm-4" style="text-align: right;color: #666;font-size: 14px;font-weight: 400;"><span class="xing">*</span>单价元）:</label>
+                    <label class="control-label col-sm-4" style="text-align: right;color: #666;font-size: 14px;font-weight: 400;line-height: 35px;"><span class="xing">*</span>单价元）:</label>
                     <div class="col-sm-4">
                         <input class="form-control" autocomplete="off" placeholder="请输入单价" v-model="price" />
                     </div>
@@ -160,13 +160,17 @@
                 test: [""],
                 //配置
                 info: {}, //获取到的信息
-                price: "0.00", //售价
-                type: "0"
+                price: "", //售价
+                type: "1"
             };
         },
         methods: {
             //获取参数
             save() {
+                if(this.price == ""){
+                    layer.msg("请输入单价")
+                    return
+                }
                 let parmas = {
                     price: this.price, //售价
                     customerId: id,      //客户ID
@@ -180,7 +184,10 @@
                     data: parmas,
                     success: res => {
                         if (res.error == "00") {
-                            layer.msg("添加成功");
+                            this.$message({
+                                message:"绑定成功",
+                                type:"success"
+                            })
                             setTimeout(() => {
                                 var index1 = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                                 parent.layer.close(index1); //再执行关闭

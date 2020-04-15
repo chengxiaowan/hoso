@@ -1,26 +1,95 @@
 <!DOCTYPE html>
 <html>
 
-	<head>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>欢迎进入寒舍管理系统</title>
+	<link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
 
-		<title>欢迎进入寒舍管理系统</title>
+	<style>
+		.c-box {
+			width: 355px;
+			height: 106px;
+			background: rgba(255, 255, 255, 1);
+			/* background:#333; */
+			box-shadow: 10px 10px 5px #888888;
+			border-radius: 2px;
+		}
 
-		<link href="css/bootstrap.min.css" rel="stylesheet">
-		<link href="css/font-awesome.min.css" rel="stylesheet">
-		<link href="css/animate.min.css" rel="stylesheet">
-		<link href="css/style.min.css" rel="stylesheet">
+		.title-box{
+			width: 100%;
+			height: 38px;
+			background: #fff;
+			border-bottom: 1px solid #E2E9F0;
+			line-height: 38px;
+			font-size: 14px;
+			font-weight: 500;
+			text-indent: 10px;
+		}
+		.content-box{
+			height: 33px;
+			width: 331px;
+			margin: 16px auto 0 auto;
+			background: #F7F7F7;
+			line-height: 33px;
+			font-size: 12px;
+			text-indent: 12px;
+		}
+	</style>
+</head>
 
-	</head>
-
-	<body class="gray-bg" style="background: #FFFFFF;">
-
-		<div class="wrapper wrapper-content " id="app">
-			<h2>欢迎进入寒舍管理系统</h2>
+<body class="gray-bg" style="background: #E2E9F0;">
+	<div class="wrapper wrapper-content" id="app">
+		<div class="c-box" @click="index()">
+			<div class="title-box">
+				销售助手
+			</div>
+			<div class="content-box">过期的权益产品券</div>
 		</div>
+	</div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script>
+	var config = {};
 
-	</body>
+	window.app = new Vue({
+		el: "#app",
+		data() {
+			return {};
+		},
+		methods: {
+			index(){
+				// window.location.href = ""
+				var index = layer.open({
+                type: 2,
+                title: '计量过期',
+                content: './SalesAssistant/index.html',
+                area: ['100%', '100%'],
+                end: () => {
+                    // that.getData()
+                }
+            });
+			}
+		},
+		mounted() {
+			console.log("vue is ok");
+		},
+	});
+</script>
 
 </html>
