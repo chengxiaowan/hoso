@@ -49,6 +49,7 @@ window.app = new Vue({
                     pageNo: this.list.pageNum || 1,
                     name:"",
                     solt:this.solt,
+                    customerId:id,
                 },
                 success: res => {
                     if (res.error == "00") {

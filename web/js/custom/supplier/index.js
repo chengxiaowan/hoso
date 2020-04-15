@@ -1,6 +1,7 @@
 
 let config = {
     api_list: `${api_url}/supplier/dataList`,         //列表
+    api_del:"/supplier/saveOrupdate"
 }
 
 window.app = new Vue({
@@ -93,12 +94,29 @@ window.app = new Vue({
             })
         },
 
+        del(id){
+            const that = this;
+			const dialog = layer.confirm("确认删除该供应商吗?", {
+				title: "提示"
+			}, () => {
+				$.get(config.api_del, {
+					id: id,
+					delFlag: '1'
+				}, function(data) { // 回调函数
+					if(data.error == '00') {
+						layer.close(dialog)
+						layer.msg("删除成功")
+						that.getData()
+					} else {
+						layer.msg(data.msg)
+					}
+				})
+			})
+        },
+
       
 
-        //获取省份
-        // getp(){
-            
-        // },
+       
 
         //时间格式化
         formatDateTime(inputTime) {

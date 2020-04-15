@@ -22,7 +22,7 @@ window.app = new Vue({
             let that = this;
             //判断必填
             if(that.name == ""){
-                layer.msg("请输入供应商名称")
+                layer.msg("请输入客户名称")
                 return
             }
 
@@ -33,6 +33,7 @@ window.app = new Vue({
 
             if(that.loginPasswd == ""){
                 layer.msg("请输入登录密码")
+                return
             }
 
            let province,city,area

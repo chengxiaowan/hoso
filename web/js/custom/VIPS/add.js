@@ -43,6 +43,10 @@ window.app = new Vue({
         keywordss:"",
         solt:"0",
 
+        //过滤条件
+        viptype:"",
+        vipsolt:"",
+
 
 
     },
@@ -255,7 +259,9 @@ window.app = new Vue({
                     name: "橙券",
                     pageNo: that.pageNo,
                     goodsNos: that.goodsno,
-                    keywords:that.keywordss
+                    keywords:that.keywordss,
+                    type:that.viptype,
+                    solt:that.vipsolt
 
                 },
                 success: res => {

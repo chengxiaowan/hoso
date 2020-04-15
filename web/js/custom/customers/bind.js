@@ -6,7 +6,8 @@ let config = {
     api_del: api_url + '/memRights/delete',
     // api_save: api_url + '/memRights/update',        //上下架
     api_del:api_url + '/memberCustomer/deleteBindGoods ',        //SHENCHU1
-    api_shops:api_url+"/supplier/dataList"
+    api_shops:api_url+"/supplier/dataList",
+    api_add: api_url + "/memberCustomer/updaeBindGoods"
 
 
 }
@@ -20,7 +21,7 @@ window.app = new Vue({
         info: "这里是权益管理",
         keywords: "",
         type: "",
-        // isOnsell: "",
+        isOnsell: "",
         list: [],
         solt:"",
         shops:[],
@@ -46,7 +47,8 @@ window.app = new Vue({
                     name:"",
                     customerId:id,
                     solt:this.solt,
-                    supplierId:this.shop
+                    supplierId:this.shop,
+                    state:this.isOnsell
 
 
                 },
@@ -84,7 +86,7 @@ window.app = new Vue({
                 type: 2,
                 title: "添加权益",
                 content: "addgoods.html?id="+id,
-                area: ["80%", "80%"],
+                area: ["937px", "606px"],
                 end: () => {
                     that.getdata()
                     console.log("关了")
@@ -106,7 +108,7 @@ window.app = new Vue({
                 type: 2,
                 title: "编辑",
                 content: `editgoods.html?id=`+id,       //这个id是客户id
-                area: ["50%", "60%"],
+                area:  ["937px", "606px"],
                 end: () => {
                     that.getdata()
                 }
@@ -159,7 +161,43 @@ window.app = new Vue({
                     }
                 }
             })
-        }
+        },
+
+        //上下架
+
+        onsell(item) {
+            const that = this
+            let parmas = {
+                price: item.price, //售价
+                customerId: id,      //客户ID
+                state: item.state == "0"?"1":"0",    //上下架状态
+                goodsNo: item.goods_no,     //产品编号
+                id:item.id
+            };
+            console.log(item)
+            console.log(parmas)
+
+            this.$confirm(`您确定${item.state == "0"?"上架":"下架"}该权益？`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                $.ajax({
+                    url: config.api_add,
+                    type: "post",
+                    data: parmas,
+                    success: res => {
+                        if (res.error == "00") {
+                            layer.msg("操作成功")
+                            this.getdata()
+                        } else {
+                            layer.msg(res.msg);
+                        }
+                    }
+                })
+            }).catch(() => { });
+
+        },
 
        
     },

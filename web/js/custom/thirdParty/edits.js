@@ -1,6 +1,6 @@
 config = {
     api_token: api_url + '/qiniu/getUpToken',
-    api_shop: api_url + "/supplier/supplierList",
+    api_shop: api_url + "/supplier/dataList",
     api_save: api_url + "/memRights/updateCq",
 
 }
@@ -24,6 +24,7 @@ window.app = new Vue({
             ku: "0",
             kuType: "",
             id:"",
+            originalGoods_no:"",
 
 
         }
@@ -53,11 +54,12 @@ window.app = new Vue({
                 type: "post",
                 data: {
                     keywords: that.keywords,
-                    type: "1"
+                    type: "1",
+                    pageSize:"100"
                 },
                 success: res => {
                     if (res.error == "00") {
-                        that.shop = res.result
+                        that.shop = res.result.list
                     } else {
                         layer.msg(res.msg)
                     }
@@ -67,12 +69,17 @@ window.app = new Vue({
         save() {
             const that = this
             //判断输入
+            if(that.shops == ""){
+                layer.msg("请选择产品供应商")
+                return
+            }
+
             if (that.name == "") {
                 layer.msg("请输入产品名称")
                 return
             }
 
-            if (that.No == "") {
+            if (that.no == "") {
                 layer.msg("请输入产品编号")
                 return
             }
@@ -116,10 +123,13 @@ window.app = new Vue({
                 pic: pic,
                 solt: that.solt,
                 describes: editor.txt.html(),         //富文本
+                id:that.id,
+
                 // 新添加参数
                 supplierId: that.shops,        //供应商ID
                 isStock: that.ku,          //本地是否有库存
                 dataType: that.kuType,      //库存类型
+                originalGoods_no:that.originalGoods_no
             }
             console.log(parmas)
 
@@ -166,8 +176,9 @@ window.app = new Vue({
         this.id = parmars.id
         this.solt = parmars.solt
         this.ku = JSON.stringify(parmars.isStock)
-        this.kuType = JSON.stringify(parmars.dataType)
+        this.kuType = parmars.dataType
         this.shops = JSON.stringify(parmars.supplierId)
+        this.originalGoods_no = parmars.goods_no
         window.editor.txt.html(parmars.describes)
         if(parmars.type == 0){
             this.type = '0'

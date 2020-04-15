@@ -150,6 +150,7 @@
                                 <td>{{item.salePrice}}</td>
                                 <td class="btn-hide">
                                     <a class="btn btn-success" @click="edit(item)">编辑</a>
+                                    <a class="btn btn-success" @click="lead(item)" v-if="item.isStock == '1'">导入</a>
                                     <a class="btn btn-success" @click="del(item)" style="color: #D0021B;">删除</a>
                                 </td>
                             </tr>

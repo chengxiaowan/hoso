@@ -1,6 +1,7 @@
 let config = {
     api_list: `${api_url}/memberPayLogs/list`,         //列表
-    api_del: `${api_url}/memberPayLogs/delete`         //删除
+    api_del: `${api_url}/memberPayLogs/delete`,         //删除
+    api_pay:`${api_url}/memberCustomer/showMainIndex`
 }
 
 var id = parameter().id;
@@ -17,6 +18,7 @@ window.app = new Vue({
             pageNo: "1",
             pageSize: "10",
             flag: false,
+            pay:{},
         }
     },
     methods: {
@@ -53,6 +55,22 @@ window.app = new Vue({
             })
         },
 
+        getPay(){
+            const that = this;
+            $.ajax({
+                url:config.api_pay,
+                type:"GET",
+                data:{
+                    id:id
+                },
+                success:res=>{
+                if(res.error == "00"){
+                    that.pay = res.result
+                }
+                }
+            })
+        },
+
         soso() {
             const that = this;
             that.pageNo = "1";
@@ -79,6 +97,7 @@ window.app = new Vue({
                 area: ['100%', '100%'],
                 end: () => {
                     that.getData()
+                    that.getPay()
                 }
             });
         },
@@ -92,6 +111,7 @@ window.app = new Vue({
                 area: ['100%', '100%'],
                 end: () => {
                     that.getData()
+                    that.getPay()
                 }
             });
         },
@@ -150,5 +170,6 @@ window.app = new Vue({
             });
         })
         this.getData()
+        this.getPay()
     }
 })

@@ -1,6 +1,6 @@
 config = {
     api_token: api_url + '/qiniu/getUpToken',
-    api_shop: api_url + "/supplier/supplierList",
+    api_shop: api_url + "/supplier/dataList",
     api_save: api_url + "/memRights/addCq",
 
 }
@@ -52,11 +52,12 @@ window.app = new Vue({
                 type: "post",
                 data: {
                     keywords: that.keywords,
-                    type: "1"
+                    type: "1",
+                    pageSize:"100"
                 },
                 success: res => {
                     if (res.error == "00") {
-                        that.shop = res.result
+                        that.shop = res.result.list
                     } else {
                         layer.msg(res.msg)
                     }
@@ -65,13 +66,18 @@ window.app = new Vue({
         },
         save() {
             const that = this
+            
+            if(that.shops == ""){
+                layer.msg("请选择产品供应商")
+                return
+            }
             //判断输入
             if (that.name == "") {
                 layer.msg("请输入产品名称")
                 return
             }
 
-            if (that.No == "") {
+            if (that.no == "") {
                 layer.msg("请输入产品编号")
                 return
             }
