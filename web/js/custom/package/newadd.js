@@ -466,6 +466,7 @@ window.app = new Vue({
         var E = window.wangEditor
         window.editor = new E('#demo')
         window.editor.customConfig.qiniu = true
+        window.editor.customConfig.zIndex = 100
         window.editor.create()
         // console.log(window)
     },

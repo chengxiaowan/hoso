@@ -23,10 +23,22 @@
 <body>
     <div id="app" class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox-content">
-            <div style="display: flex;justify-content: center;margin-top: 55px;">
+            <div style="display: flex;justify-content: center;margin-top: 40px;">
                 <div style="line-height: 35px;text-align: right;">到期时间：</div>
                 <div>
                     <input type="text" class="form-control" id="test" style="width: 210px;">
+                </div>
+            </div>
+            <div style="display: flex;justify-content: center;margin-top: 15px;">
+                <div style="line-height: 35px;text-align: right;text-indent: 14px;">供应商：</div>
+                <div>
+                    <input type="text" class="form-control" style="width: 210px;">
+                </div>
+            </div>
+            <div style="display: flex;justify-content: center;margin-top: 15px;">
+                <div style="line-height: 35px;text-align: right; text-indent: 14px;">采购价：</div>
+                <div>
+                    <input type="text" class="form-control" style="width: 210px;">
                 </div>
             </div>
 
@@ -90,15 +102,15 @@
         },
         methods: {
             submitUpload() {
-                if ($("#test").val() == '') {
-                    this.$message({
-                        message: '请选择过期时间',
-                        type: 'warning'
-                    });
-                    return
-                } else {
+                // if ($("#test").val() == '') {
+                //     this.$message({
+                //         message: '请选择过期时间',
+                //         type: 'warning'
+                //     });
+                //     return
+                // } else {
                     this.parmars.pastTime = $("#test").val()
-                }
+                // }
                 console.log(this.parmars)
                 this.$refs.upload.submit();
             },

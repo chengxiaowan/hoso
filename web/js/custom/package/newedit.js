@@ -410,6 +410,7 @@ window.app = new Vue({
 
 
             if(this.payused.includes("0")){
+                parmas.timeType = this.timeType
                 parmas.time = this.time
             }
 
@@ -518,6 +519,8 @@ window.app = new Vue({
          var E = window.wangEditor
          window.editor = new E('#demo')
          window.editor.customConfig.qiniu = true
+        window.editor.customConfig.zIndex = 100
+
          window.editor.create()
          // console.log(window)
 

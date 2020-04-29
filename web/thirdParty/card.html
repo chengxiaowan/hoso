@@ -102,7 +102,7 @@
                     <table id="simple-table" class="table table-responsive table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th width="45%">卡号</th>
+                                <th width="45%">卡密</th>
                                 <th width="15%">状态</th>
                                 <th width="15%">导入时间</th>
                                 <th width="15%">过期时间</th>
@@ -112,7 +112,7 @@
                         <tbody>
                             <template v-if="list.total !=0">
                                 <tr v-for="item in list.list" :key="list.id">
-                                    <td>{{item.cardsNum}}</td>
+                                    <td>{{item.cardsPassword}}</td>
                                     <td>{{item.state=="0"?"未使用":"已使用"}}</td>
                                     <td>{{formatDateTime(item.createTime)}}</td>
                                     <td v-if="item.pastTime">{{formatDateTime(item.pastTime)}}</td>
@@ -248,7 +248,7 @@
                     type:2,
                     title:"导入excel",
                     content:`import.html?goodsNo=${goodsNo}&type=0`,
-                    area:["425px","500px"],
+                    area:["50%","500px"],
                     end:()=>{
                         that.getdata()
                     }

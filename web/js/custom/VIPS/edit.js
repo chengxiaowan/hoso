@@ -336,7 +336,7 @@ window.app = new Vue({
                     if (res.error == "00") {
                         that.name = res.result.name
                         // that.remake = res.result.remark
-                        that.type = type
+                        that.type = res.result.type + ""
                         that.isOnsell = res.result.isOnsell
                         that.isReceive = res.result.isReceive
                         that.price = res.result.price
@@ -353,7 +353,7 @@ window.app = new Vue({
                         that.dpay = res.result.reducePrice
 
 
-                        that.solt = res.result.solt
+                        that.solt = res.result.solt + ""
 
                         //为了处理这个没有辨识的时间字段花了一个钟头，真的是烦躁
                         // let drool = res.result.time.split("-")
@@ -461,16 +461,16 @@ window.app = new Vue({
         console.log("Vue初始化成功")
         this.getToken()
         this.getinfo()
-        layui.use('laydate', function () {
-            var laydate = layui.laydate;
+        // layui.use('laydate', function () {
+        //     var laydate = layui.laydate;
 
-            //执行一个laydate实例
-            laydate.render({
-                elem: '#test1', //指定元素
-                value: that.date,
-                min: "0"
-            });
-        });
+        //     //执行一个laydate实例
+        //     laydate.render({
+        //         elem: '#test1', //指定元素
+        //         value: that.date,
+        //         min: "0"
+        //     });
+        // });
         var E = window.wangEditor
         window.editor = new E('#demo')
         window.editor.customConfig.qiniu = true
