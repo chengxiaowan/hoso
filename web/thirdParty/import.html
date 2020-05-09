@@ -32,13 +32,13 @@
             <div style="display: flex;justify-content: center;margin-top: 15px;">
                 <div style="line-height: 35px;text-align: right;text-indent: 14px;">供应商：</div>
                 <div>
-                    <input type="text" class="form-control" style="width: 210px;">
+                    <input type="text" class="form-control" style="width: 210px;" v-model="parmars.supplierName">
                 </div>
             </div>
             <div style="display: flex;justify-content: center;margin-top: 15px;">
                 <div style="line-height: 35px;text-align: right; text-indent: 14px;">采购价：</div>
                 <div>
-                    <input type="text" class="form-control" style="width: 210px;">
+                    <input type="text" class="form-control" style="width: 210px;" v-model="parmars.offical_price">
                 </div>
             </div>
 
@@ -92,6 +92,9 @@
                     goodsNo: goodsNo,
                     dataType: type,
                     pastTime: "1",
+                    supplierName:"",
+                    offical_price:""
+
                 },
                 // parmars: {
                 //     goodsNo: 123,

@@ -6,11 +6,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 	<title>欢迎进入寒舍管理系统</title>
-	<link rel="stylesheet" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
-    <link rel="stylesheet" href="../css/animate.min.css">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/layout.css">
+	<link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="./css/animate.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/layout.css">
     <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
 
 	<style>
@@ -19,7 +19,7 @@
 			height: 106px;
 			background: rgba(255, 255, 255, 1);
 			/* background:#333; */
-			box-shadow: 10px 10px 5px #888888;
+			/* box-shadow: 10px 10px 5px #888888; */
 			border-radius: 2px;
 		}
 
@@ -55,15 +55,15 @@
 		</div>
 	</div>
 </body>
-<script src="../js/jquery-2.1.1.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-<script src="../js/plugins/layer/layer.min.js"></script>
-<script src="../js/vue.js"></script>
-<script src="../js/module/module_pagination.js"></script>
+<script src="./js/jquery-2.1.1.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/plugins/layer/layer.min.js"></script>
+<script src="./js/vue.js"></script>
+<script src="./js/module/module_pagination.js"></script>
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <!-- 自定义js -->
-<script src="../js/content.min.js?v=1.0.0"></script>
-<script src="../js/custom/common.js"></script>
+<script src="./js/content.min.js?v=1.0.0"></script>
+<script src="./js/custom/common.js"></script>
 <script>
 	var config = {};
 
@@ -77,7 +77,7 @@
 				// window.location.href = ""
 				var index = layer.open({
                 type: 2,
-                title: '计量过期',
+                title: '已过期的权益产品券',
                 content: './SalesAssistant/index.html',
                 area: ['100%', '100%'],
                 end: () => {

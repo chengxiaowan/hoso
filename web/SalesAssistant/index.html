@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="../css/animate.min.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../js/plugins/layui/css/layui.css" />
+
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <style>
         .table {
@@ -65,46 +67,36 @@
                     <!-- 检索 start -->
                     <div class="form-inline" role="form" id="customerForm">
                         <div class="form-group">
-                            <input class="form-control" id="nav-search-input" type="text" placeholder="请输入产品名称"
-                                v-model="keywords">
+                            <input class="form-control" type="text" placeholder="请输入产品名称" v-model="keywords">
                         </div>
                         <div class="form-group" style="margin-left: 15px;">
-                            <input class="form-control" id="nav-search-input" type="text" placeholder="请输入卡号/卡密/链接"
-                                v-model="keywords">
-                        </div>
-                        <div class="form-group">
-                            <em>供应商：</em>
-                            <select v-model="type" class="form-control" style="width:100px;">
-                                <option value="">全部</option>
-                                <option value="2">打折券</option>
-                                <option value="3">抵用券</option>
-                                <option value="4">满减券</option>
-                            </select>
+                            <input class="form-control" type="text" placeholder="请输入供应商名称" v-model="supplierName">
                         </div>
                         <div class="form-group">
                             <em>状态：</em>
-                            <select v-model="isOnsell" class="form-control" style="width: 100px;">
-                                <option value="">全部</option>
+                            <select v-model="type" class="form-control" style="width: 100px;">
                                 <option value="0">已过期</option>
                                 <option value="1">即将过期</option>
                             </select>
                         </div>
-                        <div class="form-group" style="margin-left: 15px;">
-                            <input class="form-control" id="nav-search-input" type="text" placeholder="请选择开始时间"
-                                v-model="keywords">
+                        <div class="form-group" style="margin-left: 15px;" v-show="type == '0'">
+                            <input class="form-control" id="start" type="text" placeholder="请选择开始时间" autocomplete="off">
                         </div>
                         <div class="form-group" style="margin-left: 15px;">
-                            <input class="form-control" id="nav-search-input" type="text" placeholder="请选择结束时间"
-                                v-model="keywords">
+                            <input class="form-control" id="end" type="text" placeholder="请选择结束时间" autocomplete="off">
                         </div>
                         <button type="submit" class="btn btn-htz btn-primary" @click="soso()">
                             <i class="icon icon_search"></i> 搜索
                         </button>
-                        <button type="reset" class="btn btn-htz btn-success" @click="add()">
+                        <button type="reset" class="btn btn-htz btn-success" @click="edits()">
                             批量修改
                         </button>
-                        <button type="reset" class="btn btn-htz btn-success" @click="add()">
+                        <button type="reset" class="btn btn-htz btn-success" @click="dowload()">
                             导出excel
+                        </button>
+                        <!-- <a :href=""></a> -->
+                        <button type="reset" class="btn btn-htz  btn-danger" @click="dels()">
+                            批量删除
                         </button>
                     </div>
                     <!-- 检索 end -->
@@ -113,27 +105,32 @@
                     <table id="simple-table" class="table table-responsive table-bordered table-hover">
                         <thead>
                             <tr>
+                                <th width="5%">
+                                    <input type="checkbox" v-model="all" @change="bobo()">
+                                </th>
+                                <th width="10%">供应商</th>
                                 <th width="20%">产品名称</th>
-                                <th width="15%">卡号</th>
-                                <th width="15%">卡密</th>
-                                <th width="15%">链接</th>
+                                <th width="10%">卡号</th>
+                                <th width="10%">卡密</th>
+                                <th width="10%">链接</th>
                                 <th width="15%">导入时间</th>
                                 <th width="15%">过期时间</th>
-                                <th width="5%">操作</th>
                             </tr>
                         </thead>
                         <tbody>
                             <template v-if="list.list != []">
-                                <tr>
-                                    <td>星巴克</td>
-                                    <td>10016111111111111</td>
-                                    <td>*****************</td>
-                                    <td>www.baidu.com</td>
-                                    <td>2020年4月28日17:10:35</td>
-                                    <td>2020年4月28日17:10:35</td>
-                                    <td class="btn-hide">
-                                        <a>编辑</a>
+                                <tr v-for="item in list.list">
+                                    <td>
+                                        <input type="checkbox" :value="item" v-model="goodslist"
+                                            @change="console.log(goodslist)" class="xuan">
                                     </td>
+                                    <td>{{item.supplierName || "--"}}</td>
+                                    <td>{{item.name}}</td>
+                                    <td>{{item.cardsNum || "--"}}</td>
+                                    <td>{{item.cardsPassword || "--"}}</td>
+                                    <td>{{item.link || "--"}}</td>
+                                    <td>{{formatDateTime(item.createTime)}}</td>
+                                    <td>{{formatDateTime(item.pastTime)}}</td>
                                 </tr>
                             </template>
                             <!-- <tr v-else>
@@ -161,8 +158,30 @@
         </div>
     </div>
 </body>
+<div id="drool" class="ibox-content" style="display: none;">
+    <div style="height: 20px;"></div>
+    <div>
+        <span style="display: inline-block; margin-left: 48px;"><i style="color: red;">*</i> 过期时间:</span>
+        <input type="text" class="form-control" style="display: inline-block; width: 170px;margin-left: 10px;"
+            id="test">
+    </div>
+    <button type="button" class="btn btn-htz btn-primary" style="display:block; margin: 0 auto; margin-top: 84px;"
+        id="save">保存</button>
+</div>
+
+<div id="drool2" class="ibox-content" style="display: none;">
+    <div style="height: 20px;"></div>
+    <div>
+        <span style="display: inline-block; margin-left: 48px;"><i style="color: red;">*</i> 过期时间:</span>
+        <input type="text" class="form-control" style="display: inline-block; width: 170px;margin-left: 10px;"
+            id="test1">
+    </div>
+    <button type="button" class="btn btn-htz btn-primary" style="display:block; margin: 0 auto; margin-top: 84px;"
+        id="save2">保存</button>
+</div>
 <script src="../js/jquery-2.1.1.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
 <script src="../js/plugins/layer/layer.min.js"></script>
 <script src="../js/vue.js"></script>
 <script src="../js/module/module_pagination.js"></script>
@@ -171,8 +190,105 @@
 <script src="../js/content.min.js?v=1.0.0"></script>
 <script src="../js/custom/common.js"></script>
 <script src="../js/custom/SalesAssistant/index.js"></script>
-
 <!-- ui库 -->
+
+<script>
+    window.layui.use('laydate', function () {
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#test', //指定元素
+            type: "datetime",
+        });
+
+        laydate.render({
+            elem: '#test1', //指定元素
+            type: "datetime"
+        });
+
+        laydate.render({
+            elem: '#start', //指定元素
+            type: "date"
+        });
+
+        laydate.render({
+            elem: '#end', //指定元素
+            type: "date",
+        });
+
+
+        //由于弹窗不在Vue作用域 顾使用原生
+        //1.单个修改
+        document.getElementById("save").onclick = function () {
+            let id = sessionStorage.getItem("goodsId")
+
+            if ($("#test").val() == "") {
+                layer.msg("请选择过期时间")
+                return
+            }
+
+            let parmars = {
+                ids: id,
+                pastTime: $("#test").val()
+
+            }
+            console.log(parmars)
+            $.ajax({
+                url: config.api_update,
+                type: "POST",
+                data: parmars,
+                success: res => {
+                    console.log(res)
+                    if (res.error == "00") {
+                        layer.msg("修改成功")
+                        layer.close(1)
+                    }else{
+                        layer.msg(res.msg)
+                    }
+                }
+            })
+        };
+
+
+        //批量修改
+        document.getElementById("save2").onclick = function(){
+            let ids = sessionStorage.getItem("ids")
+            sessionStorage.removeItem("ids")
+
+            if ($("#test1").val() == "") {
+                layer.msg("请选择过期时间")
+                return
+            }
+
+            let parmars = {
+                ids: ids,
+                pastTime: $("#test1").val()
+
+            }
+            console.log(parmars)
+            $.ajax({
+                url: config.api_update,
+                type: "POST",
+                data: parmars,
+                success: res => {
+                    console.log(res)
+                    if (res.error == "00") {
+                        layer.msg("修改成功")
+                        layer.close(1)
+                    }else{
+                        windos.layer.msg(res.msg)
+                    }
+                }
+            })
+        }
+
+
+        //获取页面上所有多选框
+        
+
+    });
+</script>
 
 
 

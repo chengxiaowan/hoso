@@ -10,14 +10,7 @@
     <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0" />
     <link rel="stylesheet" href="../css/animate.min.css" />
     <link rel="stylesheet" href="../css/style.css" />
-<<<<<<< HEAD
     <link rel="stylesheet" href="../js/plugins/layui/css/layui.css" />
-=======
-<<<<<<< HEAD
-    <link rel="stylesheet" href="../js/plugins/layui/css/layui.css" />
-=======
->>>>>>> 069d940b796a82686b87bbfcce695338b4672c3f
->>>>>>> 78c6b13b00a4914a950a8426162f7c2b9408efcf
     <link rel="stylesheet" href="../css/layout.css" />
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css" />
     <style>
@@ -109,19 +102,21 @@
                     <table id="simple-table" class="table table-responsive table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th width="45%">卡密</th>
-                                <th width="45%">卡号</th>
-
-                                <th width="15%">状态</th>
-                                <th width="15%">导入时间</th>
-                                <th width="15%">过期时间</th>
+                                <th width="10%">供应商</th>
+                                <th width="20%">卡密</th>
+                                <th width="10%">采购价</th>
+                                <th width="10%">状态</th>
+                                <th width="20%">导入时间</th>
+                                <th width="20%">过期时间</th>
                                 <th width="10%">操作</th>
                             </tr>
                         </thead>
                         <tbody>
                             <template v-if="list.total !=0">
                                 <tr v-for="item in list.list" :key="list.id">
+                                    <td>{{item.supplierName || "--"}}</td>
                                     <td>{{item.cardsPassword}}</td>
+                                    <td>{{item.offical_price || "--" }}</td>
                                     <td>{{item.state=="0"?"未使用":"已使用"}}</td>
                                     <td>{{formatDateTime(item.createTime)}}</td>
                                     <td v-if="item.pastTime">{{formatDateTime(item.pastTime)}}</td>
@@ -132,7 +127,7 @@
                                 </tr>
                             </template>
                             <tr v-else>
-                                <td colspan="4">暂无数据</td>
+                                <td colspan="6">暂无数据</td>
                             </tr>
                         </tbody>
                     </table>

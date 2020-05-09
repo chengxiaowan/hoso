@@ -100,8 +100,10 @@
                     <table id="simple-table" class="table table-responsive table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th width="30%">卡号</th>
-                                <th width="30%">卡密</th>
+                                <th width="10%">供应商</th>
+                                <th width="20%">卡号</th>
+                                <th width="20%">卡密</th>
+                                <th width="10%">采购价</th>
                                 <th width="10%">状态</th>
                                 <th width="10%">导入时间</th>
                                 <th width="10%">过期时间</th>
@@ -111,8 +113,10 @@
                         <tbody>
                             <template v-if="list.total !=0">
                                 <tr v-for="item in list.list" :key="list.id">
+                                    <td>{{item.supplierName || "--"}}</td>
                                     <td>{{item.cardsNum}}</td>
                                     <td>{{item.cardsPassword}}</td>
+                                    <td>{{item.offical_price || "--" }}</td>
                                     <td>{{item.state=="0"?"未使用":"已使用"}}</td>
                                     <td>{{formatDateTime(item.createTime)}}</td>
                                     <td v-if="item.pastTime">{{formatDateTime(item.pastTime)}}</td>

@@ -1,3 +1,4 @@
+
 var config = {
 	role: localStorage.userRole,
 	api_list: api_url + '/goods/dataList2', //获取商品列表

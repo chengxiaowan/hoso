@@ -100,8 +100,10 @@
                     <table id="simple-table" class="table table-responsive table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th width="45%">链接</th>
-                                <th width="15%">状态</th>
+                                <th width="10%">供应商</th>
+                                <th width="30%">链接</th>
+                                <th width="10%">采购价</th>
+                                <th width="10%">状态</th>
                                 <th width="15%">导入时间</th>
                                 <th width="15%">过期时间</th>
                                 <th width="10%">操作</th>
@@ -111,6 +113,7 @@
                             <template v-if="list.total !=0">
                                 <tr v-for="item in list.list" :key="list.id">
                                     <td>{{item.link}}</td>
+                                    <td>{{item.offical_price || "--" }}</td>
                                     <td>{{item.state=="0"?"未使用":"已使用"}}</td>
                                     <td>{{formatDateTime(item.createTime)}}</td>
                                     <td v-if="item.pastTime">{{formatDateTime(item.pastTime)}}</td>
