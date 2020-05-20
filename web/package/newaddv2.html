@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>添加权益卡</title>
+    <link rel="stylesheet" href="../css/public.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+    <link rel="stylesheet" href="../js/plugins/utf8-jsp/themes/default/css/ueditor.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/htz.css" />
+    <style>
+        .title {
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(51, 51, 51, 1);
+            margin-bottom: 30px;
+        }
+
+        .user-box {
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .title-box {
+            float: left;
+            width: 125px;
+            line-height: 35px;
+            text-align: right;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #666;
+        }
+
+        .input-box {
+            float: left;
+            margin-left: 10px;
+        }
+
+        .imginfo {
+            width: 100px;
+            height: 100px;
+        }
+
+        .xing {
+            color: #F64D62;
+        }
+
+        .image-box {
+            display: flex;
+            /* margin-left: 63px; */
+            float: left;
+            margin-right: 50px;
+        }
+
+        .big-box {
+            overflow: hidden;
+        }
+
+        .group {
+            width: 180px;
+            min-height: 400px;
+            float: left;
+            margin-right: 15px;
+            border: 1px solid rgba(229, 229, 229, 1);
+
+        }
+
+        .tebs {
+            width: 1343px;
+            float: left;
+            min-height: 400px;
+            /* background: #07cbc9; */
+        }
+
+        .group-item {
+            height: 40px;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(154, 154, 154, 1);
+            line-height: 40px;
+            text-align: center;
+            border-bottom: 1px solid rgba(229, 229, 229, 1);
+
+        }
+
+        .vips {
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(51, 51, 51, 1);
+        }
+
+        /*模态框2*/
+
+        .max-box {
+            overflow: hidden;
+        }
+
+        .type-box {
+            min-height: 400px;
+            width: 170px;
+            /* background: #F64D62; */
+            float: left;
+            border: 1px solid #f6f6f6;
+        }
+
+        .goods-box {
+            min-height: 400px;
+            width: 936px;
+            /* background: #07cbc9; */
+            float: left;
+            margin-left: 14px;
+        }
+
+        .type-item {
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            color: #333;
+            font-size: 14px;
+            border: 1px solid #f6f6f6;
+        }
+
+        .item-hove {
+            background: url('../images/bg-s.png');
+        }
+
+    
+    </style>
+
+</head>
+
+<body>
+    <div id="app">
+        <div class="ibox-content">
+            <div class="title">
+                基本信息
+            </div>
+
+            <!-- 需要用户键入的信息 -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="user-box">
+                        <div class="title-box">
+                            <span class="xing">*</span>
+                            <span>名称：</span>
+                        </div>
+                        <div class="input-box" style="width: 625px;">
+                            <input type="text" class="form-control" placeholder="请输入会员包名称" v-model="name">
+                        </div>
+                    </div>
+
+                    <div class="user-box">
+                        <div class="title-box">
+                            <span class="xing">*</span>
+                            <span>模板：</span>
+                        </div>
+                        <div class="input-box" style="width: 207px;">
+                            <!-- <template>
+                                <el-select v-model="com" placeholder="请选择模板">
+                                    <el-option v-for="item in comList" :value="item.id" :label="item.name"
+                                        :key="item.id"></el-option>
+                                </el-select>
+                            </template> -->
+                            <span style="line-height: 35px;">无</span>
+                            <button class="btn btn-htz btn-primary" @click="openinfo()">点击选择模板</button>
+                        </div>
+                    </div>
+
+                    <div class="user-box">
+                        <div class="title-box">
+                            <span class="xing">*</span>
+                            <span>上/下架状态：</span>
+                        </div>
+                        <div class="input-box" style="width: 207px;line-height: 35px;">
+                            <template>
+                                <el-radio v-model="isOnsell" label="1">上架</el-radio>
+                                <el-radio v-model="isOnsell" label="0">下架</el-radio>
+
+                            </template>
+                        </div>
+                    </div>
+
+                    <div class="user-box" style="padding-left: 63px;">
+                        <div class="image-box">
+                            <div class="drool-title"><span class="xing">*</span>封面:</div>
+                            <div style="margin-left: 10px;" id="drool">
+                                <div id="updataImage" class="imageup">
+                                    <img id="vivew" src="../images/imgadd.png" class="imginfo">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="image-box">
+                            <div class="drool-title"><span class="xing">*</span>顶部图片:</div>
+                            <div style="margin-left: 10px;" id="drool2">
+                                <div id="updataImage2" class="imageup">
+                                    <img id="vivew2" src="../images/imgadd.png" class="imginfo">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2019年12月24日15:31:54  迭代 -->
+                        <div class="image-box">
+                            <div class="drool-title"><span class="xing">*</span>权益卡图片:</div>
+                            <div style="margin-left: 10px;" id="drool3">
+                                <div id="updataImage3" class="imageup">
+                                    <img id="vivew3" src="../images/imgadd.png" class="imginfo">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="image-box">
+                            <div class="drool-title"><span class="xing">*</span>分享图片:</div>
+                            <div style="margin-left: 10px;" id="drool4">
+                                <div id="updataImage4" class="imageup">
+                                    <img id="vivew4" src="../images/imgadd.png" class="imginfo">
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="user-box">
+                        <div class="title-box">
+                            <span class="xing">*</span>
+                            <span>购买方式：</span>
+                        </div>
+                        <div class="input-box" style="line-height: 35px;">
+                            <template>
+                                <el-checkbox-group v-model="payused">
+                                    <el-checkbox label="0"
+                                        :disabled="payused.includes('1') || payused.includes('2') || payused.includes('3')">
+                                        单次购买</el-checkbox>
+                                    <el-checkbox label="1" :disabled="payused.includes('0')">包月</el-checkbox>
+                                    <el-checkbox label="2" :disabled="payused.includes('0')">包季</el-checkbox>
+                                    <el-checkbox label="3" :disabled="payused.includes('0')">包年</el-checkbox>
+                                </el-checkbox-group>
+                            </template>
+                        </div>
+                    </div>
+                    <!--单次购买盒子  -->
+                    <template v-if="payused.includes('0')">
+                        <div class="user-box">
+                            <div class="title-box">
+                                <span class="xing">*</span>
+                                <span>原价（元）：</span>
+                            </div>
+                            <div class="input-box" style="width: 144px;">
+                                <input type="text" class="form-control" placeholder="请输入原价" v-model="price">
+                            </div>
+                        </div>
+
+                        <div class="user-box">
+                            <div class="title-box">
+                                <span class="xing">*</span>
+                                <span>售价（元）：</span>
+                            </div>
+                            <div class="input-box" style="width: 144px;">
+                                <input type="text" class="form-control" placeholder="请输入售价" v-model="sprice">
+                            </div>
+                        </div>
+
+                        <div class="user-box">
+                            <div class="title-box">
+                                <span class="xing">*</span>
+                                <span>首冲价格（元）：</span>
+                            </div>
+                            <div class="input-box" style="width: 144px;">
+                                <input type="text" class="form-control" placeholder="请输入售价" v-model="fprice">
+                            </div>
+                        </div>
+
+                        <div class="user-box">
+                            <div class="title-box">
+                                <span class="xing">*</span>
+                                <span>到期时间：</span>
+                            </div>
+                            <div class="input-box" style="width: 144px;">
+                                <select class="form-control" v-model="timeType">
+                                    <option value="0">永不过期</option>
+                                    <option value="1">领取</option>
+                                    <option value="2">固定在</option>
+                                </select>
+                            </div>
+                            <div class="input-box" style="width: 200px;" v-show="timeType=='1'">
+                                <input type="text" class="form-control" style="display: inline-block;width: 144px;" v-model="time">天后过期
+                            </div>
+                            <div class="input-box" style="width: 200px;" v-show="timeType=='2'">
+                                <el-date-picker v-model="time" type="date" placeholder="选择日期时间" size="medium" style="width: 144px;" value-format="yyyy-MM-dd" style="z-index: 999999;">
+                                </el-date-picker>后过期
+                            </div>
+
+                        </div>
+                    </template>
+
+                    <!-- 包时长盒子 -->
+                    <template v-if="payused.includes('1') || payused.includes('2') || payused.includes('3')">
+                        <!-- 原价 -->
+                        <div class="user-box">
+                            <div class="title-box">
+                                <span class="xing">*</span>
+                                <span>原价（元）：</span>
+                            </div>
+                            <div class="input-box" style="width: 110px;" v-show="payused.includes('1')">
+                                <div style="display: inline-block; width: 60px;">
+                                    <input type="text" class="form-control" v-model="mprice">
+                                </div>
+                                元/月
+                            </div>
+                            <div class="input-box" style="width: 110px;" v-show="payused.includes('2')">
+                                <div style="display: inline-block; width: 60px;">
+                                    <input type="text" class="form-control" v-model="dprice">
+                                </div>
+                                元/季
+                            </div>
+                            <div class="input-box" style="width: 110px;" v-show="payused.includes('3')">
+                                <div style="display: inline-block; width: 60px;">
+                                    <input type="text" class="form-control" v-model="yprice">
+                                </div>
+                                元/年
+                            </div>
+                        </div>
+
+                        <!-- 售价 -->
+                        <div class="user-box">
+                            <div class="title-box">
+                                <span class="xing">*</span>
+                                <span>售价（元）：</span>
+                            </div>
+                            <div class="input-box" style="width: 110px;" v-show="payused.includes('1')">
+                                <div style="display: inline-block; width: 60px;">
+                                    <input type="text" class="form-control" v-model="msprice">
+                                </div>
+                                元/月
+                            </div>
+                            <div class="input-box" style="width: 110px;" v-show="payused.includes('2')">
+                                <div style="display: inline-block; width: 60px;">
+                                    <input type="text" class="form-control" v-model="dsprice">
+                                </div>
+                                元/季
+                            </div>
+                            <div class="input-box" style="width: 110px;" v-show="payused.includes('3')">
+                                <div style="display: inline-block; width: 60px;">
+                                    <input type="text" class="form-control" v-model="ysprice">
+                                </div>
+                                元/年
+                            </div>
+                        </div>
+
+                        <!-- 首冲 -->
+
+                        <div class="user-box">
+                            <div class="title-box">
+                                <span class="xing">*</span>
+                                <span>首冲价格（元）：</span>
+                            </div>
+                            <div class="input-box" style="width: 110px;" v-show="payused.includes('1')">
+                                <div style="display: inline-block; width: 60px;">
+                                    <input type="text" class="form-control" v-model="mfprice">
+                                </div>
+                                元/月
+                            </div>
+                            <div class="input-box" style="width: 110px;" v-show="payused.includes('2')">
+                                <div style="display: inline-block; width: 60px;">
+                                    <input type="text" class="form-control" v-model="dfprice">
+                                </div>
+                                元/季
+                            </div>
+                            <div class="input-box" style="width: 110px;" v-show="payused.includes('3')">
+                                <div style="display: inline-block; width: 60px;">
+                                    <input type="text" class="form-control" v-model="yfprice">
+                                </div>
+                                元/年
+                            </div>
+                        </div>
+
+
+                    </template>
+
+                    <div class="user-box">
+                        <div class="title-box">
+                            <span class="xing">*</span>
+                            <span>分享佣金（元）：</span>
+                        </div>
+                        <div class="input-box" style="width: 144px;">
+                            <input type="text" class="form-control" placeholder="请输入佣金" v-model="shareprice"
+                                @blur="share"
+                                onkeyup="this.value= this.value.match(/\d+(\.\d{0,2})?/) ? this.value.match(/\d+(\.\d{0,2})?/)[0] : ''" />
+                        </div>
+                    </div>
+
+                    <!-- 描述 -->
+                    <div class="user-box">
+                        <div class="title-box">
+                            <span class="xing">*</span>
+                            <span>说明：</span>
+                        </div>
+                        <div class="input-box" style="width: 700px;">
+                            <!-- <textarea class="form-control" rows="5" v-model="textarea"></textarea>
+                             -->
+                            <div id="demo"></div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-12">
+                    <el-button type="primary" @click="save()" style="margin-left: 250px;">保 存</el-button>
+                </div>
+            </div>
+
+
+            <!-- 模态框1 -->
+            <el-dialog title="添加分组" :visible.sync="dialogVisible" width="30%" center>
+                <div class="user-box">
+                    <div class="title-box">
+                        <span class="xing">*</span>
+                        <span>分组名称：</span>
+                    </div>
+                    <div class="input-box" style="width: 200px;">
+                        <input type="text" class="form-control" v-model="groupName">
+                    </div>
+                </div>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="dialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="addGroup()">确 定</el-button>
+                </span>
+            </el-dialog>
+
+            <!-- 模态框2 -->
+            <el-dialog title="添加权益" :visible.sync="dialogVisible2" width="1180px" center>
+                <div class="max-box">
+                    <div class="type-box">
+                        <div class="type-item" v-if="flag!='1'" @click="flag=1">优惠券</div>
+                        <div class="type-item item-hove" v-if="flag=='1'">优惠券</div>
+
+                        <!-- <div class="type-item" v-if="flag!='2'" @click="flag=2">实物</div>
+                        <div class="type-item item-hove" v-if="flag=='2'">实物</div> -->
+
+                        <div class="type-item" v-if="flag!='3'" @click="flag=3">虚拟商品</div>
+                        <div class="type-item item-hove" v-if="flag=='3'">虚拟商品</div>
+                    </div>
+
+                    <!-- 优惠券盒子 -->
+                    <div class="goods-box" v-show="flag==1">
+                        <div class="add-box">
+                            <div style="display: inline-block;width: 200px;">
+                                <input placeholder="请输入优惠券名称" class="form-control" v-model="keywords">
+                            </div>
+                            <button class="btn btn-htz btn-primary" @click="getQuan">
+                                <i class="icon icon_search"></i>搜 索
+                            </button>
+                        </div>
+                        <table id="simple-table" class="table table-responsive table-bordered table-hover"
+                            style="margin-top: 10px;">
+                            <thead>
+                                <tr>
+                                    <th width="40%">名称</th>
+                                    <th width="15%">LOGO</th>
+                                    <th width="15%">类型</th>
+                                    <th width="20%">创建时间</th>
+                                    <th width="10%">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="item in quanList.list" :key="item.id">
+                                    <td>{{item.name}}</td>
+                                    <td>
+                                        <img :src="item.pic" alt="" style="width: 30px;height: 30px;">
+                                    </td>
+                                    <td v-if="item.type=='1'">普通券</td>
+                                    <td v-if="item.type=='2'">打折</td>
+                                    <td v-if="item.type=='3'">抵用券</td>
+                                    <td v-if="item.type=='4'">满减券</td>
+
+                                    <td>{{formatDateTime(item.createTime)}}</td>
+                                    <td class="btn-hide">
+                                        <a @click="add1(item)">加 入</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <el-pagination background layout="prev, pager, next" :total="quanList.total"
+                            @current-change="page">
+                        </el-pagination>
+                    </div>
+
+                    <!-- 实物盒子 -->
+                    <div class="goods-box" v-show="flag==2">
+                        <div class="add-box">
+                            <div style="display: inline-block;width: 200px;">
+                                <input placeholder="请输入商品名称" class="form-control" v-model="keywords2">
+                            </div>
+                            <button class="btn btn-htz btn-primary" @click="getgoods">
+                                <i class="icon icon_search"></i>搜 索
+                            </button>
+                        </div>
+                        <table id="simple-table" class="table table-responsive table-bordered table-hover"
+                            style="margin-top: 10px;">
+                            <thead>
+                                <tr>
+                                    <th width="40%">名称</th>
+                                    <th width="15%">分类</th>
+                                    <th width="15%">图片</th>
+                                    <th width="20%">价格</th>
+                                    <th width="10%">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="item in goodsList.list" :key="item.id">
+                                    <td>{{item.name}}</td>
+                                    <td>{{item.typeName}}</td>
+                                    <td>
+                                        <img :src="item.image" alt="" style="width: 30px;height: 30px;">
+                                    </td>
+
+                                    <td>{{item.minPrice}}-{{item.maxPrice}}</td>
+                                    <td class="btn-hide">
+                                        <a>加 入</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <el-pagination background layout="prev, pager, next" :total="goodsList.total"
+                            @current-change="page2">
+                        </el-pagination>
+                    </div>
+                    <!-- 虚拟商品盒子 -->
+                    <div class="goods-box" v-show="flag==3">
+                        <div class="add-box">
+                            <div style="display: inline-block;width: 200px;">
+                                <input placeholder="请输入商品名称" class="form-control" v-model="keywords3">
+                            </div>
+                            <button class="btn btn-htz btn-primary" @click="getNumgoods">
+                                <i class="icon icon_search"></i>搜 索
+                            </button>
+                        </div>
+                        <table id="simple-table" class="table table-responsive table-bordered table-hover"
+                            style="margin-top: 10px;">
+                            <thead>
+                                <tr>
+                                    <th width="25%">名称</th>
+                                    <th width="20%">编号</th>
+                                    <th width="10%">面值</th>
+                                    <th width="10%">采购价</th>
+                                    <th width="10%">销售价</th>
+                                    <th width="10%">充值方式</th>
+                                    <th width="15%">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="item in numList.list" :key="item.id">
+                                    <td>{{item.name}}</td>
+                                    <td>{{item.goods_no}}</td>
+                                    <td>{{item.official_price}}</td>
+                                    <td>{{item.price}}</td>
+                                    <td>{{item.salePrice}}</td>
+                                    <td>{{item.type=='0'?"直充":"卡券"}}</td>
+                                    <td class="btn-hide">
+                                        <a>加 入</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <el-pagination background layout="prev, pager, next" :total="numList.total"
+                            @current-change="page3">
+                        </el-pagination>
+                    </div>
+
+                </div>
+            </el-dialog>
+        </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/jquery.navScroll.js"></script>
+<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+<script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+
+<!-- Vue+axios -->
+<script src="../js/vue.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.min.js"></script>
+
+
+<script src="../js/module/module_pagination.js"></script>
+<script src="../js/tagsinput.js"></script>
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
+
+<script src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
+
+
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
+<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+<script src="../js/qiniuyun/qiniu-package.js"></script>
+<script src="../js/qiniuyun/qiniu_editor.js"></script>
+<script src="../js/custom/package/newaddv2.js"></script>
+<script>
+
+</script>
+
+</html>

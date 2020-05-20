@@ -41,7 +41,9 @@ window.app = new Vue({
             list: [],
 
             type:"",
-            solt:""
+            solt:"",
+
+            typelist:"",        //实物分类
 
         }
     },
@@ -369,6 +371,20 @@ window.app = new Vue({
                 })
             }).catch(() => { });
 
+        },
+
+        //获取实物分类
+        getType(){
+            const that = this
+            $.ajax({
+                url:"",
+                type:"post",
+                data:{},
+                success:res=>{
+                    
+                }
+
+            })
         }
 
 

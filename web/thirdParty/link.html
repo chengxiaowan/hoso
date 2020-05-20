@@ -112,6 +112,7 @@
                         <tbody>
                             <template v-if="list.total !=0">
                                 <tr v-for="item in list.list" :key="list.id">
+                                    <td>{{item.supplierName || "--"}}</td>
                                     <td>{{item.link}}</td>
                                     <td>{{item.offical_price || "--" }}</td>
                                     <td>{{item.state=="0"?"未使用":"已使用"}}</td>

@@ -38,7 +38,7 @@ window.app = new Vue({
                     type: this.type,
                     pageSize: this.list.pageSize || 10,
                     pageNo: this.list.pageNum || 1,
-                    createTimeStart: $("#start").val(),
+                    createTimeStart: this.type == 1?"":$("#start").val(),
                     createTimeEnd: $("#end").val()
 
                 },
@@ -217,20 +217,6 @@ window.app = new Vue({
         dowload() {
             const that = this;
             window.open(`${config.api_donwload}?name=${that.keywords}&supplierName=${that.supplierName}&type=${this.type}&createTimeStart=${$("#start").val()}&createTimeEnd=${$("#end").val()}`)
-            // $.ajax({
-            //     url:config.api_donwload,
-            //     type:"get",
-            //     data:{
-            //         name: this.keywords,
-            //         supplierName: this.supplierName,
-            //         type: this.type,
-            //         createTimeStart:$("#start").val(),
-            //         createTimeEnd:$("#end").val() 
-            //     },
-            //     success:res=>{
-            //         console.log(res)
-            //     }
-            // })
         },
 
         //时间格式化
