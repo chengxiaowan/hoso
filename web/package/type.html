@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,9 +11,102 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .big-box {
+            display: flex;
+            /* justify-content: space-around; */
+            flex-wrap: wrap;
+        }
+
+        .type-box {
+            width: 400px;
+            height: 500px;
+            border: 1px solid #f5f5f5;
+            margin-top: 15px;
+            box-sizing: border-box;
+            margin-left: 110px;
+            background: #f5f5f5;
+            box-shadow: 3px 3px 3px #f3f3f3;
+        }
+
+        .type-box:hover {
+            border: 1px solid #449CF6
+        }
+
+        .img-box {
+            width: 350px;
+            height: 400px;
+            margin: 0 auto;
+            margin-top: 15px;
+            overflow: auto;
+            /* border: 1px solid #333; */
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .img-box>img {
+            width: 100%;
+        }
+
+        .zhezhao {
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .3);
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: none;
+        }
+
+        /* .img-box:hover{
+            overflow: hidden;
+        } */
+
+        /* .img-box:hover > .zhezhao{
+            display: block;
+        } */
+
+        .btn-box {
+            width: 350px;
+            height: 55px;
+            margin: 0 auto;
+            margin-top: 15px;
+            /* border: 1px solid #333; */
+            border-radius: 4px;
+            line-height: 55px;
+            text-align: center;
+            background: #fff;
+        }
+    </style>
 </head>
+
 <body>
-    
+    <div id="app">
+        <div class="ibox-content">
+            <div class="title">
+                请选择您需要的模板
+            </div>
+            <div class="big-box">
+                <div class="type-box" v-for="item in list">
+                    <div class="img-box">
+                        <img :src="item.img" alt="">
+                        <div class="zhezhao">
+                            蒙版
+                        </div>
+                    </div>
+                    <div class="btn-box">
+                        <button class="btn btn-htz btn-primary">选我</button>
+                        <button class="btn btn-htz btn-success" @click="showimg(item)">看大图</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <el-dialog title="模板详情" :visible.sync="dialogVisible" width="50%" >
+           <div style="width: 100%;height: 500px;overflow: auto;">
+            <img :src="img" alt="" style="width: 100%;">
+           </div>
+        </el-dialog>
+    </div>
 </body>
 <script src="../js/jquery-2.1.1.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
@@ -25,8 +119,51 @@
 <script src="../js/custom/common.js"></script>
 <script>
     window.app = new Vue({
-        el:"#app",
-        
+        el: "#app",
+        data() {
+            return {
+                list: [
+                    {
+                        img: "../images/type1.png",
+                        id: "1"
+                    },
+                    {
+                        img: "../images/type2.png",
+                        id: "2"
+                    },
+                    {
+                        img: "../images/type1.png",
+                        id: "1"
+                    },
+                    {
+                        img: "../images/type2.png",
+                        id: "2"
+                    },
+                    {
+                        img: "../images/type1.png",
+                        id: "1"
+                    },
+
+                ],
+                dialogVisible:false,
+                img:"",
+            }
+        },
+        methods: {
+            showimg(item) {
+                this.img = item.img
+                this.dialogVisible = true
+            },
+
+            save() {
+
+            }
+        },
+        mounted() {
+
+        }
+
     })
 </script>
+
 </html>

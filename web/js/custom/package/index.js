@@ -77,7 +77,7 @@ window.app = new Vue({
             let index = layer.open({
                 type:2,
                 title:"编辑会员包",
-                content:`neweditv2.html?id=${item.id}`,
+                content:`newedit.html?id=${item.id}`,
                 area: ["100%", "100%"],
                 end:()=>{
                     that.getdata(1)

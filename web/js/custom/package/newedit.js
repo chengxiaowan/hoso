@@ -375,7 +375,7 @@ window.app = new Vue({
                 topPic: $("#vivew2").attr('src'),              //顶部图片
                 // topPic: $("#vivew3").attr('src'),              //权益卡图片图片
                 memPic:$("#vivew3").attr('src'),
-                sharePic:$("#vivew3").attr('src'),                //分享图片
+                sharePic:$("#vivew4").attr('src'),                //分享图片
 
 
                 // remark: this.textarea,     //描述
@@ -387,7 +387,7 @@ window.app = new Vue({
                 monthPrice: this.mprice || 0,
                 quarterPrice: this.dprice || 0,
                 yearPrice: this.yprice || 0,
-                price: this.price || 0,
+                price: this.sprice || 0,
                 firstPrice: this.fprice || 0,
                 mfirstPrice: this.mfprice || 0,
                 qfirstPrice: this.dfprice || 0,
@@ -471,7 +471,7 @@ window.app = new Vue({
                         that.payused = drool.priceUsed.split(",");
 
                         //佣金啊
-                        TouchList.shareprice = drool.sharePrice
+                        that.shareprice = drool.sharePrice
 
                         //过期时长
                         //2020年4月27日09:58:31
