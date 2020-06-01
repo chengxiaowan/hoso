@@ -195,7 +195,7 @@ window.app = new Vue({
 						time: 1000
 					});
 				} else {
-					that.getAttributeList();
+					that.getAttributeList();                                                                                                                                 
 				}
 			}
 			if(this.index == 2) {

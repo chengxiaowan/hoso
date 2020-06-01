@@ -265,7 +265,6 @@ window.app = new Vue({
         // }
     },
     mounted() {
-        console.log(config.api_list)
         this.getdata()
         this.getshops()
     },

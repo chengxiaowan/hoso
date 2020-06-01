@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .table {
+            margin-top: 24px;
+        }
+
+        .title-index {
+            width: 100%;
+            /* margin: 0 28px; */
+            background: #E4E9EF;
+            /* height: 98px; */
+            margin-bottom: 28px;
+            border-radius: 4px;
+            padding-bottom: 25px;
+        }
+
+        .title-index>h3 {
+            padding-top: 16px;
+            font-size: 20px;
+            color: #4a4a4a;
+            margin-left: 15px;
+            margin-bottom: 15px;
+        }
+
+        .title-index>p {
+            margin-left: 25px;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFangSC;
+            font-weight: 400;
+            color: rgba(74, 74, 74, 1);
+            margin-bottom: 9px;
+        }
+
+        select {
+            width: 70px;
+            height: 37px;
+            text-align: center;
+            text-align-last: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="wrapper wrapper-content  animated fadeInRight">
+        <div class="ibox-content">
+            <div class="title-index">
+                <h3>说明</h3>
+                <p>1、端午节礼盒领取列表。</p>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <!-- 检索 start -->
+                    <div class="form-inline" role="form" id="customerForm">
+                        <div class="form-group">
+                            <input class="form-control" id="nav-search-input" type="text" placeholder="请输入收件人手机号"
+                                v-model="keywords">
+                        </div>
+
+                        <button type="submit" class="btn btn-htz btn-primary" @click="soso()">
+                            <i class="icon icon_search"></i> 搜索
+                        </button>
+                    </div>
+                    <!-- 检索 end -->
+                </div>
+                <div class="col-sm-12">
+                    <table id="simple-table" class="table table-responsive table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th with="20%">收件人名称</th>
+                                <th width="10%">收件人手机号</th>
+                                <th width="40%">收件人地址</th>
+                                <th width="10%">兑换码</th>
+                                <th width="20%">预约时间</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr v-for="item in list.list">
+                                <td>{{item.name}}</td>
+                                <td>{{item.mobilePhone}}</td>
+                                <td>{{item.address}}</td>
+                                <td>{{item.code}}</td>
+                                <td>{{formatDateTime(item.createTime)}}</td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                    <div class="pull-left form form-inline">
+                        <div class="form-group form-group-sm">
+                            共 {{list.total}} 条数据,每页显示
+                            <select @change="getdata(1)" v-model="list.pageSize" class="form-control">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="40">40</option>
+                                <option value="50">50</option>
+                            </select> 条
+                        </div>
+                    </div>
+                    <div class="pagi pull-right"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script>
+    //接口交互
+let config = {
+    role: localStorage.userRole,
+    //接口地址写在下面 使用api_url变量拼接
+    api_list: api_url + "/memPackage/showLogs",
+
+}
+
+window.app = new Vue({
+    el: "#app",
+    data: {
+        info: "这里是权益管理",
+        keywords: "",
+        type: "",
+        // isOnsell: "",
+        list: [],
+        shops:[],
+        shop:"",
+        solt:""
+    },
+    methods: {
+        getdata(page) {
+            // console.log("drool")
+            const that = this
+            $('body,html').scrollTop(0)
+            if (page) this.list.pageNum = page
+            $.ajax({
+                url: config.api_list,
+                async: true,
+                type: "POST",
+                data: {
+                    keywords: this.keywords,
+                    type: this.type,
+                    isOnsell: this.isOnsell,
+                    pageSize: this.list.pageSize || 10,
+                    pageNo: this.list.pageNum || 1,
+                    name:"",
+                    solt:this.solt,
+                    supplierId:this.shop
+                },
+                success: res => {
+                    if (res.error == "00") {
+                        this.list = res.result
+                        console.log(res)
+                        //分页
+                        if (this.pagi) {
+                            $('.pagi').pagination('updatePages', this.list.pages)
+                            if (page == 1) $('.pagi').pagination('goToPage', this.list.pageNum)
+                        } else {
+                            that.pagi = $('.pagi').pagination({
+                                pages: that.list.pages, //总页数
+                                showCtrl: true,
+                                displayPage: 6,
+                                currentPage: that.list.pageNum,
+                                onSelect: function (num) {
+                                    that.list.pageNum = num
+                                    that.getdata()
+                                    yo.scrollTo('body')
+                                }
+                            })
+                        }
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                }
+
+            })
+        },
+        soso() {
+            this.list.pageSize = 10
+            this.list.pageNum = 1
+            this.getdata()
+        },
+
+        //删除指定项
+        del(item) {
+            this.$confirm('您确定删除该第三方商品？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                $.ajax({
+                    url: config.api_del,
+                    type: "post",
+                    async: true,
+                    data: {
+                        id: item.id,
+                        // tableName: "member_rights"
+                        // type: item.type,
+                    },
+                    success: res => {
+                        if (res.error == "00") {
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            this.getdata(1)
+                        }
+                    }
+                })
+            }).catch(() => { });
+
+            // console.log(item)
+        },
+         //时间格式化
+         formatDateTime(inputTime) {
+            var date = new Date(inputTime);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            m = m < 10 ? ('0' + m) : m;
+            var d = date.getDate();
+            d = d < 10 ? ('0' + d) : d;
+            var h = date.getHours();
+            h = h < 10 ? ('0' + h) : h;
+            var minute = date.getMinutes();
+            var second = date.getSeconds();
+            minute = minute < 10 ? ('0' + minute) : minute;
+            second = second < 10 ? ('0' + second) : second;
+            return y + '-' + m + '-' + d + ' ' + '　' + h + ':' + minute + ':' + second;
+        },
+    },
+    mounted() {
+        this.getdata()
+    },
+})
+
+</script> 
+<!-- ui库 -->
+
+
+
+</html>

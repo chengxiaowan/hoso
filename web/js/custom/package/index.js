@@ -20,10 +20,10 @@ window.app = new Vue({
             let index = layer.open({
                 type: 2,
                 title: "新增会员包",
-                content: "newaddv2.html",
+                content: "newadd.html",
                 // content: "add.html",
                 area: ["100%", "100%"],
-                end:()=>{
+                end: () => {
                     that.getdata(1)
                 }
             })
@@ -75,23 +75,23 @@ window.app = new Vue({
             console.log(item)
             const that = this
             let index = layer.open({
-                type:2,
-                title:"编辑会员包",
-                content:`newedit.html?id=${item.id}`,
+                type: 2,
+                title: "编辑会员包",
+                content: `newedit.html?id=${item.id}`,
                 area: ["100%", "100%"],
-                end:()=>{
+                end: () => {
                     that.getdata(1)
-                }              
+                }
             })
         },
 
         adds(item) {
             // console.log(item)
             let index = layer.open({
-                type:2,
-                title:"绑定权益",
-                content:`addc.html?id=${item.id}`,
-                area: ["100%", "100%"]                
+                type: 2,
+                title: "绑定权益",
+                content: `addc.html?id=${item.id}`,
+                area: ["100%", "100%"]
             })
         },
 
@@ -99,10 +99,10 @@ window.app = new Vue({
         add1(item) {
             // console.log(item)
             let index = layer.open({
-                type:2,
-                title:"绑定商家商品",
-                content:`addShop.html?id=${item.id}`,
-                area: ["100%", "100%"]                
+                type: 2,
+                title: "绑定商家商品",
+                content: `addShop.html?id=${item.id}`,
+                area: ["100%", "100%"]
             })
         },
         //时间格式化
@@ -121,7 +121,7 @@ window.app = new Vue({
             second = second < 10 ? ('0' + second) : second;
             return y + '-' + m + '-' + d + ' ' + '　' + h + ':' + minute + ':' + second;
         },
-        del(item){
+        del(item) {
             this.$confirm('您确定删除该会员包？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -145,7 +145,40 @@ window.app = new Vue({
                         }
                     }
                 })
-            }).catch(() => {});
+            }).catch(() => { });
+        },
+
+        give(item) {
+            const that = this
+            let index = layer.open({
+                type: 2,
+                title: "赠送",
+                content: `give.html?id=${item.id}`,
+                area: ["100%", "100%"]
+            })
+        },
+        link(item) {
+            const that = this
+            this.$alert(`https://homeplus.fun/static/membershipPack/testPagesOne/F-index.html?type=1&relateId=0&memPackageId=${item.id}`, '分享链接', {
+                confirmButtonText: '确定',
+                callback: action => {
+                    var text = `https://homeplus.fun/static/membershipPack/testPagesOne/F-index.html?type=1&relateId=0&memPackageId=${item.id}`;
+                    var textarea = `<textarea class='text'>${text}</textarea>`
+                    $("body").append(textarea)
+                    $(".text").select()
+                    try {
+                        var successful = document.execCommand('copy');
+                        var msg = successful ? '复制成功' : '该浏览器不支持点击复制到剪贴板';
+                        that.$message({
+                            message: msg,
+                            type: 'success'
+                          });
+                    } catch (err) {
+                        that.$alert('该浏览器不支持点击复制到剪贴板');
+                    }
+                    $(".text").remove();
+                }
+            });
         }
     },
     mounted() {

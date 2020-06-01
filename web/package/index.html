@@ -48,6 +48,21 @@
             text-align: center;
             text-align-last: center;
         }
+
+        .el-dropdown{
+            display: none;
+            position: absolute;
+            top: 9px;
+            left: 280px;
+        }
+
+        /* .el-dropdown{
+            display: none;
+        } */
+
+        tr:hover >td > .el-dropdown{
+            display: inline-block;
+        }
     </style>
 </head>
 
@@ -100,12 +115,27 @@
                                     <td v-if="item.isOnsell == '1'">上架</td>
                                     <td v-if="item.isOnsell == '0'">下架</td>
                                     <td>{{formatDateTime(item.createTime)}}</td>
-                                    <td class="btn-hide">
+                                    <td style="position: relative;" class="btn-hide">
                                         <a href="#" class="btn btn-success" @click="edit(item)">编辑</a>
-                                        <a href="#" class="btn btn-success" @click="adds(item)">绑定权益</a>
-                                        <a href="#" class="btn btn-success" v-if="item.isGoods=='1'" @click="add1(item)">绑定商家商品</a>
-                                        <a href="#" class="btn btn-success">下架</a>
+                                        <!-- <a href="#" class="btn btn-success" @click="give(item)">赠送</a>
+                                        <a href="#" class="btn btn-success" @click="">绑定权益</a>
+                                        <a href="#" class="btn btn-success" v-if="item.isGoods=='1'" @click="add1(item)">绑定商家商品</a> -->
+                                        <!-- <a href="#" class="btn btn-success">下架</a> -->
                                         <a href="#" class="btn btn-success" @click="del(item)" style="color: #D0021B;">删除</a>
+                                        <el-dropdown>
+                                            <span class="el-dropdown-link" style="font-size: 14px;color: #449CF6;">
+                                              更多<i class="el-icon-arrow-down el-icon--right"></i>
+                                            </span>
+                                            <el-dropdown-menu slot="dropdown">
+                                              <!-- <el-dropdown-item @click.native="give(item)">链接</el-dropdown-item> -->
+                                              <el-dropdown-item @click.native="link(item)">链接</el-dropdown-item>
+
+                                              <el-dropdown-item @click.native="adds(item)">绑定权益</el-dropdown-item>
+                                              <el-dropdown-item @click.native="add1(item)" v-if="item.isGoods=='1'">绑定商家商品</el-dropdown-item>
+                                              
+                                              
+                                            </el-dropdown-menu>
+                                          </el-dropdown>
                                     </td>
                                 </tr>
                             </template>
@@ -141,7 +171,7 @@
 <!-- 自定义js -->
 <script src="../js/content.min.js?v=1.0.0"></script>
 <script src="../js/custom/common.js"></script>
-<script src="../js/custom/package/index.js"></script>
+<script src="../js/custom/package/index.js"></script> 
 
 <!-- ui库 -->
 

@@ -170,7 +170,8 @@ var vueApp = new Vue({
 				async: true,
 				type: 'post',
 				data: {
-					keywords: ''
+					keywords: '',
+					type:0
 				},
 				success: function(res) {
 					that.loading('close')
