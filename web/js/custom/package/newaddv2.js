@@ -67,7 +67,12 @@ window.app = new Vue({
 
             //过期时间
             timeType: "0",
-            time: ""
+            time: "",
+
+            cominfo:{
+                name:"请选择模板"
+            },
+            drool:false
         }
     },
 
@@ -258,7 +263,7 @@ window.app = new Vue({
                 return
             }
 
-            if (this.com == "") {
+            if (this.cominfo.id == "") {
                 layer.msg("请选择权益模板")
                 return
             }
@@ -373,7 +378,7 @@ window.app = new Vue({
 
             let parmas = {
                 name: this.name,        //名称
-                modelId: this.com,        //模板ID
+                modelId: this.cominfo.id,        //模板ID
                 isOnsell: this.isOnsell, //上下架状态
                 // type:this.cominfo.isGroup,   //根据模板判断是否分组
                 pic: $("#vivew").attr('src'),                 //封面图片
@@ -457,7 +462,14 @@ window.app = new Vue({
                 content:"type.html",
                 area:["100%","100%"],
                 end:()=>{
-
+                    let info = sessionStorage.getItem("com")
+                    if(info){
+                        that.cominfo = JSON.parse(info)
+                    }else{
+                        that.cominfo = {
+                            name:"请选择模板"
+                        }
+                    }
                 }
             })
         }

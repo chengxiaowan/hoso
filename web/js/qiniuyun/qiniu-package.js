@@ -92,7 +92,7 @@ function uploaderReady2(token) {
     var uploader = Qiniu.uploader({
         runtimes: 'html5,flash,html4',
         browse_button: 'updataImage2', //上传按钮的ID
-        container: 'drool2', //上传按钮的上级元素ID
+        container: 'drool', //上传按钮的上级元素ID
         // drop_element: 'btn-uploader',    //拖拽上传
         max_file_size: '5242880', //最大文件限制
         flash_swf_url: '/static/js/plupload/Moxie.swf',
@@ -182,7 +182,7 @@ function uploaderReady3(token) {
     var uploader = Qiniu.uploader({
         runtimes: 'html5,flash,html4',
         browse_button: 'updataImage3', //上传按钮的ID
-        container: 'drool2', //上传按钮的上级元素ID
+        container: 'drool', //上传按钮的上级元素ID
         // drop_element: 'btn-uploader',    //拖拽上传
         max_file_size: '5242880', //最大文件限制
         flash_swf_url: '/static/js/plupload/Moxie.swf',
@@ -271,7 +271,7 @@ function uploaderReady4(token) {
     var uploader = Qiniu.uploader({
         runtimes: 'html5,flash,html4',
         browse_button: 'updataImage4', //上传按钮的ID
-        container: 'drool4', //上传按钮的上级元素ID
+        container: 'drool', //上传按钮的上级元素ID
         // drop_element: 'btn-uploader',    //拖拽上传
         max_file_size: '5242880', //最大文件限制
         flash_swf_url: '/static/js/plupload/Moxie.swf',

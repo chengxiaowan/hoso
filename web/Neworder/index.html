@@ -64,7 +64,15 @@
                                     <select class="form-control" v-model="type">
                                         <option value="">全部</option>
                                         <option value="1">待付款</option>
-                                        <option value="5">已支付</option>
+                                        <option value="5">已完成</option>
+                                    </select>
+                                </div>
+                                <div style="line-height: 35px;margin-right:5px ;">购买用途</div>
+                                <div class="sele-box">
+                                    <select class="form-control" v-model="solt">
+                                        <option value="">全部</option>
+                                        <option value="5">开通</option>
+                                        <option value="9">赠送</option>
                                     </select>
                                 </div>
                                 <div style="line-height: 35px;margin-right:5px ;">开始时间</div>
@@ -90,10 +98,11 @@
                                     <table id="simple-table" class="table table-responsive table-bordered table-hover">
                                         <thead>
                                             <tr>
-                                                <th width="20%">权益卡名称</th>
+                                                <th width="15%">权益卡名称</th>
                                                 <th width="10%">购买方式</th>
                                                 <th width="10%">订单状态</th>
-                                                <th width="20%">客户手机号码</th>
+                                                <th width="10%">购买用途</th>
+                                                <th width="15%">客户手机号码</th>
                                                 <th width="10%">金额</th>
                                                 <th width="20%">下单时间</th>
                                                 <th width="10%">操作</th>
@@ -114,11 +123,13 @@
                                                     <!--<td v-if="item.orderStatus==3">已审核</td>-->
                                                     <td v-if="item.orderStatus==4">待出库</td>
                                                     <td v-if="item.orderStatus==5">已完成</td>
+                                                    <td v-if="item.orderType==5">开通</td>
+                                                    <td v-if="item.orderType==9">赠送</td>
                                                     <td>{{item.tel}}</td>
                                                     <td>{{item.payAmount}}</td>
                                                     <td>{{item.createTime}}</td>
                                                     <td class="btn-hide">
-                                                        <a class="btn btn-success" title="查看">查看</a>
+                                                        <a class="btn btn-success" title="查看" @click='edit3(item)'>查看</a>
                                                     </td>
                                                 </tr>
                                             </template>
@@ -289,7 +300,7 @@
                                                     <td>{{item.payAmount}}</td>
                                                     <td>{{item.createTime}}</td>
                                                     <td class="btn-hide">
-                                                        <a class="btn btn-success" title="查看" @click="edit(item.saleOrderId,item.orderType)">查看</a>
+                                                        <a class="btn btn-success" title="查看" v-if="item.type == '3'" @click="edits(item.saleOrderId,item.orderType)">查看</a>
                                                     </td>
                                                 </tr>
                                             </template>

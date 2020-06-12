@@ -337,37 +337,28 @@
 														<table id="simple-table" class="table table-responsive table-bordered table-hover">
 															<thead>
 																<tr>
-																	<!-- <th width="10%">商品编号</th> -->
-																	<th width="31%">商品信息</th>
-																	<th width="8%">配送方式</th>
-																	<th width="6%">订单数量</th>
+																	<th width="20%">商品名称</th>
+																	<th width="10%">订单数量</th>
+																	<th width="15%">配送方式</th>
 																	<th width="10%">物流公司</th>
-																	<th width="10%">物流单号</th>
-																	<th width="5%">数量</th>
-																	<!-- <th width="10%">来源类型</th> -->
-																	<th width="5%">是否签收</th>
-																	<th width="25%">操作</th>
+																	<th width="15%">物流单号</th>
+																	<th width="10%">发货数量</th>
+																	<th width="10%">是否签收</th>
+																	<th width="10%">操作</th>
+
+																	
 																</tr>
 															</thead>
 															<tbody>
 																<template>
 																	<tr v-for="(item,index) of list.list">
-																		<!-- <td>{{item.skuCode}}</td> -->
-																		<td>
-																			<img class="goods_img pull-left" :src="item.mainImgPath" alt="">
-																			<div class="goods_txt pull-left">
-																				<p>{{item.skuName}}</p>
-																				<p>{{item.colorName}}</p>
-																				<p>{{item.standard}}</p>
-																			</div>
-																		</td>
+																		<td>{{item.name}}</td>
+																		<td>1</td>
 																		<td>{{item.deliveryType==0?'--':(item.deliveryType==1?'供应商配送':'我方配送')}}</td>
-																		<td>{{item.num}}</td>
-																		<td>{{item.companyName}}</td>
-																		<td>{{item.expressNo}}</td>
-																		<td>{{item.deliveryNum}}</td>
-																		<!-- <td>{{item.mark==1?'双11活动价':(item.mark ==2?'限时购活动':(item.mark ==3?'拼团':'--'))}}</td> -->
-																		<td>{{item.isSigned==0?'未签收':'已签收'}}</td>
+																		<td>{{item.companyName || "--"}}</td>
+																		<td>{{item.expressNo  || "--"}}</td>
+																		<td>1</td>
+																		<th>{{item.isSigned==0?'未签收':'已签收'}}</th>
 																		<td>
 																			<a class="btn btn-success" title="编辑" @click="editSku(item);">编辑</a>
 																			<a class="btn btn-success" title="物流信息" @click="wl(item);">物流信息</a>

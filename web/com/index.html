@@ -89,10 +89,12 @@
                     <table id="simple-table" class="table table-responsive table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th width="40%">模板名称</th>
-                                <th width="15%">是否分项</th>
-                                <th width="15%">是否包含商家产品</th>
-                                <th width="20%">创建时间</th>
+                                <th width="25%">模板名称</th>
+                                <th width="10%">是否分项</th>
+                                <th width="10%">主/次结构</th>
+                                <th width="10%">是否包含商家产品</th>
+                                <th width="10%">是否包含广告</th>
+                                <th width="25%">创建时间</th>
                                 <th width="10%">操作</th>
                               
                             </tr>
@@ -102,7 +104,9 @@
                             <tr v-for="item in list.list">
                                 <td>{{item.name}}</td>
                                 <td>{{item.isGroup==0?"是":"否"}}</td>
+                                <td>{{item.isMain==0?"是":"否"}}</td>
                                 <td>{{item.isGoods==0?"是":"否"}}</td>
+                                <td>{{item.isAdv==0?"是":"否"}}</td>
                                 <td>{{formatDateTime(item.createTime)}}</td>
                                 <td class="btn-hide">
                                     <a class="btn btn-success" @click="edit(item)">编辑</a>

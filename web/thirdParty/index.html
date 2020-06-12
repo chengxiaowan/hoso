@@ -8,6 +8,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
     <link rel="stylesheet" href="../css/animate.min.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/layout.css">
@@ -71,9 +72,9 @@
 
                         <div class="form-group">
                             <em>供应商：</em>
-                            <select  class="form-control" style="width:141px;" v-model="shop">
+                            <select  class="form-control" v-select2="" data-placeholder="请选择供应商" v-model="shop" required="required" style="width:200px">
                                 <option value="">全部</option>
-                                <option v-for="item in shops" :value="item.id">{{item.name}}</option>
+                                <option v-for="item in shops" v-bind:value="item.id">{{item.name}}</option>
                             </select>
                         </div>
 
@@ -181,13 +182,14 @@
 <script src="../js/jquery-2.1.1.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
 <script src="../js/vue.js"></script>
 <script src="../js/module/module_pagination.js"></script>
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <!-- 自定义js -->
 <script src="../js/content.min.js?v=1.0.0"></script>
 <script src="../js/custom/common.js"></script>
-<script src="../js/custom/thirdParty/index.js"></script> 
+<script src="../js/custom/thirdParty/index.js"></script>  
 <!-- ui库 -->
 
 

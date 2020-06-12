@@ -135,6 +135,29 @@
         .item-hove {
             background: url('../images/bg-s.png');
         }
+
+        .com-box {
+            width: 300px;
+            height: 35px;
+            border-radius: 2px;
+            border: 1px solid rgba(199, 199, 199, 1);
+            text-align: center;
+            font-size: 14px;
+            color: #9B9B9B;
+            line-height: 35px;
+
+        }
+
+        .see{
+            width: 30px;
+            height: 35px;
+            color: #56ADDB;
+            font-size: 12px;
+            line-height: 35px;
+            text-align: center;
+            margin-left: 15px;
+            cursor: pointer;
+        }
     </style>
 
 </head>
@@ -164,13 +187,20 @@
                             <span class="xing">*</span>
                             <span>模板：</span>
                         </div>
-                        <div class="input-box" style="width: 207px;">
-                            <template>
+                        <div class="input-box" style="width: 300px; display:flex;">
+                            <!-- <template>
                                 <el-select v-model="com" placeholder="请选择模板">
                                     <el-option v-for="item in comList" :value="item.id" :label="item.name"
                                         :key="item.id"></el-option>
                                 </el-select>
-                            </template>
+                            </template> -->
+                            <div class="com-box" @click="openinfo" v-show="!cominfo.pic">
+                                {{cominfo.name}}
+                            </div>
+                            <div class="com-box" @click="openinfo" v-if="cominfo.pic" style="color: #333;">
+                                {{cominfo.name}}
+                            </div>
+                            <div class="see" v-if="cominfo.pic" @click="drool=true">预览</div>
                         </div>
                     </div>
 
@@ -188,44 +218,59 @@
                         </div>
                     </div>
 
-                    <div class="user-box" style="padding-left: 63px;">
-                        <div class="image-box">
-                            <div class="drool-title"><span class="xing">*</span>封面:</div>
-                            <div style="margin-left: 10px;" id="drool">
-                                <div id="updataImage" class="imageup">
-                                    <img id="vivew" src="../images/imgadd.png" class="imginfo">
-                                </div>
-                            </div>
+                    <div class="row" style="margin-bottom: 29px;">
+                        <div class="col-sm-1"
+                            style="text-align: right;line-height: 35px;color: #717171;font-size: 14px;">
+                            <i style="color:#F64D62 ;">*</i> 图片:
                         </div>
-                        <div class="image-box">
-                            <div class="drool-title"><span class="xing">*</span>顶部图片:</div>
-                            <div style="margin-left: 10px;" id="drool2">
-                                <div id="updataImage2" class="imageup">
-                                    <img id="vivew2" src="../images/imgadd.png" class="imginfo">
+                        <div class="col-sm-11" style="display: flex;" id="drool">
+                            <div class="list-pic"
+                                style="width: 345px;height: 140px;border: 1px dashed #c7c7c7;position: relative;"
+                                id="updataImage">
+                                <div class="pic-title"
+                                    style="background: #6e6e6e;height: 20px;color: #fff;font-size: 14px;text-align: center;line-height: 20px;position: absolute;top: 0;left:0;width: 345px;">
+                                    <i style="color:#f64d62;">*</i>列表图片
                                 </div>
+                                <img id="vivew" src="../images/updata1.png" style="width: 100%;height: 100%;">
+                                <div style="position: absolute;bottom: -25px;font-size: 10px;color: #858585;">
+                                    图片尺寸:1035*360px</div>
                             </div>
-                        </div>
-                        <!-- 2019年12月24日15:31:54  迭代 -->
-                        <div class="image-box">
-                            <div class="drool-title"><span class="xing">*</span>权益卡图片:</div>
-                            <div style="margin-left: 10px;" id="drool3">
-                                <div id="updataImage3" class="imageup">
-                                    <img id="vivew3" src="../images/imgadd.png" class="imginfo">
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="image-box">
-                            <div class="drool-title"><span class="xing">*</span>分享图片:</div>
-                            <div style="margin-left: 10px;" id="drool4">
-                                <div id="updataImage4" class="imageup">
-                                    <img id="vivew4" src="../images/imgadd.png" class="imginfo">
+                            <div class="list-pic" id="updataImage2"
+                                style="width: 129px;height: 140px;border: 1px dashed #c7c7c7;position: relative;margin-left: 30px;">
+                                <div class="pic-title"
+                                    style="background: #6e6e6e;height: 20px;color: #fff;font-size: 14px;text-align: center;line-height: 20px;position: absolute;top: 0;left:0;width: 129px;">
+                                    <i style="color:#f64d62;">*</i>顶部图片
                                 </div>
+                                <img id="vivew2" src="../images/updata2.png" style="width: 100%;height: 100%;">
+                                <div style="position: absolute;bottom: -25px;font-size: 10px;color: #858585;">
+                                    图片尺寸:1125*1047px</div>
+
+                            </div>
+                            <div class="card-pic" id="updataImage3"
+                                style="width: 329px;height: 140px;border: 1px dashed #c7c7c7;position: relative;margin-left: 30px;">
+                                <div class="pic-title"
+                                    style="background: #6e6e6e;height: 20px;color: #fff;font-size: 14px;text-align: center;line-height: 20px;position: absolute;top: 0;left:0;width: 329px;">
+                                    <i style="color:#f64d62;">*</i>卡券图片
+                                </div>
+                                <img id="vivew3" src="../images/updata1.png" style="width: 100%;height: 100%;">
+                                <div style="position: absolute;bottom: -25px;font-size: 10px;color: #858585;">
+                                    图片尺寸:987*1047px</div>
+                            </div>
+
+                            <div class="share-pic" id="updataImage4"
+                                style="width: 129px;height: 140px;border: 1px dashed #c7c7c7;position: relative;margin-left: 30px;">
+                                <div class="pic-title"
+                                    style="background: #6e6e6e;height: 20px;color: #fff;font-size: 14px;text-align: center;line-height: 20px;position: absolute;top: 0;left:0;width: 129px;">
+                                    <i style="color:#f64d62;">*</i>顶部图片
+                                </div>
+                                <img id="vivew4" src="../images/updata2.png" style="width: 100%;height: 100%;">
+                                <div style="position: absolute;bottom: -25px;font-size: 10px;color: #858585;">
+                                    图片尺寸:1125*1047px</div>
+
                             </div>
                         </div>
-
                     </div>
-
                     <div class="user-box">
                         <div class="title-box">
                             <span class="xing">*</span>
@@ -289,10 +334,12 @@
                                 </select>
                             </div>
                             <div class="input-box" style="width: 200px;" v-show="timeType=='1'">
-                                <input type="text" class="form-control" style="display: inline-block;width: 144px;" v-model="time">天后过期
+                                <input type="text" class="form-control" style="display: inline-block;width: 144px;"
+                                    v-model="time">天后过期
                             </div>
                             <div class="input-box" style="width: 200px;" v-show="timeType=='2'">
-                                <el-date-picker v-model="time" type="date" placeholder="选择日期时间" size="medium" style="width: 144px;" value-format="yyyy-MM-dd">
+                                <el-date-picker v-model="time" type="date" placeholder="选择日期时间" size="medium"
+                                    style="width: 144px;" value-format="yyyy-MM-dd" style="z-index: 999999;">
                                 </el-date-picker>后过期
                             </div>
 
@@ -402,73 +449,13 @@
                             <span>说明：</span>
                         </div>
                         <div class="input-box" style="width: 700px;">
-                            <!-- <textarea class="form-control" rows="5" v-model="textarea"></textarea> -->
+                            <!-- <textarea class="form-control" rows="5" v-model="textarea"></textarea>
+                             -->
                             <div id="demo"></div>
                         </div>
                     </div>
                 </div>
-                <!-- 权益盒子 -->
-                <!-- <div class="col-sm-12">
-                    <div class="title">
-                        权益信息
-                    </div>
 
-                    <div class="big-box">
-                        <div class="group" v-if="cominfo.isGroup !='0'">
-                            <div class="group-item vips" v-for="item in group">{{item}}</div>
-                            <div class="group-item" @click="dialogVisible=true">点击新增标题</div>
-                        </div>
-
-                        <div class="tebs">
-                            <div class="add-box">
-                                <div style="display: inline-block;width: 367px;">
-                                    <input placeholder="请输入权益名称" class="form-control">
-                                </div>
-                                <button class="btn btn-htz btn-primary">
-                                    <i class="icon icon_search"></i>搜 索
-                                </button>
-                                <button class="btn btn-htz btn-success" @click="dialogVisible2=true">
-                                    <i id="nav-search-icon" class="icon icon_plus"></i> 新 增
-                                </button>
-                            </div>
-                            <table id="simple-table" class="table table-responsive table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <td width="20%">名称</td>
-                                        <td width="10%">图片</td>
-                                        <td width="10%">类型</td>
-                                        <td width="10%">数量</td>
-                                        <td width="10%">使用次数</td>
-                                        <td width="10%">售价</td>
-                                        <td width="10%">是否主权益</td>
-                                        <td width="10%">加入时间</td>
-                                        <td width="10%">操作</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="item in dataList">
-                                        <td>{{item.maintitel}}</td>
-                                        <td>
-                                            <img :src="item.pic" alt="" style="width: 30px;height: 30px;">
-                                        </td>
-                                        <td v-if="item.type == 0">打折券</td>
-                                        <td v-if="item.type == 1">满减券</td>
-                                        <td v-if="item.type == 3">虚拟商品</td>
-                                        <td v-if="item.type == 4">实际商品</td>
-                                        <td>{{item.count}}</td>
-                                        <td>{{}}</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-
-                            </table>
-                        </div>
-                    </div>
-
-                </div> -->
 
                 <div class="col-sm-12">
                     <el-button type="primary" @click="save()" style="margin-left: 250px;">保 存</el-button>
@@ -635,6 +622,11 @@
 
                 </div>
             </el-dialog>
+            <el-dialog title="模板预览" :visible.sync="drool" width="600px">
+                <div style="width: 100%;height: 600px;overflow: auto;">
+                    <img :src="cominfo.pic" alt="" style="width: 100%;">
+                </div>
+            </el-dialog>
         </div>
 </body>
 <script src="../js/jquery-2.1.1.min.js"></script>
@@ -668,5 +660,8 @@
 <script src="../js/qiniuyun/qiniu-package.js"></script>
 <script src="../js/qiniuyun/qiniu_editor.js"></script>
 <script src="../js/custom/package/neweditv2.js"></script>
+<script>
+
+</script>
 
 </html>

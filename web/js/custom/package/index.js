@@ -20,7 +20,7 @@ window.app = new Vue({
             let index = layer.open({
                 type: 2,
                 title: "新增会员包",
-                content: "newadd.html",
+                content: "./newaddv2.html",
                 // content: "add.html",
                 area: ["100%", "100%"],
                 end: () => {
@@ -77,7 +77,7 @@ window.app = new Vue({
             let index = layer.open({
                 type: 2,
                 title: "编辑会员包",
-                content: `newedit.html?id=${item.id}`,
+                content: `neweditv2..html?id=${item.id}`,
                 area: ["100%", "100%"],
                 end: () => {
                     that.getdata(1)

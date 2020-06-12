@@ -103,7 +103,9 @@
     <!-- <script src="../js/custom/package/addc.js"></script> -->
     <script>
         const config = {
-            api_sku: api_url + '/goodsSku/dataList'
+            api_sku: api_url + '/goodsSku/dataList',
+    api_token: api_url + '/qiniu/getUpToken', //获取七牛的token
+
         }
 
         window.app = new Vue({

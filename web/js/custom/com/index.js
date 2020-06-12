@@ -76,7 +76,7 @@ window.app = new Vue({
             let index = layer.open({
                 type: 2,
                 title: "新增模板",
-                content: "../com/add.html",
+                content: "newadd.html",
                 area: ["100%", "100%"],
                 end: () => {
                     that.getdata()
@@ -98,7 +98,7 @@ window.app = new Vue({
             let index = layer.open({
                 type: 2,
                 title: "编辑模板",
-                content: `../com/edit.html?id=${item.id}`,
+                content: `../com/newedit.html?id=${item.id}`,
                 area: ["100%", "100%"],
                 end: () => {
                     that.getdata()

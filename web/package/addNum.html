@@ -300,6 +300,22 @@
             //     })
             // },
 
+             //获取七牛云上传Token
+             getToken() {
+                const that = this
+                $.ajax({
+                    url: config.api_token,
+                    async: true,
+                    data: {},
+                    taye: "post",
+                    success: res => {
+                        that.token = res;
+                        // uploaderReady(res)
+                        uploadInit(res)      //这个是富文本的
+                    }
+                })
+            },
+
             //获取分项
             getGroup() {
                 const that = this;
@@ -400,6 +416,7 @@
 
             // this.getInfo()
             this.getGroup();
+            this.getToken()
 
             var E = window.wangEditor;
             window.editor = new E("#demo");

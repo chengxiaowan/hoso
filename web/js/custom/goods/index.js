@@ -2,7 +2,7 @@ var config = {
 	role: localStorage.userRole,
 	api_list: api_url + '/goods/dataList', //获取品牌列表
 	api_typeList: api_url + '/type/typeList', //获取类别
-	api_supplierList: api_url + '/supplier/supplierList', //获取供应商列表
+	api_supplierList: api_url + '/supplier/dataList', //获取供应商列表
 	api_brandList: api_url + '/brand/brandList', //获取品牌列表
 	api_edit: api_url + '/goods/saveOrupdate', //修改品牌
 	api_del: api_url + '/goods/del', //删除品牌
@@ -171,16 +171,17 @@ var vueApp = new Vue({
 				type: 'post',
 				data: {
 					keywords: '',
-					type:0
+					type:0,
+					pageSize:100
 				},
 				success: function(res) {
 					that.loading('close')
 					if(res.error == "00") {
 						var arr = []
-						for(var i in res.result) {
+						for(var i in res.result.list) {
 							var obj = {};
-							obj.id = res.result[i].id;
-							obj.text = res.result[i].name;
+							obj.id = res.result.list[i].id;
+							obj.text = res.result.list[i].name;
 							arr.push(obj);
 						}
 						that.supplierList = arr;

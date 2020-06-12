@@ -71,6 +71,11 @@ window.app = new Vue({
              //过期时间
              timeType:"",
              time:"",
+
+             cominfo:{
+                name:"请选择模板"
+            },
+            drool:false
         }
     },
 
@@ -101,11 +106,7 @@ window.app = new Vue({
                 pageSize: "100",
                 pageNo: "1"
             }
-            // axios.post(config.api_com, parmas)
-            //     .then(res => {
-            //         console.log(res)
-            //         that.comList = res.data.result.list
-            //     })
+
 
             $.ajax({
                 url: config.api_com,
@@ -113,6 +114,8 @@ window.app = new Vue({
                 data: parmas,
                 success: res => {
                     that.comList = res.result.list
+        this.getdetail()
+
                 }
             })
         },
@@ -228,6 +231,27 @@ window.app = new Vue({
 
         },
 
+        //打开模板弹窗
+        openinfo(){
+            const that = this
+            let index = layer.open({
+                type:2,
+                title:"选择模板",
+                content:"type.html",
+                area:["100%","100%"],
+                end:()=>{
+                    let info = sessionStorage.getItem("com")
+                    if(info){
+                        that.cominfo = JSON.parse(info)
+                    }else{
+                        that.cominfo = {
+                            name:"请选择模板"
+                        }
+                    }
+                }
+            })
+        },
+
         //添加优惠券
         add1(item) {
             const that = this
@@ -263,7 +287,7 @@ window.app = new Vue({
                 return
             }
 
-            if (this.com == "") {
+            if (this.cominfo.id == "") {
                 layer.msg("请选择权益模板")
                 return
             }
@@ -368,7 +392,7 @@ window.app = new Vue({
             let parmas = {
                 memPackageId:id,
                 name: this.name,        //名称
-                modelId: this.com,        //模板ID
+                modelId: this.cominfo.id,        //模板ID
                 isOnsell: this.isOnsell, //上下架状态
                 // type:this.cominfo.isGroup,   //根据模板判断是否分组
                 pic: $("#vivew").attr('src'),                 //封面图片
@@ -461,7 +485,14 @@ window.app = new Vue({
                         let drool = res.result;
                         that.name = drool.name;
                         that.com = drool.modelId;
-                        that.isOnsell = drool.isOnsell;
+                        for(let i = 0;i<=that.comList.length;i++){
+                            if(that.com == that.comList[i]){
+                                that.cominfo = that.comList[i]
+                                // console.log(that.comList[i])
+                            }
+                        }
+
+                        that.isOnsell = JSON.stringify(drool.isOnsell);
                         $("#vivew").attr("src", drool.pic);
                         $("#vivew2").attr("src", drool.topPic);
                         $("#vivew3").attr("src", drool.memPic);
@@ -510,11 +541,14 @@ window.app = new Vue({
 
     //挂在时
     mounted() {
+        let that = this
         //获取token并初始化七牛云上传
         this.getToken()
         this.get_com()
+
+       
+
         // this.getQuan()
-        this.getdetail()
          //初始化富文本
          var E = window.wangEditor
          window.editor = new E('#demo')

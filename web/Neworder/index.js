@@ -25,6 +25,7 @@ window.app = new Vue({
             list: [],
             list2: [],
             list3: [],
+            solt:""
 
         }
     },
@@ -38,7 +39,9 @@ window.app = new Vue({
                 orderStatus: this.type,
                 createTimeStart: $("#start").val(),
                 createTimeEnd: $("#end").val(),
-                pageNo:this.pageNo
+                pageNo:this.pageNo,
+                //???
+                type:this.solt
             }
             $.ajax({
                 url: confing.api_list,
@@ -104,6 +107,26 @@ window.app = new Vue({
 				area: ['100%', '100%']
 			});
         },
+
+        edits(id, orderType) {
+			var index = layer.open({
+				type: 2,
+				title: '编辑订单',
+				content: '../sales/edits.html?id=' + id + "&orderType=" + orderType,
+				area: ['100%', '100%']
+			});
+        },
+
+        edit3(item) {
+			var index = layer.open({
+				type: 2,
+				title: '编辑订单',
+				content: 'edit.html?id=' + item.saleOrderId + "&memberName=" + item.memberName + "&orderType=" + item.orderType,
+				area: ['100%', '100%']
+			});
+        },
+
+
         
 
         //获取虚拟商品

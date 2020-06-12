@@ -256,7 +256,9 @@
     let config = {
         api_info: api_url + '/memRights/detail',
         api_group: api_url + '/memPackage/showGroupOrmemRights',
-        api_add: api_url + '/memPackage/bindRights'
+        api_add: api_url + '/memPackage/bindRights',
+    api_token: api_url + '/qiniu/getUpToken', //获取七牛的token
+
     }
 
     var id = parameter().id;
@@ -295,6 +297,21 @@
             }
         },
         methods: {
+             //获取七牛云上传Token
+             getToken() {
+                const that = this
+                $.ajax({
+                    url: config.api_token,
+                    async: true,
+                    data: {},
+                    taye: "post",
+                    success: res => {
+                        that.token = res;
+                        // uploaderReady(res)
+                        uploadInit(res)      //这个是富文本的
+                    }
+                })
+            },
             //获取优惠券详细信息
             getInfo() {
                 $.ajax({
@@ -429,6 +446,7 @@
 
         },
         mounted() {
+            this.getToken()
             this.isGroup = isGroup
             this.isMains = isMain
 

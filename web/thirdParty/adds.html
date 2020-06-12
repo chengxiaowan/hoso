@@ -138,7 +138,7 @@
                 <label class="control-label col-sm-1"><span class="xing">*</span>供应商:</label>
                 <div class="col-sm-2">
                     <template>
-                        <el-select v-model="shops" filterable placeholder="请选择供应商">
+                        <el-select v-model="shops" filterable placeholder="请选择供应商" @change="bobo()">
                             <el-option v-for="item in shop" :key="item.id" :label="item.name" :value="item.id">
                             </el-option>
                         </el-select>
@@ -156,7 +156,7 @@
             <div class="row form-group">
                 <label class="control-label col-sm-1"><span class="xing">*</span>产品编码:</label>
                 <div class="col-sm-2">
-                    <input type="text" class="form-control" v-model="no" placeholder="请输入产品编码" />
+                    <input type="text" class="form-control" v-model="no" placeholder="请输入产品编码，最多6位数字" @blur="yan()" />
                 </div>
             </div>
 

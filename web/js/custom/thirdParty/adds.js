@@ -1,6 +1,6 @@
 config = {
     api_token: api_url + '/qiniu/getUpToken',
-    api_shop: api_url + "/supplier/dataList",
+    api_shop: api_url + "/supplier/dataList1",
     api_save: api_url + "/memRights/addCq",
 
 }
@@ -24,6 +24,9 @@ window.app = new Vue({
             ku: "0",
             kuType: "",
 
+            falge:false,
+            shopsinfo:{},
+
 
         }
     },
@@ -42,6 +45,33 @@ window.app = new Vue({
                     uploadInit(res)      //这个是富文本的
                 }
             })
+        },
+
+        //多参数聚合
+        bobo(){
+            console.log("执行了")
+            const that = this
+            console.log(that.shop.length)
+
+            for(let i = 0; i<that.shop.length;i++){
+                if(that.shop[i].id == that.shops && that.shop[i].dataSource){
+                    that.shopsinfo = that.shop[i]
+                }
+                
+            }
+            console.log(this.shopsinfo)
+
+        },
+
+        yan(){
+            var reg = /^[0-9]+.?[0-9]*$/
+            if(reg.test(this.no) && this.no.length <=6){
+                console.log("1")
+                this.falge = true
+            }else{
+                layer.msg("请输入6位纯数字商品编码")
+               this.falge = false
+            }
         },
 
         //获取供应商
@@ -66,6 +96,7 @@ window.app = new Vue({
         },
         save() {
             const that = this
+
             
             if(that.shops == ""){
                 layer.msg("请选择产品供应商")
@@ -79,6 +110,11 @@ window.app = new Vue({
 
             if (that.no == "") {
                 layer.msg("请输入产品编号")
+                return
+            }
+
+            if(that.falge == false){
+                layer.msg("请输入六位纯数字商品编码")
                 return
             }
 
@@ -127,6 +163,10 @@ window.app = new Vue({
                 dataType: that.kuType,      //库存类型
             }
             console.log(parmas)
+
+            if(this.shopsinfo.dataSource){
+                parmas.dataSource = this.shopsinfo.dataSource
+            }
 
             $.ajax({
                 url: config.api_save,

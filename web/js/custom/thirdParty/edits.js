@@ -1,6 +1,6 @@
 config = {
     api_token: api_url + '/qiniu/getUpToken',
-    api_shop: api_url + "/supplier/dataList",
+    api_shop: api_url + "/supplier/dataList1",
     api_save: api_url + "/memRights/updateCq",
 
 }
@@ -25,6 +25,9 @@ window.app = new Vue({
             kuType: "",
             id:"",
             originalGoods_no:"",
+
+            falge:false,
+            shopsinfo:{},
 
 
         }
@@ -66,6 +69,18 @@ window.app = new Vue({
                 }
             })
         },
+          //多参数聚合
+          bobo(){
+            console.log("执行了")
+            const that = this
+            for(let i = 0; i<that.shop.length;i++){
+                if(that.shop[i].id == that.shops && that.shop[i].dataSource){
+                    that.shopsinfo = that.shop[i]
+                }
+            }
+            console.log(this.shopsinfo)
+
+        },
         save() {
             const that = this
             //判断输入
@@ -81,6 +96,11 @@ window.app = new Vue({
 
             if (that.no == "") {
                 layer.msg("请输入产品编号")
+                return
+            }
+
+            if(that.falge == false){
+                layer.msg("请输入六位纯数字商品编码")
                 return
             }
 
@@ -131,6 +151,11 @@ window.app = new Vue({
                 dataType: that.kuType,      //库存类型
                 originalGoods_no:that.originalGoods_no
             }
+            
+            if(this.shopsinfo.dataSource){
+                parmas.dataSource = this.shopsinfo.dataSource
+            }
+
             console.log(parmas)
 
             $.ajax({
@@ -148,6 +173,17 @@ window.app = new Vue({
                     }
                 }
             })
+        },
+
+        yan(){
+            var reg = /^[0-9]+.?[0-9]*$/
+            if(reg.test(this.no) && this.no.length <=6){
+                console.log("1")
+                this.falge = true
+            }else{
+                layer.msg("请输入6位纯数字商品编码")
+                this.falge = false
+            }
         }
     },
     mounted() {
@@ -181,11 +217,7 @@ window.app = new Vue({
         this.shops = JSON.stringify(parmars.supplierId)
         this.originalGoods_no = parmars.goods_no
         window.editor.txt.html(parmars.describes)
-        if(parmars.type == 0){
-            this.type = '0'
-        }else{
-            this.type = '1'
-        }
+        this.type = parmars.type
         if(parmars.pic){
             $('#vivew').attr("src",parmars.pic)
         }

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>编辑模板</title>
+    <title>新增模板</title>
     <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/animate.min.css">
@@ -88,18 +88,18 @@
                         <div class="title-from"><span class="xing">*</span> 是否分项：</div>
                         <div class="title-input" style="width: 146px;">
                             <select class="form-control" style="padding-left:60px" v-model="type">
-                                <option value="0">是</option>
-                                <option value="1">否</option>
+                                <option value="1">是</option>
+                                <option value="0">否</option>
                             </select>
                         </div>
-                    </div>
+                    </div> 
 
                     <div class="main-info">
                         <div class="title-from"><span class="xing">*</span> 模板样式：</div>
                         <div class="title-input" style="width: 146px;">
                             <select class="form-control" style="padding-left:60px" v-model="isMain">
-                                <option value="0">主/次</option>
-                                <option value="1">非主次</option>
+                                <option value="1">主/次</option>
+                                <option value="0">非主次</option>
                             </select>
                         </div>
                     </div>
@@ -117,10 +117,15 @@
 
 
                     <div class="main-info">
-                        <div class="title-from"><span class="xing">*</span> 图文详情：</div>
-                        <div class="title-input" style="width: 800px;">
-                            <div id="demo"></div>
-
+                        <div class="title-from"><span class="xing">*</span> 模板样式：</div>
+                        <div class="title-input" style="width: 700px;">
+                            <div class="image-box">
+                                <div style="margin-left: 10px;" id="drool">
+                                    <div id="updataImage" class="imageup">
+                                        <img id="vivew" src="../images/imgadd.png" style="width: 200px;height: 200px;">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -141,15 +146,16 @@
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
 <script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
-<script src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
 
 <!-- qiniu.js依赖于Plupload，所以Plupload要在qiniu.js之前引用 -->
 <script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
 <script src="../js/qiniuyun/qiniuVip.js"></script>
+<script src="../js/qiniuyun/qiniu-package.js"></script>
+<script src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
 
 <!-- 自定义js -->
 <script src="../js/content.min.js?v=1.0.0"></script>
 <script src="../js/custom/common.js"></script>
-<script src="../js/custom/com/edit.js"></script>  
+<script src="../js/custom/com/edit.js"></script> 
 
 </html>

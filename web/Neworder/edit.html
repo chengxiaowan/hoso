@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑订单</title>
+    <meta name="keywords" content="寒舍">
+    <meta name="description" content="寒舍">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/htz.css" />
+</head>
+<style>
+    .input-container {
+        height: 34px !important;
+        line-height: 34px !important;
+    }
+
+    .select2-container {
+        z-index: 99999999999999;
+    }
+
+    body {
+        font-size: 12px;
+    }
+</style>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content" id="app">
+        <div class="row">
+            <div class="col-sm-12" style="margin-bottom: 5px;">
+                <h2 class="m-t-xs">订单编号: {{c.orderNo}} <small class="m-l-md">订单状态 :
+                        <span v-if="c.orderStatus == 0">已取消</span>
+                        <span v-if="c.orderStatus == 1">待付款</span>
+                        <span v-if="c.orderStatus == 2">待收货</span>
+                        <span v-if="c.orderStatus == 3">已审核</span>
+                        <span v-if="c.orderStatus == 4">待出库</span>
+                        <span v-if="c.orderStatus == 5">已完成</span>
+
+                    </small></h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        基本信息
+                    </div>
+                    <div class="panel-body">
+                        <div class="row form form-horizontal">
+                            <div class="col-md-6">
+                                <div class="">
+                                    <b class="col-sm-3 control-label">订单编号：</b>
+                                    <div class="col-sm-9 input-container ">
+                                        {{c.orderNo}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="">
+                                    <b class="col-sm-3 control-label">订单状态：</b>
+                                    <div class="col-sm-8 input-container"
+                                        @click="change('orderStatus')"
+                                        @mouseenter="enter('orderStatus')"
+                                        @mouseleave="leave">
+                                        <span
+                                            v-if="editParam!='orderStatus'&&c.orderStatus == 0"
+                                            class="orderStatus">已取消</span>
+                                        <span
+                                            v-if="editParam!='orderStatus'&&c.orderStatus == 1"
+                                            class="orderStatus">待付款</span>
+                                        <span
+                                            v-if="editParam!='orderStatus'&&c.orderStatus == 2"
+                                            class="orderStatus">待收货</span>
+                                        <span
+                                            v-if="editParam!='orderStatus'&&c.orderStatus == 3"
+                                            class="orderStatus">已审核</span>
+                                        <span
+                                            v-if="editParam!='orderStatus'&&c.orderStatus == 4"
+                                            class="orderStatus">待出库</span>
+                                        <span
+                                            v-if="editParam!='orderStatus'&&c.orderStatus == 5"
+                                            class="orderStatus">已完成</span>
+                                        <form @submit.prevent="saveData"
+                                            v-if="editParam=='orderStatus'">
+                                            <select class="form-control" disabled
+                                                style="width:100%"
+                                                v-if="editParam=='orderStatus'" v-focus
+                                                v-model="c.orderStatus"
+                                                name='orderStatus'>
+                                                <option value="">请选择</option>
+                                                <option value="2">待收货</option>
+                                                <option value="4">待出库</option>
+                                                <option value="5">已完成</option>
+                                            </select>
+                                        </form>
+                                        <i v-if="hoverParam=='orderStatus'"
+                                            class="fa fa-edit m-l-md"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="">
+                                    <b class="col-sm-3 control-label">订单类型：</b>
+                                    <div class="col-sm-9 input-container ">
+                                        <span v-if="c.orderType == 0">其他</span>
+                                        <span v-if="c.orderType == 1">商品</span>
+                                        <span v-if="c.orderType == 2">商品组合</span>
+                                        <span v-if="c.orderType == 3">场景</span>
+                                        <span v-if="c.orderType == 5">权益卡</span>
+                                        <span v-if="c.orderType == 9">权益卡</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="">
+                                    <b class="col-sm-3 control-label">权益卡名称：</b>
+                                    <div class="col-sm-9 input-container ">
+                                        <!-- {{c.payAmount }} -->
+                                        {{memberName}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="">
+                                    <b class="col-sm-3 control-label">客户手机号码：</b>
+                                    <div class="col-sm-9 input-container ">
+                                        {{c.customerPhone ||"--"}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="">
+                                    <b class="col-sm-3 control-label">订单金额(元)：</b>
+                                    <div class="col-sm-9 input-container ">
+                                        {{c.totalAmount}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="">
+                                    <b class="col-sm-3 control-label">下单时间：</b>
+                                    <div class="col-sm-9 input-container ">
+                                        {{c.createTime}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="">
+                                    <b class="col-sm-3 control-label">付款时间：</b>
+                                    <div class="col-sm-9 input-container ">
+                                        {{c.payTime}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="">
+                                    <b class="col-sm-3 control-label">购买用途：</b>
+                                    <div class="col-sm-9 input-container ">
+                                        {{c.orderType == "5" ? "开通" : "赠送"}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6" v-if="c.orderType==9&&c.orderStatus == 5">
+                                <div class="">
+                                    <b class="col-sm-3 control-label">是否领取：</b>
+                                    <div class="col-sm-9 input-container ">
+                                        {{c.isReceive == "1" ? "已领取" : "未领取"}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6"  v-if="c.orderType==9&&c.orderStatus == 5">
+                                <div class="">
+                                    <b class="col-sm-3 control-label">领取人手机号码</b>
+                                    <div class="col-sm-9 input-container ">
+                                        {{c.phone || "--"}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6"  v-if="c.orderType==9&&c.orderStatus == 5">
+                                <div class="">
+                                    <b class="col-sm-3 control-label">领取时间：</b>
+                                    <div class="col-sm-9 input-container ">
+                                        {{c.receiveTime || "--"}}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        交易信息
+                    </div>
+                    <div class="panel-body">
+                        <div class="row form form-horizontal">
+                            <div class="col-md-12 clear">
+                                <div class="">
+                                    <b class="col-sm-1 control-label">交易方式：</b>
+                                    <div class="col-sm-11 input-container ">
+                                        <span v-if="c.payType == 0">其他</span>
+                                        <span v-if="c.payType == 1">微信支付</span>
+                                        <span v-if="c.payType == 2">支付宝支付</span>
+                                        <span v-if="c.payType == 3">货到付款</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 clear">
+                                <div class="">
+                                    <b class="col-sm-1 control-label">交易号：</b>
+                                    <div class="col-sm-11 input-container ">
+                                        {{c.payNo}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- 全局js -->
+    <script src="../js/jquery-2.1.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/plugins/layer/layer.min.js"></script>
+    <script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+    <script src="../js/plugins/select2-4.0.3/i18n/zh-CN.js"></script>
+    <script src="../js/vue.js"></script>
+    <script src="../js/module/module_pagination.js"></script>
+    <!-- 自定义js -->
+    <script src="../js/content.min.js?v=1.0.0"></script>
+    <script src="../js/custom/common.js"></script>
+    <script src="./edit.js"></script>
+</body>
+
+</html>

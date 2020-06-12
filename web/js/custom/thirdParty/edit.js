@@ -127,11 +127,7 @@ window.app = new Vue({
         this.originalGoods_no = parmars.goods_no
         this.id = parmars.id
         this.solt = parmars.solt
-        if(parmars.type == 0){
-            this.type = '0'
-        }else{
-            this.type = '1'
-        }
+        this.type = parmars.type
         if(parmars.pic){
             $('#vivew').attr("src",parmars.pic)
         }
