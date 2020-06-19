@@ -11,6 +11,8 @@ window.app = new Vue({
         return {
             token: "",
             shop: [],        //供应商列表
+            shopList: [],        //过滤后的供应商
+            shopType: "100",        //供应商类型
             keywords: "",
             //整合表单参数
             shops: "",  //选择的供应商
@@ -24,8 +26,13 @@ window.app = new Vue({
             ku: "0",
             kuType: "",
 
-            falge:false,
-            shopsinfo:{},
+            falge: false,
+            shopsinfo: {},
+
+            dataList: [
+                { label: "权益供应商", value: "0" },
+                { label: "线下门店", value: "1" },
+            ]
 
 
         }
@@ -47,30 +54,14 @@ window.app = new Vue({
             })
         },
 
-        //多参数聚合
-        bobo(){
-            console.log("执行了")
-            const that = this
-            console.log(that.shop.length)
-
-            for(let i = 0; i<that.shop.length;i++){
-                if(that.shop[i].id == that.shops && that.shop[i].dataSource){
-                    that.shopsinfo = that.shop[i]
-                }
-                
-            }
-            console.log(this.shopsinfo)
-
-        },
-
-        yan(){
+        yan() {
             var reg = /^[0-9]+.?[0-9]*$/
-            if(reg.test(this.no) && this.no.length <=6){
+            if (reg.test(this.no) && this.no.length <= 6) {
                 console.log("1")
                 this.falge = true
-            }else{
+            } else {
                 layer.msg("请输入6位纯数字商品编码")
-               this.falge = false
+                this.falge = false
             }
         },
 
@@ -83,11 +74,14 @@ window.app = new Vue({
                 data: {
                     keywords: that.keywords,
                     type: "1",
-                    pageSize:"100"
+                    pageSize: "100"
                 },
                 success: res => {
                     if (res.error == "00") {
                         that.shop = res.result.list
+
+                        //确保数据回来后触发一次watch
+                        that.shopType = "0"
                     } else {
                         layer.msg(res.msg)
                     }
@@ -97,8 +91,8 @@ window.app = new Vue({
         save() {
             const that = this
 
-            
-            if(that.shops == ""){
+
+            if (that.shops == "") {
                 layer.msg("请选择产品供应商")
                 return
             }
@@ -113,7 +107,7 @@ window.app = new Vue({
                 return
             }
 
-            if(that.falge == false){
+            if (that.falge == false) {
                 layer.msg("请输入六位纯数字商品编码")
                 return
             }
@@ -143,7 +137,7 @@ window.app = new Vue({
                 pic = $('#vivew').attr("src")
             }
 
-            if(that.ku == "1" && that.kuType == ""){
+            if (that.ku == "1" && that.kuType == "") {
                 layer.msg("请选择数据类型")
             }
 
@@ -162,11 +156,12 @@ window.app = new Vue({
                 isStock: that.ku,          //本地是否有库存
                 dataType: that.kuType,      //库存类型
             }
-            console.log(parmas)
 
-            if(this.shopsinfo.dataSource){
-                parmas.dataSource = this.shopsinfo.dataSource
-            }
+
+            //类型 ""是权益 1是门店
+            parmas.dataSource = this.shopType
+
+            console.log(parmas)
 
             $.ajax({
                 url: config.api_save,
@@ -180,7 +175,7 @@ window.app = new Vue({
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                             parent.layer.close(index); //再执行关闭
                         }, 2000);
-                    }else if(res.error == "01"){
+                    } else if (res.error == "01") {
                         layer.msg("产品编号重复，请重新输入")
                     }
                 }
@@ -196,8 +191,43 @@ window.app = new Vue({
         window.editor = new E('#demo')
         window.editor.customConfig.qiniu = true     //允许富文本调用七牛云对象储存
         window.editor.create()
-
         //获取供应商
         that.getshop()
+
+
     },
+
+    watch: {
+
+        //根据选择的类型来过滤供应商
+        shopType(val) {
+            if (val == "1") {
+                console.log("线下门店")
+                //为了避免不必要的麻烦 每次watch触发都把值设置为空
+                this.shops = ""
+                let arr = []
+                this.shop.forEach(i => {
+                    if (i.dataSource) {
+                        arr.push(i)
+                    }
+                })
+                this.shopList = arr
+            }
+
+
+
+            if (val == "0") {
+                console.log("权益供应商")
+                //为了避免不必要的麻烦 每次watch触发都把值设置为空
+                this.shops = ""
+                let arr = []
+                this.shop.forEach(i => {
+                    if (!i.dataSource) {
+                        arr.push(i)
+                    }
+                })
+                this.shopList = arr
+            }
+        }
+    }
 })

@@ -205,10 +205,11 @@
                 </div>
                 <div class="col-sm-5">
                     <div class="image-box">
-                        <div style="margin-left: 10px;" id="drool">
+                        <div style="margin-left: 10px; display: flex;" id="drool">
                             <div id="updataImage" class="imageup">
                                 <img id="vivew" src="../images/imgadd.png" style="width: 100px;height: 100px;">
                             </div>
+                            <div style="margin-left: 20px;color: rgba(74, 144, 226, 1);line-height: 180px;overflow: hidden;cursor: pointer;" @click="see()">预览</div>
                         </div>
                     </div>
                 </div>
@@ -219,6 +220,12 @@
         </div>
         <el-dialog :title="title" :visible.sync="dialogVisible" width="450px">
             <img :src="images" alt="" style="width: 400px;">
+        </el-dialog>
+
+        <el-dialog :title="title" :visible.sync="dialogVisible2" width="450px">
+            <div style="width: 400px;overflow: auto;">
+                <img :src="images" alt="" style="width: 400px;">
+            </div>
         </el-dialog>
     </div>
 </body>

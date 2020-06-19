@@ -11,6 +11,8 @@ window.app = new Vue({
         return {
             token: "",
             shop: [],        //供应商列表
+            shopList: [],        //过滤后的供应商
+            shopType: "100",        //供应商类型
             keywords: "",
             //整合表单参数
             shops: "",  //选择的供应商
@@ -23,11 +25,15 @@ window.app = new Vue({
             solt: "0",
             ku: "0",
             kuType: "",
-            id:"",
-            originalGoods_no:"",
 
-            falge:false,
-            shopsinfo:{},
+            falge: false,
+            shopsinfo: {},
+
+            dataList: [
+                { label: "权益供应商", value: "0" },
+                { label: "线下门店", value: "1" },
+            ],
+            info: {},
 
 
         }
@@ -58,33 +64,30 @@ window.app = new Vue({
                 data: {
                     keywords: that.keywords,
                     type: "1",
-                    pageSize:"100"
+                    pageSize: "100"
                 },
                 success: res => {
                     if (res.error == "00") {
                         that.shop = res.result.list
+                        console.log(window.app)
+                        that.shopType = JSON.stringify(that.info.dataSource)
+                        setTimeout(() => {
+                            that.shops = JSON.stringify(that.info.supplierId)
+                        }, 100)
+
+
+
                     } else {
                         layer.msg(res.msg)
                     }
                 }
             })
         },
-          //多参数聚合
-          bobo(){
-            console.log("执行了")
-            const that = this
-            for(let i = 0; i<that.shop.length;i++){
-                if(that.shop[i].id == that.shops && that.shop[i].dataSource){
-                    that.shopsinfo = that.shop[i]
-                }
-            }
-            console.log(this.shopsinfo)
 
-        },
         save() {
             const that = this
             //判断输入
-            if(that.shops == ""){
+            if (that.shops == "") {
                 layer.msg("请选择产品供应商")
                 return
             }
@@ -99,10 +102,7 @@ window.app = new Vue({
                 return
             }
 
-            if(that.falge == false){
-                layer.msg("请输入六位纯数字商品编码")
-                return
-            }
+            this.yan()
 
             if (that.price == "") {
                 layer.msg("请输入面值（元）")
@@ -129,7 +129,7 @@ window.app = new Vue({
                 pic = $('#vivew').attr("src")
             }
 
-            if(that.ku == "1" && that.kuType == ""){
+            if (that.ku == "1" && that.kuType == "") {
                 layer.msg("请选择数据类型")
             }
 
@@ -143,18 +143,15 @@ window.app = new Vue({
                 pic: pic,
                 solt: that.solt,
                 describes: editor.txt.html(),         //富文本
-                id:that.id,
+                id: that.id,
 
                 // 新添加参数
                 supplierId: that.shops,        //供应商ID
                 isStock: that.ku,          //本地是否有库存
                 dataType: that.kuType,      //库存类型
-                originalGoods_no:that.originalGoods_no
+                originalGoods_no: that.originalGoods_no
             }
-            
-            if(this.shopsinfo.dataSource){
-                parmas.dataSource = this.shopsinfo.dataSource
-            }
+            parmas.dataSource = this.shopType
 
             console.log(parmas)
 
@@ -175,14 +172,17 @@ window.app = new Vue({
             })
         },
 
-        yan(){
+        yan() {
             var reg = /^[0-9]+.?[0-9]*$/
-            if(reg.test(this.no) && this.no.length <=6){
+            if (reg.test(this.no) && this.no.length <= 6) {
                 console.log("1")
                 this.falge = true
-            }else{
+                return
+            } else {
                 layer.msg("请输入6位纯数字商品编码")
                 this.falge = false
+                return
+
             }
         }
     },
@@ -202,6 +202,7 @@ window.app = new Vue({
         //参数获取
         let parmars = JSON.parse(sessionStorage.getItem("item"))
         console.log(parmars)
+        this.info = parmars
 
         this.name = parmars.name
         this.type = parmars.type
@@ -214,12 +215,48 @@ window.app = new Vue({
         this.solt = parmars.solt
         this.ku = JSON.stringify(parmars.isStock)
         this.kuType = parmars.dataType
-        this.shops = JSON.stringify(parmars.supplierId)
+        // this.shops = parmars.supplierId
         this.originalGoods_no = parmars.goods_no
         window.editor.txt.html(parmars.describes)
         this.type = parmars.type
-        if(parmars.pic){
-            $('#vivew').attr("src",parmars.pic)
+        if (parmars.pic) {
+            $('#vivew').attr("src", parmars.pic)
         }
+        // this.shopType = JSON.stringify(parmars.dataSource)
     },
+
+    watch: {
+
+        //根据选择的类型来过滤供应商
+        shopType(val) {
+            if (val == "1") {
+                console.log("线下门店")
+                //为了避免不必要的麻烦 每次watch触发都把值设置为空
+                this.shops = ""
+                let arr = []
+                this.shop.forEach(i => {
+                    if (i.dataSource) {
+                        arr.push(i)
+                    }
+                })
+                this.shopList = arr
+            }
+
+
+
+            if (val == "0") {
+                console.log("权益供应商")
+                //为了避免不必要的麻烦 每次watch触发都把值设置为空
+                this.shops = ""
+                let arr = []
+                this.shop.forEach(i => {
+                    if (!i.dataSource) {
+                        arr.push(i)
+                    }
+                })
+                this.shopList = arr
+            }
+        }
+    }
+
 })

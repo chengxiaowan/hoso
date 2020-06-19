@@ -21,17 +21,15 @@ window.app = new Vue({
 	},
 	mounted: function() {
 		let  that = this
+		//挂载一个富文本
+        var E = window.wangEditor
+        window.editor = new E('#demo')
+        window.editor.customConfig.qiniu = true     //允许富文本调用七牛云对象储存
+		window.editor.create()
+		
 		that.getTokenMessage()
 		that.getInfo()
-		this.editor = UE.getEditor('container', {
-			initialFrameHeight: 350,
-			initialFrameWidth: null,
-			// initialContent: "请填写详细描述",
-		});
-		that.editor.addListener("ready", function() {
-			// editor准备好之后才可以使用
-			that.editor.setContent(that.editorInfo);
-		});
+		
 	},
 	methods: {
 		/**
@@ -57,7 +55,8 @@ window.app = new Vue({
 						that.title = res.result.title
 						that.summary = res.result.summary
 						that.imageUrl = res.result.imageUrl
-						that.editorInfo = res.result.description
+						// that.editorInfo = res.result.description
+						editor.txt.html(res.result.description)
 					}else{
 						layer.msg(res.msg)
 					}
@@ -66,7 +65,7 @@ window.app = new Vue({
 		},
 		save() {
 			let that = this
-			if(that.title==''||that.summary==''){
+			if(that.title==''){
 				layer.msg('请填写全部必填项')
 				return false
 			}
@@ -79,7 +78,7 @@ window.app = new Vue({
 					title: that.title,
 					summary: that.summary,
 					imageUrl: $("#demo1").attr('src'),
-					description: this.editor.getContent()
+					description:editor.txt.html()
 				},
 				success(res) {
 					if(res.error == '00') {
@@ -106,6 +105,8 @@ window.app = new Vue({
 				success: function(data) {
 					var obj = data;
 					uploaderReady(obj);
+                    uploadInit(obj)      //这个是富文本的
+
 
 				}
 			});

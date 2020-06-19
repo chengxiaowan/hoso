@@ -49,7 +49,7 @@
             text-align-last: center;
         }
 
-        .el-dropdown{
+        .el-dropdown {
             display: none;
             position: absolute;
             top: 9px;
@@ -60,19 +60,19 @@
             display: none;
         } */
 
-        tr:hover >td > .el-dropdown{
+        tr:hover>td>.el-dropdown {
             display: inline-block;
+        }
+
+        #app{
+            height: 100%;
         }
     </style>
 </head>
 
-<body>
+<body style="height: 100%;">
     <div id="app" class="wrapper wrapper-content  animated fadeInRight">
         <div class="ibox-content">
-            <div class="title-index">
-                <h3>说明</h3>
-                <p>1、请慎重下架已上架的会员包。</p>
-            </div>
             <div class="row">
                 <div class="col-sm-12">
                     <!-- 检索 start -->
@@ -81,19 +81,8 @@
                             <input class="form-control" id="nav-search-input" type="text" placeholder="请输入名称"
                                 v-model="keywords">
                         </div>
-                        <div class="form-group">
-                            <em>上/下架状态：</em>
-                            <select v-model="type" class="form-control" style="width: 100px;">
-                                <option value="">全部</option>
-                                <option value="0">下架</option>
-                                <option value="1">上架</option>
-                            </select>
-                        </div>
                         <button type="submit" class="btn btn-htz btn-primary" @click="getdata(1)">
                             <i class="icon icon_search"></i> 搜索
-                        </button>
-                        <button type="reset" class="btn btn-htz btn-success" @click="goAdd()">
-                            <i id="nav-search-icon" class="icon icon_plus"></i> 新增
                         </button>
                     </div>
                     <!-- 检索 end -->
@@ -102,40 +91,23 @@
                     <table id="simple-table" class="table table-responsive table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th width="40%">名称</th>
-                                <th width="10%">上/下架状态</th>
-                                <th width="25%">创建时间</th>
-                                <th width="25%">操作</th>
+                                <th width="50%">标题</th>
+                                <th width="20%">封面</th>
+                                <th width="20%">创建时间</th>
+                                <th width="10%">操作</th>
                             </tr>
                         </thead>
                         <tbody>
                             <template>
                                 <tr v-for="item in list.list">
-                                    <td>{{item.name}}</td>
-                                    <td v-if="item.isOnsell == '1'">上架</td>
-                                    <td v-if="item.isOnsell == '0'">下架</td>
-                                    <td>{{formatDateTime(item.createTime)}}</td>
+                                    <td>{{item.title}}</td>
+                                    <td>
+                                        <img :src="item.imageUrl" alt="" style="width: 48px;height: 48px;">
+                                    </td>
+                                    <td>{{item.createTime}}</td>
                                     <td style="position: relative;" class="btn-hide">
-                                        <a href="#" class="btn btn-success" @click="edit(item)">编辑</a>
-                                        <a href="#" class="btn btn-success" @click="adds(item)">绑定权益</a>
-                                        <!-- <a href="#" class="btn btn-success" @click="give(item)">赠送</a>
-                                        <a href="#" class="btn btn-success" v-if="item.isGoods=='1'" @click="add1(item)">绑定商家商品</a> -->
-                                        <!-- <a href="#" class="btn btn-success">下架</a> -->
-                                        <a href="#" class="btn btn-success" @click="del(item)" style="color: #D0021B;">删除</a>
-                                        <el-dropdown>
-                                            <span class="el-dropdown-link" style="font-size: 14px;color: #449CF6;">
-                                              更多<i class="el-icon-arrow-down el-icon--right"></i>
-                                            </span>
-                                            <el-dropdown-menu slot="dropdown">
-                                              <el-dropdown-item @click.native="bindad(item)" v-if="item.isAdv == '1'">绑定广告</el-dropdown-item>
-                                              <el-dropdown-item @click.native="give(item)">赠送</el-dropdown-item>
-                                              <el-dropdown-item @click.native="link(item)" v-if="item.link">H5链接</el-dropdown-item>
+                                        <a href="#" class="btn btn-success" @click="add(item)">加入</a>
 
-                                              <el-dropdown-item @click.native="add1(item)" v-if="item.isGoods=='1'">绑定商家商品</el-dropdown-item>
-                                              
-                                              
-                                            </el-dropdown-menu>
-                                          </el-dropdown>
                                     </td>
                                 </tr>
                             </template>
@@ -160,6 +132,18 @@
                 </div>
             </div>
         </div>
+        <el-dialog title="顺序号" :visible.sync="dialogVisible" width="30%" :modal-append-to-body="false">
+            <div style="display: flex; justify-content: space-around;line-height: 35px;">
+                <div>顺序号:</div>
+                <div style="width: 247px;">
+                    <input type="text" class="form-control" v-model="num">
+                </div>
+            </div>
+            <div style="margin-top: 70px; width: 100%;">
+                <button class="btn btn-htz btn-primary" @click="save()" style="display: block;margin: 0 auto;">保存</button>
+            </div>
+            
+        </el-dialog>
     </div>
 </body>
 <script src="../js/jquery-2.1.1.min.js"></script>
@@ -171,7 +155,7 @@
 <!-- 自定义js -->
 <script src="../js/content.min.js?v=1.0.0"></script>
 <script src="../js/custom/common.js"></script>
-<script src="../js/custom/package/index.js"></script>  
+<script src="../js/custom/package/bindnewAD.js"></script>
 
 <!-- ui库 -->
 

@@ -20,13 +20,15 @@ window.app = new Vue({
 	},
 	mounted: function() {
 		let  that = this
-		that.getTokenMessage()
 
-		this.editor = UE.getEditor('container', {
-			initialFrameHeight: 350,
-			initialFrameWidth: null,
-			// initialContent: "请填写详细描述",
-		});
+			//挂载一个富文本
+			var E = window.wangEditor
+			window.editor = new E('#demo')
+			window.editor.customConfig.qiniu = true     //允许富文本调用七牛云对象储存
+			window.editor.create()
+
+		that.getTokenMessage()
+	
 	},
 	methods: {
 		/**
@@ -41,9 +43,14 @@ window.app = new Vue({
 
 		save() {
 			let that = this
-			if(that.title==''||that.summary==''){
+			if(that.title==''){
 				layer.msg('请填写全部必填项')
-				return false
+				return
+			}
+
+			if($("#demo1").attr('src') == ""){
+				layer.msg('请上传封面')
+				return
 			}
 			$.ajax({
 				type: "post",
@@ -53,7 +60,7 @@ window.app = new Vue({
 					title: that.title,
 					summary: that.summary,
 					imageUrl: $("#demo1").attr('src'),
-					description: this.editor.getContent()
+					description: editor.txt.html()
 				},
 				success(res) {
 					if(res.error == '00') {
@@ -80,6 +87,8 @@ window.app = new Vue({
 				success: function(data) {
 					var obj = data;
 					uploaderReady(obj);
+                    uploadInit(obj)      //这个是富文本的
+
 
 				}
 			});

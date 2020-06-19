@@ -4,6 +4,9 @@ let config = {
     api_info: api_url + '/memPackage/detailModel',
 }
 
+// var id = parameter().id;
+
+
 let id = parameter().id
 window.app = new Vue({
     el: "#app",
@@ -18,7 +21,9 @@ window.app = new Vue({
             h5:"",
             remark:"",
             title:"",
-            images:""
+            images:"",
+            dialogVisible:false,
+            dialogVisible2:false,
             
         }
     },
@@ -34,6 +39,7 @@ window.app = new Vue({
                 return
             }
             let parmars = {
+                id:id,
                 name: this.name,
                 pic: $("#vivew").attr("src"),
                 isGroup: this.type,
@@ -100,6 +106,7 @@ window.app = new Vue({
                         that.h5 = drool.link
                         that.remark = drool.remark
                         $("#vivew").attr("src",drool.pic)
+                        // that.images = drool.pic
 
                     }
                 }
@@ -134,6 +141,11 @@ window.app = new Vue({
                 this.dialogVisible = true
 
             }
+        },
+        //预览
+        see(){
+            this.images = $("#vivew").attr("src")
+            this.dialogVisible2 = true
         }
     },
     mounted() {

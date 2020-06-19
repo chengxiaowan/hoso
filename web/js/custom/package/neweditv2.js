@@ -528,6 +528,7 @@ window.app = new Vue({
                         that.yprice = drool.oldyearprice;      //包年原价
                         that.ysprice = drool.yearPrice;     //包年售价
                         that.yfprice = drool.yfirstPrice;     //包年首冲
+                        that.shareprice = drool.sharePrice
                     }
                 }
             })

@@ -148,6 +148,17 @@ window.app = new Vue({
             }).catch(() => { });
         },
 
+        bindad(item){
+            const that = this
+            let index = layer.open({
+                type: 2,
+                title: "广告列表",
+                content: `bindAD.html?id=${item.id}`,
+                area: ["100%", "100%"]
+            })
+        },
+
+
         give(item) {
             const that = this
             let index = layer.open({
@@ -159,10 +170,10 @@ window.app = new Vue({
         },
         link(item) {
             const that = this
-            this.$alert(`https://homeplus.fun/static/membershipPack/testPagesOne/F-index.html?type=1&relateId=0&memPackageId=${item.id}`, '分享链接', {
-                confirmButtonText: '确定',
+            this.$alert(`${item.link}?type=1&relateId=0&memPackageId=${item.id}`, '分享链接', {
+                confirmButtonText: '复制',
                 callback: action => {
-                    var text = `https://homeplus.fun/static/membershipPack/testPagesOne/F-index.html?type=1&relateId=0&memPackageId=${item.id}`;
+                    var text = `${item.link}?type=1&relateId=0&memPackageId=${item.id}`;
                     var textarea = `<textarea class='text'>${text}</textarea>`
                     $("body").append(textarea)
                     $(".text").select()

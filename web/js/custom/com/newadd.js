@@ -18,7 +18,8 @@ window.app = new Vue({
             remark:"",
             dialogVisible:false,
             title:"",
-            images:""
+            images:"",
+            dialogVisible2:false
         }
     },
     methods: {
@@ -106,6 +107,11 @@ window.app = new Vue({
                 this.dialogVisible = true
 
             }
+        },
+
+        see(){
+            this.images = $("#vivew").attr("src")
+            this.dialogVisible2 = true
         }
     },
     mounted() {
