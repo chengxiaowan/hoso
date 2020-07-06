@@ -19,13 +19,21 @@ window.app = new Vue({
             dialogVisible:false,
             title:"",
             images:"",
-            dialogVisible2:false
+            dialogVisible2:false,
+            ADstyle:"",
+            list:[{label:"横向滑动",id:"0"},{label:"纵向列表",id:"2"},{label:"主次罗列",id:"3"}
+        ]
         }
     },
     methods: {
         save() {
             if (this.name == "") {
                 layer.msg("请输入模板名称")
+                return
+            }
+
+            if(this.isAD == "1" && this.ADstyle == ""){
+                layer.msg("请选择广告样式")
                 return
             }
 
@@ -41,7 +49,8 @@ window.app = new Vue({
                 isMain:this.isMain,
                 isAdv:this.isAD,
                 remark:this.remark,
-                link:this.h5
+                link:this.h5,
+                type:this.ADstyle
 
             }
             console.log(parmars)

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
     <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0" />
     <link rel="stylesheet" href="../js/plugins/layui/css/layui.css" />
+    <link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
     <link rel="stylesheet" href="../css/animate.min.css" />
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/layout.css" />
@@ -166,7 +167,8 @@
             <div class="row form-group">
                 <label class="control-label col-sm-1"><span class="xing">*</span>产品编码:</label>
                 <div class="col-sm-2">
-                    <input type="text" class="form-control" v-model="no" placeholder="请输入产品编码，最多6位数字" @blur="yan()" maxlength="6" />
+                    <input type="text" class="form-control" v-model="no" placeholder="请输入产品编码，最多6位数字" @blur="yan()"
+                        maxlength="6" />
                 </div>
             </div>
 
@@ -174,8 +176,8 @@
                 <label class="control-label col-sm-1"><span class="xing">*</span>分类:</label>
                 <div class="col-sm-1">
                     <select class="form-control" v-model="type">
-                        <option value="1" v-hide="shopType == '1'">直充</option>
-                        <option value="0" v-hide="shopType == '1'">卡券</option>
+                        <option value="1" v-show="shopType != '1'">直充</option>
+                        <option value="0" v-show="shopType != '1'">卡券</option>
                         <option value="2">线下</option>
                         <option value="3">实物</option>
                     </select>
@@ -272,6 +274,7 @@
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/plugins/layer/layer.min.js"></script>
 <script src="../js/plugins/layui/layui.js"></script>
+<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
 <script src="../js/vue.js"></script>
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>

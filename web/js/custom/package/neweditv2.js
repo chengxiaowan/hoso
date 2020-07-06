@@ -411,7 +411,9 @@ window.app = new Vue({
                 monthPrice: this.mprice || 0,
                 quarterPrice: this.dprice || 0,
                 yearPrice: this.yprice || 0,
-                price: this.price || 0,
+                price: this.sprice || 0,
+
+
                 firstPrice: this.fprice || 0,
                 mfirstPrice: this.mfprice || 0,
                 qfirstPrice: this.dfprice || 0,

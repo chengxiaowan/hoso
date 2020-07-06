@@ -181,6 +181,33 @@
                 </div>
             </div>
 
+            <div class="row" v-if="isAD == '1'">
+                <div class="col-sm-1" style="text-align: right;">
+                    <span class="xing">*</span>广告样式：
+                </div>
+                <div class="col-sm-2">
+                    <template>
+                        <el-select v-model="ADstyle" placeholder="请选择广告形式">
+                            <el-option
+                              v-for="item in list"
+                              :key="item.id"
+                              :label="item.label"
+                              :value="item.id">
+                            </el-option>
+                          </el-select>
+                    </template>
+                </div>
+                <div class="col-sm-2">
+                    <template>
+                        <el-popover placement="right" trigger="hover">
+                            <span class="infos">权益卡内广告模块的样式</span>
+                            <img src="../images/info.png" alt="" slot="reference"
+                                style="width: 20px;height: 20px;line-height: 35px;">
+                        </el-popover>
+                    </template>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-sm-1" style="text-align: right;">
                     <span class="xing">*</span>H5链接：

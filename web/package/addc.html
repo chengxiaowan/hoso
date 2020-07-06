@@ -159,14 +159,15 @@
                     <table id="simple-table" class="table table-responsive table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th width="20%">主标题</th>
+                                <th width="10%">主标题</th>
                                 <th width="10%">副标题</th>
                                 <th width="10%">原标题</th>
-                                <th width="5%">图片</th>
                                 <th width="10%">类型</th>
+                                <th width="10%">子分类</th>
                                 <th width="10%">数量</th>
-                                <th width="10%">可用次数</th>
-                                <th width="15%">是否主权益</th>
+                                <th width="10%">售价</th>
+                                <th width="10%">是否主权益</th>
+                                <th width="10%">创建时间</th>
                                 <th width="10%">操作</th>
 
                             </tr>
@@ -180,16 +181,22 @@
                                             {{drool}}
                                         </div>
                                     </td>
-                                    <td>
-                                        <img :src="item.goodsPic" alt="" style="width: 35px;height: 35px;">
-                                    </td>
+
+                                    <td>{{item.name}}</td>
+
+
                                     <!-- 类型 -->
                                     <td v-if="item.type=='0' || item.type=='1' || item.type=='2'">优惠券</td>
                                     <td v-if="item.type=='3'">虚拟商品</td>
                                     <td v-if="item.type=='4'">实物商品</td>
+
+                                     <td>{{item.childType}}</td>
+
+
                                     <td>{{item.count}}</td>
-                                    <td>{{item.countUsed=='-1'?"无限次": item.countUsed}}</td>
+                                    <td>{{item.price == '0'?"--":item.price}}</td>
                                     <td>{{item.isMain=='1'?'是':'否'}}</td>
+                                    <td>{{formatDateTime(item.createTime)}}</td>
                                     <td class="btn-hide">
                                         <a class="btn btn-success" @click="edit(item)">编辑</a>
                                         <a class="btn btn-success" @click="del(item)" style="color: #D0021B;">删除</a>
@@ -222,15 +229,16 @@
                 <table id="simple-table" class="table table-responsive table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th width="20%">主标题</th>
-                            <th width="20%">副标题</th>
-                            <th width="20%">原标题</th>
-                            <th width="5%">图片</th>
-                            <th width="5%">类型</th>
-                            <th width="5%">数量</th>
-                            <th width="5%">可用次数</th>
-                            <th width="5%">是否主权益</th>
-                            <th width="15%">操作</th>
+                            <th width="10%">主标题</th>
+                            <th width="10%">副标题</th>
+                            <th width="10%">原标题</th>
+                            <th width="10%">类型</th>
+                            <th width="10%">子分类</th>
+                            <th width="10%">数量</th>
+                            <th width="10%">售价</th>
+                            <th width="10%">是否主权益</th>
+                            <th width="10%">创建时间</th>
+                            <th width="10%">操作</th>
 
                         </tr>
                     </thead>
@@ -238,30 +246,25 @@
                         <template v-if="list.length !='0'">
                             <tr v-for="item in list">
                                 <td>{{item.maintitle}}</td>
-                                <td>
-                                    <template v-if="item.title.split('@1x1@').length>1">
-                                       
-                                        <ul style="margin-left: 12px;">
-                                            <li v-for="drool in item.title.split('@1x1@')" style="text-align: left;">{{drool}}</li>
-                                        </ul>
-                                    </template>
-                                    <template v-else>
-                                        <div v-for="drool in item.title.split('@1x1@')">
-                                            {{drool}}
-                                        </div>
-                                    </template>
+                                <td style="text-align: left;">
+                                    <div style="text-align: left;" v-for="drool in item.title.split('@1x1@')">
+                                        {{drool}}
+                                    </div>
                                 </td>
+
                                 <td>{{item.name}}</td>
-                                <td>
-                                    <img :src="item.goodsPic" alt="" style="width: 35px;height: 35px;">
-                                </td>
+
                                 <!-- 类型 -->
                                 <td v-if="item.type=='0' || item.type=='1' || item.type=='2'">优惠券</td>
                                 <td v-if="item.type=='3'">虚拟商品</td>
                                 <td v-if="item.type=='4'">实物商品</td>
+
+                                <td>{{item.childType}}</td>
+
                                 <td>{{item.count}}</td>
-                                <td>{{item.countUsed=='-1'?"无限次": item.countUsed}}</td>
+                                <td>{{item.price == '0'?"--":item.price}}</td>
                                 <td>{{item.isMain=='1'?'是':'否'}}</td>
+                                <td>{{formatDateTime(item.createTime)}}</td>
                                 <td class="btn-hide">
                                     <a class="btn btn-success" @click="edit(item)">编辑</a>
                                     <a class="btn btn-success" @click="del(item)" style="color: #D0021B;">删除</a>
@@ -401,6 +404,7 @@
                                 <option value="0">卡券</option>
                                 <option value="1">直充</option>
                                 <option value="2">线下</option>
+                                <option value="3">实物</option>
                             </select>
                         </div>
                         <span style="margin-left: 15px;">类型:</span>
@@ -442,6 +446,7 @@
                                 <td v-if="item.type == 0">卡券</td>
                                 <td v-if="item.type == 1">直充</td>
                                 <td v-if="item.type == 2">线下</td>
+                                <td v-if="item.type == 3">实物</td>
 
                                 <td v-if="item.solt == 0">视频音乐</td>
                                 <td v-if="item.solt == 1">旅游</td>
