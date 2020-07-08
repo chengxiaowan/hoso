@@ -57,13 +57,20 @@
 
 <body class="gray-bg" style="background: #E2E9F0;">
 	<div class="wrapper wrapper-content" id="app">
-		<div class="c-box">
+		<div class="c-box" v-if="role != 2">
 			<div class="title-box">
 				销售助手
 			</div>
 			<div class="content-box" @click="index()">过期的权益产品券</div>
 			<div class="content-box" @click="give()" style="margin-top: 15px;">端午礼盒领取列表</div>
 
+		</div>
+
+		<div class="c-box" v-else>
+			<div class="title-box">
+				销售助手
+			</div>
+			<div class="content-box" @click="drool()">薛定谔的夜市核销</div>
 		</div>
 
 	</div>
@@ -83,7 +90,9 @@
 	window.app = new Vue({
 		el: "#app",
 		data() {
-			return {};
+			return {
+				role:""
+			};
 		},
 		methods: {
 			index() {
@@ -109,11 +118,17 @@
 						// that.getData()
 					}
 				})
+			},
+
+			drool(){
+				window.location = "./yes/index.html"
 			}
 				
 		},
 			mounted() {
 				console.log("vue is ok");
+				console.log(sessionStorage.getItem("roleType"))
+				this.role = sessionStorage.getItem('roleType')
 			},
 		});
 </script>

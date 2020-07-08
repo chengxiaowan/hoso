@@ -21,7 +21,56 @@
 		<nav class="navbar-default navbar-static-side" role="navigation">
 			<div class="nav-close"><i class="fa fa-times-circle"></i></div>
 			<div class="sidebar-collapse">
-				<ul class="nav" id="side-menu">
+
+				<ul class="nav" id="side-menu" v-if="role == 2">
+					<li class="nav-header">
+						<div class="dropdown profile-element">
+							<span><img alt="image" class="img-circle" src="images/small_logo.png" /></span>
+							<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+								<span class="clear">
+									<span class="text-muted text-xs block">超级管理员<b class="caret"></b></span>
+								</span>
+							</a>
+							<ul class="dropdown-menu animated fadeInRight m-t-xs">
+								<li>
+									<a class="J_menuItem" href="form_avatar.html">修改头像</a>
+								</li>
+								<li>
+									<a class="J_menuItem" href="profile.html">个人资料</a>
+								</li>
+								<li>
+									<a class="J_menuItem" href="contacts.html">联系我们</a>
+								</li>
+								<li>
+									<a class="J_menuItem" href="mailbox.html">信箱</a>
+								</li>
+								<li class="divider"></li>
+								<li>
+									<a onclick="logOut()">安全退出</a>
+								</li>
+							</ul>
+						</div>
+						<div class="logo-element">寒舍</div>
+					</li>
+
+					<li>
+						<a href="#">
+							<i class="icon icon_order"></i>
+							<span class="nav-label">核销管理</span>
+							<span class="fa arrow"></span>
+						</a>
+						<ul class="nav nav-second-level">
+							<li>
+								<a class="J_menuItem" href="yes/index.html">薛定谔的夜核销记录</a>
+							</li>
+							
+						</ul>
+					</li>
+
+				</ul>
+
+
+				<ul class="nav" id="side-menu" v-else>
 					<li class="nav-header">
 						<div class="dropdown profile-element">
 							<span><img alt="image" class="img-circle" src="images/small_logo.png" /></span>
@@ -305,7 +354,7 @@
 							</li>
 						</ul>
 					</li>
- -->
+					-->
 
 
 
@@ -329,6 +378,9 @@
 							</li>
 							<li>
 								<a class="J_menuItem" href="activityManagement/customerWishList.html">我爱我家</a>
+							</li>
+							<li>
+								<a class="J_menuItem" href="yes/index.html">薛定谔的夜核销记录</a>
 							</li>
 						</ul>
 					</li>
@@ -601,6 +653,22 @@
 	<script src="js/custom/common.js"></script>
 	<!-- 第三方插件 -->
 	<script src="js/plugins/pace/pace.min.js"></script>
+	<script src="js/vue.js"></script>
+	<script>
+		window.app = new Vue({
+			el:"#wrapper",
+			data(){
+				return {
+					role:""
+				}
+			},
+
+			mounted () {
+				console.log(sessionStorage.getItem("roleType"))
+				this.role = sessionStorage.getItem('roleType')
+			}
+		})
+	</script>
 </body>
 
 </html>

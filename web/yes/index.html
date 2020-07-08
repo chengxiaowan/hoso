@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../js/plugins/select2-4.0.3/select2.min.css">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .table {
+            margin-top: 24px;
+        }
+
+        .title-index {
+            width: 100%;
+            /* margin: 0 28px; */
+            background: #E4E9EF;
+            /* height: 98px; */
+            margin-bottom: 28px;
+            border-radius: 4px;
+            padding-bottom: 25px;
+        }
+
+        .title-index>h3 {
+            padding-top: 16px;
+            font-size: 20px;
+            color: #4a4a4a;
+            margin-left: 15px;
+            margin-bottom: 15px;
+        }
+
+        .title-index>p {
+            margin-left: 25px;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFangSC;
+            font-weight: 400;
+            color: rgba(74, 74, 74, 1);
+            margin-bottom: 9px;
+        }
+
+        select {
+            width: 70px;
+            height: 37px;
+            text-align: center;
+            text-align-last: center;
+        }
+
+        .el-upload__input {
+            display: none !important;
+        }
+
+        .upload-demo {
+            display: inline-block !important;
+        }
+
+        .m-box {
+            width: 210px;
+            height: 80px;
+            background: rgba(237, 237, 237, 1);
+            border-radius: 4px;
+            margin-top: 25px;
+            margin-left: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="wrapper wrapper-content  animated fadeInRight">
+        <div class="ibox-content">
+            <div class="title-index">
+                <h3>说明</h3>
+                <p>1、显示薛定谔的夜活动核销记录</p>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <!-- 检索 start -->
+                    <div class="form-inline" role="form" id="customerForm">
+                        <div class="form-group">
+                            <input class="form-control" id="nav-search-input" type="text" placeholder="请输入摊位核销码或者摊位名称"
+                                v-model="keywords" style="width: 300px;">
+                        </div>
+
+                        <div class="form-group">
+                            <em>奖项等级：</em>
+                            <select v-model="type" class="form-control" style="width:141px;">
+                                <option value="">全部</option>
+                                <option value="一等奖">一等奖</option>
+                                <option value="二等奖">二等奖</option>
+                                <option value="三等奖">三等奖</option>
+                                <option value="四等奖">四等奖</option>
+                                <option value="五等奖">五等奖</option>
+                                <option value="六等奖">六等奖</option>
+                            </select>
+                        </div>
+
+
+                        <button type="submit" class="btn btn-htz btn-primary" @click="soso()">
+                            <i class="icon icon_search"></i> 搜索
+                        </button>
+                        <el-upload class="upload-demo" :action="upurl"
+                            :show-file-list="false" :on-success="uploadOk" :on-error="uperror" accept=".xls,.xlsx" v-if="role == 1" >
+                            <button type="reset" class="btn btn-htz btn-success">
+                                <i id="nav-search-icon" class="icon icon_plus"></i> 导入excel
+                            </button>
+                        </el-upload>
+
+                        <button type="reset" class="btn btn-htz btn-success" @click="dowload()" v-else>
+                           导出excel
+                        </button>
+                    </div>
+                    <!-- 检索 end -->
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="m-box">
+                            <img src="m.png"
+                                style="width: 44px;height: 44px;display: inline-block;margin: 18px 0 18px 18px;">
+                            <div style="float: right;margin-right: 61px;margin-top: 16px;">
+                                <h3 style="font-size:14px;
+                                font-family:PingFangSC-Medium,PingFang SC;
+                                font-weight:500;
+                                color:rgba(74,74,74,1); margin-bottom: 5px;">核销总金额</h3>
+                                <span style="font-size:16px;
+                                font-family:PingFangSC-Medium,PingFang SC;
+                                font-weight:500;
+                                color:rgba(74,144,226,1);">￥{{price}}.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <table id="simple-table" class="table table-responsive table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <td width="20%">摊位</td>
+                                <td width="10%">中奖码</td>
+                                <td width="10%">奖项等级</td>
+                                <td width="20%">奖品名称</td>
+                                <td width="20%">核销方式</td>
+                                <td width="20%">核销时间</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr v-for="item in list.list">
+                                <td>{{item.verificationPerson}}</td>
+                                <td>{{item.code}}</td>
+                                <td>{{item.level}}</td>
+                                <td>{{item.prize}}</td>
+                                <td>{{item.verificationType}}</td>
+                                <td>{{formatDateTime(item.time)}}</td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                    <div class="pull-left form form-inline">
+                        <div class="form-group form-group-sm">
+                            共 {{list.total}} 条数据,每页显示
+                            <select @change="getdata(1)" v-model="list.pageSize" class="form-control">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="40">40</option>
+                                <option value="50">50</option>
+                            </select> 条
+                        </div>
+                    </div>
+                    <div class="pagi pull-right"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/plugins/select2-4.0.3/select2.min.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script src="index.js"></script>
+<!-- ui库 -->
+
+
+
+</html>
