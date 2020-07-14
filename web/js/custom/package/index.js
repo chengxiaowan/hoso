@@ -119,7 +119,7 @@ window.app = new Vue({
             var second = date.getSeconds();
             minute = minute < 10 ? ('0' + minute) : minute;
             second = second < 10 ? ('0' + second) : second;
-            return y + '-' + m + '-' + d + ' ' + '　' + h + ':' + minute + ':' + second;
+            return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
         },
         del(item) {
             this.$confirm('您确定删除该会员包？', '提示', {
