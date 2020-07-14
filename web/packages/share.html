@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        /*ele图片上传*/
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            width: 129px;
+            height: 120px;
+            margin-left: 25px;
+        }
+
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 129px;
+            height: 120px;
+            line-height: 120px;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 129px;
+            height: 120px;
+            display: block;
+        }
+
+        .avatar-uploader2 .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            width: 329px;
+            height: 120px;
+            margin-left: 25px;
+        }
+
+        .avatar-uploader2 .el-upload:hover {
+            border-color: #409EFF;
+        }
+
+        .avatar-uploader-icon2 {
+            font-size: 28px;
+            color: #8c939d;
+            width: 329px;
+            height: 120px;
+            line-height: 120px;
+            text-align: center;
+        }
+
+        .avatar2 {
+            width: 329px;
+            height: 120px;
+            display: block;
+        }
+
+        .upload-box {
+            display: flex;
+            /* flex: 1; */
+        }
+
+        .el-upload__input {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="wrapper wrapper-content  animated fadeInRight">
+        <div class="ibox-content">
+            <div class="upload-box">
+                <div>分享图片:</div>
+                <div>
+                    <img :src="pic" style="width: 129px;height: 120px;margin-left: 25px;" v-if="pic">
+                    <div style="width: 129px;height: 120px;margin-left: 25px; background: #f5f5f5;text-align: center;line-height: 120px;color: #333;" v-else>
+                        暂无图片
+                    </div>
+                </div>
+                <div style="margin-left: 25px;margin-top: 46px;">
+                    <!-- <el-button type="primary" @click="uptop()">上传图片</el-button> -->
+                    <el-upload class="upload-demo" :action="actionPath" :show-file-list="false"
+                        accept="image/jpeg, image/gif, image/png, image/bmp" :data="postdata"
+                        :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+                        <el-button type="primary">点击上传</el-button>
+                    </el-upload>
+                </div>
+            </div>
+            <div style="color: #858585;margin-left: 80px;margin-bottom: 20px;">图片尺寸：1125 * 1047px</div>
+
+            <!-- <div class="upload-box">
+                <div >卡券图片:</div>
+                <div>
+                    <el-upload class="avatar-uploader2" :action="actionPath" :show-file-list="false"
+                        accept="image/jpeg, image/gif, image/png, image/bmp" :data="postdata"
+                        :on-success="handleAvatarSuccess2" :before-upload="beforeAvatarUpload2">
+                        <img v-if="pic2" :src="pic2" class="avatar2">
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
+                </div>
+                <div style="margin-left: 25px;margin-top: 46px;">
+                    <el-button type="primary" @click="upcard()">上传图片</el-button>
+                </div>
+            </div>
+            <div style="color: #858585;margin-left: 80px;">图片尺寸：987 * 360px</div>
+        </div> -->
+        </div>
+
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<!-- <script src="../js/custom/package/index.js"></script>   -->
+<script>
+
+    var id = parameter().id;
+
+    var config = {
+        api_upload: api_url + "/memPackage/uploadPic",
+        api_token: api_url + "/qiniu/getUpToken",     //获取七牛云的token
+        api_index: api_url + '/memPackage/detailIndex', //首页
+
+
+    }
+
+    window.app = new Vue({
+        el: "#app",
+        data() {
+            return {
+                actionPath: "https://upload.qiniup.com",
+                pic: "",
+                postdata: { token: "" },
+                baseurl: "https://images.homeplus.fun/", //七牛云储存域名，用于拼接key得到图片url
+                index: {},
+
+            }
+        },
+
+        methods: {
+            //初始化富文本图片上传到七牛云的依赖
+            getToken() {
+                const that = this
+                $.ajax({
+                    url: config.api_token,
+                    type: "GET",
+                    data: {},
+                    success: res => {
+                        that.postdata.token = res
+                        // uploadInit(res)
+                    }
+
+                })
+            },
+
+            //上传后拼接Url
+            handleAvatarSuccess(res, file) {
+                console.log(res.url);
+                this.pic = this.baseurl + res.url;
+                this.uptop()
+            },
+
+            //上船前的检测--公用
+            beforeAvatarUpload(file) {
+                // const isJPG = file.type === "image/*";
+                const isLt5M = file.size / 1024 / 1024 < 5;
+
+                // if (!isJPG) {
+                //   this.$message.error("上传图片只能是 JPG 格式!");
+                // }
+                if (!isLt5M) {
+                    this.$message.error("上传图片大小不能超过 5MB!");
+                }
+                return isLt5M;
+            },
+
+            getindex() {
+                $.ajax({
+                    url: config.api_index,
+                    type: "POST",
+                    data: {
+                        id: id
+                    },
+                    success: res => {
+                        if (res.error == "00") {
+                            this.index = res.result
+                            this.pic = res.result.sharePic
+                        }
+                    }
+                })
+            },
+
+            // 上传顶部
+            uptop() {
+                if (this.pic == "") {
+                    this.$message("请上传分享图片")
+                    return
+                }
+                let data = {
+                    id: id,
+                    sharePic: this.pic
+                }
+
+                $.ajax({
+                    url: config.api_upload,
+                    type: "GET",
+                    data: data,
+                    success: res => {
+                        if (res.error == "00") {
+                            this.$message("上传分享图片成功")
+                        }
+                    }
+                })
+            },
+
+        },
+
+        mounted() {
+            this.getToken()
+            this. getindex()
+        }
+    })
+</script>
+
+<!-- ui库 -->
+
+
+
+</html>

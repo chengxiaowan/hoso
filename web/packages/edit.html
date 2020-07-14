@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>新增会员包</title>
+    <link rel="stylesheet" href="./public.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/htz.css" />
+    <link rel="stylesheet" href="../css/style.css">
+
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/plugins/layui/dist/css/layui.css">
+
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            background: #E3E9EE;
+            height: 100%;
+        }
+
+        .layui-tab-card {
+            border-bottom: none;
+        }
+
+        .drawer-box {
+            width: 145px;
+            height: calc(100% - 20px);
+            /* background: #fff; */
+            margin-top: 10px;
+        }
+
+        .see-box {
+            width: 217px;
+            height: calc(100% - 20px);
+            background: #07cbc9;
+            margin-right: 46px;
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .work-box {
+            width: 1240px;
+            /* height: calc(100% - 20px); */
+            background: #fff;
+            margin-top: 10px;
+            overflow: auto;
+        }
+
+        #app {
+            height: 100%;
+        }
+
+        .drawer {
+            width: 125px;
+            height: 100%;
+            background: #fff;
+            padding-top: 15px;
+        }
+
+        .drawer>li {
+            width: 50px;
+            line-height: 30px;
+            font-size: 14px;
+            text-align: center;
+            /* padding-top: 10px; */
+            border-bottom: 1px solid #ccc;
+            margin: 0 auto;
+        }
+
+        .layui-tab {
+            margin: 0;
+            height: 100%;
+        }
+
+        .layui-tab-content {
+            height: 100%;
+        }
+
+        .layui-tab-card>.layui-tab-title {
+            background-color: #E3E9EE;
+        }
+
+        .title-box {
+            width: 100%;
+            height: 120px;
+            background: #F5F5F5;
+            position: relative;
+        }
+
+        .title-item {
+            margin-left: 24px;
+            font-size: 14px;
+            color: #000;
+        }
+
+        .add-box {
+            position: absolute;
+            bottom: 12px;
+            right: 21px;
+        }
+
+        .add-box>img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .srach-box {
+            width: 100%;
+            margin-top: 30px;
+            display: flex;
+        }
+
+        th {
+            color: #5B5B5B;
+            text-align: center;
+            font-weight: normal;
+            background: #E4E9EF !important;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .row {
+            line-height: 35px;
+            margin-bottom: 25px;
+        }
+
+        .xing {
+            color: #F64D62;
+        }
+
+        /*ele图片上传*/
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            width: 345px;
+            height: 120px;
+        }
+
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 345px;
+            height: 120px;
+            line-height: 120px;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 345px;
+            height: 120px;
+            display: block;
+        }
+
+        /*富文本配置*/
+        .text {
+            border: 1px solid #ccc;
+            height: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" style="display: flex;">
+        <!-- 抽屉盒子 -->
+        <div class="drawer-box">
+            <ul class="drawer">
+                <li>首页</li>
+                <li>封面</li>
+                <li>分享页</li>
+            </ul>
+        </div>
+        <!-- 预览盒子 -->
+        <div class="see-box"></div>
+        <!--操作盒子 -->
+        <div class="work-box">
+            <div class="layui-tab layui-tab-card">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">权益产品设置</li>
+                    <li>广告设置</li>
+                    <li>商家商品设置</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div class="ibox-content">
+                            <div class="title-box">
+                                <div style="height: 24px;"></div>
+                                <div class="title-item">请设置权益产品</div>
+                                <div class="add-box">
+                                    <img src="../images/plus.png" alt="">
+                                    <img src="../images/plus2.png" alt="">
+                                </div>
+                            </div>
+                            <div class="srach-box">
+                                <div style="width: 267px;">
+                                    <input type="text" class="form-control" placeholder="请输入名称">
+                                </div>
+                                <button type="button" class="btn btn-htz btn-primary"
+                                    style="margin-left: 15px;">搜索</button>
+                                <button type="button" class="btn btn-htz btn-success"
+                                    style="margin-left: 15px;" v-if="groupList[0]">新增</button>
+                            </div>
+                            <table id="simple-table" class="table table-responsive table-bordered table-hover"
+                                style="margin-top: 20px;">
+                                <thead>
+                                    <tr>
+                                        <th>主标题</th>
+                                        <th>副标题</th>
+                                        <th>图片</th>
+                                        <th>类型</th>
+                                        <th>子分类</th>
+                                        <th>数量</th>
+                                        <th>售价</th>
+                                        <th>是否主权益</th>
+                                        <th>加入时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="layui-tab-item">
+                        <div class="ibox-content">
+                            <div class="title-box" style="margin-bottom: 25px;">
+                                <div style="height: 24px;"></div>
+                                <div class="title-item">请设置权益卡的广告，在左侧首页图片里可以选择广告展现形式</div>
+                                <div class="add-box">
+                                    <img src="../images/plus.png" alt="">
+                                    <img src="../images/plus2.png" alt="">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-1" style="text-align: right;">
+                                    <span class="xing">*</span> 标题:
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 0;">
+                                <div class="col-sm-1" style="text-align: right;">
+                                    <span class="xing">*</span> 图片:
+                                </div>
+                                <div class="col-sm-5">
+                                    <el-upload class="avatar-uploader" :action="actionPath" :show-file-list="false"
+                                        accept="image/jpeg, image/gif, image/png, image/bmp" :data="postdata"
+                                        :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+                                        <img v-if="pic" :src="pic" class="avatar">
+                                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                    </el-upload>
+                                </div>
+                            </div>
+                            <div style="margin-left: 105px;font-size: 14px;color: #858585;margin-bottom: 25px;">
+                                图片尺寸：1035*360px</div>
+                            <div class="row">
+                                <div class="col-sm-1" style="text-align: right;">
+                                    <span class="xing">*</span> 说明:
+                                </div>
+                                <div class="col-sm-8" id="editor">
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <el-button type="primary" style="display: block; margin: 0 auto;">下一步</el-button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class="ibox-content">
+                            <div class="title-box">
+                                <div style="height: 24px;"></div>
+                                <div class="title-item">请设置权益卡对应的商家商品</div>
+                                <div class="add-box">
+                                    <img src="../images/plus.png" alt="">
+                                    <img src="../images/plus2.png" alt="">
+                                </div>
+                            </div>
+                            <div class="srach-box">
+                                <div style="width: 267px;">
+                                    <input type="text" class="form-control" placeholder="请输入名称">
+                                </div>
+                                <button type="button" class="btn btn-htz btn-primary"
+                                    style="margin-left: 15px;">搜索</button>
+                                <button type="button" class="btn btn-htz btn-success"
+                                    style="margin-left: 15px;">新增</button>
+                            </div>
+                            <table id="simple-table" class="table table-responsive table-bordered table-hover"
+                                style="margin-top: 20px;">
+                                <thead>
+                                    <tr>
+                                        <th width="40%">名称</th>
+                                        <th width="20%">类型</th>
+                                        <th width="20%">加入时间</th>
+                                        <th width="20%">操作</th>
+                                    </tr>
+                                </thead>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <!-- 添加分组 -->
+         <el-dialog title="新增分组" :visible.sync="dialogVisible" width="30%" center>
+            <div class="input-box" style="display: block;margin:0 auto;">
+                <input type="text" class="form-control" placeholder="请输入分组名称" v-model="groupName">
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
+                <el-button type="primary" @click="addGroup()">确 定</el-button>
+            </span>
+        </el-dialog>
+    </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+
+<!-- 七牛云依赖 -->
+<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+
+
+<!-- 七牛云自定义配置 -->
+<script src="../js/qiniuyun/qiniu_editor.js"></script>
+
+
+<!-- <script src="../js/vue.js"></script> -->
+<script src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="../js/custom/packages/edit.js"></script>
+
+
+
+</html>

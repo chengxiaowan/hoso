@@ -1,3 +1,9 @@
+/*
+ * @Author: chengxiaowan(1045114585@qq.com) 
+ * @Date: 2020-07-09 11:03:45 
+ * @Last Modified by: chengxiaowan(1045114585@qq.com)
+ * @Last Modified time: 2020-07-09 11:15:31
+ */
 let config = {
     //在这里写接口和api_url拼接
     api_token: api_url + '/qiniu/getUpToken', //获取七牛的token
@@ -77,7 +83,8 @@ window.app = new Vue({
                     }
                 }
             })
-        }
+        },
+
     },
     mounted() {
         this.getToken()

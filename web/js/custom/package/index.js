@@ -20,7 +20,7 @@ window.app = new Vue({
             let index = layer.open({
                 type: 2,
                 title: "新增会员包",
-                content: "./newaddv2.html",
+                content: "../packages/add.html",
                 // content: "add.html",
                 area: ["100%", "100%"],
                 end: () => {
@@ -77,7 +77,8 @@ window.app = new Vue({
             let index = layer.open({
                 type: 2,
                 title: "编辑会员包",
-                content: `neweditv2..html?id=${item.id}`,
+                // content: `neweditv2..html?id=${item.id}`,
+                content: `../packages/edits.html?id=${item.id}`,
                 area: ["100%", "100%"],
                 end: () => {
                     that.getdata(1)
@@ -119,7 +120,7 @@ window.app = new Vue({
             var second = date.getSeconds();
             minute = minute < 10 ? ('0' + minute) : minute;
             second = second < 10 ? ('0' + second) : second;
-            return y + '-' + m + '-' + d + ' ' + '　' + h + ':' + minute + ':' + second;
+            return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
         },
         del(item) {
             this.$confirm('您确定删除该会员包？', '提示', {

@@ -28,6 +28,7 @@ function cancle() {
 }
 //输入框限制只能输入数字和小数
 function clearNoNum(obj){
+    // console.log(obj)
     obj.value = obj.value.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符  
     obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个. 清除多余的  
     obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
@@ -36,6 +37,8 @@ function clearNoNum(obj){
         obj.value= parseFloat(obj.value);
     }
 }
+
+
 // 时间戳转日期
 function formatDate (value) {
     let date = new Date(value);

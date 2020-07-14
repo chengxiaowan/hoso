@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>新增会员包</title>
+    <link rel="stylesheet" href="./public.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/htz.css" />
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/plugins/layui/dist/css/layui.css">
+
+    <style>
+        .head-title {
+            /* width: 56px; */
+            height: 20px;
+            font-size: 14px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: rgba(51, 51, 51, 1);
+        }
+
+        .el-divider {
+            margin: 13px 0;
+            margin-bottom: 24px;
+        }
+
+        .xing {
+            color: #F64D62;
+        }
+
+        .row {
+            margin-bottom: 25px;
+        }
+
+        .el-input__inner{
+            height: 35px!important;
+            line-height: 35px!important;
+        }
+
+        .el-input__icon{
+            line-height: 35px!important;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="ibox-content">
+            <div class="title-box">
+                <div class="head-title">基本信息</div>
+                <el-divider></el-divider>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-1" style="text-align: right;line-height: 35px;">
+                    <div>
+                        <span class="xing">*</span>
+                        名称：
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" v-model="name" placeholder="请输入名称，1-30字" maxlength="30">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-1" style="text-align: right;line-height: 35px;">
+                    <div>
+                        <span class="xing">*</span>
+                        有效期：
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div style="display: inline-block;width: 100px;">
+                        <select class="form-control" v-model="pastTimeType" @change="seeType()" style="text-align: center; text-align-last: center;">
+                            <option value="0">长期有效</option>
+                            <option value="1">购买</option>
+                            <option value="2">固定在</option>
+                        </select>
+                    </div>
+                    <div style="display: inline-block;" v-show="pastTimeType == '1'">
+                        <input type="text" class="form-control" style="display: inline-block; width: 100px;"
+                            v-model="pastTime" oninput="clearNoNum(this)">
+                        天后过期
+                    </div>
+                    <div style="display: inline-block;" v-show="pastTimeType == '2'">
+                        <el-date-picker v-model="pastTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd" :picker-options="pickerOptions">
+                        </el-date-picker>
+                        后过期
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-1" style="text-align: right;line-height: 35px;">
+                    <div>
+                        <span class="xing">*</span>
+                        首页网址：
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" v-model="link" placeholder="请输入首页网址">
+                </div>
+            </div>
+
+            <!-- <div class="row">
+                <div class="col-sm-1" style="text-align: right;line-height: 35px;">
+                    <div>
+                        <span class="xing">*</span>
+                        是否主次：
+                    </div>
+                </div>
+                <div class="col-sm-5" style="line-height: 35px;">
+                    <el-checkbox-group v-model="isMain" :max="1">
+                        <el-checkbox label="1" value="1">是</el-checkbox>
+                        <el-checkbox label="0" value="0">否</el-checkbox>
+                      </el-checkbox-group>
+                </div>
+            </div> -->
+
+            <div class="row">
+                <div class="col-sm-1" style="text-align: right;line-height: 35px;">
+                    <div>
+                        <span class="xing">*</span>
+                        包含广告：
+                    </div>
+                </div>
+                <div class="col-sm-5" style="line-height: 35px;">
+                    <el-radio v-model="isAdv" label="1">是</el-radio>
+                    <el-radio v-model="isAdv" label="0">否</el-radio>
+                </div>
+            </div>
+
+            <div class="row" v-if="isAdv.includes('1')">
+                <div class="col-sm-1" style="text-align: right;line-height: 35px;">
+                    <div>
+                        <span class="xing">*</span>
+                        广告样式：
+                    </div>
+                </div>
+                <div class="col-sm-5" style="line-height: 35px;display: flex;">
+                    <div style="width: 25px;height: 25px;" @click="AdvType='0'" v-show="AdvType != '0'"><img
+                            style="width: 25px;height: 25px;" src="../images/gg_style1_uncheck.png" alt=""></div>
+                    <div style="width: 25px;height: 25px;" v-show="AdvType == 0"><img style="width: 25px;height: 25px;"
+                            src="../images/gg_style1_check.png" alt=""></div>
+
+                    <div style="width: 25px;height: 25px;margin-left: 25px;" @click="AdvType='1'"
+                        v-show="AdvType != '1'"><img style="width: 25px;height: 25px;"
+                            src="../images/gg_style2_uncheck.png" alt=""></div>
+                    <div style="width: 25px;height: 25px;margin-left: 25px;" v-show="AdvType=='1'"><img
+                            style="width: 25px;height: 25px;" src="../images/gg_style2_check.png" alt=""></div>
+
+                    <div style="width: 25px;height: 25px;margin-left: 25px;" @click="AdvType='2'"
+                        v-show="AdvType != '2'"><img style="width: 25px;height: 25px;"
+                            src="../images/gg_style3_uncheck.png" alt=""></div>
+                    <div style="width: 25px;height: 25px;margin-left: 25px;" v-show="AdvType=='2'"><img
+                            style="width: 25px;height: 25px;" src="../images/gg_style3_check.png" alt=""></div>
+
+                    <div style="width: 25px;height: 25px;margin-left: 25px;" @click="AdvType='3'"
+                        v-show="AdvType != '3'"><img style="width: 25px;height: 25px;"
+                            src="../images/gg_style4_uncheck.png" alt=""></div>
+                    <div style="width: 25px;height: 25px;margin-left: 25px;" v-show="AdvType=='3'"><img
+                            style="width: 25px;height: 25px;" src="../images/gg_style4_check.png" alt=""></div>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-1" style="text-align: right;line-height: 35px;">
+                    <div>
+                        <span class="xing">*</span>
+                        包含商家商品：
+                    </div>
+                </div>
+                <div class="col-sm-5" style="line-height: 35px;">
+                    <el-radio v-model="isGoods" label="1">是</el-radio>
+                    <el-radio v-model="isGoods" label="0">否</el-radio>
+                   
+                </div>
+            </div>
+
+            <div class="title-box">
+                <div class="head-title">售价及佣金设置</div>
+                <el-divider></el-divider>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-1" style="text-align: right;line-height: 35px;">
+                    <div>
+                        <span class="xing">*</span>
+                        购买方式：
+                    </div>
+                </div>
+                <div class="col-sm-5" style="line-height: 35px;">
+                    <el-checkbox-group v-model="payType" @change="see()">
+                        <el-checkbox label="0"
+                            :disabled="payType.includes('1') || payType.includes('2') || payType.includes('3')">
+                            单次购买</el-checkbox>
+                        <el-checkbox label="1" :disabled="payType.includes('0')">包月</el-checkbox>
+                        <el-checkbox label="2" :disabled="payType.includes('0')">包季</el-checkbox>
+                        <el-checkbox label="3" :disabled="payType.includes('0')">包年</el-checkbox>
+                    </el-checkbox-group>
+                </div>
+            </div>
+ 
+            <!-- 单次购买盒子 -->
+            <template v-if="payType.includes('0')">
+                <div class="row">
+                    <div class="col-sm-1" style="text-align: right;line-height: 35px;">
+                        <div>
+                            <span class="xing">*</span>
+                            原价(元)：
+                        </div>
+                    </div>
+                    <div class="col-sm-2" style="line-height: 35px;">
+                        <input type="text" class="form-control" placeholder="请输入原价，最多两位小数" v-model="price"
+                            oninput="clearNoNum(this)">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-1" style="text-align: right;line-height: 35px;">
+                        <div>
+                            <span class="xing">*</span>
+                            售价(元)：
+                        </div>
+                    </div>
+                    <div class="col-sm-2" style="line-height: 35px;">
+                        <input type="text" class="form-control" placeholder="请输入售价，最多两位小数" v-model="sprice"
+                            oninput="clearNoNum(this)">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-1" style="text-align: right;line-height: 35px;">
+                        <div>
+                            <span class="xing">*</span>
+                            首充价(元)：
+                        </div>
+                    </div>
+                    <div class="col-sm-2" style="line-height: 35px;">
+                        <input type="text" class="form-control" placeholder="请输入售价，最多两位小数" v-model="fprice"
+                            oninput="clearNoNum(this)">
+                    </div>
+                </div>
+            </template>
+
+            <!-- 时长盒子 -->
+            <template v-if="payType.includes('1') || payType.includes('2') || payType.includes('3')">
+                <div class="row">
+                    <div class="col-sm-1" style="text-align: right;line-height: 35px;">
+                        <div>
+                            <span class="xing">*</span>
+                            原价(元)：
+                        </div>
+                    </div>
+                    <div class="col-sm-1" style="line-height: 35px;" v-if="payType.includes('1')">
+                        <div style="width: 60px;display: inline-block">
+                            <input type="text" class="form-control" v-model="Mprice" oninput="clearNoNum(this)">
+                        </div>
+                        /月
+                    </div>
+
+                    <div class="col-sm-1" style="line-height: 35px;" v-if="payType.includes('2')">
+                        <div style="width: 60px;display: inline-block">
+                            <input type="text" class="form-control" v-model="Jprice" oninput="clearNoNum(this)">
+                        </div>
+                        /季
+                    </div>
+
+                    <div class="col-sm-1" style="line-height: 35px;" v-if="payType.includes('3')">
+                        <div style="width: 60px;display: inline-block">
+                            <input type="text" class="form-control" v-model="Yprice" oninput="clearNoNum(this)">
+                        </div>
+                        /年
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-1" style="text-align: right;line-height: 35px;">
+                        <div>
+                            <span class="xing">*</span>
+                            售价(元)：
+                        </div>
+                    </div>
+                    <div class="col-sm-1" style="line-height: 35px;" v-if="payType.includes('1')">
+                        <div style="width: 60px;display: inline-block">
+                            <input type="text" class="form-control" v-model="Msprice" oninput="clearNoNum(this)">
+                        </div>
+                        /月
+                    </div>
+
+                    <div class="col-sm-1" style="line-height: 35px;" v-if="payType.includes('2')">
+                        <div style="width: 60px;display: inline-block">
+                            <input type="text" class="form-control" v-model="Jsprice" oninput="clearNoNum(this)">
+                        </div>
+                        /季
+                    </div>
+
+                    <div class="col-sm-1" style="line-height: 35px;" v-if="payType.includes('3')">
+                        <div style="width: 60px;display: inline-block">
+                            <input type="text" class="form-control" v-model="Ysprice" oninput="clearNoNum(this)">
+                        </div>
+                        /年
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-1" style="text-align: right;line-height: 35px;">
+                        <div>
+                            <span class="xing">*</span>
+                            首充价(元)：
+                        </div>
+                    </div>
+                    <div class="col-sm-1" style="line-height: 35px;" v-if="payType.includes('1')"
+                        oninput="clearNoNum(this)">
+                        <div style="width: 60px;display: inline-block">
+                            <input type="text" class="form-control" v-model="Mfprice">
+                        </div>
+                        /月
+                    </div>
+
+                    <div class="col-sm-1" style="line-height: 35px;" v-if="payType.includes('2')"
+                        oninput="clearNoNum(this)">
+                        <div style="width: 60px;display: inline-block">
+                            <input type="text" class="form-control" v-model="Jfprice">
+                        </div>
+                        /季
+                    </div>
+
+                    <div class="col-sm-1" style="line-height: 35px;" v-if="payType.includes('3')"
+                        oninput="clearNoNum(this)">
+                        <div style="width: 60px;display: inline-block">
+                            <input type="text" class="form-control" v-model="Yfprice">
+                        </div>
+                        /年
+                    </div>
+
+                </div>
+            </template>
+
+            <!-- 分享价格 -->
+            <div class="row">
+                <div class="col-sm-1" style="text-align: right;line-height: 35px;">
+                    <div>
+                        <span class="xing">*</span>
+                        分享佣金(元)：
+                    </div>
+                </div>
+                <div class="col-sm-2" style="line-height: 35px;">
+                    <input type="text" class="form-control" placeholder="请输入分享价，最多两位小数" v-model="sharePrice"
+                        oninput="clearNoNum(this)">
+                </div>
+            </div>
+
+            <div class="title-box">
+                <div class="head-title">其他信息</div>
+                <el-divider></el-divider>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-1" style="text-align: right;">
+                    <div>
+                        <!-- <span class="xing">*</span> -->
+                        说明：
+                    </div>
+                </div>
+                <div class="col-sm-6" id="editor"></div>
+            </div>
+
+            <div class="row">
+                <el-button type="primary" style="display: block; margin: 0 auto;" @click="save()">下一步</el-button>
+                <!-- <el-button type="primary" style="display: block; margin: 0 auto;" @click="nextPage()">下一步</el-button> -->
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+
+<!-- 七牛云依赖 -->
+<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+
+
+<!-- 七牛云自定义配置 -->
+<script src="../js/qiniuyun/qiniu_editor.js"></script>
+
+
+<!-- <script src="../js/vue.js"></script> -->
+<script src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="../js/custom/packages/add.js"></script>
+
+
+
+</html>

@@ -91,7 +91,7 @@
             <div class="info-box">
                 <div class="info-title">其他信息</div>
                 <div class="ibox-content">
-                    <div class="row" v-if="isGroup=='1'">
+                    <!-- <div class="row" v-if="isGroup=='1'">
                         <div class="col-sm-3 form-title">
                             <span class="xing">*</span>
                             分项名称:
@@ -101,7 +101,7 @@
                                 <option v-for="item in group" :value="item.groupId">{{item.name}}</option>
                             </select>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="row" v-if="isMains=='1'">
                         <div class="col-sm-3 form-title">
                             <span class="xing">*</span>
@@ -194,7 +194,7 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-sm-3 form-title">
                             <span class="xing">*</span>
                             背景图:
@@ -208,7 +208,7 @@
                                 <img :src="background" alt="" style="width: 207px;height: 72px;" />
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="row">
                         <div class="col-sm-3 form-title">
@@ -257,6 +257,7 @@
     var isGroup = parameter().isGroup;
     var isMain = parameter().isMain;
     var ids = parameter().ids;
+    var groupId = parameter().groupid;
     window.app = new Vue({
         el: "#app",
         data() {
@@ -269,7 +270,7 @@
                 ismMain: "",
 
                 //可选参数
-                groupName: "", //选择的分组
+                groupName: groupId, //选择的分组
                 isMain: "0", //是否主权益
                 isMains: "",
                 title: "", //副标题
@@ -371,17 +372,7 @@
                     parmas.isMain = this.isMain;
                 }
                 //判断是否分组
-                if (this.isGroup == "1") {
-                    parmas.parentId = this.groupName;
-                    console.log("走了");
-                } else {
-                    parmas.parentId = -1;
-                }
-                //判断type
-                //判断使用次数          //不需要判断了 2019年12月25日11:09:50
-
-                // parmas.countUsed = this.countUsed
-
+                parmas.parentId = this.groupName;
                 parmas.countUsed = 1;
                 //判断type
                 parmas.remark = editor.txt.html();

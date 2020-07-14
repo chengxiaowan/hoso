@@ -103,7 +103,7 @@
             <div class="info-box">
                 <div class="info-title">其他信息</div>
                 <div class="ibox-content">
-                    <div class="row" v-if="isGroup=='1'">
+                    <!-- <div class="row" v-if="isGroup=='1'">
                         <div class="col-sm-3 form-title">
                             <span class="xing">*</span>
                             分项名称:
@@ -113,7 +113,7 @@
                                 <option v-for="item in group" :value="item.groupId">{{item.name}}</option>
                             </select>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="row" v-if="isMains=='1'">
                         <div class="col-sm-3 form-title">
                             <span class="xing">*</span>
@@ -197,7 +197,7 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-sm-3 form-title">
                             <span class="xing">*</span>
                             背景图:
@@ -211,7 +211,7 @@
                                 <img :src="background" alt="" style="width: 207px;height: 72px;">
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="row">
                         <div class="col-sm-3 form-title">
@@ -266,6 +266,8 @@
     var isGroup = parameter().isGroup;
     var isMain = parameter().isMain;
     var ids = parameter().ids;
+    var groupId = parameter().groupid;
+    console.log(groupId)
     window.app = new Vue({
         el: "#app",
         data() {
@@ -279,7 +281,7 @@
 
 
                 //可选参数
-                groupName: "",   //选择的分组
+                groupName: groupId,   //选择的分组
                 isMain: "1",      //是否主权益
                 isMains: "",
                 title: "",       //副标题

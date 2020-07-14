@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>新增会员包</title>
+    <link rel="stylesheet" href="./public.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/htz.css" />
+    <link rel="stylesheet" href="../css/style.css">
+
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/plugins/layui/dist/css/layui.css">
+
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            background: #E3E9EE;
+            height: 100%;
+        }
+
+        .el-input__inner {
+            height: 35px !important;
+            line-height: 35px !important;
+        }
+
+        .el-input__icon {
+            line-height: 35px !important;
+        }
+
+
+        .layui-tab-card {
+            border-bottom: none;
+        }
+
+        .drawer-box {
+            width: 145px;
+            height: calc(100% - 20px);
+            /* background: #fff; */
+            margin-top: 10px;
+            overflow-x: hidden;
+        }
+
+        .see-box {
+            /* width: 217px; */
+            width: 375px;
+            height: calc(100% - 20px);
+            /* background: #07cbc9; */
+            margin-right: 15px;
+            margin-left: 15px;
+            margin-top: 10px;
+            overflow: auto;
+        }
+
+        .work-box {
+            width: 1240px;
+            /* height: calc(100% - 20px); */
+            background: #fff;
+            margin-top: 10px;
+            overflow: auto;
+        }
+
+        #app {
+            height: 100%;
+        }
+
+        .drawer {
+            width: 125px;
+            height: 100%;
+            background: #fff;
+            padding-top: 15px;
+        }
+
+        .drawer>li {
+            width: 50px;
+            line-height: 30px;
+            font-size: 14px;
+            text-align: center;
+            /* padding-top: 10px; */
+            border-bottom: 1px solid #ccc;
+            margin: 0 auto;
+        }
+
+        .layui-tab {
+            margin: 0;
+            height: 100%;
+        }
+
+        .layui-tab-content {
+            height: 100%;
+        }
+
+        .layui-tab-card>.layui-tab-title {
+            background-color: #E3E9EE;
+        }
+
+        .title-box {
+            width: 100%;
+            height: 120px;
+            background: #F5F5F5;
+            position: relative;
+        }
+
+        .title-item {
+            margin-left: 24px;
+            font-size: 14px;
+            color: #000;
+        }
+
+        .add-boxs {
+            position: absolute;
+            bottom: 12px;
+            right: 21px;
+        }
+
+        .add-boxs>img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .srach-box {
+            width: 100%;
+            margin-top: 30px;
+            display: flex;
+        }
+
+        th {
+            color: #5B5B5B;
+            text-align: center;
+            font-weight: normal;
+            background: #E4E9EF !important;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .row {
+            line-height: 35px;
+            margin-bottom: 25px;
+        }
+
+        .xing {
+            color: #F64D62;
+        }
+
+        /*ele图片上传*/
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            width: 345px;
+            height: 120px;
+        }
+
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 345px;
+            height: 120px;
+            line-height: 120px;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 345px;
+            height: 120px;
+            display: block;
+        }
+
+        /*富文本配置*/
+        .text {
+            border: 1px solid #ccc;
+            height: 300px;
+        }
+
+        .zu-box {
+            height: 45px;
+            width: 1000px;
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            /* background-color: #07cbc9; */
+            display: flex;
+        }
+
+        .zu-item {
+            height: 45px;
+            line-height: 45px;
+            color: #000;
+            padding: 0 10px;
+            border: 1px solid #d9d9d9;
+            cursor: pointer;
+
+        }
+
+        .zu-item-active {
+            background: #fff;
+            border: 1px solid #d9d9d9;
+            border-top: 2px solid #5B8DD1;
+            border-bottom: none;
+            height: 45px;
+            line-height: 45px;
+            color: #000;
+            padding: 0 10px;
+            cursor: pointer;
+        }
+
+        .vip-titel {
+            background: #E4E9EF;
+            height: 100px;
+            line-height: 100px;
+            border-radius: 2px;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFangSC;
+            font-weight: 400;
+            color: rgba(74, 74, 74, 1);
+            text-indent: 15px;
+        }
+
+        .box {
+            height: 500px;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .group {
+            width: 240px;
+            height: 500px;
+            /* background: aqua; */
+            border: 1px solid #e5e5e5;
+        }
+
+        .group-item {
+            border-bottom: 1px solid #e5e5e5;
+            text-align: center;
+            height: 40px;
+            line-height: 40px;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(154, 154, 154, 1);
+
+        }
+
+        .vips {
+            width: 1343px;
+            height: 500px;
+            /* background: #07cbc9; */
+        }
+
+        .input-box {
+            width: 267px;
+            display: inline-block;
+            margin-right: 20px;
+
+        }
+
+        .title-box {
+            margin-bottom: 15px;
+        }
+
+        .box2 {
+            margin-top: 15px;
+        }
+
+        .max-box {
+            overflow: hidden;
+        }
+
+        .type-box {
+            min-height: 400px;
+            width: 170px;
+            /* background: #F64D62; */
+            float: left;
+            border: 1px solid #f6f6f6;
+        }
+
+        .goods-box {
+            min-height: 400px;
+            width: 936px;
+            /* background: #07cbc9; */
+            float: left;
+            margin-left: 14px;
+        }
+
+        .type-item {
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            color: #333;
+            font-size: 14px;
+            border: 1px solid #f6f6f6;
+        }
+
+        .item-hove {
+            background: url('../images/bg-s.png');
+        }
+
+        .bg {
+            background: #f5f5f5;
+            border-bottom: 1px solid #e5e5e5;
+            text-align: center;
+            height: 40px;
+            line-height: 40px;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(154, 154, 154, 1);
+        }
+
+        .el-pagination {
+            text-align: right;
+        }
+
+        .index-page {
+            width: 100%;
+            height: 100%;
+            background: #F6F6F6;
+            position: relative;
+        }
+
+        .top-box {
+            width: 100%;
+            height: 349px;
+            position: relative;
+        }
+
+        .mem-box {
+            width: 329px;
+            height: 120px;
+            background: #000;
+            position: absolute;
+            top: 180px;
+            left: 50%;
+            margin-left: -165px;
+            border-radius: 14px 14px 0px 0px;
+        }
+
+        .index-main {
+            width: 100%;
+            margin-top: -49px;
+            /* height: 100%; */
+            background-color: #f6f6f6;
+            position: relative;
+            z-index: 10;
+            border-radius: 21px 21px 0 0;
+            padding-top: 200px;
+            padding-bottom: 200px;
+            /* overflow-x: hidden; */
+
+        }
+
+        .index-main-info {
+            width: 299px;
+            height: 241px;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 1px 1px 20px 5px rgba(188, 188, 188, 0.17);
+            border-radius: 8px 8px 0 0;
+            position: absolute;
+            top: -27px;
+            left: 50%;
+            margin-left: -150px;
+        }
+
+        .index-main-info-title {
+            font-size: 14px;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 1);
+            text-align: center;
+            padding-top: 25px;
+        }
+
+        .index-main-info-title2 {
+            font-size: 10px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(255, 84, 84, 1);
+            margin-top: 6px;
+            text-align: center;
+        }
+
+        .index-price {
+            height: 36px;
+            text-align: center;
+        }
+
+        .index-btn-box {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            position: absolute;
+            top: 181px;
+        }
+
+        .index-btn1 {
+            width: 67px;
+            height: 38px;
+            background: linear-gradient(130deg, rgba(255, 119, 119, 1) 0%, rgba(255, 211, 71, 1) 100%);
+            box-shadow: 1px 1px 20px 0px rgba(255, 90, 90, 0.5);
+            border-radius: 22px;
+            text-align: center;
+            color: #fff;
+            line-height: 38px;
+        }
+
+        .index-btn2 {
+            width: 189px;
+            height: 38px;
+            background: linear-gradient(130deg, rgba(255, 99, 99, 1) 0%, rgba(255, 20, 20, 1) 100%);
+            box-shadow: 1px 1px 20px 0px rgba(255, 90, 90, 0.5);
+            border-radius: 19px;
+            text-align: center;
+            color: #fff;
+            line-height: 38px;
+        }
+
+        .index-icon {
+            margin-top: 20px;
+        }
+
+        .index-icon>img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            text-align: center;
+        }
+
+        .index-group {
+            margin-top: 30px;
+        }
+
+        .index-group-title {
+            font-size: 18px;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: rgba(51, 51, 51, 1);
+            text-indent: 15px;
+            margin-bottom: 20px;
+        }
+
+        .drool {
+            display: flex;
+            margin: 0 16px;
+            /* justify-content: space-between; */
+            flex-wrap: wrap;
+        }
+
+        .vip-item {
+            width: 74px;
+            height: 125px;
+            background-color: #fff;
+            margin-right: 3px;
+            margin-top: 20px;
+        }
+
+        .item-img {
+            width: 44px;
+            height: 44px;
+            margin: 15px 15px 0 15px;
+        }
+
+        .item-main-title {
+            margin-top: 24px;
+            font-size: 12px;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: rgba(51, 51, 51, 1);
+            text-align: center;
+        }
+
+        .item-main-solt {
+            font-size: 12px;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: rgba(230, 183, 93, 1);
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" style="display: flex;">
+        <!-- 抽屉盒子 -->
+        <div class="drawer-box">
+            <ul class="drawer">
+                <li @click="switchPage(0)">首页</li>
+                <li @click="switchPage(1)">封面</li>
+                <li @click="switchPage(2)">分享页</li>
+            </ul>
+        </div>
+        <!-- 预览盒子 -->
+        <div class="see-box" style="position: relative;" v-if="pages == 0">
+            <div class="index-page">
+                <div class="top-box">
+                    <img :src="index.topPic" alt="" style="width: 100%;height: 100%;" @click="upimage()">
+                    <div class="mem-box">
+                        <img :src="index.memPic" alt=""
+                            style="width: 100%;height: 100%;border-radius:14px 14px 0px 0px;" @click="upimage()">
+                    </div>
+                </div>
+                <div class="index-main">
+                    <div class="index-main-info">
+                        <p class="index-main-info-title">{{index.name}}</p>
+                        <p class="index-main-info-title2">首次购买</p>
+                        <div class="index-price">
+                            <span style="font-size:14px;font-family:LiGothicMed;color:rgba(255,84,84,1);">￥</span>
+                            <span
+                                style="font-size:36px;font-family:LiGothicMed;color:rgba(255,84,84,1);">{{index.firstPrice || index.mfirstPrice || index.qfirstPrice || index.yfirstPrice}}</span>
+                            <span
+                                style="font-size:8px;font-family:PingFangSC-Regular,PingFang SC;font-weight:400;color:rgba(153,153,153,1);">原价：<s
+                                    style="text-decoration:line-through">{{index.oldprice || index.oldmonthPrice || index.oldquarterPrice || index.oldyearPrice}}</s></span>
+                        </div>
+                        <div class="index-icon">
+                            <img src="https://images.homeplus.fun/o_1du73t8ntrasvnr1cmn12cq07f.png" alt=""
+                                style="margin-left: 60px;">
+                            <img src="https://images.homeplus.fun/o_1du73ujjo134bg92qssleo4os7.png" alt="">
+                            <img src="https://images.homeplus.fun/o_1du737mk8iadnqb15kg1dvlm7a7.png" alt="">
+                            <img src="https://images.homeplus.fun/o_1du74c9jn15bdv071kug14rs78m7.png" alt="">
+                            <img src="https://images.homeplus.fun/11111.png" alt="">
+                        </div>
+                        <div class="index-btn-box">
+                            <div class="index-btn1">送TA</div>
+                            <div class="index-btn2">开通</div>
+                        </div>
+                    </div>
+                    <!-- 缺少一个长盒子 -->
+
+                    <div class="index-group" v-for="item in index.memberRights">
+                        <div class="index-group-title">{{item.name}}</div>
+                        <div class="drool">
+                            <template>
+                                <div style="width:345px;height: 120px;background: #fff; position: relative;"
+                                    v-for="bobo in item.memberRight" v-if="bobo.isMain == '1'">
+                                    <img :src="bobo.goodsPic" alt=""
+                                        style="width: 32px;height: 32px;position: absolute;top: 19px;left: 15px;">
+                                    <div style="font-size:12px;
+                                font-family:PingFangSC-Semibold,PingFang SC;
+                                font-weight:600;
+                                color:rgba(51,51,51,1);position: absolute;top: 27px;left: 51px;">{{bobo.maintitle}}
+                                    </div>
+                                    <div
+                                        style="width:68px;
+                                height:28px;
+                                background:linear-gradient(130deg,rgba(255,99,99,1) 0%,rgba(255,20,20,1) 100%);
+                                box-shadow:1px 1px 20px 0px rgba(255,90,90,0.5);
+                                border-radius:19px;color: #fff;position: absolute;top:21px;right: 14px;text-align: center;line-height: 28px;">
+                                        领取</div>
+
+                                    <ul style="position: absolute;
+                                top: 68px;
+                                left: 30px;">
+                                        <li v-for="o in bobo.title.split('@1x1@')" style="list-style-type: disc;">
+                                            {{o}}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </template>
+                            <div class="vip-item" v-for="i in item.memberRight" v-if="i.isMain == '0'">
+                                <div class="item-img">
+                                    <img :src="i.goodsPic" alt="" style="width: 100%;height: 100%;">
+                                </div>
+                                <div class="item-main-title">{{i.maintitle}}</div>
+                                <div class="item-main-solt">{{i.title}}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 广告盒子-->
+                    <!-- 轮播样式 -->
+                    <div class="adv-box" v-if="index.isAdv=='1' && index.advType == '0'" style="margin:30px 15px;">
+                        <el-carousel trigger="click" width="345px" height="100px">
+                            <el-carousel-item v-for="item in index.advsList">
+                                <img :src="item.imageUrl" alt="" style="width: 100%;">
+                            </el-carousel-item>
+                        </el-carousel>
+                    </div>
+                    <!-- 竖向罗列 -->
+                    <div class="adv-box" v-if="index.isAdv=='1' && index.advType == '1'" style="margin:30px 0px;">
+                        <div style="width: 345px;height: 100px;margin-top: 12px;" v-for="item in index.advsList">
+                            <img :src="item.imageUrl" alt="" style="width: 100%;height: 100%;">
+                        </div>
+                    </div>
+
+                    <!-- 一个大其他小 -->
+                    <div class="adv-box" v-if="index.isAdv=='1' && index.advType == '2'" style="margin:30px 0px;">
+                        <div style="width: 345px;height: 100px;margin-top: 12px;">
+                            <img :src="index.advsList[0].imageUrl" alt="" style="width: 100%;height: 100%;">
+                        </div>
+                        <div style="display: flex;flex-wrap: wrap;justify-content: space-between;">
+                            <div v-for="(item,index) in index.advsList"
+                                style="width: 165px;height: 70px;margin-top: 15px;" v-if="index !=0">
+                                <img :src="item.imageUrl" alt="" style="width: 100%;height: 100%;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 全部小 -->
+                    <div class="adv-box" v-if="index.isAdv=='1' && index.advType == '3'" style="margin:30px 0px;">
+                        <div style="display: flex;flex-wrap: wrap;justify-content: space-between;">
+                            <div v-for="(item,index) in index.advsList"
+                                style="width: 165px;height: 70px;margin-top: 15px;">
+                                <img :src="item.imageUrl" alt="" style="width: 100%;height: 100%;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 门店盒子 -->
+                    <div style="margin-top: 20px;" v-for="item in index.shopsList">
+                        <div style="font-size:18px;
+                        font-family:PingFangSC-Semibold,PingFang SC;
+                        font-weight:600;
+                        color:rgba(51,51,51,1);text-indent: 15px;margin-bottom: 10px;">{{item.name}}</div>
+                        <div style="display: flex;flex-wrap: wrap;">
+                            <div style="width: 166px;height: 204px; margin-right: 2px;background: #fff;"
+                                v-for="i in item.shops">
+                                <img :src="i.logoPath" alt="" style="width:166px;height:150px">
+                                <div>
+                                    <p
+                                        style="font-size:12px;
+                                    font-family:PingFangSC-Semibold,PingFang SC;
+                                    font-weight:600;
+                                    color:rgba(51,51,51,1); width: 160; white-space:nowrap;  overflow: hidden; text-overflow:ellipsis;">
+                                        {{i.name}}</p>
+                                    <p style="font-size:10px;
+                                    font-family:PingFangSC-Semibold,PingFang SC;
+                                    font-weight:600;
+                                    color:rgba(178,178,178,1);">{{i.city}} {{i.area}} {{i.address}}</p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="see-box" style="position: relative;" v-if="pages == 1" style="background-color: #fff;">
+            <!-- <img :src="index.sharePic" alt="" > -->
+            <el-image :src="index.pic" @click=" uppic()" style="width: 375px;">
+                <div slot="error" class="image-slot"
+                    style="width: 375px;height: 355px;line-height: 355px;font-size: 30px;text-align: center;"
+                    @click=" uppic()">
+                    <i class="el-icon-picture-outline"></i>请上传封面
+                </div>
+            </el-image>
+
+        </div>
+        <div class="see-box" style="position: relative;" v-if="pages == 2">
+            <!-- <img :src="index.sharePic" alt="" > -->
+            <el-image :src="index.sharePic" @click=" upshare()">
+                <div slot="error" class="image-slot"
+                    style="width: 375px;height: 355px;line-height: 355px;font-size: 30px;text-align: center;"
+                    @click=" upshare()">
+                    <i class="el-icon-picture-outline"></i>请上传分享图片
+                </div>
+            </el-image>
+        </div>
+        <!--操作盒子 -->
+        <div class="work-box">
+            <div class="layui-tab layui-tab-card">
+                <ul class="layui-tab-title" style="position: sticky;">
+                    <li class="layui-this">基本信息</li>
+                    <li>权益产品设置</li>
+                    <li v-if="maininfo.isAdv == '1'">广告设置</li>
+                    <li v-if="maininfo.isGoods == '1'">商家商品设置</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <!-- 基本信息编辑盒子 -->
+                    <div class="layui-tab-item layui-show">
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-sm-2" style="text-align: right;line-height: 35px;">
+                                    <div>
+                                        <span class="xing">*</span>
+                                        名称：
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" v-model="maininfo.name"
+                                        placeholder="请输入名称，1-30字" maxlength="30">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-2" style="text-align: right;line-height: 35px;">
+                                    <div>
+                                        <span class="xing">*</span>
+                                        有效期：
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div style="display: inline-block;width: 100px;">
+                                        <select class="form-control" v-model="maininfo.pastTimeType"
+                                            @change="seeType()">
+                                            <option value="0">长期有效</option>
+                                            <option value="1">领取</option>
+                                            <option value="2">固定在</option>
+                                        </select>
+                                    </div>
+                                    <div style="display: inline-block;" v-show="maininfo.pastTimeType == '1'">
+                                        <input type="text" class="form-control"
+                                            style="display: inline-block; width: 100px;" v-model="maininfo.pastTime"
+                                            oninput="clearNoNum(this)">
+                                        天后过期
+                                    </div>
+                                    <div style="display: inline-block;" v-show="maininfo.pastTimeType == '2'">
+                                        <el-date-picker v-model="maininfo.pastTime" type="date" placeholder="选择日期"
+                                            value-format="yyyy-MM-dd" :picker-options="pickerOptions">
+                                        </el-date-picker>
+                                        后过期
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-2" style="text-align: right;line-height: 35px;">
+                                    <div>
+                                        <span class="xing">*</span>
+                                        首页网址：
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" v-model="maininfo.link"
+                                        placeholder="请输入首页网址">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-2" style="text-align: right;line-height: 35px;">
+                                    <div>
+                                        <span class="xing">*</span>
+                                        包含广告：
+                                    </div>
+                                </div>
+                                <div class="col-sm-5" style="line-height: 35px;">
+                                    <el-radio v-model="maininfo.isAdv" label="1">是</el-radio>
+                                    <el-radio v-model="maininfo.isAdv" label="0">否</el-radio>
+                                </div>
+                            </div>
+
+                            <div class="row" v-if="maininfo.isAdv.includes('1')">
+                                <div class="col-sm-2" style="text-align: right;line-height: 35px;">
+                                    <div>
+                                        <span class="xing">*</span>
+                                        广告样式：
+                                    </div>
+                                </div>
+                                <div class="col-sm-5" style="line-height: 35px;display: flex;">
+                                    <div style="width: 25px;height: 25px;" @click="maininfo.AdvType='0'"
+                                        v-show="maininfo.AdvType != '0'"><img style="width: 25px;height: 25px;"
+                                            src="../images/gg_style1_uncheck.png" alt=""></div>
+                                    <div style="width: 25px;height: 25px;" v-show="maininfo.AdvType == 0"><img
+                                            style="width: 25px;height: 25px;" src="../images/gg_style1_check.png"
+                                            alt="">
+                                    </div>
+
+                                    <div style="width: 25px;height: 25px;margin-left: 25px;"
+                                        @click="maininfo.AdvType='1'" v-show="maininfo.AdvType != '1'"><img
+                                            style="width: 25px;height: 25px;" src="../images/gg_style2_uncheck.png"
+                                            alt=""></div>
+                                    <div style="width: 25px;height: 25px;margin-left: 25px;"
+                                        v-show="maininfo.AdvType=='1'"><img style="width: 25px;height: 25px;"
+                                            src="../images/gg_style2_check.png" alt="">
+                                    </div>
+
+                                    <div style="width: 25px;height: 25px;margin-left: 25px;"
+                                        @click="maininfo.AdvType='2'" v-show="maininfo.AdvType != '2'"><img
+                                            style="width: 25px;height: 25px;" src="../images/gg_style3_uncheck.png"
+                                            alt=""></div>
+                                    <div style="width: 25px;height: 25px;margin-left: 25px;"
+                                        v-show="maininfo.AdvType=='2'"><img style="width: 25px;height: 25px;"
+                                            src="../images/gg_style3_check.png" alt="">
+                                    </div>
+
+                                    <div style="width: 25px;height: 25px;margin-left: 25px;"
+                                        @click="maininfo.AdvType='3'" v-show="maininfo.AdvType != '3'"><img
+                                            style="width: 25px;height: 25px;" src="../images/gg_style4_uncheck.png"
+                                            alt="">
+                                    </div>
+                                    <div style="width: 25px;height: 25px;margin-left: 25px;"
+                                        v-show="maininfo.AdvType=='3'"><img style="width: 25px;height: 25px;"
+                                            src="../images/gg_style4_check.png" alt="">
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-2" style="text-align: right;line-height: 35px;">
+                                    <div>
+                                        <span class="xing">*</span>
+                                        包含商家商品：
+                                    </div>
+                                </div>
+                                <div class="col-sm-5" style="line-height: 35px;">
+                                    <el-radio v-model="maininfo.isGoods" label="1">是</el-radio>
+                                    <el-radio v-model="maininfo.isGoods" label="0">否</el-radio>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-2" style="text-align: right;line-height: 35px;">
+                                    <div>
+                                        <span class="xing">*</span>
+                                        购买方式：
+                                    </div>
+                                </div>
+                                <div class="col-sm-5" style="line-height: 35px;">
+                                    <el-checkbox-group v-model="maininfo.payType">
+                                        <el-checkbox label="0"
+                                            :disabled="maininfo.payType.includes('1') || maininfo.payType.includes('2') || maininfo.payType.includes('3')">
+                                            单次购买</el-checkbox>
+                                        <el-checkbox label="1" :disabled="maininfo.payType.includes('0')">包月
+                                        </el-checkbox>
+                                        <el-checkbox label="2" :disabled="maininfo.payType.includes('0')">包季
+                                        </el-checkbox>
+                                        <el-checkbox label="3" :disabled="maininfo.payType.includes('0')">包年
+                                        </el-checkbox>
+                                    </el-checkbox-group>
+                                </div>
+                            </div>
+
+                            <!-- 单次购买盒子 -->
+                            <template v-if="maininfo.payType.includes('0')">
+                                <div class="row">
+                                    <div class="col-sm-2" style="text-align: right;line-height: 35px;">
+                                        <div>
+                                            <span class="xing">*</span>
+                                            原价(元)：
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2" style="line-height: 35px;">
+                                        <input type="text" class="form-control" placeholder="请输入原价，最多两位小数"
+                                            v-model="maininfo.price" oninput="clearNoNum(this)">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-2" style="text-align: right;line-height: 35px;">
+                                        <div>
+                                            <span class="xing">*</span>
+                                            售价(元)：
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2" style="line-height: 35px;">
+                                        <input type="text" class="form-control" placeholder="请输入售价，最多两位小数"
+                                            v-model="maininfo.sprice" oninput="clearNoNum(this)">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-2" style="text-align: right;line-height: 35px;">
+                                        <div>
+                                            <span class="xing">*</span>
+                                            首充价(元)：
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2" style="line-height: 35px;">
+                                        <input type="text" class="form-control" placeholder="请输入售价，最多两位小数"
+                                            v-model="maininfo.fprice" oninput="clearNoNum(this)">
+                                    </div>
+                                </div>
+                            </template>
+
+                            <!-- 时长盒子 -->
+                            <template
+                                v-if="maininfo.payType.includes('1') || maininfo.payType.includes('2') || maininfo.payType.includes('3')">
+                                <div class="row">
+                                    <div class="col-sm-2" style="text-align: right;line-height: 35px;">
+                                        <div>
+                                            <span class="xing">*</span>
+                                            原价(元)：
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2" style="line-height: 35px;"
+                                        v-if="maininfo.payType.includes('1')">
+                                        <div style="width: 60px;display: inline-block">
+                                            <input type="text" class="form-control" v-model="maininfo.Mprice"
+                                                oninput="clearNoNum(this)">
+                                        </div>
+                                        /月
+                                    </div>
+
+                                    <div class="col-sm-2" style="line-height: 35px;"
+                                        v-if="maininfo.payType.includes('2')">
+                                        <div style="width: 60px;display: inline-block">
+                                            <input type="text" class="form-control" v-model="maininfo.Jprice"
+                                                oninput="clearNoNum(this)">
+                                        </div>
+                                        /季
+                                    </div>
+
+                                    <div class="col-sm-2" style="line-height: 35px;"
+                                        v-if="maininfo.payType.includes('3')">
+                                        <div style="width: 60px;display: inline-block">
+                                            <input type="text" class="form-control" v-model="maininfo.Yprice"
+                                                oninput="clearNoNum(this)">
+                                        </div>
+                                        /年
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-2" style="text-align: right;line-height: 35px;">
+                                        <div>
+                                            <span class="xing">*</span>
+                                            售价(元)：
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2" style="line-height: 35px;"
+                                        v-if="maininfo.payType.includes('1')">
+                                        <div style="width: 60px;display: inline-block">
+                                            <input type="text" class="form-control" v-model="maininfo.Msprice"
+                                                oninput="clearNoNum(this)">
+                                        </div>
+                                        /月
+                                    </div>
+
+                                    <div class="col-sm-2" style="line-height: 35px;"
+                                        v-if="maininfo.payType.includes('2')">
+                                        <div style="width: 60px;display: inline-block">
+                                            <input type="text" class="form-control" v-model="maininfo.Jsprice"
+                                                oninput="clearNoNum(this)">
+                                        </div>
+                                        /季
+                                    </div>
+
+                                    <div class="col-sm-2" style="line-height: 35px;"
+                                        v-if="maininfo.payType.includes('3')">
+                                        <div style="width: 60px;display: inline-block">
+                                            <input type="text" class="form-control" v-model="maininfo.Ysprice"
+                                                oninput="clearNoNum(this)">
+                                        </div>
+                                        /年
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-2" style="text-align: right;line-height: 35px;">
+                                        <div>
+                                            <span class="xing">*</span>
+                                            首充价(元)：
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2" style="line-height: 35px;"
+                                        v-if="maininfo.payType.includes('1')" oninput="clearNoNum(this)">
+                                        <div style="width: 60px;display: inline-block">
+                                            <input type="text" class="form-control" v-model="maininfo.Mfprice">
+                                        </div>
+                                        /月
+                                    </div>
+
+                                    <div class="col-sm-2" style="line-height: 35px;"
+                                        v-if="maininfo.payType.includes('2')" oninput="clearNoNum(this)">
+                                        <div style="width: 60px;display: inline-block">
+                                            <input type="text" class="form-control" v-model="maininfo.Jfprice">
+                                        </div>
+                                        /季
+                                    </div>
+
+                                    <div class="col-sm-2" style="line-height: 35px;"
+                                        v-if="maininfo.payType.includes('3')" oninput="clearNoNum(this)">
+                                        <div style="width: 60px;display: inline-block">
+                                            <input type="text" class="form-control" v-model="maininfo.Jfprice">
+                                        </div>
+                                        /年
+                                    </div>
+
+                                </div>
+                            </template>
+
+                            <!-- 分享价格 -->
+                            <div class="row">
+                                <div class="col-sm-2" style="text-align: right;line-height: 35px;">
+                                    <div>
+                                        <span class="xing">*</span>
+                                        分享佣金(元)：
+                                    </div>
+                                </div>
+                                <div class="col-sm-2" style="line-height: 35px;">
+                                    <input type="text" class="form-control" placeholder="请输入分享价，最多两位小数"
+                                        v-model="maininfo.sharePrice" oninput="clearNoNum(this)">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-2" style="text-align: right;">
+                                    <div>
+                                        <!-- <span class="xing">*</span> -->
+                                        说明：
+                                    </div>
+                                </div>
+                                <div class="col-sm-8" id="editors"></div>
+                            </div>
+
+                            <div class="row">
+                                <!-- <el-button type="primary" style="display: block; margin: 0 auto;" @click="save()">下一步</el-button> -->
+                                <el-button type="primary" style="display: block; margin: 0 auto;" @click="save()">
+                                    保存修改</el-button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="layui-tab-item">
+                        <div class="ibox-content">
+                            <div class="title-box">
+                                <div style="height: 24px;"></div>
+                                <div class="title-item">请设置权益产品</div>
+                                <div class="add-boxs">
+                                    <img src="../images/plus.png" alt="" @click="dialogVisible = true">
+                                    <img src="../images/plus2.png" alt="" @click="delgroup()" v-if="group.groupId">
+                                </div>
+                                <div class="zu-box">
+                                    <div :class="item==group?'zu-item-active':'zu-item'" v-for="item in groupList"
+                                        @click="zuclick(item)">
+                                        {{item.name}}
+                                    </div>
+                                </div>
+                            </div>
+                            <template v-if="group.groupId">
+                                <div class="srach-box">
+                                    <div style="width: 267px;">
+                                        <input type="text" class="form-control" placeholder="请输入名称">
+                                    </div>
+                                    <button type="button" class="btn btn-htz btn-primary" style="margin-left: 15px;"
+                                        @click="getlist()">搜索</button>
+                                    <button type="button" class="btn btn-htz btn-success" style="margin-left: 15px;"
+                                        @click="dialogVisible2=true">新增</button>
+                                </div>
+                                <table id="simple-table" class="table table-responsive table-bordered table-hover"
+                                    style="margin-top: 20px;">
+                                    <thead>
+                                        <tr>
+                                            <th width="10%">主标题</th>
+                                            <th width="10%">副标题</th>
+                                            <th width="10%">图片</th>
+                                            <th width="10%">类型</th>
+                                            <th width="10%">子分类</th>
+                                            <th width="10%">数量</th>
+                                            <th width="10%">售价</th>
+                                            <th width="10%">是否主权益</th>
+                                            <th width="10%">加入时间</th>
+                                            <th width="10%">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tr v-for="item in list" :key="item.groupId">
+                                        <td>{{item.maintitle}}</td>
+                                        <td>
+                                            <div style="text-align: left;" v-for="drool in item.title.split('@1x1@')">
+                                                {{drool}}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <img :src="item.goodsPic" :alt="item.name"
+                                                style="width: 30px;height: 30px;">
+                                        </td>
+                                        <!-- 类型 -->
+                                        <td v-if="item.type=='0' || item.type=='1' || item.type=='2'">优惠券</td>
+                                        <td v-if="item.type=='3'">虚拟商品</td>
+                                        <td v-if="item.type=='4'">实物商品</td>
+
+                                        <td>{{item.childType}}</td>
+                                        <td>{{item.count}}</td>
+                                        <td>{{item.price == '0'?"--":item.price}}</td>
+                                        <td>{{item.isMain=='1'?'是':'否'}}</td>
+                                        <td>{{formatDateTime(item.createTime)}}</td>
+                                        <td class="btn-hide">
+                                            <a class="btn btn-success" @click="edit(item)">编辑</a>
+                                            <a class="btn btn-success" @click="del(item)" style="color: #D0021B;">删除</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </template>
+
+                        </div>
+                    </div>
+
+                    <div class="layui-tab-item">
+                        <div class="ibox-content">
+                            <div class="title-box" style="margin-bottom: 25px;">
+                                <div style="height: 24px;"></div>
+                                <div class="title-item">请设置权益卡的广告，在左侧首页图片里可以选择广告展现形式</div>
+                                <div class="add-boxs">
+                                    <img src="../images/plus.png" alt="" @click=" addadv()">
+                                    <img src="../images/plus2.png" alt="" @click="deladv()" v-if="adv.id">
+                                </div>
+                                <div class="zu-box">
+                                    <div :class="item.id==adv.id?'zu-item-active':'zu-item'" v-for="item in advList"
+                                        :key="item.id" @click="Advclick(item)">
+                                        {{item.title}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div v-show="adv.id">
+                                
+                                <div class="row">
+                                    <div class="col-sm-2" style="text-align: right;">
+                                        <span class="xing">*</span> 标题:
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" placeholder="请输入广告名称"
+                                            v-model="advTitle">
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 0;">
+                                    <div class="col-sm-2" style="text-align: right;">
+                                        <span class="xing">*</span> 图片:
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <el-upload class="avatar-uploader" :action="actionPath" :show-file-list="false"
+                                            accept="image/jpeg, image/gif, image/png, image/bmp" :data="postdata"
+                                            :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+                                            <img v-if="pic" :src="pic" class="avatar">
+                                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                        </el-upload>
+                                    </div>
+                                </div>
+                                <div style="margin-left: 105px;font-size: 14px;color: #858585;margin-bottom: 25px;">
+                                    图片尺寸：1035*360px</div>
+                                <div class="row">
+                                    <div class="col-sm-1" style="text-align: right;">
+                                        <span class="xing">*</span> 说明:
+                                    </div>
+                                    <div class="col-sm-8" id="editor">
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <el-button type="primary" style="margin-left: 500px;" @click="editAdv()"
+                                        v-if="adv.id">
+                                        保存</el-button>
+                                    <el-button type="primary" style="margin-left: 500px;" @click="advSave()" v-else>保存
+                                    </el-button>
+                                    <!-- <el-button type="danger" style="margin-left: 20px;" @click="deladv()" v-if="adv.id">删除
+                                </el-button> -->
+                                </div>
+
+                            </div>
+                            
+
+
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class="ibox-content">
+                            <div class="title-box">
+                                <div style="height: 24px;"></div>
+                                <div class="title-item">请设置权益卡对应的商家商品</div>
+                                <div class="add-boxs">
+                                    <img src="../images/plus.png" alt="" @click="dialogVisible3=true">
+                                    <img src="../images/plus2.png" alt="" @click="delshopgroup()" v-if="groups.groupId">
+                                </div>
+                                <div class="zu-box">
+                                    <div :class="item.groupId==groups.groupId?'zu-item-active':'zu-item'"
+                                        v-for="item in groupList2" :key="item.groupId" @click="groupsclick(item)">
+                                        {{item.name}}
+                                    </div>
+                                </div>
+                            </div>
+                            <template v-if="groups.groupId">
+
+                                <div class="srach-box">
+                                    <div style="width: 267px;">
+                                        <input type="text" class="form-control" placeholder="请输入名称">
+                                    </div>
+                                    <button type="button" class="btn btn-htz btn-primary"
+                                        style="margin-left: 15px;">搜索</button>
+                                    <button type="button" class="btn btn-htz btn-success" style="margin-left: 15px;"
+                                        @click="dialogVisible4=true">新增</button>
+                                </div>
+                                <table id="simple-table" class="table table-responsive table-bordered table-hover"
+                                    style="margin-top: 20px;">
+                                    <thead>
+                                        <tr>
+                                            <th width="40%">名称</th>
+                                            <th width="20%">类型</th>
+                                            <th width="20%">加入时间</th>
+                                            <th width="20%">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tr v-for="item in lists" :key="item.groupId">
+                                        <td>{{item.name}}</td>
+                                        <td>{{item.type == 1?"酒店":'民宿'}}</td>
+                                        <td></td>
+                                        <td class="btn-hide">
+                                            <!-- <a href="#">编辑</a> -->
+                                            <a href="#" @click=" delshop(item)" style="color: #D0021B;">删除</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </template>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 添加分组 -->
+        <el-dialog title="新增分组" :visible.sync="dialogVisible" width="30%" center>
+            <div class="input-box" style="display: block;margin:0 auto;">
+                <input type="text" class="form-control" placeholder="请输入分组名称" v-model="groupName">
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
+                <el-button type="primary" @click="addGroup()">确 定</el-button>
+            </span>
+        </el-dialog>
+
+        <!-- 添加商家分组 -->
+        <el-dialog title="新增分组" :visible.sync="dialogVisible3" width="30%" center>
+            <div class="input-box" style="display: block;margin:0 auto;">
+                <input type="text" class="form-control" placeholder="请输入分组名称" v-model="groupName2">
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
+                <el-button type="primary" @click="addGroups()">确 定</el-button>
+            </span>
+        </el-dialog>
+
+        <!-- 添加权益商品 -->
+        <el-dialog title="权益列表" :visible.sync="dialogVisible2" width="1180px" center>
+            <div class="max-box">
+                <div class="type-box">
+                    <div class="type-item" v-if="flag!='1'" @click="flag=1">优惠券</div>
+                    <div class="type-item item-hove" v-if="flag=='1'">优惠券</div>
+
+                    <div class="type-item" v-if="flag!='2'" @click="flag=2">实物</div>
+                    <div class="type-item item-hove" v-if="flag=='2'">实物</div>
+
+                    <div class="type-item" v-if="flag!='3'" @click="flag=3">虚拟商品</div>
+                    <div class="type-item item-hove" v-if="flag=='3'">虚拟商品</div>
+                </div>
+
+                <!-- 优惠券盒子 -->
+                <div class="goods-box" v-show="flag==1">
+                    <div class="add-box">
+                        <div style="display: inline-block;width: 200px;">
+                            <input placeholder="请输入权益名称" class="form-control" v-model="keywords">
+                        </div>
+                        <button class="btn btn-htz btn-primary" @click="getQuan">
+                            <i class="icon icon_search"></i>搜 索
+                        </button>
+                    </div>
+                    <table id="simple-table" class="table table-responsive table-bordered table-hover"
+                        style="margin-top: 10px;">
+                        <thead>
+                            <tr>
+                                <th width="40%">名称</th>
+                                <th width="15%">LOGO</th>
+                                <th width="15%">类型</th>
+                                <th width="20%">创建时间</th>
+                                <th width="10%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in quanList.list" :key="item.id">
+                                <td>{{item.name}}</td>
+                                <td>
+                                    <img :src="item.pic" alt="" style="width: 30px;height: 30px;">
+                                </td>
+                                <td v-if="item.type=='1'">普通券</td>
+                                <td v-if="item.type=='2'">打折</td>
+                                <td v-if="item.type=='3'">抵用券</td>
+                                <td v-if="item.type=='4'">满减券</td>
+
+                                <td>{{formatDateTime(item.createTime)}}</td>
+                                <td class="btn-hide">
+                                    <a @click="add1(item)">加 入</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <el-pagination background layout="prev, pager, next" :total="quanList.total" @current-change="page">
+                    </el-pagination>
+                </div>
+
+                <!-- 实物盒子 -->
+                <div class="goods-box" v-show="flag==2">
+                    <div class="add-box">
+                        <div style="display: inline-block;width: 200px;">
+                            <input placeholder="请输入权益名称" class="form-control" v-model="keywords2">
+                        </div>
+                        <button class="btn btn-htz btn-primary" @click="getQuan">
+                            <i class="icon icon_search"></i>搜 索
+                        </button>
+                    </div>
+                    <table id="simple-table" class="table table-responsive table-bordered table-hover"
+                        style="margin-top: 10px;">
+                        <thead>
+                            <tr>
+                                <th width="40%">名称</th>
+                                <th width="15%">分类</th>
+                                <th width="15%">图片</th>
+                                <th width="20%">价格</th>
+                                <th width="10%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in goodsList.list" :key="item.id">
+                                <td>{{item.name}}</td>
+                                <td>{{item.typeName}}</td>
+                                <td>
+                                    <img :src="item.image" alt="" style="width: 30px;height: 30px;">
+                                </td>
+
+                                <td>{{item.minPrice}}-{{item.maxPrice}}</td>
+                                <td class="btn-hide">
+                                    <a @click="add3(item)">加 入</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <el-pagination background layout="prev, pager, next" :total="goodsList.total"
+                        @current-change="page2">
+                    </el-pagination>
+                </div>
+                <!-- 虚拟商品盒子 -->
+                <div class="goods-box" v-show="flag==3">
+                    <div class="add-box">
+                        <div style="display: inline-block;width: 200px;">
+                            <input placeholder="请输入权益名称" class="form-control" v-model="keywords3">
+                        </div>
+                        <span style="margin-left: 15px;">分类:</span>
+                        <div style="display: inline-block;">
+                            <select class="form-control" style="width:141px;" v-model="type">
+                                <option value="">全部</option>
+                                <option value="0">卡券</option>
+                                <option value="1">直充</option>
+                                <option value="2">线下</option>
+                                <option value="3">实物</option>
+                            </select>
+                        </div>
+
+                        <div style="display: inline-block;">
+                            <select class="form-control" style="width:141px;" v-model="type">
+                                <option value="">全部</option>
+                                <option value="0">卡券</option>
+                            </select>
+                        </div>
+
+                        <span style="margin-left: 15px;">类型:</span>
+                        <div style="display: inline-block;width: 200px;">
+                            <select class="form-control" style="width:141px;" v-model="solt">
+                                <option value="">全部</option>
+                                <option value="0">视频音乐</option>
+                                <option value="1">旅游</option>
+                                <option value="2">出行</option>
+                                <option value="3">吃喝</option>
+                                <option value="4">生活其他</option>
+                                <option value="5">教育办公</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-htz btn-primary" @click="getNumgoods()">
+                            <i class="icon icon_search"></i>搜 索
+                        </button>
+                    </div>
+                    <table id="simple-table" class="table table-responsive table-bordered table-hover"
+                        style="margin-top: 10px;">
+                        <thead>
+                            <tr>
+                                <th width="10%">供应商</th>
+                                <th width="25%">名称</th>
+                                <th width="10%">分类</th>
+                                <th width="10%">类型</th>
+                                <th width="10%">面值</th>
+                                <th width="10%">采购价</th>
+                                <th width="10%">销售价</th>
+                                <th width="15%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in numList.list" :key="item.id">
+                                <td>{{item.supplierName || "--"}}</td>
+                                <td>{{item.name}}</td>
+
+                                <td v-if="item.type == 0">卡券</td>
+                                <td v-if="item.type == 1">直充</td>
+                                <td v-if="item.type == 2">线下</td>
+                                <td v-if="item.type == 3">实物</td>
+
+                                <td v-if="item.solt == 0">视频音乐</td>
+                                <td v-if="item.solt == 1">旅游</td>
+                                <td v-if="item.solt == 2">出行</td>
+                                <td v-if="item.solt == 3">吃喝</td>
+                                <td v-if="item.solt == 4">生活其他</td>
+                                <td v-if="item.solt == 5">教育办公</td>
+
+                                <td>{{item.official_price}}</td>
+                                <td>{{item.price}}</td>
+                                <td>{{item.salePrice}}</td>
+                                <td class="btn-hide">
+                                    <a @click="add2(item)">加 入</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <el-pagination background layout="prev, pager, next" :total="numList.total" @current-change="page3">
+                    </el-pagination>
+                </div>
+            </div>
+        </el-dialog>
+
+        <!-- 商家商品 -->
+        <el-dialog title="商家商品" :visible.sync="dialogVisible4" width="1180px">
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" v-model="keywords4" placeholder="请输入门店名称">
+                    </div>
+
+                    <div class="col-sm-1">
+                        <button class="btn btn-htz btn-primary" @click="getshop()">搜索</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table id="simple-table" class="table table-responsive table-bordered table-hover"
+                            style="margin-top: 10px;">
+                            <thead>
+                                <tr>
+                                    <th width="40%">名称</th>
+                                    <th width="25%">类型</th>
+                                    <th width="25%">地址</th>
+                                    <th width="10%">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="item in shopList.list" :key="item.id">
+                                    <td>{{item.shopsName}}</td>
+                                    <td>
+                                        {{item.shopsType=='1'?'民宿':'酒店'}}
+                                    </td>
+                                    <td>{{item.province}} {{item.city}} {{item.area}} {{item.address}}</td>
+                                    <td>
+                                        <a @click="addshops(item)" style="color: #409EFF;">加 入</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <el-pagination background layout="prev, pager, next" :total="shopList.total"
+                            @current-change="page4">
+                        </el-pagination>
+                    </div>
+                </div>
+            </div>
+        </el-dialog>
+    </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/custom/common.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/plugins/layui/layui.js"></script>
+
+<!-- 七牛云依赖 -->
+<script type="text/javascript" src="../js/qiniuyun/plupload.full.min.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/moxie.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/plupload/2.1.2/i18n/zh_CN.js"></script>
+<script type="text/javascript" src="../js/qiniuyun/qiniu.js"></script>
+
+
+<!-- 七牛云自定义配置 -->
+<script src="../js/qiniuyun/qiniu_editor.js"></script>
+
+
+<!-- <script src="../js/vue.js"></script> -->
+<script src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="../js/custom/packages/edits.js"></script>
+
+
+
+</html>
