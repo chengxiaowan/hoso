@@ -1,8 +1,8 @@
-var api_url="http://192.168.0.110:8080"
+// var api_url="http://192.168.0.110:8080"
 // var api_url="http://192.168.0.122:8080"
 // var api_url="http://localhost:8080"
 // var api_url="http://www.hanshe.pro:8080"
-// var api_url="http://www.homeplus.fun:8080"     
+var api_url="http://www.homeplus.fun:8080"     
 // var api_url=''
 
 /*将url?name=value&name=value转换为{name:value,name:value}*/
