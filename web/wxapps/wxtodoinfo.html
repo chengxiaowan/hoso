@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .form-box {
+            display: flex;
+            line-height: 35px;
+            margin-top: 5px !important;
+        }
+
+        .xing {
+            color: #FF6A72;
+        }
+
+        .title-box {
+            width: 100px;
+            line-height: 35px;
+            text-align: right;
+            /* margin-left: 70px; */
+            color: #666666;
+        }
+
+        .btn-box {
+            margin: 0 auto;
+            text-align: center;
+            margin-top: 60px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="ibox-content">
+            <div class="form-box">
+                <div class="title-box">名称:</div>
+                <div style="width: 450px;margin-left: 15px;color: #333333;">
+                    {{item.name}}
+                </div>
+            </div>
+
+            <div class="form-box">
+                <div class="title-box">审核时间:</div>
+                <div style="width: 450px;margin-left: 15px;color: #333333;">
+                    {{formatDateTime(item.updateTime)}}
+                </div>
+            </div>
+
+            <div class="form-box">
+                <div class="title-box">审核状态:</div>
+                <div style="width: 450px;margin-left: 15px;color: #333333;">
+                    审核不通过
+                </div>
+            </div>
+
+            <div class="form-box">
+                <div class="title-box">原因:</div>
+                <div style="width: 450px;margin-left: 15px;color: #333333;" v-html="item.reason">
+
+                </div>
+            </div>
+
+            <div class="btn-box">
+                <el-button type="primary" @click="save()">关闭</el-button>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script>
+    window.app = new Vue({
+        el: "#app",
+
+        data() {
+            return {
+                item: {},
+            }
+        },
+
+        methods: {
+            //时间格式化
+            formatDateTime(inputTime) {
+                var date = new Date(inputTime);
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                m = m < 10 ? ('0' + m) : m;
+                var d = date.getDate();
+                d = d < 10 ? ('0' + d) : d;
+                var h = date.getHours();
+                h = h < 10 ? ('0' + h) : h;
+                var minute = date.getMinutes();
+                var second = date.getSeconds();
+                minute = minute < 10 ? ('0' + minute) : minute;
+                second = second < 10 ? ('0' + second) : second;
+                return y + '-' + m + '-' + d ;
+            },
+
+            save() {
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭
+            }
+
+        },
+
+        mounted() {
+            this.item = JSON.parse(sessionStorage.getItem("info"))
+        }
+    })
+</script>
+
+</html>

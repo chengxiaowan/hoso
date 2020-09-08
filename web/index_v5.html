@@ -57,7 +57,9 @@
 
 <body class="gray-bg" style="background: #E2E9F0;">
 	<div class="wrapper wrapper-content" id="app">
-		<div class="c-box" v-if="role != 2">
+	<h1>欢迎使用寒舍后台管理系统</h1>
+
+		<!-- <div class="c-box" v-if="role != 2">
 			<div class="title-box">
 				销售助手
 			</div>
@@ -71,7 +73,7 @@
 				销售助手
 			</div>
 			<div class="content-box" @click="drool()">薛定谔的夜市核销</div>
-		</div>
+		</div> -->
 
 	</div>
 </body>
@@ -87,50 +89,50 @@
 <script>
 	var config = {};
 
-	window.app = new Vue({
-		el: "#app",
-		data() {
-			return {
-				role:""
-			};
-		},
-		methods: {
-			index() {
-				// window.location.href = ""
-				var index = layer.open({
-					type: 2,
-					title: '已过期的权益产品券',
-					content: './SalesAssistant/index.html',
-					area: ['100%', '100%'],
-					end: () => {
-						// that.getData()
-					}
-				});
-			},
+	// window.app = new Vue({
+	// 	el: "#app",
+	// 	data() {
+	// 		return {
+	// 			role:""
+	// 		};
+	// 	},
+	// 	methods: {
+	// 		index() {
+	// 			// window.location.href = ""
+	// 			var index = layer.open({
+	// 				type: 2,
+	// 				title: '已过期的权益产品券',
+	// 				content: './SalesAssistant/index.html',
+	// 				area: ['100%', '100%'],
+	// 				end: () => {
+	// 					// that.getData()
+	// 				}
+	// 			});
+	// 		},
 
-			give() {
-				var index = layer.open({
-					type: 2,
-					title: '端午礼盒领取',
-					content: './SalesAssistant/index2.html',
-					area: ['100%', '100%'],
-					end: () => {
-						// that.getData()
-					}
-				})
-			},
+	// 		give() {
+	// 			var index = layer.open({
+	// 				type: 2,
+	// 				title: '端午礼盒领取',
+	// 				content: './SalesAssistant/index2.html',
+	// 				area: ['100%', '100%'],
+	// 				end: () => {
+	// 					// that.getData()
+	// 				}
+	// 			})
+	// 		},
 
-			drool(){
-				window.location = "./yes/index.html"
-			}
+	// 		drool(){
+	// 			window.location = "./yes/index.html"
+	// 		}
 				
-		},
-			mounted() {
-				console.log("vue is ok");
-				console.log(sessionStorage.getItem("roleType"))
-				this.role = sessionStorage.getItem('roleType')
-			},
-		});
+	// 	},
+	// 		mounted() {
+	// 			console.log("vue is ok");
+	// 			console.log(sessionStorage.getItem("roleType"))
+	// 			this.role = sessionStorage.getItem('roleType')
+	// 		},
+	// 	});
 </script>
 
 </html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .form-box {
+            display: flex;
+            line-height: 35px;
+            margin-top:10px!important;
+        }
+
+        .xing {
+            color: #FF6A72;
+        }
+
+        .title-box {
+            width: 100px;
+            line-height: 35px;
+            text-align: right;
+            /* margin-left: 70px; */
+        }
+
+        .btn-box {
+            margin: 0 auto;
+            text-align: center;
+            margin-top: 60px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="ibox-content">
+            <div class="form-box">
+                <div class="title-box">版本描述:</div>
+                <div style="width: 450px;margin-left: 15px;">
+                    <textarea class="form-control" rows="8" placeholder="请输入版本描述..." v-model="remark"></textarea>
+                </div>
+            </div>
+
+            <div class="btn-box">
+                <el-button type="primary" @click="save()">提交审核</el-button>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script>
+    var config = {
+        api_upcode: api_url + ''
+    }
+
+    var appId = parameter().appId
+    var id = parameter().id
+
+
+    window.app = new Vue({
+        el: "#app",
+
+        data() {
+            return {
+                vnum: "",
+                remark: "",
+                wxapp:{},
+                wxapptem:{},
+            }
+        },
+
+        methods: {
+            save(){
+                if(this.remark == ""){
+                    this.$message.error("请输入版本描述")
+                }
+
+                $.ajax({
+                    url:api_url + `/wechat/submitAudit`,
+                    type:"GET",
+                    data:{
+                        appId:appId,
+                        version_desc:this.remark,          //用户定义的描述
+                        id:id
+                    },
+                    success:res=>{
+                        if(res.error == "00"){
+                            this.$message("提交成功")
+
+                           setTimeout(()=>{
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); //再执行关闭
+                           },2000)
+                        }else{
+                            this.$message(res.msg)
+                        }
+                    }
+                })
+            }
+        },
+
+        mounted() {
+            
+        }
+    })
+</script>
+
+</html>

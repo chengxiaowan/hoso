@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="ibox-content">
+            <table id="simple-table" class="table table-responsive table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th width="10%">模板ID</th>
+                        <th width="10%">版本号</th>
+                        <th width="45%">描述</th>
+                        <th width="25%">加入时间</th>
+                        <th width="10%">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template>
+                        <tr>
+                        <tr v-for="item in codelist">
+                            <td>{{item.template_id}}</td>
+                            <td>{{item.user_version}}</td>
+                            <td>{{item.user_desc}}</td>
+                            <td>{{formatDateTime(item.create_time)}}</td>
+                            <td class="btn-hide">
+                                <a href="#" class="btn btn-success" @click="upcode(item)">选择</a>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script>
+    var config = {
+        api_code: api_url + "/wechat/getModelList"
+    }
+
+    window.app = new Vue({
+        el: "#app",
+
+        data() {
+            return {
+                codelist: []
+            }
+        },
+
+        methods: {
+            getcode() {
+                let that = this
+                $.ajax({
+                    url: config.api_code,
+                    type: "GET",
+                    success: res => {
+                        // let drool = JSON.parse(res)
+                        // console.log(drool)
+                        if (res.errcode == "0") {
+                            that.codelist = res.template_list
+                        }
+                    }
+                })
+            },
+
+            upcode(item) {
+                const that = this;
+                //模板信息存到session
+                sessionStorage.setItem("wxapptem", JSON.stringify(item))
+
+                //跳转到新页面
+                window.location.href = "./codeinfo.html"
+
+            },
+
+            //时间格式化
+            formatDateTime(inputTime) {
+                var date = new Date(inputTime);
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                m = m < 10 ? ('0' + m) : m;
+                var d = date.getDate();
+                d = d < 10 ? ('0' + d) : d;
+                var h = date.getHours();
+                h = h < 10 ? ('0' + h) : h;
+                var minute = date.getMinutes();
+                var second = date.getSeconds();
+                minute = minute < 10 ? ('0' + minute) : minute;
+                second = second < 10 ? ('0' + second) : second;
+                return y + '-' + m + '-' + d + ' ' + '　' + h + ':' + minute + ':' + second;
+            },
+
+
+        },
+
+        mounted() {
+            this.getcode()
+        }
+    })
+</script>
+
+</html>

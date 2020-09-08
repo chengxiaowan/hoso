@@ -82,18 +82,24 @@
         .el-upload__input {
             display: none !important;
         }
+
+        /* for Chrome */
+        .inner-container::-webkit-scrollbar {
+            display: none;
+        }
     </style>
 </head>
 
 <body>
-    <div id="app" class="wrapper wrapper-content  animated fadeInRight">
+    <div id="app" class="wrapper wrapper-content  animated fadeInRight" v-cloak>
         <div class="ibox-content">
             <div class="upload-box">
                 <div>分享图片:</div>
                 <div>
                     <img :src="pic" style="width: 129px;height: 120px;margin-left: 25px;" v-if="pic">
-                    <div style="width: 129px;height: 120px;margin-left: 25px; background: #f5f5f5;text-align: center;line-height: 120px;color: #333;" v-else>
-                        暂无图片
+                    <div style="width: 129px;height: 120px;margin-left: 25px; background: #f5f5f5;text-align: center;line-height: 120px;color: #333;background: url('../images/sharepic.png');background-size: cover;"
+                        v-else>
+
                     </div>
                 </div>
                 <div style="margin-left: 25px;margin-top: 46px;">
@@ -101,7 +107,7 @@
                     <el-upload class="upload-demo" :action="actionPath" :show-file-list="false"
                         accept="image/jpeg, image/gif, image/png, image/bmp" :data="postdata"
                         :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-                        <el-button type="primary">点击上传</el-button>
+                        <el-button type="primary"> <i class="el-icon-upload2"></i> 上传图片</el-button>
                     </el-upload>
                 </div>
             </div>
@@ -241,7 +247,7 @@
 
         mounted() {
             this.getToken()
-            this. getindex()
+            this.getindex()
         }
     })
 </script>

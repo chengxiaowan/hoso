@@ -2,12 +2,13 @@
  * @Author: chengxiaowan(1045114585@qq.com) 
  * @Date: 2020-07-14 15:40:33 
  * @Last Modified by: chengxiaowan(1045114585@qq.com)
- * @Last Modified time: 2020-08-07 10:11:06
+ * @Last Modified time: 2020-09-07 15:07:25
  */
 
 var config = {
     api_token: api_url + "/qiniu/getUpToken",     //获取七牛云的token
-    api_save: api_url + '/memPackage/add'
+    api_save: api_url + '/memPackage/add',
+    api_list: api_url + '/wechat/list',           //获取小程序列表
 
 
 }
@@ -57,7 +58,17 @@ window.app = new Vue({
                     //此条为设置禁止用户选择今天之前的日期，不包含今天。
                     return time.getTime() <= (Date.now()-(24 * 60 * 60 * 1000));
                 }
-            }
+            },
+
+            //muck的数据
+            appList:[
+                {name:"小程序1",appId:"123456"},
+                {name:"小程序2",appId:"123457"},
+                {name:"小程序3",appId:"123458"},
+                {name:"小程序4",appId:"123459"},
+            ],
+
+            appId:"",
         }
     },
     methods: {
@@ -230,7 +241,10 @@ window.app = new Vue({
                 sharePrice:this.sharePrice,
 
                 //其他信息
-                remark:window.editor.txt.html()
+                remark:window.editor.txt.html(),
+
+                //appid
+                appId:this.appId
             } 
             
             $.ajax({
@@ -250,6 +264,22 @@ window.app = new Vue({
 
         nextPage(){
             window.location.href = "add2.html"
+        },
+
+        //获取小程序列表
+        getWxapp(){
+            const that = this;
+            $.ajax({
+                url:config.api_list,
+                type:"POST",
+                data:{
+                    pageSize:"100"
+                },
+                success:res=>{
+                    this.appList = res.result.list
+                    console.log(this.appList)
+                }
+            })
         }
 
     },
@@ -268,6 +298,8 @@ window.app = new Vue({
 
         //初始化七牛云
         this.getToken()
+
+        this.getWxapp()
 
 
         //初始化富文本

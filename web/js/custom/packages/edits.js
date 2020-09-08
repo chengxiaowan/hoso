@@ -2,7 +2,7 @@
  * @Author: chengxiaowan(1045114585@qq.com) 
  * @Date: 2020-07-20 09:22:52 
  * @Last Modified by: chengxiaowan(1045114585@qq.com)
- * @Last Modified time: 2020-08-07 14:33:06
+ * @Last Modified time: 2020-09-08 16:36:16
  */
 
 //  在这里获取权益卡ID，不管这个页面是怎么进来的 都要在url拼接一个id
@@ -39,6 +39,10 @@ var config = {
     api_index: api_url + '/memPackage/detailIndex', //首页
 
     api_save: api_url + '/memPackage/update',        //基本信息更新
+    api_shops:api_url+"/supplier/dataList1",
+
+    api_list2: api_url + '/wechat/list',           //获取小程序列表
+
 }
 
 window.app = new Vue({
@@ -147,9 +151,14 @@ window.app = new Vue({
 
                 //分享价格
                 sharePrice: "",
+                appId:"",
+
             },
             index: [],
             pages: 0,
+            soso1:"",
+            soso2:"",
+            shops:"",
 
             pickerOptions: {
                 disabledDate(time) {
@@ -158,7 +167,15 @@ window.app = new Vue({
                     //此条为设置禁止用户选择今天之前的日期，不包含今天。
                     return time.getTime() <= (Date.now()-(24 * 60 * 60 * 1000));
                 }
-            }
+            },
+            supplierId:"",
+            appId:"",
+            appList:[
+                {name:"小程序1",appId:"123456"},
+                {name:"小程序2",appId:"123457"},
+                {name:"小程序3",appId:"123458"},
+                {name:"小程序4",appId:"123459"},
+            ],
 
         }
     },
@@ -244,7 +261,7 @@ window.app = new Vue({
                     if (res.error == "00") {
                         that.groupList = res.result
                         if (that.groupList.length != 0) {
-                            that.group = res.result[0]
+                            that.group = res.result[res.result.length - 1]
                             this.getlist()
                         }
                     } else {
@@ -292,6 +309,7 @@ window.app = new Vue({
                     memPackageId: id,
                     parentId: this.group.groupId,
                     pageSize: "100",
+                    keywords:this.soso1
                 },
                 success: res => {
                     if (res.error == "00") {
@@ -350,7 +368,8 @@ window.app = new Vue({
                 keywords: this.keywords3,
                 name: "",
                 type: this.type,
-                solt: this.solt
+                solt: this.solt,
+                supplierId:this. supplierId,
 
             }
 
@@ -411,7 +430,7 @@ window.app = new Vue({
                 type: 2,
                 title: "完善其他信息",
                 content: `../package/addquan.html?id=${item.id}&type=${item.type}&isGroup=1&isMain=1&ids=${id}&groupid=${that.group.groupId}`,
-                area: ["1053px", "600px"],
+                area: ["1180px", "600px"],
                 end: () => {
                     that.getlist()
                 }
@@ -426,7 +445,7 @@ window.app = new Vue({
                 type: 2,
                 title: "完善其他信息",
                 content: `../package/addNum.html?&isGroup=1&isMain=1&ids=${id}&groupid=${that.group.groupId}`,
-                area: ["1053px", "600px"],
+                area: ["1180px", "600px"],
                 end: () => {
                     that.getlist()
                 }
@@ -446,7 +465,7 @@ window.app = new Vue({
                 type: 2,
                 title: "子商品",
                 content: `../package/addGood.html&groupid=${that.group.groupId}`,
-                area: ["1053px", "600px"],
+                area: ["1180px", "600px"],
                 end: () => {
                     that.getlist()
                 }
@@ -568,7 +587,7 @@ window.app = new Vue({
                 type: "POST",
                 data: data,
                 success: res => {
-                    this.$message("修改成功")
+                    this.$message("保存成功")
                     this.getAdvList()
                 }
             })
@@ -585,10 +604,10 @@ window.app = new Vue({
                 success: res => {
                     if (res.error == "00") {
                         if (res.result.length != "0") {
-                            this.adv = res.result[0]
-                            this.advTitle = res.result[0].title;
-                            this.pic = res.result[0].imageUrl;
-                            editor.txt.html(res.result[0].description)
+                            this.adv = res.result[res.result.length - 1]
+                            this.advTitle = res.result[res.result.length - 1].title;
+                            this.pic = res.result[res.result.length - 1].imageUrl;
+                            editor.txt.html(res.result[res.result.length - 1].description)
                         }
 
                         this.advList = res.result
@@ -701,7 +720,7 @@ window.app = new Vue({
                     if (res.error == "00") {
                         that.groupList2 = res.result
                         if (that.groupList2.length != 0) {
-                            that.groups = res.result[0]
+                            that.groups = res.result[res.result.length - 1]
                             this.getlists()
                         }
                     } else {
@@ -720,6 +739,7 @@ window.app = new Vue({
                     memPackageId: id,
                     parentId: this.groups.groupId,
                     pageSize: "100",
+                    keywords:this.soso2
                 },
                 success: res => {
                     if (res.error == "00") {
@@ -892,6 +912,8 @@ window.app = new Vue({
                         //描述
                         window.editors.txt.html(R.remark)
 
+                        this.maininfo.appId = R.appId
+
                     }
                 }
 
@@ -1039,7 +1061,9 @@ window.app = new Vue({
                 sharePrice: this.maininfo.sharePrice,
 
                 //其他信息
-                remark: window.editors.txt.html()
+                remark: window.editors.txt.html(),
+
+                appId:this.maininfo.appId
             }
 
             $.ajax({
@@ -1116,8 +1140,44 @@ window.app = new Vue({
         //切换页面
         switchPage(item) {
             this.pages = item
+        },
+
+        //获取供应商（过滤商品）
+        getshops(){
+            const that = this
+            $.ajax({
+                url:config.api_shops,
+                type:"POST",
+                data:{
+                    type:"0",
+                    pageSize:100
+                },
+                success:res=>{
+                    if(res.error == "00"){
+                        console.log(res.result)
+                        that.shops = res.result.list
+                    }
+                }
+            })
+        },
+          //获取小程序列表
+          getWxapp(){
+            const that = this;
+            $.ajax({
+                url:config.api_list2,
+                type:"POST",
+                data:{
+                    pageSize:"100"
+                },
+                success:res=>{
+                    this.appList = res.result.list
+                    console.log(this.appList)
+                }
+            })
         }
     },
+
+    
 
 
 
@@ -1132,6 +1192,7 @@ window.app = new Vue({
         console.log("Vue is mounted")
 
         //获取数据
+        this.getshops()
         this.getGroup()
         this.getlist()
         this.getQuan()
@@ -1141,6 +1202,7 @@ window.app = new Vue({
         this.getshop()
         this.getmaininfo()
         this.getindex()
+        this.getWxapp()
         //初始化一个日期组件
         layui.use('laydate', function () {
             var laydate = layui.laydate;

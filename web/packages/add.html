@@ -94,6 +94,27 @@
                 </div>
             </div>
 
+            
+
+            <div class="row">
+                <div class="col-sm-1" style="text-align: right;line-height: 35px;">
+                    <div>
+                        <!-- <span class="xing">*</span> -->
+                        绑定小程序：
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <el-select v-model="appId" filterable placeholder="请选择">
+                        <el-option
+                          v-for="item in appList"
+                          :key="item.appId"
+                          :label="item.name"
+                          :value="item.appId">
+                        </el-option>
+                      </el-select>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-sm-1" style="text-align: right;line-height: 35px;">
                     <div>

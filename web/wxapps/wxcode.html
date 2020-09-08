@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css?v=4.3.0">
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .form-box {
+            display: flex;
+            line-height: 35px;
+        }
+
+        .xing {
+            color: #FF6A72;
+        }
+
+        .title-box {
+            width: 100px;
+            line-height: 35px;
+            text-align: right;
+            margin-left: 70px;
+            line-height: 2em;
+        }
+
+        .btn-box {
+            margin: 0 auto;
+            text-align: center;
+            margin-top: 70px;
+        }
+
+        .info-box {
+            text-align: center;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #666666;
+            margin-top: 50px;
+        }
+
+        .el-divider--horizontal {
+            margin-top: 50px !important;
+            margin-bottom: 42px !important;
+        }
+
+        .code-box {
+            width: 180px;
+            height: 207px;
+            background: #F2F2F2;
+            margin: 0 auto;
+        }
+
+        .wxcode {
+            display: block;
+            width: 150px;
+            height: 150px;
+            margin: 15px;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .save {
+            display: block;
+            width: 125px;
+            height: 40px;
+            background: #4A90E2;
+            border-radius: 2px;
+            color: #fff;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+        }
+
+        .remark {
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #666666;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="ibox-content">
+            <div class="info-box">
+                管理员体验者可扫描下方二维码即可体验体验版
+            </div>
+            <div class="info-box" style="margin-top: 0;">(下载保存该二维码)</div>
+            <el-divider></el-divider>
+            <div class="code-box">
+                <div style="width: 100%;height: 15px;"></div>
+                <img :src="codeurl" alt="" class="wxcode">
+                <div class="remark">{{name}}体验版</div>
+            </div>
+            <div style="text-align: center;margin-top: 66px;">
+                <el-button type="primary" @click="dowload()">下载二维码</el-button>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/layer/layer.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.9/vue.min.js"></script>
+<script src="../js/module/module_pagination.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!-- 自定义js -->
+<script src="../js/content.min.js?v=1.0.0"></script>
+<script src="../js/custom/common.js"></script>
+<script>
+    var config = {
+        api_code: api_url + '/wechat/getQrCode'
+    }
+
+    var appId = parameter().appId
+    var name = parameter().name
+
+    window.app = new Vue({
+        el: "#app",
+
+        data() {
+            return {
+                codeurl: "",
+                name: ""
+            }
+        },
+
+        methods: {
+            dowload() {
+                // window.open(this.codeurl, "_blank").close
+                let image = new Image();
+                // 解决跨域 Canvas 污染问题
+                image.setAttribute("crossOrigin", "anonymous");
+                image.onload = function () {
+                    let canvas = document.createElement("canvas");
+                    canvas.width = image.width;
+                    canvas.height = image.height;
+                    let context = canvas.getContext("2d");
+                    context.drawImage(image, 0, 0, image.width, image.height);
+                    let url = canvas.toDataURL("image/png"); //得到图片的base64编码数据
+                    let a = document.createElement("a"); // 生成一个a元素
+                    let event = new MouseEvent("click"); // 创建一个单击事件
+                    a.download = this.name; // 设置图片名称
+                    a.href = url; // 将生成的URL设置为a.href属性
+                    a.dispatchEvent(event); // 触发a的单击事件
+                };
+                image.src = this.codeurl;
+            }
+        },
+
+        mounted() {
+            this.codeurl = config.api_code + "?appId=" + appId
+            this.name = name
+            console.log(this.codeurl)
+        }
+    })
+</script>
+
+</html>
